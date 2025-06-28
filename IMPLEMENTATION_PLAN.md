@@ -204,6 +204,110 @@ data: {"distance": 25.4, "led_states": [...], "timestamp": 1234567890}
 
 ---
 
+### Step 5: Production & Deployment 📋 **PLANNED**
+
+#### **Step 5.1: OTA Firmware Updates** 📋 **PLANNED**
+- 📋 **Over-The-Air Updates**: ESP32 OTA partition scheme and update mechanism
+- 📋 **Version Management**: Firmware versioning and rollback capability
+- 📋 **Update Server**: Simple HTTP/HTTPS server for firmware distribution
+- 📋 **Security**: Signed firmware updates and secure boot
+- 📋 **User Interface**: Web-based firmware update with progress indication
+
+#### **Step 5.2: Security Hardening** 📋 **PLANNED**
+- 📋 **WiFi Security**: WPA3 support and strong encryption
+- 📋 **Web Interface Security**: HTTPS, session management, CSRF protection
+- 📋 **Access Control**: Basic authentication for configuration pages
+- 📋 **Network Security**: Firewall rules and secure communication
+- 📋 **Credential Protection**: Encrypted storage of sensitive data
+
+#### **Step 5.3: Performance Optimization** 📋 **PLANNED**
+- 📋 **Memory Management**: Heap usage optimization and leak detection
+- 📋 **Task Optimization**: CPU usage profiling and optimization
+- 📋 **Network Performance**: HTTP server optimization and caching
+- 📋 **Power Management**: Sleep modes and power consumption optimization
+- 📋 **Storage Optimization**: Flash usage and wear leveling
+
+#### **Step 5.4: MQTT Integration** 📋 **PLANNED**
+- 📋 **MQTT Client**: Connect to MQTT broker for IoT integration
+- 📋 **Data Publishing**: Real-time distance measurements to MQTT topics
+- 📋 **Configuration**: MQTT broker settings via web interface
+- 📋 **Status Reporting**: System health and diagnostics via MQTT
+- 📋 **Home Automation**: Integration with Home Assistant, OpenHAB, etc.
+
+**MQTT Topics:**
+```
+esp32-distance/distance     - Current distance measurement
+esp32-distance/status       - System status and health
+esp32-distance/config       - Configuration updates
+esp32-distance/led/state    - LED strip status
+```
+
+#### **Step 5.5: System Reliability** 📋 **PLANNED**
+- 📋 **Watchdog Timers**: Hardware and software watchdog implementation
+- 📋 **Error Recovery**: Comprehensive error handling and recovery mechanisms
+- 📋 **Logging System**: Persistent log storage and remote log access
+- 📋 **Health Monitoring**: System metrics and performance monitoring
+- 📋 **Factory Reset**: Complete system reset capability
+
+**Step 5 Deliverables:**
+- Production-ready firmware with OTA updates
+- Secure web interface with authentication
+- MQTT integration for IoT platforms
+- Performance-optimized and reliable system
+- Comprehensive logging and monitoring
+
+---
+
+### Step 6: Garage Parking Assistant 📋 **FUTURE**
+
+#### **Step 6.1: Multi-Zone Detection** 📋 **FUTURE**
+- 📋 **Multiple Sensors**: Support for multiple HC-SR04 sensors
+- 📋 **Zone Configuration**: Configurable detection zones (approach, stop, too close)
+- 📋 **Sensor Fusion**: Combine multiple sensor readings for accuracy
+- 📋 **Parking Guidance**: Visual indicators for optimal parking position
+- 📋 **Vehicle Detection**: Distinguish between vehicles and other objects
+
+#### **Step 6.2: Audio Alert System** 📋 **FUTURE**
+- 📋 **Piezo Buzzer**: Audio feedback for parking guidance (if piezo found! 🔍)
+- 📋 **Alert Patterns**: Different beep patterns for different zones
+- 📋 **Volume Control**: Configurable audio levels via web interface
+- 📋 **Silent Mode**: Option to disable audio alerts
+- 📋 **Custom Sounds**: Configurable alert tones and patterns
+
+#### **Step 6.3: Advanced Parking Logic** 📋 **FUTURE**
+- 📋 **Car Detection**: Algorithms to detect vehicle presence vs. absence
+- 📋 **Parking Position**: Optimal stop position calculation
+- 📋 **Multiple Vehicles**: Support for different vehicle sizes
+- 📋 **Learning Mode**: Adaptive algorithms that learn parking preferences
+- 📋 **Safety Zones**: Configurable safety margins and warning zones
+
+#### **Step 6.4: Garage Integration** 📋 **FUTURE**
+- 📋 **Door Sensors**: Integration with garage door position sensors
+- 📋 **Automation**: Automatic garage door control (future expansion)
+- 📋 **Multiple Bays**: Support for multi-bay garages
+- 📋 **User Profiles**: Different settings for different drivers
+- 📋 **Mobile Notifications**: Push notifications for parking events
+
+**Hardware Requirements:**
+- Multiple HC-SR04 sensors (2-4 units)
+- Piezo buzzer (if available from "many years back" 😄)
+- Optional: Garage door position sensors
+- Optional: Additional LED strips for multi-zone indication
+
+**Use Cases:**
+- Single-car garage parking assistant
+- Multi-bay garage with individual guidance
+- RV/boat parking assistance
+- Workshop/storage area object positioning
+
+**Step 6 Deliverables:**
+- Multi-sensor parking guidance system
+- Audio feedback with configurable patterns
+- Advanced vehicle detection algorithms
+- Integration with garage automation systems
+
+---
+
 ## Architecture Evolution
 
 The project has evolved from a simple proof-of-concept to a clean, modular architecture:
