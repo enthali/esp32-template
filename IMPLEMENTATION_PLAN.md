@@ -72,56 +72,117 @@ Priority 1: Main Task             (coordination only)
 ---
 
 ### Step 4: Web Interface 📋 **PLANNED**
-- 📋 Set up ESP32 as WiFi access point or station
-- 📋 Implement HTTP server for web interface  
-- 📋 Create responsive webpage displaying real-time distance
-- 📋 Add configuration options for distance ranges and LED settings
-- 📋 Implement WebSocket for live data streaming
-- 📋 Add historical data logging and visualization
 
-**Planned Features:**
-- Real-time distance display with LED strip visualization
-- Configurable distance ranges and mapping parameters
-- LED strip configuration (color schemes, brightness, animation modes)
-- Sensor calibration interface (temperature compensation, timeout settings)
-- System status monitoring (task health, queue statistics, error logs)
-- Data export capabilities (CSV, JSON)
+#### **Step 4.1: WiFi Setup with Captive Portal** 📋 **PLANNED**
+- 📋 **Captive Portal**: Use ESP-IDF's built-in captive portal example as foundation
+- 📋 **SoftAP Mode**: ESP32 creates its own WiFi network ("ESP32-Distance-Sensor")
+- 📋 **WiFi Configuration Page**: Allow users to connect to their home WiFi
+- 📋 **Network Switching**: Ability to switch between AP mode and Station mode
+- 📋 **DNS Server**: Redirect all DNS queries to ESP32 IP for captive portal detection
 
-**Technical Architecture:**
-- HTTP server with static file serving for web interface
-- WebSocket endpoint for real-time data streaming  
-- JSON API for configuration and control
-- Integration with existing display logic for remote LED control
-- WiFi configuration portal for easy network setup
+**Based on ESP-IDF Captive Portal Example:**
+```c
+// Key components found via Playwright research:
+#include "esp_http_server.h"
+#include "dns_server.h"
+#include "esp_wifi.h"
+
+// SoftAP setup with captive portal
+wifi_init_softap();                    // Create ESP32 WiFi network
+dhcp_set_captiveportal_url();          // DHCP Option 114 for modern devices
+start_dns_server(&config);             // Redirect all DNS to ESP32
+```
+
+**Implementation:**
+- Create basic captive portal that shows WiFi setup page
+- Scan for available networks and present selection list
+- Store WiFi credentials in NVS flash
+- Switch to Station mode when credentials provided
+- Fall back to AP mode if connection fails
 
 ---
 
-## Current Project Status
+#### **Step 4.2: Basic Static Web Interface** 📋 **PLANNED**  
+- 📋 **Static HTML/CSS**: Simple responsive web interface
+- 📋 **Basic HTTP Server**: Serve static files from ESP32 flash memory
+- 📋 **Core Pages**: 
+  - `/` - Main dashboard with current distance display
+  - `/settings` - Basic configuration page
+  - `/about` - System information page
+- 📋 **Mobile Responsive**: Touch-friendly interface for smartphones
 
-### ✅ **Completed Components**
-1. **LED Controller Component** (`components/led_controller/`)
-   - Full WS2812 hardware abstraction with RMT backend
-   - Individual pixel control with RAM buffer management
-   - Comprehensive test suite with background task architecture
+**Integration Points:**
+- Use existing `distance_sensor_get_latest()` API for current readings
+- Display current distance value (refreshed on page reload)
+- Basic system status (uptime, WiFi connection, sensor health)
 
-2. **Distance Sensor Component** (`components/distance_sensor/`)
-   - Interrupt-driven HC-SR04 sensor with dual-queue system
-   - Real-time measurements with comprehensive error handling
-   - Non-blocking API for consumer task integration
+---
 
-3. **Hardware Integration**
-   - Live distance measurements working in main application
-   - Centralized hardware configuration in `main.c`
-   - Clean component architecture following ESP-IDF best practices
+#### **Step 4.3: JSON API Endpoints** 📋 **PLANNED**
+- 📋 **RESTful API**: JSON endpoints for programmatic access
+- 📋 **Core Endpoints**:
+  - `GET /api/distance` - Current distance measurement
+  - `GET /api/status` - System health and statistics  
+  - `GET /api/config` - Current configuration
+  - `POST /api/config` - Update settings
+- 📋 **Error Handling**: Proper HTTP status codes and error messages
 
-### 🔄 **In Progress**
-- **Step 3**: Display Logic implementation (GitHub Issue assigned to Copilot)
+**API Design:**
+```c
+// Example JSON responses
+GET /api/distance -> {"distance": 25.4, "status": "ok", "timestamp": 1234567890}
+GET /api/status   -> {"uptime": 3600, "wifi": "connected", "tasks": "healthy"}
+```
 
-### 📋 **Next Milestones**
-1. Complete display logic integration and testing
-2. Plan web interface architecture and WiFi integration
-3. Implement data logging and historical analysis features
-4. Performance optimization and system reliability testing
+---
+
+#### **Step 4.4: Real-time Data Streaming** 📋 **PLANNED**
+- 📋 **Server-Sent Events (SSE)**: Real-time distance updates
+- 📋 **Live Dashboard**: Auto-updating web interface without page refresh
+- 📋 **LED Visualization**: Browser-based LED strip representation
+- 📋 **WebSocket Support**: Bidirectional communication (optional upgrade)
+
+**Real-time Features:**
+```c
+// SSE endpoint for live updates
+GET /events -> text/event-stream
+data: {"distance": 25.4, "led_states": [...], "timestamp": 1234567890}
+```
+
+**Dashboard Features:**
+- Live distance number with units
+- Virtual LED strip matching physical hardware
+- Color-coded status indicators
+- Real-time error notifications
+
+---
+
+#### **Step 4.5: Advanced Configuration Interface** 📋 **PLANNED**
+- 📋 **Settings Management**: Web-based configuration for all system parameters
+- 📋 **Distance Calibration**: Set min/max ranges for LED mapping  
+- 📋 **LED Configuration**: Brightness, color schemes, animation modes
+- 📋 **Sensor Settings**: Timeout values, temperature compensation
+- 📋 **WiFi Management**: Change networks, view connection status
+- 📋 **System Controls**: Restart, factory reset, firmware updates
+
+**Configuration Categories:**
+- **Distance Mapping**: 10-50cm range, LED assignment, error thresholds
+- **Visual Settings**: LED brightness, color patterns, error indicators  
+- **Sensor Tuning**: Measurement intervals, timeout handling, temperature
+- **Network Settings**: WiFi credentials, static IP, hostname
+- **System Maintenance**: Logs, diagnostics, updates
+
+---
+
+**Step 4 Deliverables:**
+- `main/wifi_manager.h/c` - Captive portal and WiFi configuration
+- `main/web_server.h/c` - HTTP server with static file serving
+- `main/api_handlers.h/c` - JSON API endpoints  
+- `main/sse_server.h/c` - Server-sent events for real-time updates
+- `main/www/` - Static web files (HTML, CSS, JavaScript)
+- Complete mobile-responsive web interface
+- Real-time dashboard with LED strip visualization
+- Comprehensive configuration management
 
 ---
 
