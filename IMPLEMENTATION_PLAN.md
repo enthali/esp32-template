@@ -80,17 +80,19 @@ Priority 1: Main Task             (coordination and health monitoring)
 
 ---
 
-### Step 4: Web Interface 📋 **PLANNED**
+### Step 4: Web Interface � **IN PROGRESS**
 
-#### **Step 4.1: WiFi Setup with Smart Network Logic** 📋 **PLANNED** (Ready for Implementation)
-- 📋 **Smart WiFi Boot Logic**: Try stored credentials → fallback to AP mode if no config/connection fails
-- 📋 **SoftAP Mode**: ESP32 creates "ESP32-Distance-Sensor" network with captive portal
-- 📋 **Captive Portal**: Auto-redirect to configuration page with network scanning
-- 📋 **Credential Management**: Store WiFi credentials in NVS flash with persistence
-- 📋 **Automatic Switching**: Station mode when configured, AP fallback on failure
-- 📋 **DNS Server**: Redirect all DNS queries to ESP32 IP for portal detection
+#### **Step 4.1: WiFi Setup with Smart Network Logic** ✅ **COMPLETED**
 
-**Smart WiFi Behavior:**
+- ✅ **Smart WiFi Boot Logic**: Try stored credentials → fallback to AP mode if no config/connection fails
+- ✅ **SoftAP Mode**: ESP32 creates "ESP32-Distance-Sensor" network with captive portal
+- ✅ **Captive Portal**: Auto-redirect to configuration page with network scanning
+- ✅ **Credential Management**: Store WiFi credentials in NVS flash with persistence
+- ✅ **Automatic Switching**: Station mode when configured, AP fallback on failure
+- ✅ **DNS Server**: Redirect all DNS queries to ESP32 IP for portal detection
+
+**Completed Smart WiFi Behavior:**
+
 1. **Boot Logic**: Try to connect to stored WiFi credentials on startup
 2. **Fallback to AP**: If no config or connection fails → start AP mode automatically
 3. **AP Mode**: Create "ESP32-Distance-Sensor" network with captive portal
@@ -98,7 +100,8 @@ Priority 1: Main Task             (coordination and health monitoring)
 5. **Automatic Switching**: Once configured, switch to Station mode seamlessly
 6. **Persistence**: Store WiFi credentials in NVS flash for future boots
 
-**Components Required:**
+**Components Implemented:**
+
 ```c
 #include "esp_wifi.h"          // WiFi driver
 #include "esp_http_server.h"   // Web server
@@ -107,50 +110,100 @@ Priority 1: Main Task             (coordination and health monitoring)
 #include "dns_server.h"        // Captive portal DNS
 ```
 
-**File Structure:**
+**File Structure Completed:**
+
 - `main/wifi_manager.h/c` - Smart WiFi logic and credential management
 - `main/web_server.h/c` - Basic HTTP server for captive portal
 - Update `main/CMakeLists.txt` with required ESP-IDF components
 
-**Expected Behavior:**
+**Verified Behavior:**
+
 - **First boot**: Creates AP "ESP32-Distance-Sensor", serves config page at 192.168.4.1
 - **After WiFi config**: Connects to home network, serves on assigned IP
 - **Connection loss**: Retries to connect 3 times with a timeout of 5 sec. then falls back to AP mode automatically
 - **Web interface**: Always accessible via current network configuration
 
+**Key Achievements:**
+- WiFi captive portal with automatic network detection and configuration
+- Full WiFi credential management with NVS persistence  
+- Smart boot logic with automatic AP fallback
+- Network scanning and selection via web interface
+- DNS server for captive portal detection
+- Reset functionality to clear credentials and restart in AP mode
+- Tested and verified with both AP and STA modes
+- Mobile-responsive configuration interface
+
+**Known Issues:**
+- **Reset functionality**: Reset endpoint does not always clear NVS credentials as expected (potential need for `nvs_flash_erase()` implementation)
+
 ---
 
 #### **Step 4.2: Basic Static Web Interface** 📋 **PLANNED**  
-- 📋 **Static HTML/CSS**: Simple responsive web interface
-- 📋 **Basic HTTP Server**: Serve static files from ESP32 flash memory
-- 📋 **Core Pages**: 
-  - `/` - Main dashboard with current distance display
-  - `/settings` - Basic configuration page
-  - `/about` - System information page
+- 📋 **Single Page App**: Navbar-based interface with build-time embedded assets
+- 📋 **Static File Serving**: Serve HTML/CSS/JS from ESP32 flash using `esp_embed_data`
+- 📋 **Core Sections**: 
+  - Dashboard (default view) - Current distance display
+  - Settings - System configuration with info section (version, uptime, GitHub link)
 - 📋 **Mobile Responsive**: Touch-friendly interface for smartphones
+
+**File Structure:**
+```
+main/www/
+├── app.html          # Single page app with navbar
+├── style.css         # Shared styles  
+└── app.js           # Shared JavaScript
+```
 
 **Integration Points:**
 - Use existing `distance_sensor_get_latest()` API for current readings
 - Display current distance value (refreshed on page reload)
-- Basic system status (uptime, WiFi connection, sensor health)
+- Basic system status in settings info section
 
 ---
 
-#### **Step 4.3: JSON API Endpoints** 📋 **PLANNED**
-- 📋 **RESTful API**: JSON endpoints for programmatic access
-- 📋 **Core Endpoints**:
-  - `GET /api/distance` - Current distance measurement
-  - `GET /api/status` - System health and statistics  
-  - `GET /api/config` - Current configuration
-  - `POST /api/config` - Update settings
-- 📋 **Error Handling**: Proper HTTP status codes and error messages
+#### **Step 4.3: Configuration Management & Data Sharing** 📋 **PLANNED**
+- 📋 **Configuration System**: Centralize magic numbers into `main/config.h` with NVS storage
+- 📋 **Shared Data Structure**: Implement mutex-protected shared variable for sensor→web data flow
+- 📋 **Runtime Configuration**: Store user-configurable parameters in NVS flash
+- 📋 **Default Values**: Compile-time defaults with runtime override capability
 
-**API Design:**
+**Configuration Categories:**
 ```c
-// Example JSON responses
-GET /api/distance -> {"distance": 25.4, "status": "ok", "timestamp": 1234567890}
-GET /api/status   -> {"uptime": 3600, "wifi": "connected", "tasks": "healthy"}
+// config.h - Compile-time defaults
+#define DEFAULT_DISTANCE_MIN_CM         10
+#define DEFAULT_DISTANCE_MAX_CM         50  
+#define DEFAULT_LED_COUNT               40
+#define DEFAULT_MEASUREMENT_INTERVAL_MS 100
+#define DEFAULT_LED_BRIGHTNESS          128
+
+// Runtime config structure (stored in NVS)
+typedef struct {
+    uint16_t distance_min_cm;
+    uint16_t distance_max_cm;
+    uint8_t led_brightness;
+    uint16_t measurement_interval_ms;
+    uint32_t sensor_timeout_ms;
+} system_config_t;
 ```
+
+**Shared Data Architecture:**
+```c
+// Sensor → Web Server data sharing
+typedef struct {
+    float distance_cm;
+    uint32_t timestamp;
+    distance_status_t status;
+} distance_data_t;
+
+static distance_data_t shared_distance_data;
+static SemaphoreHandle_t distance_mutex;
+```
+
+**Integration Points:**
+- Replace all magic numbers with config values
+- Sensor task updates shared data structure (protected by mutex)
+- Web server reads shared data structure (protected by mutex)
+- Configuration changes trigger system parameter updates
 
 ---
 
@@ -175,7 +228,25 @@ data: {"distance": 25.4, "led_states": [...], "timestamp": 1234567890}
 
 ---
 
-#### **Step 4.5: Advanced Configuration Interface** 📋 **PLANNED**
+#### **Step 4.5: JSON API Endpoints** 📋 **PLANNED**
+- 📋 **RESTful API**: JSON endpoints for programmatic access
+- 📋 **Core Endpoints** (flat structure):
+  - `GET /api/distance` - Current distance measurement
+  - `GET /api/status` - System health and statistics  
+  - `GET /api/config` - Current configuration
+  - `POST /api/config` - Update settings
+- 📋 **Error Handling**: Proper HTTP status codes and error messages
+
+**API Design:**
+```c
+// Example JSON responses
+GET /api/distance -> {"distance": 25.4, "status": "ok", "timestamp": 1234567890}
+GET /api/status   -> {"uptime": 3600, "wifi": "connected", "tasks": "healthy"}
+```
+
+---
+
+#### **Step 4.6: Advanced Configuration Interface** 📋 **PLANNED**
 - 📋 **Settings Management**: Web-based configuration for all system parameters
 - 📋 **Distance Calibration**: Set min/max ranges for LED mapping  
 - 📋 **LED Configuration**: Brightness, color schemes, animation modes
@@ -194,13 +265,19 @@ data: {"distance": 25.4, "led_states": [...], "timestamp": 1234567890}
 
 **Step 4 Deliverables:**
 - `main/wifi_manager.h/c` - Captive portal and WiFi configuration
-- `main/web_server.h/c` - HTTP server with static file serving
+- `main/web_server.h/c` - HTTP server with static file serving and SSE support
+- `main/config.h` - Centralized configuration management with NVS storage
+- `main/shared_data.h/c` - Mutex-protected data sharing between sensor and web tasks
 - `main/api_handlers.h/c` - JSON API endpoints  
-- `main/sse_server.h/c` - Server-sent events for real-time updates
-- `main/www/` - Static web files (HTML, CSS, JavaScript)
-- Complete mobile-responsive web interface
-- Real-time dashboard with LED strip visualization
-- Comprehensive configuration management
+- `main/www/app.html` - Single page application with navbar
+- `main/www/style.css` - Shared responsive styles
+- `main/www/app.js` - Shared JavaScript and SSE client
+- Complete mobile-responsive web interface with navbar navigation
+- Centralized configuration system with runtime parameter storage
+- Mutex-based data sharing architecture (sensor → web server)
+- Real-time dashboard with LED strip visualization via Server-Sent Events
+- JSON REST API for external integration
+- Comprehensive configuration management in settings page
 
 ---
 
