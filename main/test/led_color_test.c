@@ -159,3 +159,24 @@ esp_err_t led_color_test_rgb_channels(uint32_t step_delay_ms)
     ESP_LOGI(TAG, "RGB channel test completed");
     return ESP_OK;
 }
+
+esp_err_t led_color_test_brightness_fade_basic(uint32_t step_delay_ms)
+{
+    ESP_LOGI(TAG, "Testing brightness fade with basic colors...");
+
+    // Define the same colors as used in basic color test
+    led_color_t fade_colors[] = {
+        LED_COLOR_RED,              // LED 0: Pure red
+        LED_COLOR_GREEN,            // LED 1: Pure green
+        LED_COLOR_BLUE,             // LED 2: Pure blue
+        LED_COLOR_WHITE,            // LED 3: White
+        LED_COLOR_YELLOW,           // LED 4: Yellow
+        led_color_rgb(255, 165, 0), // LED 5: Orange
+        led_color_rgb(128, 0, 128), // LED 6: Purple (dimmer magenta)
+        led_color_rgb(0, 255, 255), // LED 7: Cyan
+    };
+
+    uint8_t color_count = sizeof(fade_colors) / sizeof(fade_colors[0]);
+    
+    return led_color_test_brightness_fade(fade_colors, color_count, step_delay_ms);
+}

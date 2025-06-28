@@ -39,6 +39,17 @@ extern "C"
     esp_err_t led_color_test_brightness_fade(const led_color_t *colors, uint8_t color_count, uint32_t step_delay_ms);
 
     /**
+     * @brief Test brightness scaling with basic colors
+     *
+     * Tests brightness scaling from full to off using the same colors as basic color test.
+     * This is a simplified version that doesn't require passing color arrays.
+     *
+     * @param step_delay_ms Delay between brightness steps in milliseconds
+     * @return ESP_OK on success
+     */
+    esp_err_t led_color_test_brightness_fade_basic(uint32_t step_delay_ms);
+
+    /**
      * @brief Test custom color mixing
      *
      * Tests various RGB combinations to verify color accuracy.

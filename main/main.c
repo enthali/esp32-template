@@ -48,17 +48,7 @@ void app_main(void)
 
     // Test 3: Brightness fade test
     ESP_LOGI(TAG, "=== Brightness Fade Test ===");
-    led_color_t fade_colors[] = {
-        LED_COLOR_RED,              // LED 0: Red
-        LED_COLOR_GREEN,            // LED 1: Green
-        LED_COLOR_BLUE,             // LED 2: Blue
-        LED_COLOR_WHITE,            // LED 3: White
-        LED_COLOR_YELLOW,           // LED 4: Yellow
-        led_color_rgb(255, 165, 0), // LED 5: Orange
-        led_color_rgb(128, 0, 128), // LED 6: Purple (dimmer magenta)
-        LED_COLOR_CYAN,             // LED 7: Cyan
-    };
-    led_color_test_brightness_fade(fade_colors, 8, 20);
+    led_color_test_brightness_fade_basic(20);
 
     // Clear all LEDs
     led_clear_all();
