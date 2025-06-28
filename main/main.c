@@ -4,7 +4,9 @@
 #include "esp_log.h"
 #include "led_controller.h"
 #include "test/test_task.h"
+#include "test/led_running_test.h"
 #include "distance_sensor.h"
+#include "display_logic.h"
 
 static const char *TAG = "main";
 
@@ -46,15 +48,14 @@ void app_main(void)
     led_clear_all();
     led_show();
 
-    // Start background test task
-    ret = test_task_start();
-    if (ret != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Failed to start test task");
-        return;
-    }
+    // Run hardware test once at startup (not continuous background task)
+    ESP_LOGI(TAG, "Running one-time LED hardware test...");
+    led_running_test_single_cycle(LED_COLOR_GREEN, 50);
+    ESP_LOGI(TAG, "Hardware test completed");
 
-    ESP_LOGI(TAG, "Background LED test task started");
+    // Clear LEDs after test
+    led_clear_all();
+    led_show();
 
     // Configure and initialize distance sensor
     distance_sensor_config_t distance_config = {
@@ -80,49 +81,28 @@ void app_main(void)
 
     ESP_LOGI(TAG, "Distance sensor initialized and started");
     ESP_LOGI(TAG, "Hardware: LED=GPIO%d, Trigger=GPIO%d, Echo=GPIO%d", LED_DATA_PIN, DISTANCE_TRIGGER, DISTANCE_ECHO);
+
+    // Initialize and start display logic
+    ret = display_logic_init(NULL); // Use default configuration
+    if (ret != ESP_OK)
+    {
+        ESP_LOGE(TAG, "Failed to initialize display logic: %s", esp_err_to_name(ret));
+        return;
+    }
+
+    ret = display_logic_start();
+    if (ret != ESP_OK)
+    {
+        ESP_LOGE(TAG, "Failed to start display logic: %s", esp_err_to_name(ret));
+        return;
+    }
+
+    ESP_LOGI(TAG, "Display logic initialized and started");
     ESP_LOGI(TAG, "Ready for distance measurement and LED display...");
 
-    // Main application loop - Read distance and display on LED strip
+    // Main application loop - Coordination and monitoring only
     while (1)
     {
-        distance_measurement_t measurement;
-
-        // Check for new distance measurement
-        if (distance_sensor_get_latest(&measurement) == ESP_OK)
-        {
-            if (measurement.status == DISTANCE_SENSOR_OK)
-            {
-                ESP_LOGI(TAG, "Distance: %.2f cm", measurement.distance_cm);
-
-                // TODO: Convert distance to LED visualization
-                // For now, just log the successful measurement
-            }
-            else
-            {
-                // Handle measurement errors
-                const char *error_msg = "";
-                switch (measurement.status)
-                {
-                case DISTANCE_SENSOR_TIMEOUT:
-                    error_msg = "Timeout";
-                    break;
-                case DISTANCE_SENSOR_OUT_OF_RANGE:
-                    error_msg = "Out of range";
-                    break;
-                case DISTANCE_SENSOR_NO_ECHO:
-                    error_msg = "No echo";
-                    break;
-                case DISTANCE_SENSOR_INVALID_READING:
-                    error_msg = "Invalid reading";
-                    break;
-                default:
-                    error_msg = "Unknown error";
-                    break;
-                }
-                ESP_LOGW(TAG, "Distance measurement error: %s", error_msg);
-            }
-        }
-
         // Check for queue overflows (indicates system overload)
         uint32_t overflows = distance_sensor_get_queue_overflows();
         static uint32_t last_overflow_count = 0;
@@ -132,6 +112,20 @@ void app_main(void)
             last_overflow_count = overflows;
         }
 
-        vTaskDelay(pdMS_TO_TICKS(10)); // Short yield to other tasks
+        // Verify tasks are still running
+        if (!distance_sensor_is_running())
+        {
+            ESP_LOGE(TAG, "Distance sensor task stopped unexpectedly");
+            // Could implement restart logic here
+        }
+
+        if (!display_logic_is_running())
+        {
+            ESP_LOGE(TAG, "Display logic task stopped unexpectedly");
+            // Could implement restart logic here
+        }
+
+        // Sleep for a longer interval since display logic handles LED updates
+        vTaskDelay(pdMS_TO_TICKS(5000)); // 5 second monitoring interval
     }
 }
