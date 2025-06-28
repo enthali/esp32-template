@@ -294,6 +294,8 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
                 else
                 {
                     ESP_LOGW(TAG, "Failed to connect after %d retries, switching to AP mode", WIFI_STA_MAXIMUM_RETRY);
+                    // Switch back to AP mode
+                    switch_to_mode(WIFI_MODE_AP_ACTIVE);
                     xEventGroupSetBits(wifi_event_group, WIFI_FAIL_BIT);
                 }
             }
@@ -419,6 +421,9 @@ static esp_err_t start_sta_mode(void)
     strncpy((char *)wifi_config.sta.password, stored_credentials.password, sizeof(wifi_config.sta.password) - 1);
     wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
 
+    // Debug: Log credentials being used
+    ESP_LOGI(TAG, "STA connecting to SSID: '%s', password: '%s'", wifi_config.sta.ssid, wifi_config.sta.password);
+
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
 
@@ -439,8 +444,7 @@ static esp_err_t start_ap_mode(void)
             .channel = WIFI_AP_CHANNEL,
             .password = WIFI_AP_PASSWORD,
             .max_connection = WIFI_AP_MAX_CONNECTIONS,
-            .authmode = WIFI_AUTH_OPEN
-        },
+            .authmode = WIFI_AUTH_OPEN},
     };
 
     // Debug: Log the actual SSID being set
