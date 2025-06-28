@@ -13,7 +13,7 @@ void app_main(void)
 
     // Configure LED strip
     led_config_t led_config = {
-        .gpio_pin = GPIO_NUM_13,     // WS2812 data pin
+        .gpio_pin = GPIO_NUM_12,     // WS2812 data pin
         .led_count = 40,             // 40 LEDs in strip
         .rmt_channel = RMT_CHANNEL_0 // Use RMT channel 0
     };
