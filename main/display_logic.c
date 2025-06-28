@@ -20,13 +20,6 @@ static TaskHandle_t display_task_handle = NULL;
 static display_config_t display_config;
 static bool is_initialized = false;
 
-// Default configuration values
-static const display_config_t DEFAULT_CONFIG = {
-    .min_distance_cm = 10.0f,
-    .max_distance_cm = 50.0f,
-    .update_interval_ms = 1000
-};
-
 /**
  * @brief Map distance to LED index
  *
@@ -167,15 +160,15 @@ esp_err_t display_logic_init(const display_config_t *config)
         return ESP_ERR_INVALID_STATE;
     }
 
-    // Use provided config or defaults
-    if (config != NULL)
+    // Config parameter is required
+    if (config == NULL)
     {
-        display_config = *config;
+        ESP_LOGE(TAG, "Configuration parameter is required");
+        return ESP_ERR_INVALID_ARG;
     }
-    else
-    {
-        display_config = DEFAULT_CONFIG;
-    }
+
+    // Copy provided configuration
+    display_config = *config;
 
     // Validate configuration
     if (display_config.min_distance_cm >= display_config.max_distance_cm)

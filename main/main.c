@@ -2,6 +2,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
+#include "esp_system.h"
 #include "led_controller.h"
 #include "test/test_task.h"
 #include "test/led_running_test.h"
@@ -82,8 +83,14 @@ void app_main(void)
     ESP_LOGI(TAG, "Distance sensor initialized and started");
     ESP_LOGI(TAG, "Hardware: LED=GPIO%d, Trigger=GPIO%d, Echo=GPIO%d", LED_DATA_PIN, DISTANCE_TRIGGER, DISTANCE_ECHO);
 
-    // Initialize and start display logic
-    ret = display_logic_init(NULL); // Use default configuration
+    // Configure and initialize display logic
+    display_config_t display_config = {
+        .min_distance_cm = 10.0f,
+        .max_distance_cm = 50.0f,
+        .update_interval_ms = 1000
+    };
+
+    ret = display_logic_init(&display_config);
     if (ret != ESP_OK)
     {
         ESP_LOGE(TAG, "Failed to initialize display logic: %s", esp_err_to_name(ret));
@@ -115,14 +122,14 @@ void app_main(void)
         // Verify tasks are still running
         if (!distance_sensor_is_running())
         {
-            ESP_LOGE(TAG, "Distance sensor task stopped unexpectedly");
-            // Could implement restart logic here
+            ESP_LOGE(TAG, "Distance sensor task stopped unexpectedly - restarting system");
+            esp_restart();
         }
 
         if (!display_logic_is_running())
         {
-            ESP_LOGE(TAG, "Display logic task stopped unexpectedly");
-            // Could implement restart logic here
+            ESP_LOGE(TAG, "Display logic task stopped unexpectedly - restarting system");
+            esp_restart();
         }
 
         // Sleep for a longer interval since display logic handles LED updates

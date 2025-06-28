@@ -62,10 +62,10 @@ extern "C"
      * Initializes the display logic with specified configuration.
      * Must be called before display_logic_start().
      *
-     * @param config Pointer to display configuration. If NULL, uses default values.
+     * @param config Pointer to display configuration. Must not be NULL.
      * @return ESP_OK on success, ESP_ERR_* on failure
      *
-     * @note Default configuration: 10-50cm range, 1000ms update interval
+     * @note Configuration must be provided from main.c to maintain single source of truth
      */
     esp_err_t display_logic_init(const display_config_t *config);
 
