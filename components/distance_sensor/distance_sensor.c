@@ -396,9 +396,10 @@ esp_err_t distance_sensor_get_latest(distance_measurement_t *measurement)
         return ESP_ERR_INVALID_ARG;
     }
 
-    return (xQueueReceive(processed_measurement_queue, measurement, 0) == pdTRUE)
+    // Block until new measurement is available
+    return (xQueueReceive(processed_measurement_queue, measurement, portMAX_DELAY) == pdTRUE)
                ? ESP_OK
-               : ESP_ERR_NOT_FOUND;
+               : ESP_FAIL;
 }
 
 bool distance_sensor_has_new_measurement(void)

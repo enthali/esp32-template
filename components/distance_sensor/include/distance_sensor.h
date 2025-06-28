@@ -25,7 +25,7 @@
  * └── Sleeps between measurements (CPU friendly, allows other tasks)
  *
  * Public API
- * ├── distance_sensor_get_latest() - Non-blocking read
+ * ├── distance_sensor_get_latest() - Blocking read (waits for new data)
  * ├── distance_sensor_has_new_measurement() - Check availability
  * ├── Queue overflow detection & statistics
  * └── Race condition safe (no shared variables)
@@ -35,7 +35,7 @@
  * - ISR only captures timestamps (no calculations)
  * - Dual-queue eliminates race conditions
  * - Task yields CPU between measurements
- * - No blocking operations in API
+ * - API blocks until new data is available
  * - Automatic queue overflow handling
  * - Temperature compensation for accuracy
  *
@@ -135,10 +135,13 @@ extern "C"
     esp_err_t distance_sensor_stop(void);
 
     /**
-     * @brief Get the latest distance measurement (non-blocking)
+     * @brief Get the latest distance measurement (blocking)
+     *
+     * Waits on the internal queue until a new measurement is available.
+     * This function will block until new data arrives from the sensor task.
      *
      * @param measurement Pointer to store the measurement result
-     * @return esp_err_t ESP_OK if new measurement available, ESP_ERR_NOT_FOUND if no new data
+     * @return esp_err_t ESP_OK on success, ESP_ERR_INVALID_ARG if measurement is NULL
      */
     esp_err_t distance_sensor_get_latest(distance_measurement_t *measurement);
 
