@@ -45,7 +45,7 @@ esp_err_t led_running_test_single_cycle(led_color_t color, uint32_t delay_ms)
 
 esp_err_t led_running_test_multiple_cycles(led_color_t color, uint32_t delay_ms, uint8_t cycles)
 {
-    ESP_LOGI(TAG, "Running light test: %d cycles, %"PRIu32"ms delay", cycles, delay_ms);
+    ESP_LOGI(TAG, "Running light test: %d cycles, %" PRIu32 "ms delay", cycles, delay_ms);
 
     for (uint8_t cycle = 0; cycle < cycles; cycle++)
     {

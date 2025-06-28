@@ -47,7 +47,7 @@ esp_err_t led_color_test_basic_colors(uint32_t display_time_ms)
     }
 
     led_show();
-    ESP_LOGI(TAG, "Displaying colors for %"PRIu32"ms", display_time_ms);
+    ESP_LOGI(TAG, "Displaying colors for %" PRIu32 "ms", display_time_ms);
     vTaskDelay(pdMS_TO_TICKS(display_time_ms));
 
     return ESP_OK;
