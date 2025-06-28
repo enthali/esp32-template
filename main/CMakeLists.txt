@@ -6,4 +6,4 @@ idf_component_register(SRCS "main.c"
                            "wifi_manager.c"
                            "web_server.c"
                     INCLUDE_DIRS "." "test"
-                    REQUIRES esp_wifi esp_http_server esp_netif nvs_flash)
+                    REQUIRES led_controller distance_sensor esp_wifi esp_http_server esp_netif nvs_flash json)
