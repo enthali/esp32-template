@@ -20,7 +20,7 @@ static const char *TAG = "main";
 
 #define DISTANCE_TRIGGER GPIO_NUM_14
 #define DISTANCE_ECHO GPIO_NUM_13
-#define DISTANCE_INTERVAL 1000 // Measurement interval in ms
+#define DISTANCE_INTERVAL 100  // Measurement interval in ms (100ms = 10Hz for responsive updates)
 #define DISTANCE_TIMEOUT 30    // Echo timeout in ms
 #define TEMPERATURE_C 20.0f    // Room temperature for speed of sound
 
