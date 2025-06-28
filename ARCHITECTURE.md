@@ -45,31 +45,41 @@ This document describes the technical architecture and implementation details fo
 - Configurable LED count during initialization
 - Read capability for current LED states
 
+**Current Status**: ✅ **COMPLETED** - Component implemented in `components/led_controller/`
+
 ### 2. Distance Sensor Module
 
-**Purpose**: Accurate distance measurement using HC-SR04 ultrasonic sensor.
+**Purpose**: Accurate distance measurement using HC-SR04 ultrasonic sensor with interrupt-driven timing and dual-queue architecture.
 
 **Hardware Interface**:
 - GPIO14: Trigger pin
-- GPIO15: Echo pin
-- Timing-critical pulse measurement
+- GPIO13: Echo pin (Updated from GPIO15)
+- Timing-critical pulse measurement with ESP32 timers
 
 **Key Features**:
-- Precise timing control using ESP32 timers
-- Signal filtering and averaging
-- Temperature compensation (optional)
-- Configurable measurement rate
+- Interrupt-driven measurement with precise timing control
+- Dual-queue system for non-blocking API access
+- Signal filtering and error detection (timeout, out-of-range, invalid readings)
+- Temperature compensation support
+- Queue overflow detection and statistics
+- Configurable measurement rate (default: 1Hz)
+- Background FreeRTOS task (Priority 6) for real-time operation
+
+**Current Status**: ✅ **COMPLETED** - Component implemented in `components/distance_sensor/`
 
 ### 3. Display Logic Module
 
 **Purpose**: Business logic for converting distance measurements to visual LED patterns.
 
 **Key Features**:
-- Distance-to-LED position mapping algorithms
-- Multiple display modes (running LED, range indicator, etc.)
-- Smooth transitions between states
-- Color coding for different distance ranges
-- Animation state management
+- Distance-to-LED position mapping algorithms (10cm-50cm → LEDs 0-39)
+- Multiple display modes (running LED, range indicator, error states)
+- Smooth transitions between states with real-time updates
+- Color coding for different distance ranges (green/blue normal, red errors)
+- Animation state management with FreeRTOS task (Priority 3)
+- Error visual indicators (sensor timeout, out-of-range conditions)
+
+**Current Status**: 🔄 **IN PROGRESS** - GitHub Issue assigned to @github-copilot (see [copilot_issue_display_logic.md](copilot_issue_display_logic.md))
 
 ### 4. Web Server Module
 
