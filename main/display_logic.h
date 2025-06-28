@@ -18,13 +18,13 @@
  * ARCHITECTURE:
  * =============
  * - Priority 3 Task: LED visualization (between sensor priority 6 and test priority 2)
- * - Non-blocking reads from distance sensor queue
- * - Update rate matches or slightly slower than distance sensor (1Hz)
+ * - Blocking reads from distance sensor queue (waits for new measurements)
+ * - Update rate matches distance sensor measurement rate
  * - Real-time safe with proper task priorities
  *
  * INTEGRATION:
  * ============
- * - Input: distance_sensor_get_latest() API (non-blocking)
+ * - Input: distance_sensor_get_latest() API (blocking - waits for new data)
  * - Output: led_controller APIs (led_set_pixel, led_clear_all, led_show)
  * - Error handling: Visual indicators for all sensor error states
  *
@@ -52,7 +52,6 @@ extern "C"
     {
         float min_distance_cm;       ///< Minimum distance for normal range (10.0f)
         float max_distance_cm;       ///< Maximum distance for normal range (50.0f)
-        uint32_t update_interval_ms; ///< Update interval in milliseconds (1000)
         // Add calibration support for future extensions
     } display_config_t;
 
@@ -73,12 +72,13 @@ extern "C"
      * @brief Start the display logic task
      *
      * Creates and starts the display logic task with priority 3.
-     * Task will continuously read distance measurements and update LED strip.
+     * Task will continuously wait for distance measurements and update LED strip.
      *
      * @return ESP_OK on success, ESP_ERR_* on failure
      *
      * @note Task runs on core 1 with 4KB stack at priority 3
      * @note display_logic_init() must be called first
+     * @note Task blocks on distance_sensor_get_latest() until new data arrives
      */
     esp_err_t display_logic_start(void);
 

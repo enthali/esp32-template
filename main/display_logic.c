@@ -115,40 +115,31 @@ static void update_led_display(const distance_measurement_t *measurement)
 /**
  * @brief Main display logic task function
  *
- * Continuously reads distance measurements and updates LED display.
+ * Continuously waits for distance measurements and updates LED display.
  * Runs at priority 3 (between distance sensor priority 6 and test priority 2).
+ * Blocks on distance_sensor_get_latest() until new measurements arrive.
  */
 static void display_logic_task(void *pvParameters)
 {
     ESP_LOGI(TAG, "Display logic task started (Priority: %d, Core: %d)",
              uxTaskPriorityGet(NULL), xPortGetCoreID());
 
-    ESP_LOGI(TAG, "Distance range: %.1f-%.1fcm → LEDs 0-39, Update interval: %lums",
-             display_config.min_distance_cm, display_config.max_distance_cm,
-             display_config.update_interval_ms);
+    ESP_LOGI(TAG, "Distance range: %.1f-%.1fcm → LEDs 0-39, blocking until new measurements",
+             display_config.min_distance_cm, display_config.max_distance_cm);
 
     distance_measurement_t measurement;
-    TickType_t last_wake_time = xTaskGetTickCount();
 
     while (1)
     {
-        // Non-blocking read from distance sensor
+        // This will now BLOCK until new measurement arrives
         if (distance_sensor_get_latest(&measurement) == ESP_OK)
         {
-            // Update LED display based on measurement
             update_led_display(&measurement);
 
             ESP_LOGD(TAG, "Processed distance: %.2f cm, status: %d",
                      measurement.distance_cm, measurement.status);
         }
-        else
-        {
-            // No new measurement available - keep current display
-            ESP_LOGD(TAG, "No new distance measurement available");
-        }
-
-        // Wait for next update interval
-        vTaskDelayUntil(&last_wake_time, pdMS_TO_TICKS(display_config.update_interval_ms));
+        // No delay needed - function blocks until next measurement
     }
 }
 
@@ -178,12 +169,6 @@ esp_err_t display_logic_init(const display_config_t *config)
         return ESP_ERR_INVALID_ARG;
     }
 
-    if (display_config.update_interval_ms == 0)
-    {
-        ESP_LOGE(TAG, "Invalid update interval: %lu ms", display_config.update_interval_ms);
-        return ESP_ERR_INVALID_ARG;
-    }
-
     // Check if LED controller is initialized
     if (!led_is_initialized())
     {
@@ -201,9 +186,8 @@ esp_err_t display_logic_init(const display_config_t *config)
     is_initialized = true;
 
     ESP_LOGI(TAG, "Display logic initialized successfully");
-    ESP_LOGI(TAG, "Config: %.1f-%.1fcm → LEDs 0-39, %lums interval",
-             display_config.min_distance_cm, display_config.max_distance_cm,
-             display_config.update_interval_ms);
+    ESP_LOGI(TAG, "Config: %.1f-%.1fcm → LEDs 0-39",
+             display_config.min_distance_cm, display_config.max_distance_cm);
 
     return ESP_OK;
 }

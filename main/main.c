@@ -86,8 +86,7 @@ void app_main(void)
     // Configure and initialize display logic
     display_config_t display_config = {
         .min_distance_cm = 10.0f,
-        .max_distance_cm = 50.0f,
-        .update_interval_ms = 1000
+        .max_distance_cm = 50.0f
     };
 
     ret = display_logic_init(&display_config);
