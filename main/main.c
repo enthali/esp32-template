@@ -3,13 +3,15 @@
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "led_controller.h"
+#include "test/led_running_test.h"
+#include "test/led_color_test.h"
 
 static const char *TAG = "main";
 
 void app_main(void)
 {
     ESP_LOGI(TAG, "ESP32 Distance Measurement with LED Strip Display");
-    ESP_LOGI(TAG, "Starting LED controller test...");
+    ESP_LOGI(TAG, "Starting LED controller tests...");
 
     // Configure LED strip
     led_config_t led_config = {
@@ -29,71 +31,43 @@ void app_main(void)
     ESP_LOGI(TAG, "LED controller initialized successfully");
     ESP_LOGI(TAG, "LED count: %d", led_get_count());
 
-    // Test basic LED operations
-    ESP_LOGI(TAG, "Testing LED operations...");
-
-    // Clear all LEDs and show
+    // Clear all LEDs first
     led_clear_all();
     led_show();
     vTaskDelay(pdMS_TO_TICKS(500));
 
-    // Test running light effect
-    for (int cycle = 0; cycle < 3; cycle++)
-    {
-        ESP_LOGI(TAG, "Running light cycle %d", cycle + 1);
+    // Test 1: Running light effect (3 cycles)
+    ESP_LOGI(TAG, "=== Running Light Test ===");
+    led_running_test_multiple_cycles(LED_COLOR_GREEN, 50, 3);
+    vTaskDelay(pdMS_TO_TICKS(1000));
 
-        for (uint16_t i = 0; i < led_get_count(); i++)
-        {
-            // Clear previous LED
-            if (i > 0)
-            {
-                led_clear_pixel(i - 1);
-            }
-            else
-            {
-                led_clear_pixel(led_get_count() - 1);
-            }
+    // Test 2: Basic color display
+    ESP_LOGI(TAG, "=== Basic Colors Test ===");
+    led_color_test_basic_colors(2000);
+    vTaskDelay(pdMS_TO_TICKS(500));
 
-            // Set current LED to green
-            led_set_pixel(i, LED_COLOR_GREEN);
-            led_show();
-
-            vTaskDelay(pdMS_TO_TICKS(50)); // 50ms delay
-        }
-    }
-
-    // Test different colors
-    ESP_LOGI(TAG, "Testing different colors...");
-    led_clear_all();
-
-    // Set first few LEDs to different colors
-    led_set_pixel(0, LED_COLOR_RED);
-    led_set_pixel(1, LED_COLOR_GREEN);
-    led_set_pixel(2, LED_COLOR_BLUE);
-    led_set_pixel(3, LED_COLOR_WHITE);
-    led_set_pixel(4, LED_COLOR_YELLOW);
-    led_set_pixel(5, led_color_rgb(255, 128, 0)); // Orange
-
-    led_show();
-    vTaskDelay(pdMS_TO_TICKS(2000));
-
-    // Test brightness scaling
-    ESP_LOGI(TAG, "Testing brightness scaling...");
-    for (int brightness = 255; brightness >= 0; brightness -= 5)
-    {
-        for (uint16_t i = 0; i < 6; i++)
-        {
-            led_color_t original = led_get_pixel(i);
-            led_set_pixel(i, led_color_brightness(original, brightness));
-        }
-        led_show();
-        vTaskDelay(pdMS_TO_TICKS(20));
-    }
+    // Test 3: Brightness fade test
+    ESP_LOGI(TAG, "=== Brightness Fade Test ===");
+    led_color_t fade_colors[] = {
+        LED_COLOR_RED,
+        LED_COLOR_GREEN,
+        LED_COLOR_BLUE,
+        LED_COLOR_WHITE,
+        LED_COLOR_YELLOW,
+        led_color_rgb(255, 128, 0) // Orange
+    };
+    led_color_test_brightness_fade(fade_colors, 6, 20);
 
     // Clear all LEDs
     led_clear_all();
     led_show();
 
-    ESP_LOGI(TAG, "LED controller test completed successfully!");
+    ESP_LOGI(TAG, "=== All LED Tests Completed Successfully! ===");
     ESP_LOGI(TAG, "Ready for distance sensor integration...");
+
+    // Main loop - keep the program running
+    while (1)
+    {
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
 }
