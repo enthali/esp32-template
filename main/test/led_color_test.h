@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 #include "esp_err.h"
-#include "../led_controller.h"
+#include "led_controller.h"
 
 #ifdef __cplusplus
 extern "C"

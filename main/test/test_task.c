@@ -4,7 +4,7 @@
  */
 
 #include "test_task.h"
-#include "../led_controller.h"
+#include "led_controller.h"
 #include "led_running_test.h"
 #include "led_color_test.h"
 #include "esp_log.h"
