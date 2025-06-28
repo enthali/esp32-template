@@ -1,0 +1,46 @@
+# ESP-IDF Build artifacts
+build/
+sdkconfig
+sdkconfig.old
+dependencies.lock
+
+# IDE files
+.vscode/
+.devcontainer/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# ESP-IDF specific
+managed_components/
+
+# Custom project ignores
+# Add any project-specific files to ignore here
