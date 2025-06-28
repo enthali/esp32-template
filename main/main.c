@@ -48,7 +48,7 @@ void app_main(void)
     distance_sensor_config_t distance_config = {
         .trigger_pin = GPIO_NUM_14,     // Trigger pin
         .echo_pin = GPIO_NUM_13,        // Echo pin
-        .measurement_interval_ms = 100, // Measure every 100ms
+        .measurement_interval_ms = 1000, // Measure every 1 second (prevents queue overflow)
         .timeout_ms = 30,               // 30ms timeout (for max 400cm range)
         .temperature_celsius = 20.0     // Room temperature for speed of sound
     };
@@ -121,6 +121,6 @@ void app_main(void)
             last_overflow_count = overflows;
         }
 
-        vTaskDelay(pdMS_TO_TICKS(500)); // Read every 500ms (sensor measures every 100ms)
+        vTaskDelay(pdMS_TO_TICKS(10)); // Short yield to other tasks
     }
 }
