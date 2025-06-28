@@ -7,7 +7,9 @@
 #include "test/test_task.h"
 #include "test/led_running_test.h"
 #include "distance_sensor.h"
+#include "wifi_manager.h"
 #include "display_logic.h"
+
 
 static const char *TAG = "main";
 
@@ -83,6 +85,26 @@ void app_main(void)
     ESP_LOGI(TAG, "Distance sensor initialized and started");
     ESP_LOGI(TAG, "Hardware: LED=GPIO%d, Trigger=GPIO%d, Echo=GPIO%d", LED_DATA_PIN, DISTANCE_TRIGGER, DISTANCE_ECHO);
 
+
+    // Initialize and start WiFi manager with smart boot logic
+    ret = wifi_manager_init();
+    if (ret != ESP_OK)
+    {
+        ESP_LOGE(TAG, "Failed to initialize WiFi manager: %s", esp_err_to_name(ret));
+        return;
+    }
+
+    ret = wifi_manager_start();
+    if (ret != ESP_OK)
+    {
+        ESP_LOGE(TAG, "Failed to start WiFi manager: %s", esp_err_to_name(ret));
+        return;
+    }
+
+    ESP_LOGI(TAG, "WiFi manager initialized and started");
+    ESP_LOGI(TAG, "Ready for distance measurement, LED display, and web interface...");
+
+
     // Configure and initialize display logic
     display_config_t display_config = {
         .min_distance_cm = 10.0f,
@@ -118,20 +140,46 @@ void app_main(void)
             last_overflow_count = overflows;
         }
 
-        // Verify tasks are still running
-        if (!distance_sensor_is_running())
+        // Periodic WiFi status logging (every 30 seconds)
+        static uint32_t wifi_status_counter = 0;
+        if (++wifi_status_counter >= 3000) // 3000 * 10ms = 30 seconds
         {
-            ESP_LOGE(TAG, "Distance sensor task stopped unexpectedly - restarting system");
-            esp_restart();
+            wifi_status_t wifi_status;
+            if (wifi_manager_get_status(&wifi_status) == ESP_OK)
+            {
+                const char *mode_str = "";
+                switch (wifi_status.mode)
+                {
+                case WIFI_MODE_DISCONNECTED:
+                    mode_str = "Disconnected";
+                    break;
+                case WIFI_MODE_STA_CONNECTING:
+                    mode_str = "Connecting";
+                    break;
+                case WIFI_MODE_STA_CONNECTED:
+                    mode_str = "Connected (STA)";
+                    break;
+                case WIFI_MODE_AP_ACTIVE:
+                    mode_str = "Access Point";
+                    break;
+                case WIFI_MODE_SWITCHING:
+                    mode_str = "Switching";
+                    break;
+                default:
+                    mode_str = "Unknown";
+                    break;
+                }
+                
+                char ip_str[16] = "N/A";
+                wifi_manager_get_ip_address(ip_str, sizeof(ip_str));
+                
+                ESP_LOGI(TAG, "WiFi Status: %s | IP: %s | SSID: %s", 
+                         mode_str, ip_str, 
+                         wifi_status.connected_ssid[0] ? wifi_status.connected_ssid : "N/A");
+            }
+            wifi_status_counter = 0;
         }
 
-        if (!display_logic_is_running())
-        {
-            ESP_LOGE(TAG, "Display logic task stopped unexpectedly - restarting system");
-            esp_restart();
-        }
-
-        // Sleep for a longer interval since display logic handles LED updates
-        vTaskDelay(pdMS_TO_TICKS(5000)); // 5 second monitoring interval
+        vTaskDelay(pdMS_TO_TICKS(10)); // Short yield to other tasks
     }
 }

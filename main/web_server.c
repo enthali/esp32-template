@@ -587,18 +587,15 @@ esp_err_t web_server_start(void)
 
     // Only start DNS server for captive portal if we're in AP mode
     wifi_mode_t wifi_mode;
-    if (esp_wifi_get_mode(&wifi_mode) == ESP_OK &&
-        (wifi_mode == WIFI_MODE_AP || wifi_mode == WIFI_MODE_APSTA))
-    {
+    if (esp_wifi_get_mode(&wifi_mode) == ESP_OK && 
+        (wifi_mode == WIFI_MODE_AP || wifi_mode == WIFI_MODE_APSTA)) {
         ESP_LOGI(TAG, "Starting DNS server for captive portal (AP mode)");
         esp_err_t ret = start_dns_server();
         if (ret != ESP_OK)
         {
             ESP_LOGW(TAG, "Failed to start DNS server, captive portal may not work properly");
         }
-    }
-    else
-    {
+    } else {
         ESP_LOGI(TAG, "Skipping DNS server (STA mode - not needed)");
     }
 
