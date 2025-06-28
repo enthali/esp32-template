@@ -73,32 +73,41 @@ Priority 1: Main Task             (coordination only)
 
 ### Step 4: Web Interface 📋 **PLANNED**
 
-#### **Step 4.1: WiFi Setup with Captive Portal** 📋 **PLANNED**
-- 📋 **Captive Portal**: Use ESP-IDF's built-in captive portal example as foundation
-- 📋 **SoftAP Mode**: ESP32 creates its own WiFi network ("ESP32-Distance-Sensor")
-- 📋 **WiFi Configuration Page**: Allow users to connect to their home WiFi
-- 📋 **Network Switching**: Ability to switch between AP mode and Station mode
-- 📋 **DNS Server**: Redirect all DNS queries to ESP32 IP for captive portal detection
+#### **Step 4.1: WiFi Setup with Smart Network Logic** 📋 **PLANNED** (Ready for Implementation)
+- 📋 **Smart WiFi Boot Logic**: Try stored credentials → fallback to AP mode if no config/connection fails
+- 📋 **SoftAP Mode**: ESP32 creates "ESP32-Distance-Sensor" network with captive portal
+- 📋 **Captive Portal**: Auto-redirect to configuration page with network scanning
+- 📋 **Credential Management**: Store WiFi credentials in NVS flash with persistence
+- 📋 **Automatic Switching**: Station mode when configured, AP fallback on failure
+- 📋 **DNS Server**: Redirect all DNS queries to ESP32 IP for portal detection
 
-**Based on ESP-IDF Captive Portal Example:**
+**Smart WiFi Behavior:**
+1. **Boot Logic**: Try to connect to stored WiFi credentials on startup
+2. **Fallback to AP**: If no config or connection fails → start AP mode automatically
+3. **AP Mode**: Create "ESP32-Distance-Sensor" network with captive portal
+4. **User Configuration**: Web interface to select and configure home WiFi
+5. **Automatic Switching**: Once configured, switch to Station mode seamlessly
+6. **Persistence**: Store WiFi credentials in NVS flash for future boots
+
+**Components Required:**
 ```c
-// Key components found via Playwright research:
-#include "esp_http_server.h"
-#include "dns_server.h"
-#include "esp_wifi.h"
-
-// SoftAP setup with captive portal
-wifi_init_softap();                    // Create ESP32 WiFi network
-dhcp_set_captiveportal_url();          // DHCP Option 114 for modern devices
-start_dns_server(&config);             // Redirect all DNS to ESP32
+#include "esp_wifi.h"          // WiFi driver
+#include "esp_http_server.h"   // Web server
+#include "esp_netif.h"         // Network interface  
+#include "nvs_flash.h"         // Credential storage
+#include "dns_server.h"        // Captive portal DNS
 ```
 
-**Implementation:**
-- Create basic captive portal that shows WiFi setup page
-- Scan for available networks and present selection list
-- Store WiFi credentials in NVS flash
-- Switch to Station mode when credentials provided
-- Fall back to AP mode if connection fails
+**File Structure:**
+- `main/wifi_manager.h/c` - Smart WiFi logic and credential management
+- `main/web_server.h/c` - Basic HTTP server for captive portal
+- Update `main/CMakeLists.txt` with required ESP-IDF components
+
+**Expected Behavior:**
+- **First boot**: Creates AP "ESP32-Distance-Sensor", serves config page at 192.168.4.1
+- **After WiFi config**: Connects to home network, serves on assigned IP
+- **Connection loss**: Retries to connect 3 times with a timeout of 5 sec. then falls back to AP mode automatically
+- **Web interface**: Always accessible via current network configuration
 
 ---
 
