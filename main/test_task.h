@@ -17,14 +17,22 @@ extern "C"
 #endif
 
     /**
-     * @brief Create and start the LED test task with default configuration
+     * @brief Test task configuration
+     */
+    typedef struct
+    {
+        uint32_t stack_size;  ///< Task stack size in bytes
+        UBaseType_t priority; ///< Task priority (1-10 recommended)
+        BaseType_t core_id;   ///< CPU core to run on (0, 1, or tskNO_AFFINITY)
+    } test_task_config_t;
+
+    /**
+     * @brief Create and start the LED test task
      *
-     * Creates a low-priority background task that runs continuous LED tests.
-     * The task runs on core 1 with 4KB stack at priority 2.
-     *
+     * @param config Task configuration, or NULL for defaults
      * @return esp_err_t ESP_OK on success
      */
-    esp_err_t test_task_start(void);
+    esp_err_t test_task_start(const test_task_config_t *config);
 
     /**
      * @brief Stop the test task

@@ -4,9 +4,9 @@
  */
 
 #include "test_task.h"
-#include "../led_controller.h"
-#include "led_running_test.h"
-#include "led_color_test.h"
+#include "led_controller.h"
+#include "test/led_running_test.h"
+#include "test/led_color_test.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -15,6 +15,13 @@ static const char *TAG = "test_task";
 
 // Task handle
 static TaskHandle_t test_task_handle = NULL;
+
+// Default configuration
+static const test_task_config_t default_config = {
+    .stack_size = 4096,       // 4KB stack
+    .priority = 2,            // Low priority (background task)
+    .core_id = tskNO_AFFINITY // Any core
+};
 
 /**
  * @brief Main test task function
@@ -54,7 +61,7 @@ static void test_task_main(void *pvParameters)
     }
 }
 
-esp_err_t test_task_start(void)
+esp_err_t test_task_start(const test_task_config_t *config)
 {
     if (test_task_handle != NULL)
     {
@@ -62,16 +69,20 @@ esp_err_t test_task_start(void)
         return ESP_ERR_INVALID_STATE;
     }
 
-    ESP_LOGI(TAG, "Creating LED test task...");
+    // Use default config if none provided
+    if (config == NULL)
+    {
+        config = &default_config;
+    }
 
     BaseType_t result = xTaskCreatePinnedToCore(
-        test_task_main,    // Task function
-        "led_test",        // Task name
-        4096,              // Stack size (4KB)
-        NULL,              // Parameters
-        2,                 // Priority (low priority background task)
-        &test_task_handle, // Task handle
-        1                  // Core ID (run on core 1)
+        test_task_main,     // Task function
+        "led_test",         // Task name
+        config->stack_size, // Stack size
+        NULL,               // Parameters
+        config->priority,   // Priority
+        &test_task_handle,  // Task handle
+        config->core_id     // Core ID
     );
 
     if (result != pdPASS)
@@ -80,7 +91,7 @@ esp_err_t test_task_start(void)
         return ESP_FAIL;
     }
 
-    ESP_LOGI(TAG, "LED test task created and started successfully");
+    ESP_LOGI(TAG, "Test task created successfully");
     return ESP_OK;
 }
 
