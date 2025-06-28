@@ -21,10 +21,11 @@ static TaskHandle_t test_task_handle = NULL;
  */
 static void test_task_main(void *pvParameters)
 {
-    ESP_LOGI(TAG, "LED Test Task started (Priority: %d, Core: %d)", 
+    ESP_LOGI(TAG, "LED Test Task started (Priority: %d, Core: %d)",
              uxTaskPriorityGet(NULL), xPortGetCoreID());
 
-    while (1) {
+    while (1)
+    {
         ESP_LOGI(TAG, "=== Starting LED Hardware Tests ===");
 
         // Test 1: Running light effect (3 cycles)
@@ -47,15 +48,16 @@ static void test_task_main(void *pvParameters)
         led_show();
 
         ESP_LOGI(TAG, "=== Test Cycle Complete ===");
-        
+
         // Wait 10 seconds before next test cycle
-        vTaskDelay(pdMS_TO_TICKS(10000));
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
 esp_err_t test_task_start(void)
 {
-    if (test_task_handle != NULL) {
+    if (test_task_handle != NULL)
+    {
         ESP_LOGW(TAG, "Test task already running");
         return ESP_ERR_INVALID_STATE;
     }
@@ -63,16 +65,17 @@ esp_err_t test_task_start(void)
     ESP_LOGI(TAG, "Creating LED test task...");
 
     BaseType_t result = xTaskCreatePinnedToCore(
-        test_task_main,           // Task function
-        "led_test",               // Task name
-        4096,                     // Stack size (4KB)
-        NULL,                     // Parameters
-        2,                        // Priority (low priority background task)
-        &test_task_handle,        // Task handle
-        1                         // Core ID (run on core 1)
+        test_task_main,    // Task function
+        "led_test",        // Task name
+        4096,              // Stack size (4KB)
+        NULL,              // Parameters
+        2,                 // Priority (low priority background task)
+        &test_task_handle, // Task handle
+        1                  // Core ID (run on core 1)
     );
 
-    if (result != pdPASS) {
+    if (result != pdPASS)
+    {
         ESP_LOGE(TAG, "Failed to create test task");
         return ESP_FAIL;
     }
@@ -83,14 +86,15 @@ esp_err_t test_task_start(void)
 
 esp_err_t test_task_stop(void)
 {
-    if (test_task_handle == NULL) {
+    if (test_task_handle == NULL)
+    {
         ESP_LOGW(TAG, "Test task not running");
         return ESP_ERR_INVALID_STATE;
     }
 
     vTaskDelete(test_task_handle);
     test_task_handle = NULL;
-    
+
     ESP_LOGI(TAG, "Test task stopped");
     return ESP_OK;
 }
