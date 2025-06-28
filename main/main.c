@@ -39,7 +39,7 @@ void app_main(void)
     if (ret != ESP_OK)
     {
         ESP_LOGE(TAG, "Failed to initialize LED controller: %s", esp_err_to_name(ret));
-        return;
+        esp_restart();
     }
 
     ESP_LOGI(TAG, "LED controller initialized successfully");
@@ -70,14 +70,14 @@ void app_main(void)
     if (ret != ESP_OK)
     {
         ESP_LOGE(TAG, "Failed to initialize distance sensor: %s", esp_err_to_name(ret));
-        return;
+        esp_restart();
     }
 
     ret = distance_sensor_start();
     if (ret != ESP_OK)
     {
         ESP_LOGE(TAG, "Failed to start distance sensor: %s", esp_err_to_name(ret));
-        return;
+        esp_restart();
     }
 
     ESP_LOGI(TAG, "Distance sensor initialized and started");
@@ -94,14 +94,14 @@ void app_main(void)
     if (ret != ESP_OK)
     {
         ESP_LOGE(TAG, "Failed to initialize display logic: %s", esp_err_to_name(ret));
-        return;
+        esp_restart();
     }
 
     ret = display_logic_start();
     if (ret != ESP_OK)
     {
         ESP_LOGE(TAG, "Failed to start display logic: %s", esp_err_to_name(ret));
-        return;
+        esp_restart();
     }
 
     ESP_LOGI(TAG, "Display logic initialized and started");
