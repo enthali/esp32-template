@@ -77,16 +77,21 @@ This project combines hardware sensing and visual feedback to create an interact
 
 ```
 ├── CMakeLists.txt
-├── main/
+├── components/                   # Hardware abstraction components
+│   └── led_controller/          # WS2812 LED strip hardware interface
+│       ├── CMakeLists.txt
+│       ├── include/led_controller.h
+│       └── led_controller.c
+├── main/                        # Application logic
 │   ├── CMakeLists.txt
-│   ├── main.c
-│   ├── led_controller.h/c      # WS2812 LED strip control
-│   ├── distance_sensor.h/c     # HC-SR04 ultrasonic sensor
-│   ├── display_logic.h/c       # Distance-to-LED mapping logic
-│   └── web_server.h/c          # HTTP server for web interface
-├── ARCHITECTURE.md             # Detailed technical architecture
-├── .gitignore                  # Git ignore patterns
-└── README.md                   # This file
+│   ├── main.c                   # Main application entry point
+│   ├── distance_sensor.h/c      # HC-SR04 ultrasonic sensor (future)
+│   ├── display_logic.h/c        # Distance-to-LED mapping logic (future)
+│   ├── web_server.h/c           # HTTP server for web interface (future)
+│   └── test/                    # Application tests
+├── ARCHITECTURE.md              # Detailed technical architecture
+├── .gitignore                   # Git ignore patterns
+└── README.md                    # This file
 ```
 
 ## Build and Flash
