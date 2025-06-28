@@ -1,32 +1,153 @@
-# _Sample project_
+# Distance Measurement with LED Strip Display
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+A project that uses an ESP32 to measure distance with an ultrasonic sensor and displays the measurement on a WS2812 LED strip with a web interface.
 
-This is the simplest buildable example. The example is used by command `idf.py create-project`
-that copies the project to user specified path and set it's name. For more information follow the [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project)
+## Project Overview
 
+This project combines hardware sensing and visual feedback to create an interactive distance measurement system. The measured distance is displayed both visually on an LED strip and remotely via a web interface.
 
+## Hardware Requirements
 
-## How to use example
-We encourage the users to use the example as a template for the new projects.
-A recommended way is to follow the instructions on a [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project).
+- ESP32 development board (ESP32-WROOM-32 or compatible)
+- 40x WS2812 LED strip
+- HC-SR04 ultrasonic sensor
+- USB cable for power and programming
+- Jumper wires for connections
+- External 5V power supply (if needed for LED strip)
 
-## Example folder contents
+## Pin Configuration
 
-The project **sample_project** contains one source file in C language [main.c](main/main.c). The file is located in folder [main](main).
+| Component | Pin | GPIO |
+|-----------|-----|------|
+| WS2812 LED Strip | Data | GPIO13 |
+| HC-SR04 Trigger | Trigger | GPIO14 |
+| HC-SR04 Echo | Echo | GPIO15 |
+| Power | VCC | 5V/3.3V |
+| Ground | GND | GND |
 
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt`
-files that provide set of directives and instructions describing the project's source files and targets
-(executable, library, or both). 
+## Project Objectives
 
-Below is short explanation of remaining files in the project folder.
+1. **LED Strip Control**: Implement addressable LED control for visual feedback
+2. **Distance Measurement**: Integrate ultrasonic sensor for accurate distance readings
+3. **Visual Indication**: Map distance measurements to LED positions on the strip
+4. **Web Interface**: Provide remote monitoring via HTTP server
+
+## Implementation Plan
+
+### Step 1: LED Strip Animation ✅
+- Configure WS2812 LED strip with RMT backend
+- Implement basic LED animations (running light effect)
+- Test all 40 LEDs for proper functionality
+- Verify power requirements and stability
+
+### Step 2: Ultrasonic Sensor Integration
+- Connect HC-SR04 sensor to designated GPIO pins
+- Implement distance measurement algorithm
+- Output readings to serial console
+- Calibrate and validate sensor accuracy
+
+### Step 3: Distance-to-LED Mapping
+- Create mapping algorithm (distance → LED position)
+- Integrate sensor readings with LED display
+- Implement smooth transitions and visual effects
+- Test with various distances and validate accuracy
+
+### Step 4: Web Interface
+- Set up ESP32 as WiFi access point or station
+- Implement HTTP server for web interface
+- Create responsive webpage displaying distance
+- Add real-time updates and configuration options
+
+## Technical Specifications
+
+- **LED Strip**: 40 x WS2812 individually addressable LEDs
+- **Distance Range**: 2cm - 400cm (HC-SR04 specification)
+- **Update Rate**: ~10Hz for smooth visual feedback
+- **Communication**: WiFi for web interface
+- **Power**: USB or external 5V supply
+
+## Development Environment
+
+- **Framework**: ESP-IDF v5.4.1
+- **Language**: C
+- **IDE**: Visual Studio Code with ESP-IDF extension
+- **Target**: ESP32
+
+## Project Structure
 
 ```
 ├── CMakeLists.txt
-├── main
-│   ├── CMakeLists.txt
-│   └── main.c
-└── README.md                  This is the file you are currently reading
+├── main/
+│   ├── CMakeLists.txt
+│   ├── main.c
+│   ├── led_controller.h/c      # WS2812 LED strip control
+│   ├── distance_sensor.h/c     # HC-SR04 ultrasonic sensor
+│   ├── display_logic.h/c       # Distance-to-LED mapping logic
+│   └── web_server.h/c          # HTTP server for web interface
+├── ARCHITECTURE.md             # Detailed technical architecture
+├── .gitignore                  # Git ignore patterns
+└── README.md                   # This file
 ```
-Additionally, the sample project contains Makefile and component.mk files, used for the legacy Make based build system. 
-They are not used or needed when building with CMake and idf.py.
+
+## Build and Flash
+
+1. Set the correct target:
+   ```
+   idf.py set-target esp32
+   ```
+
+2. Configure the project:
+   ```
+   idf.py menuconfig
+   ```
+
+3. Build and flash:
+   ```
+   idf.py build flash monitor
+   ```
+
+## Usage
+
+1. Power on the ESP32 with connected hardware
+2. Observe LED strip animation during startup
+3. Place objects at various distances from the sensor
+4. Watch the LED position change based on distance
+5. Connect to the web interface for remote monitoring
+
+## Testing Strategy
+
+- **Unit Testing**: Test each component individually
+- **Integration Testing**: Verify component interactions
+- **Performance Testing**: Validate update rates and accuracy
+- **User Testing**: Ensure intuitive visual feedback
+
+## Future Enhancements
+
+- Multiple distance sensors for 2D/3D mapping
+- Color-coded distance ranges
+- Data logging and historical analysis
+- Mobile app integration
+- Voice feedback for accessibility
+
+## Troubleshooting
+
+- **LED not working**: Check GPIO13 connection and power supply
+- **Sensor not responding**: Verify GPIO14/15 connections and timing
+- **Web interface unavailable**: Check WiFi configuration and IP address
+- **Inconsistent readings**: Calibrate sensor and check for interference
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is open source and available under the MIT License.
+
+## Author
+
+Created as a learning project for ESP32 development with ESP-IDF.
