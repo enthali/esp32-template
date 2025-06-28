@@ -15,61 +15,55 @@ Implement a modern, mobile-responsive single-page web application with navbar na
 Create a new web assets directory structure:
 ```
 main/www/
-├── app.html          # Single page application with navbar
-├── style.css         # Mobile-responsive CSS styles
-└── app.js           # JavaScript for navigation and data display
+├── index.html          # Main dashboard
+├── wifi-setup.html     # WiFi configuration (current captive portal)
+├── settings.html       # System configuration  
+├── css/
+│   └── style.css       # Shared styles
+└── js/
+    └── app.js          # Shared JavaScript functionality
 ```
 
-### 2. HTML Structure (`main/www/app.html`)
-- **Single Page Application**: All content in one HTML file with sections
-- **Navbar Navigation**: Fixed top navigation with Dashboard and Settings tabs
-- **Responsive Design**: Mobile-first approach with touch-friendly interface
-- **Content Sections**:
-  - **Dashboard** (default active): Current distance display, system status
-  - **Settings**: Configuration and system information
+### 2. Multi-Page HTML Structure
 
-**Expected HTML Structure**:
+- **Separate HTML Files**: Individual pages for each section with shared navigation
+- **Navbar Navigation**: Consistent navigation bar across all pages  
+- **Responsive Design**: Mobile-first approach with touch-friendly interface
+- **Content Pages**:
+  - **index.html**: Main dashboard with distance display
+  - **wifi-setup.html**: WiFi configuration (preserve existing captive portal)
+  - **settings.html**: System configuration with project link in footer
+
+**Expected HTML Structure (index.html example)**:
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32 Distance Sensor</title>
-    <link rel="stylesheet" href="/style.css">
+    <title>ESP32 Distance Sensor - Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-brand">Distance Sensor</div>
         <div class="nav-links">
-            <button class="nav-btn active" data-section="dashboard">Dashboard</button>
-            <button class="nav-btn" data-section="settings">Settings</button>
+            <a href="/index.html" class="nav-btn active">Dashboard</a>
+            <a href="/wifi-setup.html" class="nav-btn">WiFi</a>
+            <a href="/settings.html" class="nav-btn">Settings</a>
         </div>
     </nav>
     
     <main class="container">
-        <section id="dashboard" class="content-section active">
-            <h2>Dashboard</h2>
-            <div class="distance-display">
-                <span class="distance-value" id="distance-value">-- cm</span>
-                <span class="distance-status" id="distance-status">Loading...</span>
-            </div>
-            <button onclick="refreshData()" class="refresh-btn">Refresh</button>
-        </section>
-        
-        <section id="settings" class="content-section">
-            <h2>Settings</h2>
-            <div class="info-section">
-                <h3>System Information</h3>
-                <p><strong>Version:</strong> ESP32-Distance v1.0</p>
-                <p><strong>Uptime:</strong> <span id="uptime">--</span></p>
-                <p><strong>WiFi:</strong> <span id="wifi-status">--</span></p>
-                <p><strong>GitHub:</strong> <a href="https://github.com/user/esp32-distance" target="_blank">Project Repository</a></p>
-            </div>
-        </section>
+        <h2>Dashboard</h2>
+        <div class="distance-display">
+            <span class="distance-value" id="distance-value">-- cm</span>
+            <span class="distance-status" id="distance-status">Loading...</span>
+        </div>
+        <button onclick="refreshData()" class="refresh-btn">Refresh</button>
     </main>
     
-    <script src="/app.js"></script>
+    <script src="/js/app.js"></script>
 </body>
 </html>
 ```
@@ -173,12 +167,16 @@ async function refreshData() {
 ### 5. ESP-IDF Integration
 
 #### A. CMakeLists.txt Updates (`main/CMakeLists.txt`)
-Add embedded file generation for web assets:
+Add embedded file generation for all web assets:
 ```cmake
-# Embed web assets in flash
-target_add_binary_data(${COMPONENT_LIB} "www/app.html" TEXT)
-target_add_binary_data(${COMPONENT_LIB} "www/style.css" TEXT)
-target_add_binary_data(${COMPONENT_LIB} "www/app.js" TEXT)
+# Embed HTML pages
+target_add_binary_data(${COMPONENT_LIB} "www/index.html" TEXT)
+target_add_binary_data(${COMPONENT_LIB} "www/wifi-setup.html" TEXT)
+target_add_binary_data(${COMPONENT_LIB} "www/settings.html" TEXT)
+
+# Embed CSS and JavaScript
+target_add_binary_data(${COMPONENT_LIB} "www/css/style.css" TEXT)
+target_add_binary_data(${COMPONENT_LIB} "www/js/app.js" TEXT)
 ```
 
 #### B. Web Server Updates (`main/web_server.c`)
@@ -278,16 +276,18 @@ const char* get_mime_type(const char* filename);
 - ✅ Modern, professional web interface accessible via ESP32 IP
 - ✅ Mobile-responsive design works on smartphones and tablets  
 - ✅ Navbar navigation provides smooth section switching
-- ✅ Dashboard displays real-time distance measurements
+- ✅ Dashboard displays placeholder distance values (real API in Step 4.3)
 - ✅ Settings section shows system information and links
 - ✅ All assets served from ESP32 flash memory (no external dependencies)
 - ✅ WiFi captive portal functionality preserved
 - ✅ Page loads quickly and performs well on mobile devices
 
 ## Files to Modify/Create
-- `main/www/app.html` (new)
-- `main/www/style.css` (new)  
-- `main/www/app.js` (new)
+- `main/www/index.html` (new - main dashboard)
+- `main/www/wifi-setup.html` (new - WiFi configuration)  
+- `main/www/settings.html` (new - system settings with project link)
+- `main/www/css/style.css` (new - shared styles)
+- `main/www/js/app.js` (new - shared JavaScript)
 - `main/CMakeLists.txt` (modify - add embedded assets)
 - `main/web_server.c` (modify - add static file serving)
 - `main/web_server.h` (modify - add new handler declarations)
