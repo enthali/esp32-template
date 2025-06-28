@@ -33,6 +33,22 @@ static esp_err_t status_handler(httpd_req_t *req);
 static esp_err_t reset_handler(httpd_req_t *req);
 static void dns_server_task(void *pvParameters);
 static esp_err_t start_dns_server(void);
+
+// Static file serving declarations
+extern const uint8_t index_html_start[] asm("_binary_www_index_html_start");
+extern const uint8_t index_html_end[] asm("_binary_www_index_html_end");
+extern const uint8_t wifi_setup_html_start[] asm("_binary_www_wifi_setup_html_start");
+extern const uint8_t wifi_setup_html_end[] asm("_binary_www_wifi_setup_html_end");
+extern const uint8_t settings_html_start[] asm("_binary_www_settings_html_start");
+extern const uint8_t settings_html_end[] asm("_binary_www_settings_html_end");
+extern const uint8_t style_css_start[] asm("_binary_www_css_style_css_start");
+extern const uint8_t style_css_end[] asm("_binary_www_css_style_css_end");
+extern const uint8_t app_js_start[] asm("_binary_www_js_app_js_start");
+extern const uint8_t app_js_end[] asm("_binary_www_js_app_js_end");
+
+// Helper functions for static file serving
+static const char* get_mime_type(const char* filename);
+static esp_err_t get_embedded_file(const char* filename, const uint8_t** data, size_t* size);
 static void stop_dns_server(void);
 
 // HTML pages
@@ -149,19 +165,27 @@ static const char *html_config_page =
 // HTTP request handlers
 static esp_err_t root_handler(httpd_req_t *req)
 {
-    ESP_LOGI(TAG, "Serving captive portal page");
-
-    httpd_resp_set_type(req, "text/html");
-    httpd_resp_set_hdr(req, "Cache-Control", "no-cache, no-store, must-revalidate");
-    httpd_resp_set_hdr(req, "Pragma", "no-cache");
-    httpd_resp_set_hdr(req, "Expires", "0");
-
-    return httpd_resp_send(req, html_config_page, HTTPD_RESP_USE_STRLEN);
+    ESP_LOGI(TAG, "Root request - serving main dashboard");
+    
+    // Redirect to static file handler for index.html
+    return static_file_handler(req);
 }
 
 static esp_err_t config_handler(httpd_req_t *req)
 {
-    return root_handler(req); // Same page for config
+    ESP_LOGI(TAG, "Config request - serving WiFi setup page");
+    
+    // Modify the request URI to serve the WiFi setup page
+    char original_uri[64];
+    strncpy(original_uri, req->uri, sizeof(original_uri) - 1);
+    strcpy((char*)req->uri, "/wifi-setup.html");
+    
+    esp_err_t result = static_file_handler(req);
+    
+    // Restore original URI
+    strcpy((char*)req->uri, original_uri);
+    
+    return result;
 }
 
 static esp_err_t scan_handler(httpd_req_t *req)
@@ -490,6 +514,81 @@ static void stop_dns_server(void)
     ESP_LOGI(TAG, "DNS server stopped");
 }
 
+// Static file serving functions
+static const char* get_mime_type(const char* filename)
+{
+    const char* ext = strrchr(filename, '.');
+    if (ext == NULL) {
+        return "text/plain";
+    }
+    
+    if (strcmp(ext, ".html") == 0) {
+        return "text/html";
+    } else if (strcmp(ext, ".css") == 0) {
+        return "text/css";
+    } else if (strcmp(ext, ".js") == 0) {
+        return "application/javascript";
+    } else if (strcmp(ext, ".json") == 0) {
+        return "application/json";
+    } else {
+        return "text/plain";
+    }
+}
+
+static esp_err_t get_embedded_file(const char* filename, const uint8_t** data, size_t* size)
+{
+    if (strcmp(filename, "/index.html") == 0 || strcmp(filename, "/") == 0) {
+        *data = index_html_start;
+        *size = index_html_end - index_html_start;
+    } else if (strcmp(filename, "/wifi-setup.html") == 0) {
+        *data = wifi_setup_html_start;
+        *size = wifi_setup_html_end - wifi_setup_html_start;
+    } else if (strcmp(filename, "/settings.html") == 0) {
+        *data = settings_html_start;
+        *size = settings_html_end - settings_html_start;
+    } else if (strcmp(filename, "/css/style.css") == 0) {
+        *data = style_css_start;
+        *size = style_css_end - style_css_start;
+    } else if (strcmp(filename, "/js/app.js") == 0) {
+        *data = app_js_start;
+        *size = app_js_end - app_js_start;
+    } else {
+        return ESP_ERR_NOT_FOUND;
+    }
+    return ESP_OK;
+}
+
+esp_err_t static_file_handler(httpd_req_t *req)
+{
+    const char* uri = req->uri;
+    const uint8_t* data;
+    size_t size;
+    
+    ESP_LOGI(TAG, "Serving static file: %s", uri);
+    
+    esp_err_t ret = get_embedded_file(uri, &data, &size);
+    if (ret != ESP_OK) {
+        ESP_LOGW(TAG, "File not found: %s", uri);
+        httpd_resp_send_404(req);
+        return ESP_FAIL;
+    }
+    
+    // Set appropriate content type
+    const char* mime_type = get_mime_type(uri);
+    httpd_resp_set_type(req, mime_type);
+    
+    // Set cache headers for static assets
+    if (strstr(uri, ".css") || strstr(uri, ".js")) {
+        httpd_resp_set_hdr(req, "Cache-Control", "public, max-age=3600");
+    } else {
+        httpd_resp_set_hdr(req, "Cache-Control", "no-cache, no-store, must-revalidate");
+        httpd_resp_set_hdr(req, "Pragma", "no-cache");
+        httpd_resp_set_hdr(req, "Expires", "0");
+    }
+    
+    return httpd_resp_send(req, (const char*)data, size);
+}
+
 // Public functions
 esp_err_t web_server_init(const web_server_config_t *config)
 {
@@ -564,6 +663,42 @@ esp_err_t web_server_init(const web_server_config_t *config)
         .handler = reset_handler,
         .user_ctx = NULL};
     httpd_register_uri_handler(server, &reset_uri);
+
+    // Register static file handlers
+    httpd_uri_t index_uri = {
+        .uri = "/index.html",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    httpd_register_uri_handler(server, &index_uri);
+
+    httpd_uri_t wifi_setup_uri = {
+        .uri = "/wifi-setup.html",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    httpd_register_uri_handler(server, &wifi_setup_uri);
+
+    httpd_uri_t settings_uri = {
+        .uri = "/settings.html",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    httpd_register_uri_handler(server, &settings_uri);
+
+    httpd_uri_t css_uri = {
+        .uri = "/css/style.css",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    httpd_register_uri_handler(server, &css_uri);
+
+    httpd_uri_t js_uri = {
+        .uri = "/js/app.js",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    httpd_register_uri_handler(server, &js_uri);
 
     ESP_LOGI(TAG, "Web server initialized successfully");
     return ESP_OK;
