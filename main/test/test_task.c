@@ -50,7 +50,7 @@ static void test_task_main(void *pvParameters)
         ESP_LOGI(TAG, "=== Test Cycle Complete ===");
 
         // Wait 10 seconds before next test cycle
-        vTaskDelay(pdMS_TO_TICKS(10000));
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
