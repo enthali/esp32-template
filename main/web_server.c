@@ -163,7 +163,19 @@ static esp_err_t scan_handler(httpd_req_t *req)
     esp_err_t ret = esp_wifi_scan_start(&scan_config, true);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "WiFi scan failed: %s", esp_err_to_name(ret));
-        return httpd_resp_send(req, "{\"error\":\"Scan failed\"}", HTTPD_RESP_USE_STRLEN);
+        
+        // If we're in AP mode, we might need to switch to APSTA mode for scanning
+        wifi_mode_t current_mode;
+        if (esp_wifi_get_mode(&current_mode) == ESP_OK && current_mode == WIFI_MODE_AP) {
+            ESP_LOGW(TAG, "Switching to APSTA mode for WiFi scanning");
+            esp_wifi_set_mode(WIFI_MODE_APSTA);
+            vTaskDelay(pdMS_TO_TICKS(100)); // Give time for mode switch
+            ret = esp_wifi_scan_start(&scan_config, true);
+        }
+        
+        if (ret != ESP_OK) {
+            return httpd_resp_send(req, "{\"error\":\"Scan failed\"}", HTTPD_RESP_USE_STRLEN);
+        }
     }
     
     // Get scan results

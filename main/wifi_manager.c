@@ -439,10 +439,14 @@ static esp_err_t start_ap_mode(void)
             .channel = WIFI_AP_CHANNEL,
             .password = WIFI_AP_PASSWORD,
             .max_connection = WIFI_AP_MAX_CONNECTIONS,
-            .authmode = WIFI_AUTH_OPEN},
+            .authmode = WIFI_AUTH_OPEN
+        },
     };
 
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
+    // Debug: Log the actual SSID being set
+    ESP_LOGI(TAG, "AP SSID length: %d, content: '%s'", wifi_config.ap.ssid_len, wifi_config.ap.ssid);
+
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &wifi_config));
 
     return ESP_OK;
