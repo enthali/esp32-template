@@ -8,16 +8,28 @@
 
 static const char *TAG = "main";
 
+// =============================================
+// HARDWARE CONFIGURATION
+// =============================================
+#define LED_DATA_PIN GPIO_NUM_12
+#define LED_COUNT 40
+#define LED_RMT_CHANNEL RMT_CHANNEL_0
+
+#define DISTANCE_TRIGGER GPIO_NUM_14
+#define DISTANCE_ECHO GPIO_NUM_13
+#define DISTANCE_INTERVAL 1000 // Measurement interval in ms
+#define DISTANCE_TIMEOUT 30    // Echo timeout in ms
+#define TEMPERATURE_C 20.0f    // Room temperature for speed of sound
+
 void app_main(void)
 {
     ESP_LOGI(TAG, "ESP32 Distance Measurement with LED Strip Display");
 
     // Configure LED strip
     led_config_t led_config = {
-        .gpio_pin = GPIO_NUM_12,     // WS2812 data pin
-        .led_count = 40,             // 40 LEDs in strip
-        .rmt_channel = RMT_CHANNEL_0 // Use RMT channel 0
-    };
+        .gpio_pin = LED_DATA_PIN,
+        .led_count = LED_COUNT,
+        .rmt_channel = LED_RMT_CHANNEL};
 
     // Initialize LED controller
     esp_err_t ret = led_controller_init(&led_config);
@@ -46,12 +58,11 @@ void app_main(void)
 
     // Configure and initialize distance sensor
     distance_sensor_config_t distance_config = {
-        .trigger_pin = GPIO_NUM_14,     // Trigger pin
-        .echo_pin = GPIO_NUM_13,        // Echo pin
-        .measurement_interval_ms = 1000, // Measure every 1 second (prevents queue overflow)
-        .timeout_ms = 30,               // 30ms timeout (for max 400cm range)
-        .temperature_celsius = 20.0     // Room temperature for speed of sound
-    };
+        .trigger_pin = DISTANCE_TRIGGER,
+        .echo_pin = DISTANCE_ECHO,
+        .measurement_interval_ms = DISTANCE_INTERVAL,
+        .timeout_ms = DISTANCE_TIMEOUT,
+        .temperature_celsius = TEMPERATURE_C};
 
     ret = distance_sensor_init(&distance_config);
     if (ret != ESP_OK)
@@ -68,7 +79,7 @@ void app_main(void)
     }
 
     ESP_LOGI(TAG, "Distance sensor initialized and started");
-    ESP_LOGI(TAG, "Hardware: LED=GPIO12, Trigger=GPIO14, Echo=GPIO13");
+    ESP_LOGI(TAG, "Hardware: LED=GPIO%d, Trigger=GPIO%d, Echo=GPIO%d", LED_DATA_PIN, DISTANCE_TRIGGER, DISTANCE_ECHO);
     ESP_LOGI(TAG, "Ready for distance measurement and LED display...");
 
     // Main application loop - Read distance and display on LED strip
