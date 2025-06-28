@@ -1,4 +1,16 @@
-# Distance Measurement with LED Strip Display
+# Distance Measurement with LED Strip Di### Q### Quick Overview
+
+- ✅ **Hardware Integration**: LED strip control and distance sensor measurement
+- ✅ **Real-time Visualization**: Distance-to-LED mapping with error indicators
+- ✅ **WiFi Connectivity**: Smart connection with captive portal fallback
+- 🔄 **Web Interface**: Basic server implemented, static UI in progress
+
+## Technical Specificationsrview
+
+- ✅ **Hardware Integration**: LED strip control and distance sensor measurement
+- ✅ **Real-time Visualization**: Distance-to-LED mapping with error indicators  
+- ✅ **WiFi Connectivity**: Smart connection with captive portal fallback
+- 🔄 **Web Interface**: Basic server implemented, static UI in progress
 
 A project that uses an ESP32 to measure distance with an ultrasonic sensor and displays the measurement on a WS2812 LED strip with a web interface.
 
@@ -19,9 +31,9 @@ This project combines hardware sensing and visual feedback to create an interact
 
 | Component | Pin | GPIO |
 |-----------|-----|------|
-| WS2812 LED Strip | Data | GPIO13 |
+| WS2812 LED Strip | Data | GPIO12 |
 | HC-SR04 Trigger | Trigger | GPIO14 |
-| HC-SR04 Echo | Echo | GPIO15 |
+| HC-SR04 Echo | Echo | GPIO13 |
 | Power | VCC | 5V/3.3V |
 | Ground | GND | GND |
 
@@ -34,44 +46,26 @@ This project combines hardware sensing and visual feedback to create an interact
 
 ## Implementation Status
 
-For detailed implementation progress and technical planning, see **[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)**.
+For detailed implementation progress, technical specifications, and step-by-step tracking:
+
+- **Implementation Plan**: See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
+- **Technical Architecture**: See [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ### Quick Status Overview
 
 - ✅ **Step 1**: LED Strip Animation - **COMPLETED**
 - ✅ **Step 2**: Ultrasonic Sensor Integration - **COMPLETED** 
-- 🔄 **Step 3**: Distance-to-LED Mapping - **IN PROGRESS** (Assigned to @github-copilot)
-- 📋 **Step 4**: Web Interface - **PLANNED**
-
-## Current Status
-
-### ✅ Completed Features
-
-- **LED Controller Component**: Full WS2812 control with RMT backend (`components/led_controller/`)
-- **Distance Sensor Component**: Interrupt-driven HC-SR04 integration (`components/distance_sensor/`)
-- **Modular Test Architecture**: Background FreeRTOS task for comprehensive LED testing
-- **Real-time Distance Measurements**: Live sensor readings with dual-queue architecture
-- **Clean Component Structure**: Hardware abstraction following ESP-IDF best practices
-- **Comprehensive Error Handling**: Timeout, range validation, and queue overflow protection
-- **Hardware Integration**: Working distance sensor → main application integration
-
-### 🔄 In Progress
-
-- **Display Logic Component**: Distance-to-LED mapping (Assigned to @github-copilot, see [copilot_issue_display_logic.md](copilot_issue_display_logic.md))
-
-### 📋 Planned Features
-
-- Distance-to-LED visualization with error indicators
-- Web interface for remote monitoring
-- WiFi connectivity and configuration
-- Historical data logging and analysis
+- ✅ **Step 3**: Distance-to-LED Mapping - **COMPLETED**
+- � **Step 4**: Web Interface - **IN PROGRESS** (Step 4.1 WiFi/Captive Portal completed)
 
 ## Technical Specifications
 
 - **LED Strip**: 40 x WS2812 individually addressable LEDs
-- **Distance Range**: 2cm - 400cm (HC-SR04 specification)
-- **Update Rate**: ~10Hz for smooth visual feedback
-- **Communication**: WiFi for web interface
+- **Distance Range**: 10cm - 50cm (mapped to LED visualization)
+- **Sensor Range**: 2cm - 400cm (HC-SR04 specification)
+- **Update Rate**: 10Hz for real-time visual feedback (100ms measurement interval)
+- **Communication**: WiFi with smart AP/STA switching and captive portal
+- **Web Interface**: HTTP server with mobile-responsive design
 - **Power**: USB or external 5V supply
 
 ## Development Environment
@@ -86,6 +80,10 @@ For detailed implementation progress and technical planning, see **[IMPLEMENTATI
 ```
 ├── CMakeLists.txt
 ├── components/                   # Hardware abstraction components
+│   ├── distance_sensor/         # HC-SR04 ultrasonic sensor component
+│   │   ├── CMakeLists.txt
+│   │   ├── include/distance_sensor.h
+│   │   └── distance_sensor.c
 │   └── led_controller/          # WS2812 LED strip hardware interface
 │       ├── CMakeLists.txt
 │       ├── include/led_controller.h
@@ -93,15 +91,15 @@ For detailed implementation progress and technical planning, see **[IMPLEMENTATI
 ├── main/                        # Application logic
 │   ├── CMakeLists.txt
 │   ├── main.c                  # Main application entry point
-│   ├── led_controller.h/c      # WS2812 LED strip control
-│   ├── test/                   # Test modules directory
-│   │   ├── led_running_test.h/c     # Running light effects tests
-│   │   ├── led_color_test.h/c       # Color accuracy and brightness tests
-│   │   └── test_task.h/c            # Background test task management
-│   ├── distance_sensor.h/c     # HC-SR04 ultrasonic sensor (planned)
-│   ├── display_logic.h/c       # Distance-to-LED mapping logic (planned)
-│   └── web_server.h/c          # HTTP server for web interface (planned)
+│   ├── display_logic.h/c       # Distance-to-LED mapping logic
+│   ├── wifi_manager.h/c        # WiFi configuration and captive portal
+│   ├── web_server.h/c          # HTTP server and web interface
+│   └── test/                   # Test modules directory
+│       ├── led_running_test.h/c     # Running light effects tests
+│       ├── led_color_test.h/c       # Color accuracy and brightness tests
+│       └── test_task.h/c            # Background test task management
 ├── ARCHITECTURE.md             # Detailed technical architecture
+├── IMPLEMENTATION_PLAN.md      # Step-by-step implementation tracking
 ├── .gitignore                  # Git ignore patterns
 └── README.md                   # This file
 ```
@@ -109,40 +107,48 @@ For detailed implementation progress and technical planning, see **[IMPLEMENTATI
 ## Build and Flash
 
 1. Set the correct target:
-   ```
+
+   ```bash
    idf.py set-target esp32
    ```
 
 2. Configure the project:
-   ```
+
+   ```bash
    idf.py menuconfig
    ```
 
 3. Build and flash:
-   ```
+
+   ```bash
    idf.py build flash monitor
    ```
 
-## Usage
+## Current System Usage
 
-### Current Testing Mode
+### Current Distance Measurement Mode
 
-1. Power on the ESP32 with connected LED strip
-2. The system automatically starts continuous LED hardware testing:
-   - **Running Light Test**: Green LED cycles through the strip (3 cycles)
-   - **Color Accuracy Test**: Displays 8 colors (red, green, blue, white, yellow, orange, purple, cyan) for 2 seconds
-   - **Brightness Fade Test**: Fades the same 8 colors from full brightness to off
-3. Tests repeat every 10 seconds in a background FreeRTOS task
-4. Monitor serial output for detailed test logging
-5. Main application loop remains available for distance sensor integration
+1. Power on the ESP32 with connected hardware (LED strip and HC-SR04 sensor)
+2. The system performs a one-time LED hardware test at startup
+3. **WiFi Connection**:
+   - If no WiFi credentials stored: Creates "ESP32-Distance-Sensor" AP with captive portal
+   - If credentials stored: Connects to configured WiFi network
+   - Fallback to AP mode if connection fails
+4. **Real-time Operation**:
+   - Distance measurements every 100ms (10Hz update rate)
+   - LED strip displays distance: 10cm-50cm mapped to LEDs 0-39
+   - Green LEDs for normal range, red LEDs for error conditions
+   - All LEDs off for sensor timeout/failure
+5. **Web Interface**: Access via current IP address for status and configuration
+6. Monitor serial output for detailed system logging
 
-### Future Usage (After Distance Sensor Integration)
+### Current Web Interface Features
 
-1. Power on the ESP32 with connected hardware
-2. Observe LED strip animation during startup
-3. Place objects at various distances from the sensor
-4. Watch the LED position change based on distance
-5. Connect to the web interface for remote monitoring
+- **Captive Portal**: Automatic WiFi configuration on first boot
+- **Network Selection**: Scan and connect to available WiFi networks  
+- **Status Page**: Basic system information and connectivity status
+- **Reset Function**: Clear WiFi credentials and restart in AP mode
+- **Mobile Responsive**: Touch-friendly interface for smartphones
 
 ## Testing Strategy
 
@@ -161,8 +167,8 @@ For detailed implementation progress and technical planning, see **[IMPLEMENTATI
 
 ## Troubleshooting
 
-- **LED not working**: Check GPIO13 connection and power supply
-- **Sensor not responding**: Verify GPIO14/15 connections and timing
+- **LED not working**: Check GPIO12 connection and power supply
+- **Sensor not responding**: Verify GPIO14/13 connections and timing
 - **Web interface unavailable**: Check WiFi configuration and IP address
 - **Inconsistent readings**: Calibrate sensor and check for interference
 

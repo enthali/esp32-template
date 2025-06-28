@@ -53,7 +53,7 @@ This document describes the technical architecture and implementation details fo
 
 **Hardware Interface**:
 - GPIO14: Trigger pin
-- GPIO13: Echo pin (Updated from GPIO15)
+- GPIO13: Echo pin  
 - Timing-critical pulse measurement with ESP32 timers
 
 **Key Features**:
@@ -79,39 +79,46 @@ This document describes the technical architecture and implementation details fo
 - Animation state management with FreeRTOS task (Priority 3)
 - Error visual indicators (sensor timeout, out-of-range conditions)
 
-**Current Status**: 🔄 **IN PROGRESS** - GitHub Issue assigned to @github-copilot (see [copilot_issue_display_logic.md](copilot_issue_display_logic.md))
+**Current Status**: ✅ **COMPLETED** - Component implemented in `main/display_logic.h/c`
 
 ### 4. Web Server Module
 
-**Purpose**: Remote monitoring and configuration interface.
+**Purpose**: Remote monitoring and configuration interface with WiFi management.
 
 **Key Features**:
-- HTTP server for web interface
-- WebSocket for real-time updates
-- JSON API for data exchange
-- Responsive web interface
-- Configuration management
+
+- **Smart WiFi Management**: Auto-connect to stored credentials with AP fallback
+- **Captive Portal**: Automatic configuration page with network scanning
+- **HTTP Server**: Mobile-responsive web interface for status and settings
+- **Credential Storage**: Secure WiFi credential management in NVS flash
+- **Network Switching**: Seamless AP ↔ STA mode transitions
+- **DNS Server**: Captive portal detection and auto-redirect
+- **Reset Functionality**: Clear stored credentials and restart system
+
+**Current Status**: ✅ **COMPLETED** (Step 4.1) - Basic implementation in `main/wifi_manager.h/c` and `main/web_server.h/c`
 
 ## Data Flow
 
-```
+```text
 HC-SR04 Sensor → Distance Sensor Module → Display Logic Module → LED Controller Module → WS2812 Strip
                                      ↓
-                              Web Server Module → HTTP/WebSocket Client
+                              Web Server Module → HTTP Client (WiFi/Captive Portal)
 ```
 
 ## Threading Model
 
-```
-Main Task (Core 0)
-├── Distance Measurement Task (High Priority)
-│   └── Periodic sensor readings (100ms)
-├── LED Update Task (Medium Priority) 
-│   └── Visual updates (100ms)
-└── Web Server Task (Low Priority)
-    └── HTTP request handling
+```text
+Main Task (Priority 1, Core 0)
+├── Distance Sensor Task (Priority 6, Core 0)
+│   └── Real-time measurements (100ms intervals)
+├── Display Logic Task (Priority 3, Core 0) 
+│   └── Event-driven LED visualization (blocking sensor API)
+└── WiFi/Web Server Tasks (Priority 2, Core 1)
+    ├── WiFi Management (connection/AP switching)
+    ├── HTTP Server (request handling)
+    └── DNS Server (captive portal)
 
-Core 1: WiFi/Network Stack (ESP-IDF default)
+Core 1: WiFi/Network Stack + ESP-IDF System Tasks
 ```
 
 ## Memory Management
@@ -131,6 +138,7 @@ Core 1: WiFi/Network Stack (ESP-IDF default)
 ## Configuration Management
 
 All configurable parameters exposed through:
+
 - Compile-time defines in header files
 - Runtime configuration via web interface
 - ESP-IDF menuconfig integration
