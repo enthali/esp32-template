@@ -54,7 +54,7 @@ For detailed implementation progress, technical specifications, and step-by-step
 ### Quick Status Overview
 
 - ✅ **Step 1**: LED Strip Animation - **COMPLETED**
-- ✅ **Step 2**: Ultrasonic Sensor Integration - **COMPLETED** 
+- ✅ **Step 2**: Ultrasonic Sensor Integration - **COMPLETED**
 - ✅ **Step 3**: Distance-to-LED Mapping - **COMPLETED**
 - � **Step 4**: Web Interface - **IN PROGRESS** (Step 4.1 WiFi/Captive Portal completed)
 
@@ -112,17 +112,19 @@ For detailed implementation progress, technical specifications, and step-by-step
    idf.py set-target esp32
    ```
 
-2. Configure the project:
+2. Configure the project (optional):
 
    ```bash
    idf.py menuconfig
    ```
 
-3. Build and flash:
+3. Build, flash, and monitor:
 
    ```bash
    idf.py build flash monitor
    ```
+
+For detailed build instructions including Windows-specific commands, see [.github/BUILD_INSTRUCTIONS.md](.github/BUILD_INSTRUCTIONS.md).
 
 ## Current System Usage
 
