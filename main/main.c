@@ -17,7 +17,7 @@ static const char *TAG = "main";
 // =============================================
 #define LED_DATA_PIN GPIO_NUM_12
 #define LED_COUNT 40
-#define LED_RMT_CHANNEL RMT_CHANNEL_0
+#define LED_RMT_CHANNEL 0
 
 #define DISTANCE_TRIGGER GPIO_NUM_14
 #define DISTANCE_ECHO GPIO_NUM_13
