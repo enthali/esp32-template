@@ -78,6 +78,16 @@ bool web_server_is_running(void);
  */
 uint16_t web_server_get_port(void);
 
+/**
+ * @brief Serve embedded static files
+ * 
+ * Handles requests for HTML, CSS, and JavaScript files embedded in flash memory.
+ * 
+ * @param req HTTP request
+ * @return ESP_OK on success, error code on failure
+ */
+esp_err_t static_file_handler(httpd_req_t *req);
+
 #ifdef __cplusplus
 }
 #endif

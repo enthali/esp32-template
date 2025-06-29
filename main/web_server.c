@@ -33,135 +33,59 @@ static esp_err_t status_handler(httpd_req_t *req);
 static esp_err_t reset_handler(httpd_req_t *req);
 static void dns_server_task(void *pvParameters);
 static esp_err_t start_dns_server(void);
+
 static void stop_dns_server(void);
 
-// HTML pages
-static const char *html_config_page =
-    "<!DOCTYPE html>"
-    "<html><head>"
-    "<title>ESP32 Distance Sensor - WiFi Setup</title>"
-    "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-    "<style>"
-    "body{font-family:Arial,sans-serif;margin:40px;background:#f0f0f0}"
-    ".container{background:white;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);max-width:500px;margin:0 auto}"
-    "h1{color:#333;text-align:center;margin-bottom:30px}"
-    ".form-group{margin-bottom:20px}"
-    "label{display:block;margin-bottom:5px;font-weight:bold;color:#555}"
-    "input,select{width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;font-size:16px;box-sizing:border-box}"
-    "button{background:#007bff;color:white;padding:12px 30px;border:none;border-radius:5px;cursor:pointer;font-size:16px;width:100%;margin-top:10px}"
-    "button:hover{background:#0056b3}"
-    ".status{padding:10px;margin:10px 0;border-radius:5px;text-align:center}"
-    ".success{background:#d4edda;color:#155724;border:1px solid #c3e6cb}"
-    ".error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}"
-    ".info{background:#d1ecf1;color:#0c5460;border:1px solid #bee5eb}"
-    "</style>"
-    "</head><body>"
-    "<div class='container'>"
-    "<h1>ESP32 Distance Sensor</h1>"
-    "<h2>WiFi Configuration</h2>"
-    "<div id='status' class='status info'>Select your WiFi network and enter the password</div>"
-    "<form id='wifiForm'>"
-    "<div class='form-group'>"
-    "<label for='ssid'>WiFi Network:</label>"
-    "<select id='ssid' name='ssid' required>"
-    "<option value=''>Scanning for networks...</option>"
-    "</select>"
-    "<button type='button' onclick='scanNetworks()'>Refresh Networks</button>"
-    "</div>"
-    "<div class='form-group'>"
-    "<label for='password'>Password:</label>"
-    "<input type='password' id='password' name='password' placeholder='WiFi password'>"
-    "</div>"
-    "<button type='submit'>Connect to WiFi</button>"
-    "</form>"
-    "<div style='margin-top:30px;padding-top:20px;border-top:1px solid #ddd'>"
-    "<h3>Device Management</h3>"
-    "<button type='button' onclick='resetDevice()' style='background:#dc3545'>Reset WiFi & Restart</button>"
-    "</div>"
-    "<script>"
-    "function scanNetworks(){"
-    "document.getElementById('ssid').innerHTML='<option value=\"\">Scanning...</option>';"
-    "fetch('/scan').then(r=>r.json()).then(data=>{"
-    "let select=document.getElementById('ssid');"
-    "select.innerHTML='';"
-    "if(data.networks && data.networks.length>0){"
-    "data.networks.forEach(n=>{"
-    "let option=document.createElement('option');"
-    "option.value=n.ssid;"
-    "option.textContent=n.ssid+' ('+n.rssi+' dBm)';"
-    "select.appendChild(option);"
-    "});"
-    "}else{"
-    "select.innerHTML='<option value=\"\">No networks found</option>';"
-    "}"
-    "}).catch(e=>{"
-    "document.getElementById('ssid').innerHTML='<option value=\"\">Scan failed</option>';"
-    "console.error('Scan error:',e);"
-    "});}"
-    "function showStatus(msg,type){"
-    "let status=document.getElementById('status');"
-    "status.textContent=msg;"
-    "status.className='status '+type;"
-    "}"
-    "document.getElementById('wifiForm').onsubmit=function(e){"
-    "e.preventDefault();"
-    "let ssid=document.getElementById('ssid').value;"
-    "let password=document.getElementById('password').value;"
-    "if(!ssid){showStatus('Please select a network','error');return;}"
-    "showStatus('Connecting to '+ssid+'...','info');"
-    "fetch('/connect',{"
-    "method:'POST',"
-    "headers:{'Content-Type':'application/json'},"
-    "body:JSON.stringify({ssid:ssid,password:password})"
-    "}).then(r=>r.json()).then(data=>{"
-    "if(data.success){"
-    "showStatus('Connected successfully! The device will now connect to your WiFi network.','success');"
-    "setTimeout(()=>window.location.reload(),3000);"
-    "}else{"
-    "showStatus('Connection failed: '+(data.error||'Unknown error'),'error');"
-    "}"
-    "}).catch(e=>{"
-    "showStatus('Connection request failed','error');"
-    "console.error('Connection error:',e);"
-    "});"
-    "};"
-    "function resetDevice(){"
-    "if(confirm('This will clear WiFi credentials and restart the device. Continue?')){"
-    "fetch('/reset',{method:'POST'})"
-    ".then(r=>r.json())"
-    ".then(data=>{"
-    "if(data.success){"
-    "showStatus('Device will restart in AP mode...','info');"
-    "setTimeout(()=>window.location.href='http://192.168.4.1',5000);"
-    "}else{"
-    "showStatus('Reset failed: '+(data.error||'Unknown error'),'error');"
-    "}"
-    "}).catch(e=>{"
-    "showStatus('Reset request failed','error');"
-    "console.error('Reset error:',e);"
-    "});"
-    "}"
-    "}"
-    "scanNetworks();"
-    "</script>"
-    "</div></body></html>";
+// Static file serving declarations
+extern const uint8_t index_html_start[] asm("_binary_index_html_start");
+extern const uint8_t index_html_end[] asm("_binary_index_html_end");
+extern const uint8_t wifi_setup_html_start[] asm("_binary_wifi_setup_html_start");
+extern const uint8_t wifi_setup_html_end[] asm("_binary_wifi_setup_html_end");
+extern const uint8_t settings_html_start[] asm("_binary_settings_html_start");
+extern const uint8_t settings_html_end[] asm("_binary_settings_html_end");
+extern const uint8_t style_css_start[] asm("_binary_style_css_start");
+extern const uint8_t style_css_end[] asm("_binary_style_css_end");
+extern const uint8_t app_js_start[] asm("_binary_app_js_start");
+extern const uint8_t app_js_end[] asm("_binary_app_js_end");
+
+// Helper functions for static file serving
+static const char *get_mime_type(const char *filename);
+static esp_err_t get_embedded_file(const char *filename, const uint8_t **data, size_t *size);
+static void stop_dns_server(void);
 
 // HTTP request handlers
 static esp_err_t root_handler(httpd_req_t *req)
 {
-    ESP_LOGI(TAG, "Serving captive portal page");
+    ESP_LOGI(TAG, "Root request - serving main dashboard");
 
-    httpd_resp_set_type(req, "text/html");
-    httpd_resp_set_hdr(req, "Cache-Control", "no-cache, no-store, must-revalidate");
-    httpd_resp_set_hdr(req, "Pragma", "no-cache");
-    httpd_resp_set_hdr(req, "Expires", "0");
+    // Modify the request URI to serve index.html
+    char original_uri[64];
+    strncpy(original_uri, req->uri, sizeof(original_uri) - 1);
+    strcpy((char *)req->uri, "/index.html");
 
-    return httpd_resp_send(req, html_config_page, HTTPD_RESP_USE_STRLEN);
+    esp_err_t result = static_file_handler(req);
+
+    // Restore original URI
+    strcpy((char *)req->uri, original_uri);
+
+    return result;
 }
 
 static esp_err_t config_handler(httpd_req_t *req)
 {
-    return root_handler(req); // Same page for config
+    ESP_LOGI(TAG, "Config request - serving WiFi setup page");
+
+    // Modify the request URI to serve the WiFi setup page
+    char original_uri[64];
+    strncpy(original_uri, req->uri, sizeof(original_uri) - 1);
+    strcpy((char *)req->uri, "/wifi-setup.html");
+
+    esp_err_t result = static_file_handler(req);
+
+    // Restore original URI
+    strcpy((char *)req->uri, original_uri);
+
+    return result;
 }
 
 static esp_err_t scan_handler(httpd_req_t *req)
@@ -490,6 +414,114 @@ static void stop_dns_server(void)
     ESP_LOGI(TAG, "DNS server stopped");
 }
 
+// Static file serving functions
+static const char *get_mime_type(const char *filename)
+{
+    const char *ext = strrchr(filename, '.');
+    if (ext == NULL)
+    {
+        return "text/plain";
+    }
+
+    if (strcmp(ext, ".html") == 0)
+    {
+        return "text/html";
+    }
+    else if (strcmp(ext, ".css") == 0)
+    {
+        return "text/css";
+    }
+    else if (strcmp(ext, ".js") == 0)
+    {
+        return "application/javascript";
+    }
+    else if (strcmp(ext, ".json") == 0)
+    {
+        return "application/json";
+    }
+    else
+    {
+        return "text/plain";
+    }
+}
+
+static esp_err_t get_embedded_file(const char *filename, const uint8_t **data, size_t *size)
+{
+    ESP_LOGI(TAG, "Getting embedded file: %s", filename);
+
+    if (strcmp(filename, "/index.html") == 0 || strcmp(filename, "/") == 0)
+    {
+        *data = index_html_start;
+        *size = index_html_end - index_html_start;
+        ESP_LOGI(TAG, "Found index.html, size: %zu", *size);
+    }
+    else if (strcmp(filename, "/wifi-setup.html") == 0)
+    {
+        *data = wifi_setup_html_start;
+        *size = wifi_setup_html_end - wifi_setup_html_start;
+        ESP_LOGI(TAG, "Found wifi-setup.html, size: %zu", *size);
+    }
+    else if (strcmp(filename, "/settings.html") == 0)
+    {
+        *data = settings_html_start;
+        *size = settings_html_end - settings_html_start;
+        ESP_LOGI(TAG, "Found settings.html, size: %zu", *size);
+    }
+    else if (strcmp(filename, "/css/style.css") == 0)
+    {
+        *data = style_css_start;
+        *size = style_css_end - style_css_start;
+        ESP_LOGI(TAG, "Found style.css, size: %zu", *size);
+    }
+    else if (strcmp(filename, "/js/app.js") == 0)
+    {
+        *data = app_js_start;
+        *size = app_js_end - app_js_start;
+        ESP_LOGI(TAG, "Found app.js, size: %zu", *size);
+    }
+    else
+    {
+        ESP_LOGW(TAG, "File not found in embedded files: %s", filename);
+        return ESP_ERR_NOT_FOUND;
+    }
+    return ESP_OK;
+}
+
+esp_err_t static_file_handler(httpd_req_t *req)
+{
+    const char *uri = req->uri;
+    const uint8_t *data;
+    size_t size;
+
+    ESP_LOGI(TAG, "Serving static file: %s", uri);
+
+    esp_err_t ret = get_embedded_file(uri, &data, &size);
+    if (ret != ESP_OK)
+    {
+        ESP_LOGW(TAG, "File not found: %s", uri);
+        httpd_resp_send_404(req);
+        return ESP_FAIL;
+    }
+
+    // Set appropriate content type
+    const char *mime_type = get_mime_type(uri);
+    httpd_resp_set_type(req, mime_type);
+
+    // Set cache headers for static assets
+    if (strstr(uri, ".css") || strstr(uri, ".js"))
+    {
+        httpd_resp_set_hdr(req, "Cache-Control", "public, max-age=3600");
+    }
+    else
+    {
+        httpd_resp_set_hdr(req, "Cache-Control", "no-cache, no-store, must-revalidate");
+        httpd_resp_set_hdr(req, "Pragma", "no-cache");
+        httpd_resp_set_hdr(req, "Expires", "0");
+    }
+
+    return httpd_resp_send(req, (const char *)data, size);
+}
+
 // Public functions
 esp_err_t web_server_init(const web_server_config_t *config)
 {
@@ -514,7 +546,11 @@ esp_err_t web_server_init(const web_server_config_t *config)
     httpd_config_t httpd_config = HTTPD_DEFAULT_CONFIG();
     httpd_config.server_port = current_config.port;
     httpd_config.max_open_sockets = current_config.max_open_sockets;
+    httpd_config.max_uri_handlers = 32; // Increase to 32 to ensure we have plenty of slots
     httpd_config.lru_purge_enable = true;
+
+    ESP_LOGI(TAG, "HTTP config: port=%d, max_sockets=%d, max_handlers=%d",
+             httpd_config.server_port, httpd_config.max_open_sockets, httpd_config.max_uri_handlers);
 
     if (httpd_start(&server, &httpd_config) != ESP_OK)
     {
@@ -522,48 +558,95 @@ esp_err_t web_server_init(const web_server_config_t *config)
         return ESP_FAIL;
     }
 
-    // Register URI handlers
+    // Register URI handlers with error checking
     httpd_uri_t root_uri = {
         .uri = "/",
         .method = HTTP_GET,
         .handler = root_handler,
         .user_ctx = NULL};
-    httpd_register_uri_handler(server, &root_uri);
+    esp_err_t ret = httpd_register_uri_handler(server, &root_uri);
+    ESP_LOGI(TAG, "Registered handler for '/' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
     httpd_uri_t config_uri = {
         .uri = "/config",
         .method = HTTP_GET,
         .handler = config_handler,
         .user_ctx = NULL};
-    httpd_register_uri_handler(server, &config_uri);
+    ret = httpd_register_uri_handler(server, &config_uri);
+    ESP_LOGI(TAG, "Registered handler for '/config' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
     httpd_uri_t scan_uri = {
         .uri = "/scan",
         .method = HTTP_GET,
         .handler = scan_handler,
         .user_ctx = NULL};
-    httpd_register_uri_handler(server, &scan_uri);
+    ret = httpd_register_uri_handler(server, &scan_uri);
+    ESP_LOGI(TAG, "Registered handler for '/scan' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
     httpd_uri_t connect_uri = {
         .uri = "/connect",
         .method = HTTP_POST,
         .handler = connect_handler,
         .user_ctx = NULL};
-    httpd_register_uri_handler(server, &connect_uri);
+    ret = httpd_register_uri_handler(server, &connect_uri);
+    ESP_LOGI(TAG, "Registered handler for '/connect' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
     httpd_uri_t status_uri = {
         .uri = "/status",
         .method = HTTP_GET,
         .handler = status_handler,
         .user_ctx = NULL};
-    httpd_register_uri_handler(server, &status_uri);
+    ret = httpd_register_uri_handler(server, &status_uri);
+    ESP_LOGI(TAG, "Registered handler for '/status' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
     httpd_uri_t reset_uri = {
         .uri = "/reset",
         .method = HTTP_POST,
         .handler = reset_handler,
         .user_ctx = NULL};
-    httpd_register_uri_handler(server, &reset_uri);
+    ret = httpd_register_uri_handler(server, &reset_uri);
+    ESP_LOGI(TAG, "Registered handler for '/reset' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
+    // Register static file handlers
+    httpd_uri_t index_uri = {
+        .uri = "/index.html",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &index_uri);
+    ESP_LOGI(TAG, "Registered handler for '/index.html' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
+    httpd_uri_t wifi_setup_uri = {
+        .uri = "/wifi-setup.html",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &wifi_setup_uri);
+    ESP_LOGI(TAG, "Registered handler for '/wifi-setup.html' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
+    httpd_uri_t settings_uri = {
+        .uri = "/settings.html",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &settings_uri);
+    ESP_LOGI(TAG, "Registered handler for '/settings.html' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
+    httpd_uri_t css_uri = {
+        .uri = "/css/style.css",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &css_uri);
+    ESP_LOGI(TAG, "Registered handler for '/css/style.css' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
+    httpd_uri_t js_uri = {
+        .uri = "/js/app.js",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &js_uri);
+    ESP_LOGI(TAG, "Registered handler for '/js/app.js' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
     ESP_LOGI(TAG, "Web server initialized successfully");
     return ESP_OK;
@@ -587,15 +670,18 @@ esp_err_t web_server_start(void)
 
     // Only start DNS server for captive portal if we're in AP mode
     wifi_mode_t wifi_mode;
-    if (esp_wifi_get_mode(&wifi_mode) == ESP_OK && 
-        (wifi_mode == WIFI_MODE_AP || wifi_mode == WIFI_MODE_APSTA)) {
+    if (esp_wifi_get_mode(&wifi_mode) == ESP_OK &&
+        (wifi_mode == WIFI_MODE_AP || wifi_mode == WIFI_MODE_APSTA))
+    {
         ESP_LOGI(TAG, "Starting DNS server for captive portal (AP mode)");
         esp_err_t ret = start_dns_server();
         if (ret != ESP_OK)
         {
             ESP_LOGW(TAG, "Failed to start DNS server, captive portal may not work properly");
         }
-    } else {
+    }
+    else
+    {
         ESP_LOGI(TAG, "Skipping DNS server (STA mode - not needed)");
     }
 
