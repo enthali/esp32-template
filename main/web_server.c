@@ -93,7 +93,9 @@ static esp_err_t scan_handler(httpd_req_t *req)
     ESP_LOGI(TAG, "WiFi scan request");
 
     httpd_resp_set_type(req, "application/json");
-    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    // CORS: Commented out broad origin for security. Can be re-enabled with specific URL for hybrid GitHub Pages approach
+    // httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    // httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "https://yourusername.github.io");  // For future hybrid approach
 
     // Start WiFi scan
     wifi_scan_config_t scan_config = {
@@ -175,7 +177,9 @@ static esp_err_t connect_handler(httpd_req_t *req)
     ESP_LOGI(TAG, "WiFi connect request");
 
     httpd_resp_set_type(req, "application/json");
-    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    // CORS: Commented out broad origin for security. Can be re-enabled with specific URL for hybrid GitHub Pages approach
+    // httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    // httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "https://yourusername.github.io");  // For future hybrid approach
 
     // Read POST data
     char *buf = malloc(req->content_len + 1);
@@ -238,7 +242,9 @@ static esp_err_t connect_handler(httpd_req_t *req)
 static esp_err_t status_handler(httpd_req_t *req)
 {
     httpd_resp_set_type(req, "application/json");
-    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    // CORS: Commented out broad origin for security. Can be re-enabled with specific URL for hybrid GitHub Pages approach
+    // httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    // httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "https://yourusername.github.io");  // For future hybrid approach
 
     wifi_status_t status;
     if (wifi_manager_get_status(&status) != ESP_OK)
@@ -272,7 +278,9 @@ static esp_err_t reset_handler(httpd_req_t *req)
     ESP_LOGI(TAG, "WiFi reset request");
 
     httpd_resp_set_type(req, "application/json");
-    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    // CORS: Commented out broad origin for security. Can be re-enabled with specific URL for hybrid GitHub Pages approach
+    // httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    // httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "https://yourusername.github.io");  // For future hybrid approach
 
     // Clear WiFi credentials and restart in AP mode
     esp_err_t ret = wifi_manager_clear_credentials();
