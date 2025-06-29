@@ -1,40 +1,42 @@
 /**
  * @file web_server.c
- * @brief Basic HTTP server for WiFi captive portal and configuration
+ * @brief HTTP server for WiFi captive portal and configuration interface
+ * 
+ * This module provides a comprehensive HTTP server for ESP32 WiFi configuration
+ * and device management. It serves both a captive portal for WiFi setup and
+ * a full web interface for device monitoring and control.
+ * 
+ * Features:
+ * - Static file serving from embedded flash assets (HTML, CSS, JS)
+ * - WiFi configuration API endpoints (scan, connect, status, reset)
+ * - Multi-page responsive web interface with navbar navigation
+ * - Integration with DNS server for captive portal functionality
  */
 
 #include "web_server.h"
 #include "wifi_manager.h"
+#include "dns_server.h"
 #include "esp_log.h"
 #include "esp_http_server.h"
 #include "esp_wifi.h"
-#include "lwip/sockets.h"
-#include "lwip/dns.h"
-#include "lwip/netdb.h"
 #include "cJSON.h"
 
 static const char *TAG = "web_server";
 
 // Server handles
 static httpd_handle_t server = NULL;
-static int dns_socket = -1;
-static TaskHandle_t dns_task_handle = NULL;
 
 // Configuration
 static web_server_config_t current_config;
 static bool server_running = false;
 
-// Forward declarations
+// Forward declarations for HTTP request handlers
 static esp_err_t root_handler(httpd_req_t *req);
 static esp_err_t config_handler(httpd_req_t *req);
 static esp_err_t scan_handler(httpd_req_t *req);
 static esp_err_t connect_handler(httpd_req_t *req);
 static esp_err_t status_handler(httpd_req_t *req);
 static esp_err_t reset_handler(httpd_req_t *req);
-static void dns_server_task(void *pvParameters);
-static esp_err_t start_dns_server(void);
-
-static void stop_dns_server(void);
 
 // Static file serving declarations
 extern const uint8_t index_html_start[] asm("_binary_index_html_start");
@@ -303,125 +305,6 @@ static esp_err_t reset_handler(httpd_req_t *req)
     }
 }
 
-// DNS server for captive portal detection
-static void dns_server_task(void *pvParameters)
-{
-    ESP_LOGI(TAG, "DNS server task started");
-
-    struct sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = INADDR_ANY;
-    server_addr.sin_port = htons(current_config.dns_port);
-
-    dns_socket = socket(AF_INET, SOCK_DGRAM, 0);
-    if (dns_socket < 0)
-    {
-        ESP_LOGE(TAG, "Failed to create DNS socket");
-        vTaskDelete(NULL);
-        return;
-    }
-
-    if (bind(dns_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
-    {
-        ESP_LOGE(TAG, "Failed to bind DNS socket");
-        close(dns_socket);
-        dns_socket = -1;
-        vTaskDelete(NULL);
-        return;
-    }
-
-    ESP_LOGI(TAG, "DNS server listening on port %d", current_config.dns_port);
-
-    uint8_t rx_buffer[512];
-
-    while (dns_socket >= 0)
-    {
-        struct sockaddr_in client_addr;
-        socklen_t client_addr_len = sizeof(client_addr);
-
-        int len = recvfrom(dns_socket, rx_buffer, sizeof(rx_buffer), 0,
-                           (struct sockaddr *)&client_addr, &client_addr_len);
-
-        if (len > 0 && len >= 12)
-        { // Minimum DNS header size
-            // Simple DNS response: redirect all queries to 192.168.4.1
-            uint8_t response[512];
-            memcpy(response, rx_buffer, len);
-
-            // Set response flags
-            response[2] = 0x81; // Standard query response, no error
-            response[3] = 0x80; // Recursion available
-
-            // Add answer section pointing to 192.168.4.1
-            int response_len = len;
-            if (response_len + 16 < sizeof(response))
-            {
-                response[response_len++] = 0xc0; // Pointer to query name
-                response[response_len++] = 0x0c;
-                response[response_len++] = 0x00; // Type A
-                response[response_len++] = 0x01;
-                response[response_len++] = 0x00; // Class IN
-                response[response_len++] = 0x01;
-                response[response_len++] = 0x00; // TTL (4 bytes)
-                response[response_len++] = 0x00;
-                response[response_len++] = 0x00;
-                response[response_len++] = 0x3c;
-                response[response_len++] = 0x00; // Data length
-                response[response_len++] = 0x04;
-                response[response_len++] = 192; // IP: 192.168.4.1
-                response[response_len++] = 168;
-                response[response_len++] = 4;
-                response[response_len++] = 1;
-
-                // Update answer count
-                response[6] = 0x00;
-                response[7] = 0x01;
-            }
-
-            sendto(dns_socket, response, response_len, 0,
-                   (struct sockaddr *)&client_addr, client_addr_len);
-        }
-    }
-
-    ESP_LOGI(TAG, "DNS server task ended");
-    vTaskDelete(NULL);
-}
-
-static esp_err_t start_dns_server(void)
-{
-    if (dns_task_handle != NULL)
-    {
-        ESP_LOGW(TAG, "DNS server already running");
-        return ESP_OK;
-    }
-
-    BaseType_t result = xTaskCreate(dns_server_task, "dns_server", 4096, NULL, 5, &dns_task_handle);
-    if (result != pdPASS)
-    {
-        ESP_LOGE(TAG, "Failed to create DNS server task");
-        return ESP_FAIL;
-    }
-
-    return ESP_OK;
-}
-
-static void stop_dns_server(void)
-{
-    if (dns_socket >= 0)
-    {
-        close(dns_socket);
-        dns_socket = -1;
-    }
-
-    if (dns_task_handle != NULL)
-    {
-        vTaskDelete(dns_task_handle);
-        dns_task_handle = NULL;
-    }
-
-    ESP_LOGI(TAG, "DNS server stopped");
-}
-
 // Static file serving functions
 static const char *get_mime_type(const char *filename)
 {
@@ -676,13 +559,20 @@ esp_err_t web_server_start(void)
 
     ESP_LOGI(TAG, "Starting web server");
 
-    // Only start DNS server for captive portal if we're in AP mode
+    // Start DNS server for captive portal if we're in AP mode
     wifi_mode_t wifi_mode;
     if (esp_wifi_get_mode(&wifi_mode) == ESP_OK &&
         (wifi_mode == WIFI_MODE_AP || wifi_mode == WIFI_MODE_APSTA))
     {
         ESP_LOGI(TAG, "Starting DNS server for captive portal (AP mode)");
-        esp_err_t ret = start_dns_server();
+        
+        // Configure DNS server to redirect to AP IP
+        dns_server_config_t dns_config = {
+            .port = 53,
+            .ap_ip = 0xC0A80401  // 192.168.4.1 in network byte order
+        };
+        
+        esp_err_t ret = dns_server_start(&dns_config);
         if (ret != ESP_OK)
         {
             ESP_LOGW(TAG, "Failed to start DNS server, captive portal may not work properly");
@@ -708,8 +598,10 @@ esp_err_t web_server_stop(void)
 
     ESP_LOGI(TAG, "Stopping web server");
 
-    stop_dns_server();
+    // Stop DNS server
+    dns_server_stop();
 
+    // Stop HTTP server
     if (server != NULL)
     {
         httpd_stop(server);
