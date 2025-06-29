@@ -1,11 +1,11 @@
 /**
  * @file web_server.c
  * @brief HTTP server for WiFi captive portal and configuration interface
- * 
+ *
  * This module provides a comprehensive HTTP server for ESP32 WiFi configuration
  * and device management. It serves both a captive portal for WiFi setup and
  * a full web interface for device monitoring and control.
- * 
+ *
  * Features:
  * - Static file serving from embedded flash assets (HTML, CSS, JS)
  * - WiFi configuration API endpoints (scan, connect, status, reset)
@@ -564,13 +564,13 @@ esp_err_t web_server_start(void)
         (wifi_mode == WIFI_MODE_AP || wifi_mode == WIFI_MODE_APSTA))
     {
         ESP_LOGI(TAG, "Starting DNS server for captive portal (AP mode)");
-        
+
         // Configure DNS server to redirect to AP IP
         dns_server_config_t dns_config = {
             .port = 53,
-            .ap_ip = 0xC0A80401  // 192.168.4.1 in network byte order
+            .ap_ip = 0xC0A80401 // 192.168.4.1 in network byte order
         };
-        
+
         esp_err_t ret = dns_server_start(&dns_config);
         if (ret != ESP_OK)
         {
