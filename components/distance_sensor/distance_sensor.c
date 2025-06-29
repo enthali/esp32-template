@@ -2,7 +2,14 @@
  * @file distance_sensor.c
  * @brief HC-SR04 Ultrasonic Distance Sensor Driver Implementation
  *
- * DUAL-QUEUE REAL-TIME ARCHITECTURE:
+ * DUAL-QUEUE REAL-TIME // Default configuration
+static const distance_sensor_config_t default_config = {
+    .trigger_pin = GPIO_NUM_14,
+    .echo_pin = GPIO_NUM_15,
+    .measurement_interval_ms = 5000,  // 5 seconds for slower debugging/observation
+    .timeout_ms = 30,
+    .temperature_celsius = 20.0f,
+    .smoothing_alpha = 0.3f};  // 30% new value, 70% previous (good balance)TURE:
  * ==================================
  *
  * This implementation follows real-time system design principles:
@@ -19,11 +26,12 @@
  *    - Blocks on raw_measurement_queue with timeout
  *    - Performs floating-point calculations safely in task context
  *    - Validates measurements and handles errors
+ *    - Applies exponential moving average (EMA) filter for smooth readings
  *    - Implements automatic queue overflow handling
  *    - Yields CPU between measurements (vTaskDelay)
  *
  * 3. PUBLIC API:
- *    - Non-blocking access to latest measurements
+ *    - Blocking access to measurements (waits for new data)
  *    - Race-condition free (no shared variables)
  *    - Queue-based communication eliminates synchronization issues
  *
@@ -64,11 +72,13 @@
 #include "esp_log.h"
 #include "esp_rom_sys.h"
 #include "esp_check.h"
+#include <stddef.h>  // For offsetof macro
 
 static const char *TAG = "distance_sensor";
 
 // Configuration
 static distance_sensor_config_t sensor_config;
+static uint32_t config_canary = 0xDEADBEEF; // Memory corruption detection
 
 // Task and queue handles
 static TaskHandle_t sensor_task_handle = NULL;
@@ -77,6 +87,10 @@ static QueueHandle_t processed_measurement_queue = NULL; // Sensor Task → API
 
 // Statistics
 static uint32_t queue_overflow_counter = 0;
+
+// Exponential Moving Average (EMA) filter state
+static float previous_smoothed_value = 0.0f;
+static bool smoothing_initialized = false;
 
 // ISR state
 static volatile uint64_t echo_start_time = 0;
@@ -104,10 +118,11 @@ static volatile bool measurement_in_progress = false;
  *      | 5. Calculate distance  |<--------|                 |
  *      |    (floating-point)    |                           |
  *      |    Validate range      |                           |
+ *      |    Apply EMA filter    |                           |
  *      |         |              |                           |
  *      |         v              |                           |
  *      | [processed_queue]------|-------------------------->| 6. get_latest()
- *      |                        |                           |    (non-blocking)
+ *      |                        |                           |    (blocking)
  *      | 7. Sleep 100ms         |                           |
  *      |    (yield CPU)         |                           |
  *      |         |              |                           |
@@ -123,9 +138,10 @@ static volatile bool measurement_in_progress = false;
 static const distance_sensor_config_t default_config = {
     .trigger_pin = GPIO_NUM_14,
     .echo_pin = GPIO_NUM_15,
-    .measurement_interval_ms = 100,
+    .measurement_interval_ms = 5000,  // 5 seconds for debugging (easier to read logs)
     .timeout_ms = 30,
-    .temperature_celsius = 20.0f};
+    .temperature_celsius = 20.0f,
+    .smoothing_alpha = 0.3f};  // 30% new value, 70% previous (good balance)
 
 /**
  * @brief GPIO ISR handler for echo pin - REAL-TIME CRITICAL
@@ -184,6 +200,57 @@ static float calculate_speed_of_sound(float temperature_celsius)
 }
 
 /**
+ * @brief Apply exponential moving average (EMA) filter for sensor smoothing
+ * 
+ * The EMA filter provides smooth distance readings while maintaining responsiveness
+ * to actual changes. It uses minimal memory (just previous value) and is
+ * computationally efficient.
+ * 
+ * Formula: smoothed = (alpha * new_value) + ((1 - alpha) * previous_smoothed)
+ * 
+ * Where alpha (smoothing_alpha) controls the balance:
+ * - 0.0: Maximum smoothing (100% previous, 0% new) - very stable but slow
+ * - 0.3: Balanced smoothing (30% new, 70% previous) - good default
+ * - 0.5: Moderate smoothing (50/50 mix)
+ * - 1.0: No smoothing (100% new, 0% previous) - raw measurements
+ * 
+ * BENEFITS:
+ * - Reduces noise from electrical interference and air currents
+ * - Maintains responsiveness to real distance changes
+ * - Memory efficient (only stores one previous value)
+ * - Computationally fast (just multiply and add)
+ * - No startup delay (works from first measurement)
+ * 
+ * @param new_measurement Raw distance measurement in centimeters
+ * @return float Smoothed distance value in centimeters
+ */
+static float apply_ema_filter(float new_measurement)
+{
+    ESP_LOGI(TAG, "DEBUG: EMA entry - alpha=%.6f", sensor_config.smoothing_alpha);
+    
+    if (!smoothing_initialized) {
+        // First measurement - initialize filter with raw value
+        previous_smoothed_value = new_measurement;
+        smoothing_initialized = true;
+        ESP_LOGI(TAG, "EMA filter initialized with first measurement: %.2f cm (alpha=%.2f)", 
+                 new_measurement, sensor_config.smoothing_alpha);
+        return new_measurement;
+    }
+    
+    // Apply exponential moving average formula
+    float smoothed = (sensor_config.smoothing_alpha * new_measurement) + 
+                     ((1.0f - sensor_config.smoothing_alpha) * previous_smoothed_value);
+    
+    // Store smoothed value for next iteration
+    previous_smoothed_value = smoothed;
+    
+    ESP_LOGI(TAG, "EMA filter: raw=%.2f cm, smoothed=%.2f cm (alpha=%.2f)", 
+             new_measurement, smoothed, sensor_config.smoothing_alpha);
+    
+    return smoothed;
+}
+
+/**
  * @brief Distance sensor task - MEASUREMENT PROCESSING
  *
  * This task implements the main measurement loop:
@@ -211,6 +278,8 @@ static void distance_sensor_task(void *pvParameters)
 
     ESP_LOGI(TAG, "Distance sensor task started (interval: %lu ms, timeout: %lu ms)",
              sensor_config.measurement_interval_ms, sensor_config.timeout_ms);
+    
+    ESP_LOGI(TAG, "DEBUG: Task started - smoothing_alpha=%.6f", sensor_config.smoothing_alpha);
 
     while (1)
     {
@@ -230,16 +299,26 @@ static void distance_sensor_task(void *pvParameters)
             // Distance = (echo_time * speed_of_sound) / 2
             float distance_cm = (echo_duration_us * speed_of_sound_cm_per_us) / 2.0f;
 
-            // 4. Validate measurement range
+            // 4. Validate measurement range and apply smoothing filter
             distance_sensor_error_t status = DISTANCE_SENSOR_OK;
+            float final_distance_cm = distance_cm;
+
             if (distance_cm < 2.0f || distance_cm > 400.0f)
             {
                 status = DISTANCE_SENSOR_OUT_OF_RANGE;
+                ESP_LOGW(TAG, "Measurement out of range: %.2f cm (no smoothing applied)", distance_cm);
+                // Don't apply smoothing to invalid measurements - preserve error info
+            }
+            else
+            {
+                // Apply EMA filter only to valid measurements
+                ESP_LOGI(TAG, "Applying EMA filter to valid measurement: %.2f cm", distance_cm);
+                final_distance_cm = apply_ema_filter(distance_cm);
             }
 
             // 5. Create processed measurement
             distance_measurement_t processed = {
-                .distance_cm = distance_cm,
+                .distance_cm = final_distance_cm,
                 .timestamp_us = raw_data.echo_end_us,
                 .status = status};
 
@@ -256,7 +335,8 @@ static void distance_sensor_task(void *pvParameters)
                 }
             }
 
-            ESP_LOGD(TAG, "Distance: %.2f cm (echo: %llu µs)", distance_cm, echo_duration_us);
+            ESP_LOGI(TAG, "Distance: raw=%.2f cm, smoothed=%.2f cm (echo: %llu µs)", 
+                     distance_cm, final_distance_cm, echo_duration_us);
         }
         else
         {
@@ -285,18 +365,51 @@ static void distance_sensor_task(void *pvParameters)
 
 esp_err_t distance_sensor_init(const distance_sensor_config_t *config)
 {
+    ESP_LOGI(TAG, "DEBUG: distance_sensor_init called with config=%p", (void*)config);
+    ESP_LOGI(TAG, "DEBUG: Struct size: %zu bytes", sizeof(distance_sensor_config_t));
+    ESP_LOGI(TAG, "DEBUG: Field offsets: trigger_pin=%zu, echo_pin=%zu, interval=%zu, timeout=%zu, temp=%zu, alpha=%zu",
+             offsetof(distance_sensor_config_t, trigger_pin),
+             offsetof(distance_sensor_config_t, echo_pin),
+             offsetof(distance_sensor_config_t, measurement_interval_ms),
+             offsetof(distance_sensor_config_t, timeout_ms),
+             offsetof(distance_sensor_config_t, temperature_celsius),
+             offsetof(distance_sensor_config_t, smoothing_alpha));
+    ESP_LOGI(TAG, "DEBUG: default_config.smoothing_alpha=%.6f (hex: 0x%08lX)", 
+             default_config.smoothing_alpha, *(uint32_t*)&default_config.smoothing_alpha);
+    
     // Use default config if none provided
     if (config == NULL)
     {
+        ESP_LOGI(TAG, "DEBUG: Using default config");
         sensor_config = default_config;
     }
     else
     {
+        ESP_LOGI(TAG, "DEBUG: Using provided config, smoothing_alpha=%.6f (hex: 0x%08lX)", 
+                 config->smoothing_alpha, *(uint32_t*)&config->smoothing_alpha);
         sensor_config = *config;
     }
 
-    ESP_LOGI(TAG, "Initializing distance sensor (trigger: GPIO%d, echo: GPIO%d)",
-             sensor_config.trigger_pin, sensor_config.echo_pin);
+    ESP_LOGI(TAG, "DEBUG: Config after copy - smoothing_alpha=%.6f (hex: 0x%08lX)", 
+             sensor_config.smoothing_alpha, *(uint32_t*)&sensor_config.smoothing_alpha);
+    
+    // Validate smoothing alpha parameter
+    if (sensor_config.smoothing_alpha < 0.0f) {
+        sensor_config.smoothing_alpha = 0.0f;
+        ESP_LOGW(TAG, "Smoothing alpha cannot be negative, using 0.0 (maximum smoothing)");
+    } else if (sensor_config.smoothing_alpha > 1.0f) {
+        sensor_config.smoothing_alpha = 1.0f;
+        ESP_LOGW(TAG, "Smoothing alpha cannot exceed 1.0, using 1.0 (no smoothing)");
+    }
+
+    ESP_LOGI(TAG, "DEBUG: Config after validation - smoothing_alpha=%.6f", sensor_config.smoothing_alpha);
+
+    // Initialize EMA filter state
+    previous_smoothed_value = 0.0f;
+    smoothing_initialized = false;
+
+    ESP_LOGI(TAG, "Initializing distance sensor (trigger: GPIO%d, echo: GPIO%d, smoothing: %.6f)",
+             sensor_config.trigger_pin, sensor_config.echo_pin, sensor_config.smoothing_alpha);
 
     // Configure trigger pin as output
     gpio_config_t trigger_conf = {
@@ -343,6 +456,10 @@ esp_err_t distance_sensor_init(const distance_sensor_config_t *config)
     gpio_set_level(sensor_config.trigger_pin, 0);
 
     ESP_LOGI(TAG, "Distance sensor initialized successfully");
+    ESP_LOGI(TAG, "EMA filter configured with alpha=%.2f (%.0f%% new, %.0f%% previous)", 
+             sensor_config.smoothing_alpha,
+             sensor_config.smoothing_alpha * 100.0f,
+             (1.0f - sensor_config.smoothing_alpha) * 100.0f);
     return ESP_OK;
 }
 

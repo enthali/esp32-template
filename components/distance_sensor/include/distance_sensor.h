@@ -108,6 +108,7 @@ extern "C"
         uint32_t measurement_interval_ms; ///< Measurement interval (default: 100ms)
         uint32_t timeout_ms;              ///< Echo timeout (default: 30ms)
         float temperature_celsius;        ///< Temperature for speed of sound compensation (default: 20°C)
+        float smoothing_alpha;            ///< EMA smoothing factor: 0.0=heavy smoothing, 1.0=no smoothing (default: 0.3)
     } distance_sensor_config_t;
 
     /**

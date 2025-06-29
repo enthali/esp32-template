@@ -66,7 +66,8 @@ void app_main(void)
         .echo_pin = DISTANCE_ECHO,
         .measurement_interval_ms = DISTANCE_INTERVAL,
         .timeout_ms = DISTANCE_TIMEOUT,
-        .temperature_celsius = TEMPERATURE_C};
+        .temperature_celsius = TEMPERATURE_C,
+        .smoothing_alpha = 0.3f};  // EMA smoothing factor
 
     ret = distance_sensor_init(&distance_config);
     if (ret != ESP_OK)
