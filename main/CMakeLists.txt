@@ -6,11 +6,9 @@ idf_component_register(SRCS "main.c"
                            "wifi_manager.c"
                            "web_server.c"
                     INCLUDE_DIRS "." "test"
+                    EMBED_FILES "www/index.html"
+                                "www/wifi-setup.html"
+                                "www/settings.html"
+                                "www/css/style.css"
+                                "www/js/app.js"
                     REQUIRES led_controller distance_sensor esp_wifi esp_http_server esp_netif nvs_flash json)
-
-# Embed web assets into the ESP32 flash memory
-target_add_binary_data(${COMPONENT_LIB} "www/index.html" TEXT)
-target_add_binary_data(${COMPONENT_LIB} "www/wifi-setup.html" TEXT)
-target_add_binary_data(${COMPONENT_LIB} "www/settings.html" TEXT)
-target_add_binary_data(${COMPONENT_LIB} "www/css/style.css" TEXT)
-target_add_binary_data(${COMPONENT_LIB} "www/js/app.js" TEXT)
