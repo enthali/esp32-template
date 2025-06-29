@@ -190,7 +190,79 @@ main/www/
 
 ---
 
-#### **Step 4.2.5: HTTPS Security Implementation** 📋 **PLANNED**  
+#### **Step 4.2.5: Component Architecture Restructuring** 📋 **PLANNED**  
+- 📋 **Component Encapsulation**: Move monitoring logic into respective components for complete self-containment
+- 📋 **WiFi Component**: Restructure `wifi_manager` into `wifi/` folder with internal monitoring
+- 📋 **Distance Sensor Enhancement**: Add internal sensor health monitoring to `distance_sensor/` component
+- 📋 **Simplified Main**: Remove all monitoring loops from `main.c` - components handle their own health internally
+- 📋 **Internal Monitoring Tasks**: Each component starts its own low-priority monitoring task automatically
+
+**Architecture Benefits:**
+- **Complete Encapsulation**: Each component fully responsible for its own health and monitoring
+- **Simplified Main**: `main.c` becomes initialization-only with no monitoring loops
+- **Internal Implementation Detail**: Monitoring hidden from component consumers
+- **Self-Contained Components**: Each component manages its lifecycle independently
+- **Clean APIs**: Public APIs stay focused on core functionality
+
+**Proposed Structure:**
+```
+📁 components/
+├── 📁 wifi/                   # All WiFi-related functionality
+│   ├── wifi_manager.h         # Management API (existing)
+│   ├── wifi_manager.c         # WiFi management (existing)
+│   ├── wifi_monitor.h         # Internal monitoring (new)
+│   └── wifi_monitor.c         # Status monitoring task (new)
+├── 📁 distance_sensor/        # All sensor functionality  
+│   ├── distance_sensor.h      # Sensor API (existing)
+│   ├── distance_sensor.c      # Sensor driver (existing)
+│   ├── sensor_monitor.h       # Internal monitoring (new)
+│   └── sensor_monitor.c       # Health monitoring task (new)
+└── 📁 display/                # All display functionality
+    ├── display_logic.h        # Display API (existing)
+    └── display_logic.c        # Display logic (existing)
+    # Note: Display monitoring optional - no current monitoring needs
+```
+
+**Implementation Strategy:**
+- `wifi_manager_init()` internally starts wifi_monitor for status logging
+- `distance_sensor_init()` internally starts sensor_monitor for queue overflow tracking
+- Monitoring tasks run at low priority (1-2) and are transparent to consumers
+- Public APIs unchanged - monitoring is internal implementation detail
+- Main.c becomes pure initialization with no runtime monitoring loops
+
+**Clean Main.c Result:**
+```c
+void app_main(void) {
+    // Hardware initialization only - monitoring starts automatically
+    led_controller_init(&led_config);
+    distance_sensor_init(&distance_config);  // Starts internal monitoring
+    wifi_manager_init();                      // Starts internal monitoring  
+    display_logic_init(&display_config);
+    
+    // Start services
+    distance_sensor_start();
+    wifi_manager_start();
+    display_logic_start();
+    
+    ESP_LOGI(TAG, "All systems initialized and running");
+    
+    // Main just sleeps - no monitoring loops needed!
+    while(1) {
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+```
+
+**Deliverables:**
+- Restructured `wifi/` component with internal monitoring
+- Enhanced `distance_sensor/` component with internal health monitoring  
+- Cleaned `main.c` with initialization-only logic
+- Component-internal monitoring tasks (transparent to consumers)
+- Updated component APIs with automatic monitoring lifecycle
+
+---
+
+#### **Step 4.2.6: HTTPS Security Implementation** 📋 **PLANNED**  
 - 📋 **HTTPS Server**: Replace HTTP with encrypted HTTPS using ESP32 SSL/TLS support
 - 📋 **Self-Signed Certificates**: Generate and embed certificates for local IoT device use
 - 📋 **Certificate Generation**: Build-time certificate creation and embedding
