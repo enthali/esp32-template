@@ -53,7 +53,6 @@ extern const uint8_t app_js_end[] asm("_binary_app_js_end");
 // Helper functions for static file serving
 static const char *get_mime_type(const char *filename);
 static esp_err_t get_embedded_file(const char *filename, const uint8_t **data, size_t *size);
-static void stop_dns_server(void);
 
 // HTTP request handlers
 static esp_err_t root_handler(httpd_req_t *req)

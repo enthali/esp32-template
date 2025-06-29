@@ -9,6 +9,7 @@
 #include "esp_wifi.h"
 #include "esp_netif.h"
 #include "esp_event.h"
+#include "esp_timer.h"
 #include "nvs_flash.h"
 #include "nvs.h"
 #include "freertos/FreeRTOS.h"
@@ -44,6 +45,9 @@ static wifi_credentials_t stored_credentials = {0};
 static bool has_stored_credentials = false;
 static uint8_t retry_count = 0;
 
+// Connection timeout timer
+static esp_timer_handle_t connection_timeout_timer = NULL;
+
 // ESP-IDF objects
 static esp_netif_t *wifi_netif_sta = NULL;
 static esp_netif_t *wifi_netif_ap = NULL;
@@ -51,6 +55,7 @@ static EventGroupHandle_t wifi_event_group = NULL;
 
 // Forward declarations
 static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data);
+static void connection_timeout_callback(void* arg);
 static esp_err_t load_credentials_from_nvs(void);
 static esp_err_t save_credentials_to_nvs(const wifi_credentials_t *credentials);
 static esp_err_t start_sta_mode(void);
@@ -105,6 +110,18 @@ esp_err_t wifi_manager_init(void)
     // Load stored credentials
     load_credentials_from_nvs();
 
+    // Create connection timeout timer
+    esp_timer_create_args_t timer_args = {
+        .callback = connection_timeout_callback,
+        .arg = NULL,
+        .name = "wifi_timeout"
+    };
+    
+    esp_err_t timer_ret = esp_timer_create(&timer_args, &connection_timeout_timer);
+    if (timer_ret != ESP_OK) {
+        ESP_LOGW(TAG, "Failed to create connection timeout timer: %s", esp_err_to_name(timer_ret));
+    }
+
     wifi_manager_initialized = true;
     ESP_LOGI(TAG, "WiFi manager initialized successfully");
     ESP_LOGI(TAG, "Stored credentials: %s", has_stored_credentials ? "YES" : "NO");
@@ -146,6 +163,13 @@ esp_err_t wifi_manager_stop(void)
     }
 
     ESP_LOGI(TAG, "Stopping WiFi manager");
+
+    // Stop and delete timeout timer
+    if (connection_timeout_timer) {
+        esp_timer_stop(connection_timeout_timer);
+        esp_timer_delete(connection_timeout_timer);
+        connection_timeout_timer = NULL;
+    }
 
     // Stop web server first
     web_server_stop();
@@ -271,11 +295,27 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
         {
         case WIFI_EVENT_STA_START:
             ESP_LOGI(TAG, "WiFi STA started, connecting...");
+            
+            // Start connection timeout timer
+            if (connection_timeout_timer) {
+                esp_timer_start_once(connection_timeout_timer, WIFI_STA_TIMEOUT_MS * 1000); // Convert to microseconds
+            }
+            
             esp_wifi_connect();
             break;
 
         case WIFI_EVENT_STA_CONNECTED:
-            ESP_LOGI(TAG, "WiFi STA connected to AP");
+            ESP_LOGI(TAG, "WiFi STA connected to AP, waiting for IP...");
+            
+            // Stop timeout timer since we're connected at WiFi layer
+            if (connection_timeout_timer) {
+                esp_timer_stop(connection_timeout_timer);
+            }
+            
+            // Start a longer timeout for IP acquisition (30 seconds)
+            if (connection_timeout_timer) {
+                esp_timer_start_once(connection_timeout_timer, 30000 * 1000); // 30 seconds for IP
+            }
             break;
 
         case WIFI_EVENT_STA_DISCONNECTED:
@@ -346,6 +386,11 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
             ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
             ESP_LOGI(TAG, "WiFi connected! IP: " IPSTR, IP2STR(&event->ip_info.ip));
 
+            // Stop any running timeout timer
+            if (connection_timeout_timer) {
+                esp_timer_stop(connection_timeout_timer);
+            }
+
             current_mode = WIFI_MODE_STA_CONNECTED;
             retry_count = 0;
             xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_BIT);
@@ -358,6 +403,31 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
             }
         }
     }
+}
+
+static void connection_timeout_callback(void* arg)
+{
+    ESP_LOGW(TAG, "Connection timeout after %d ms, switching to AP mode", WIFI_STA_TIMEOUT_MS);
+    
+    // Check current WiFi state
+    wifi_ap_record_t ap_info;
+    esp_err_t wifi_status = esp_wifi_sta_get_ap_info(&ap_info);
+    
+    if (wifi_status == ESP_OK) {
+        ESP_LOGW(TAG, "WiFi layer is connected to %s (RSSI: %d), but no IP received", 
+                 ap_info.ssid, ap_info.rssi);
+        ESP_LOGW(TAG, "This might be a DHCP issue on the network");
+    } else {
+        ESP_LOGW(TAG, "WiFi layer also disconnected");
+    }
+    
+    // Cancel the timer
+    if (connection_timeout_timer) {
+        esp_timer_stop(connection_timeout_timer);
+    }
+    
+    // Force switch to AP mode
+    switch_to_mode(WIFI_MODE_AP_ACTIVE);
 }
 
 static esp_err_t load_credentials_from_nvs(void)

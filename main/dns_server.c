@@ -63,12 +63,12 @@ static void dns_server_task(void *pvParameters)
         return;
     }
 
-    ESP_LOGI(TAG, "DNS server listening on port %d, redirecting to %d.%d.%d.%d", 
+    ESP_LOGI(TAG, "DNS server listening on port %d, redirecting to %u.%u.%u.%u", 
              current_config.port,
-             (current_config.ap_ip >> 24) & 0xFF,
-             (current_config.ap_ip >> 16) & 0xFF,
-             (current_config.ap_ip >> 8) & 0xFF,
-             current_config.ap_ip & 0xFF);
+             (unsigned int)((current_config.ap_ip >> 24) & 0xFF),
+             (unsigned int)((current_config.ap_ip >> 16) & 0xFF),
+             (unsigned int)((current_config.ap_ip >> 8) & 0xFF),
+             (unsigned int)(current_config.ap_ip & 0xFF));
 
     uint8_t rx_buffer[512];
     
