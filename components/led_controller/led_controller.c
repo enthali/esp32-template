@@ -8,6 +8,8 @@
 
 #include "led_controller.h"
 #include "esp_log.h"
+#include "driver/rmt_tx.h"
+#include "driver/rmt_encoder.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -24,7 +26,9 @@ static const char *TAG = "led_controller";
 static led_color_t *led_buffer = NULL;
 static led_config_t current_config = {0};
 static bool is_initialized = false;
-static rmt_item32_t *rmt_buffer = NULL;
+static rmt_channel_handle_t rmt_channel_handle = NULL;
+static rmt_encoder_handle_t rmt_encoder_handle = NULL;
+static rmt_transmit_config_t rmt_tx_config = {0};
 
 // Predefined color constants
 const led_color_t LED_COLOR_RED = {255, 0, 0};
@@ -37,34 +41,28 @@ const led_color_t LED_COLOR_MAGENTA = {255, 0, 255};
 const led_color_t LED_COLOR_OFF = {0, 0, 0};
 
 /**
- * @brief Convert single byte to RMT items for WS2812
- *
- * Converts 8-bit value to 8 RMT items representing WS2812 bit timing.
- *
- * @param byte Byte value to convert
- * @param rmt_items Output buffer for 8 RMT items
+ * @brief Create WS2812 RMT encoder
  */
-static void byte_to_rmt_items(uint8_t byte, rmt_item32_t *rmt_items)
+static esp_err_t rmt_new_led_strip_encoder(rmt_encoder_handle_t *ret_encoder)
 {
-    for (int i = 7; i >= 0; i--)
-    {
-        if (byte & (1 << i))
-        {
-            // Bit 1: High for 0.8us, Low for 0.4us
-            rmt_items[7 - i].level0 = 1;
-            rmt_items[7 - i].duration0 = WS2812_T1H_TICKS;
-            rmt_items[7 - i].level1 = 0;
-            rmt_items[7 - i].duration1 = WS2812_T1L_TICKS;
-        }
-        else
-        {
-            // Bit 0: High for 0.4us, Low for 0.8us
-            rmt_items[7 - i].level0 = 1;
-            rmt_items[7 - i].duration0 = WS2812_T0H_TICKS;
-            rmt_items[7 - i].level1 = 0;
-            rmt_items[7 - i].duration1 = WS2812_T0L_TICKS;
-        }
-    }
+    // Create bytes encoder for RGB data
+    rmt_bytes_encoder_config_t bytes_encoder_config = {
+        .bit0 = {
+            .level0 = 1,
+            .duration0 = WS2812_T0H_TICKS,
+            .level1 = 0,
+            .duration1 = WS2812_T0L_TICKS,
+        },
+        .bit1 = {
+            .level0 = 1,
+            .duration0 = WS2812_T1H_TICKS,
+            .level1 = 0,
+            .duration1 = WS2812_T1L_TICKS,
+        },
+        .flags.msb_first = 1,
+    };
+    
+    return rmt_new_bytes_encoder(&bytes_encoder_config, ret_encoder);
 }
 
 /**
@@ -72,32 +70,43 @@ static void byte_to_rmt_items(uint8_t byte, rmt_item32_t *rmt_items)
  */
 static esp_err_t configure_rmt_channel(void)
 {
-    rmt_config_t config = {
-        .rmt_mode = RMT_MODE_TX,
-        .channel = current_config.rmt_channel,
+    // Configure RMT TX channel
+    rmt_tx_channel_config_t tx_channel_config = {
         .gpio_num = current_config.gpio_pin,
-        .clk_div = 1, // 80MHz clock
-        .mem_block_num = 1,
-        .tx_config = {
-            .carrier_en = false,
-            .loop_en = false,
-            .idle_level = RMT_IDLE_LEVEL_LOW,
-            .idle_output_en = true,
-        }};
+        .clk_src = RMT_CLK_SRC_DEFAULT,
+        .resolution_hz = 80000000, // 80MHz resolution
+        .mem_block_symbols = 64,
+        .trans_queue_depth = 4,
+    };
 
-    esp_err_t ret = rmt_config(&config);
-    if (ret != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Failed to configure RMT channel: %s", esp_err_to_name(ret));
+    esp_err_t ret = rmt_new_tx_channel(&tx_channel_config, &rmt_channel_handle);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to create RMT TX channel: %s", esp_err_to_name(ret));
         return ret;
     }
 
-    ret = rmt_driver_install(current_config.rmt_channel, 0, 0);
-    if (ret != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Failed to install RMT driver: %s", esp_err_to_name(ret));
+    // Create LED strip encoder
+    ret = rmt_new_led_strip_encoder(&rmt_encoder_handle);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to create LED strip encoder: %s", esp_err_to_name(ret));
+        rmt_del_channel(rmt_channel_handle);
+        rmt_channel_handle = NULL;
         return ret;
     }
+
+    // Enable RMT TX channel
+    ret = rmt_enable(rmt_channel_handle);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to enable RMT channel: %s", esp_err_to_name(ret));
+        rmt_del_encoder(rmt_encoder_handle);
+        rmt_del_channel(rmt_channel_handle);
+        rmt_channel_handle = NULL;
+        rmt_encoder_handle = NULL;
+        return ret;
+    }
+
+    // Configure transmission
+    rmt_tx_config.loop_count = 0; // No loop
 
     return ESP_OK;
 }
@@ -133,25 +142,12 @@ esp_err_t led_controller_init(const led_config_t *config)
         return ESP_ERR_NO_MEM;
     }
 
-    // Allocate RMT buffer (24 bits per LED + reset pulse)
-    size_t rmt_buffer_size = (config->led_count * 24 + 1) * sizeof(rmt_item32_t);
-    rmt_buffer = (rmt_item32_t *)malloc(rmt_buffer_size);
-    if (rmt_buffer == NULL)
-    {
-        ESP_LOGE(TAG, "Failed to allocate RMT buffer");
-        free(led_buffer);
-        led_buffer = NULL;
-        return ESP_ERR_NO_MEM;
-    }
-
     // Configure RMT
     esp_err_t ret = configure_rmt_channel();
     if (ret != ESP_OK)
     {
         free(led_buffer);
-        free(rmt_buffer);
         led_buffer = NULL;
-        rmt_buffer = NULL;
         return ret;
     }
 
@@ -177,13 +173,19 @@ esp_err_t led_controller_deinit(void)
     led_show();
 
     // Cleanup RMT
-    rmt_driver_uninstall(current_config.rmt_channel);
+    if (rmt_channel_handle) {
+        rmt_disable(rmt_channel_handle);
+        rmt_del_channel(rmt_channel_handle);
+        rmt_channel_handle = NULL;
+    }
+    if (rmt_encoder_handle) {
+        rmt_del_encoder(rmt_encoder_handle);
+        rmt_encoder_handle = NULL;
+    }
 
     // Free memory
     free(led_buffer);
-    free(rmt_buffer);
     led_buffer = NULL;
-    rmt_buffer = NULL;
 
     is_initialized = false;
     ESP_LOGI(TAG, "LED controller deinitialized");
@@ -245,35 +247,36 @@ esp_err_t led_show(void)
         return ESP_ERR_INVALID_STATE;
     }
 
-    // Convert LED buffer to RMT items
-    for (uint16_t led = 0; led < current_config.led_count; led++)
-    {
-        // WS2812 expects GRB order
-        uint8_t green = led_buffer[led].green;
-        uint8_t red = led_buffer[led].red;
-        uint8_t blue = led_buffer[led].blue;
-
-        // Convert each color byte to RMT items
-        byte_to_rmt_items(green, &rmt_buffer[led * 24 + 0]);
-        byte_to_rmt_items(red, &rmt_buffer[led * 24 + 8]);
-        byte_to_rmt_items(blue, &rmt_buffer[led * 24 + 16]);
+    // Prepare data buffer in GRB order for WS2812
+    size_t data_size = current_config.led_count * 3; // 3 bytes per LED (GRB)
+    uint8_t *data_buffer = malloc(data_size);
+    if (!data_buffer) {
+        ESP_LOGE(TAG, "Failed to allocate data buffer");
+        return ESP_ERR_NO_MEM;
     }
 
-    // Add reset pulse at the end
-    rmt_item32_t *reset_item = &rmt_buffer[current_config.led_count * 24];
-    reset_item->level0 = 0;
-    reset_item->duration0 = WS2812_RESET_TICKS;
-    reset_item->level1 = 0;
-    reset_item->duration1 = 0;
-
-    // Transmit
-    esp_err_t ret = rmt_write_items(current_config.rmt_channel, rmt_buffer,
-                                    current_config.led_count * 24 + 1, true);
-    if (ret != ESP_OK)
+    // Convert LED buffer to GRB format
+    for (uint16_t led = 0; led < current_config.led_count; led++)
     {
+        data_buffer[led * 3 + 0] = led_buffer[led].green; // G
+        data_buffer[led * 3 + 1] = led_buffer[led].red;   // R
+        data_buffer[led * 3 + 2] = led_buffer[led].blue;  // B
+    }
+
+    // Transmit data using new RMT TX API
+    esp_err_t ret = rmt_transmit(rmt_channel_handle, rmt_encoder_handle, 
+                                data_buffer, data_size, &rmt_tx_config);
+    if (ret == ESP_OK) {
+        // Wait for transmission to complete
+        ret = rmt_tx_wait_all_done(rmt_channel_handle, 100); // 100ms timeout
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to wait for transmission completion: %s", esp_err_to_name(ret));
+        }
+    } else {
         ESP_LOGE(TAG, "Failed to transmit LED data: %s", esp_err_to_name(ret));
     }
 
+    free(data_buffer);
     return ret;
 }
 

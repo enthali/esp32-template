@@ -22,7 +22,7 @@
 #include <stdbool.h>
 #include "esp_err.h"
 #include "driver/gpio.h"
-#include "driver/rmt.h"
+#include "driver/rmt_tx.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -50,7 +50,7 @@ extern "C"
     {
         gpio_num_t gpio_pin;       ///< GPIO pin for WS2812 data line
         uint16_t led_count;        ///< Number of LEDs in the strip
-        rmt_channel_t rmt_channel; ///< RMT channel to use (RMT_CHANNEL_0 to RMT_CHANNEL_7)
+        int rmt_channel;           ///< RMT channel number (0 to 7)
     } led_config_t;
 
     /**
