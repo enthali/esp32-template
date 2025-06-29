@@ -2,14 +2,7 @@
  * @file distance_sensor.c
  * @brief HC-SR04 Ultrasonic Distance Sensor Driver Implementation
  *
- * DUAL-QUEUE REAL-TIME // Default configuration
-static const distance_sensor_config_t default_config = {
-    .trigger_pin = GPIO_NUM_14,
-    .echo_pin = GPIO_NUM_15,
-    .measurement_interval_ms = 5000,  // 5 seconds for slower debugging/observation
-    .timeout_ms = 30,
-    .temperature_celsius = 20.0f,
-    .smoothing_alpha = 0.3f};  // 30% new value, 70% previous (good balance)TURE:
+ * DUAL-QUEUE REAL-TIME ARCHITECTURE:
  * ==================================
  *
  * This implementation follows real-time system design principles:
@@ -72,13 +65,22 @@ static const distance_sensor_config_t default_config = {
 #include "esp_log.h"
 #include "esp_rom_sys.h"
 #include "esp_check.h"
-#include <stddef.h>  // For offsetof macro
+#include <stddef.h> // For offsetof macro
+
+// Debug configuration - comment out to disable detailed debug output
+// When defined: Shows struct layout, memory dumps, and detailed EMA filter tracing
+// When undefined: Only essential operational logs (initialization, errors, measurements)
+// #define DISTANCE_SENSOR_DEBUG
+
+// Measurement logging - comment out to disable frequent measurement logs (every 100ms)
+// When defined: Shows each raw/smoothed measurement result
+// When undefined: Only initialization, errors, and status messages
+// #define DISTANCE_SENSOR_MEASUREMENT_LOGS
 
 static const char *TAG = "distance_sensor";
 
 // Configuration
 static distance_sensor_config_t sensor_config;
-static uint32_t config_canary = 0xDEADBEEF; // Memory corruption detection
 
 // Task and queue handles
 static TaskHandle_t sensor_task_handle = NULL;
@@ -138,10 +140,10 @@ static volatile bool measurement_in_progress = false;
 static const distance_sensor_config_t default_config = {
     .trigger_pin = GPIO_NUM_14,
     .echo_pin = GPIO_NUM_15,
-    .measurement_interval_ms = 5000,  // 5 seconds for debugging (easier to read logs)
+    .measurement_interval_ms = 100, // 100ms for normal operation (10 Hz measurement rate)
     .timeout_ms = 30,
     .temperature_celsius = 20.0f,
-    .smoothing_alpha = 0.3f};  // 30% new value, 70% previous (good balance)
+    .smoothing_alpha = 0.3f}; // 30% new value, 70% previous (good balance)
 
 /**
  * @brief GPIO ISR handler for echo pin - REAL-TIME CRITICAL
@@ -201,52 +203,59 @@ static float calculate_speed_of_sound(float temperature_celsius)
 
 /**
  * @brief Apply exponential moving average (EMA) filter for sensor smoothing
- * 
+ *
  * The EMA filter provides smooth distance readings while maintaining responsiveness
  * to actual changes. It uses minimal memory (just previous value) and is
  * computationally efficient.
- * 
+ *
  * Formula: smoothed = (alpha * new_value) + ((1 - alpha) * previous_smoothed)
- * 
+ *
  * Where alpha (smoothing_alpha) controls the balance:
  * - 0.0: Maximum smoothing (100% previous, 0% new) - very stable but slow
  * - 0.3: Balanced smoothing (30% new, 70% previous) - good default
  * - 0.5: Moderate smoothing (50/50 mix)
  * - 1.0: No smoothing (100% new, 0% previous) - raw measurements
- * 
+ *
  * BENEFITS:
  * - Reduces noise from electrical interference and air currents
  * - Maintains responsiveness to real distance changes
  * - Memory efficient (only stores one previous value)
  * - Computationally fast (just multiply and add)
  * - No startup delay (works from first measurement)
- * 
+ *
  * @param new_measurement Raw distance measurement in centimeters
  * @return float Smoothed distance value in centimeters
  */
 static float apply_ema_filter(float new_measurement)
 {
+#ifdef DISTANCE_SENSOR_DEBUG
     ESP_LOGI(TAG, "DEBUG: EMA entry - alpha=%.6f", sensor_config.smoothing_alpha);
-    
-    if (!smoothing_initialized) {
+#endif
+
+    if (!smoothing_initialized)
+    {
         // First measurement - initialize filter with raw value
         previous_smoothed_value = new_measurement;
         smoothing_initialized = true;
-        ESP_LOGI(TAG, "EMA filter initialized with first measurement: %.2f cm (alpha=%.2f)", 
+#ifdef DISTANCE_SENSOR_DEBUG
+        ESP_LOGI(TAG, "EMA filter initialized with first measurement: %.2f cm (alpha=%.2f)",
                  new_measurement, sensor_config.smoothing_alpha);
+#endif
         return new_measurement;
     }
-    
+
     // Apply exponential moving average formula
-    float smoothed = (sensor_config.smoothing_alpha * new_measurement) + 
+    float smoothed = (sensor_config.smoothing_alpha * new_measurement) +
                      ((1.0f - sensor_config.smoothing_alpha) * previous_smoothed_value);
-    
+
     // Store smoothed value for next iteration
     previous_smoothed_value = smoothed;
-    
-    ESP_LOGI(TAG, "EMA filter: raw=%.2f cm, smoothed=%.2f cm (alpha=%.2f)", 
+
+#ifdef DISTANCE_SENSOR_DEBUG
+    ESP_LOGI(TAG, "EMA filter: raw=%.2f cm, smoothed=%.2f cm (alpha=%.2f)",
              new_measurement, smoothed, sensor_config.smoothing_alpha);
-    
+#endif
+
     return smoothed;
 }
 
@@ -278,8 +287,10 @@ static void distance_sensor_task(void *pvParameters)
 
     ESP_LOGI(TAG, "Distance sensor task started (interval: %lu ms, timeout: %lu ms)",
              sensor_config.measurement_interval_ms, sensor_config.timeout_ms);
-    
+
+#ifdef DISTANCE_SENSOR_DEBUG
     ESP_LOGI(TAG, "DEBUG: Task started - smoothing_alpha=%.6f", sensor_config.smoothing_alpha);
+#endif
 
     while (1)
     {
@@ -312,7 +323,9 @@ static void distance_sensor_task(void *pvParameters)
             else
             {
                 // Apply EMA filter only to valid measurements
+#ifdef DISTANCE_SENSOR_DEBUG
                 ESP_LOGI(TAG, "Applying EMA filter to valid measurement: %.2f cm", distance_cm);
+#endif
                 final_distance_cm = apply_ema_filter(distance_cm);
             }
 
@@ -335,8 +348,12 @@ static void distance_sensor_task(void *pvParameters)
                 }
             }
 
-            ESP_LOGI(TAG, "Distance: raw=%.2f cm, smoothed=%.2f cm (echo: %llu µs)", 
+#ifdef DISTANCE_SENSOR_MEASUREMENT_LOGS
+#ifdef DISTANCE_SENSOR_MEASUREMENT_LOGS
+            ESP_LOGI(TAG, "Distance: raw=%.2f cm, smoothed=%.2f cm (echo: %llu µs)",
                      distance_cm, final_distance_cm, echo_duration_us);
+#endif
+#endif
         }
         else
         {
@@ -365,7 +382,8 @@ static void distance_sensor_task(void *pvParameters)
 
 esp_err_t distance_sensor_init(const distance_sensor_config_t *config)
 {
-    ESP_LOGI(TAG, "DEBUG: distance_sensor_init called with config=%p", (void*)config);
+#ifdef DISTANCE_SENSOR_DEBUG
+    ESP_LOGI(TAG, "DEBUG: distance_sensor_init called with config=%p", (void *)config);
     ESP_LOGI(TAG, "DEBUG: Struct size: %zu bytes", sizeof(distance_sensor_config_t));
     ESP_LOGI(TAG, "DEBUG: Field offsets: trigger_pin=%zu, echo_pin=%zu, interval=%zu, timeout=%zu, temp=%zu, alpha=%zu",
              offsetof(distance_sensor_config_t, trigger_pin),
@@ -374,35 +392,47 @@ esp_err_t distance_sensor_init(const distance_sensor_config_t *config)
              offsetof(distance_sensor_config_t, timeout_ms),
              offsetof(distance_sensor_config_t, temperature_celsius),
              offsetof(distance_sensor_config_t, smoothing_alpha));
-    ESP_LOGI(TAG, "DEBUG: default_config.smoothing_alpha=%.6f (hex: 0x%08lX)", 
-             default_config.smoothing_alpha, *(uint32_t*)&default_config.smoothing_alpha);
-    
+    ESP_LOGI(TAG, "DEBUG: default_config.smoothing_alpha=%.6f (hex: 0x%08lX)",
+             default_config.smoothing_alpha, *(uint32_t *)&default_config.smoothing_alpha);
+#endif
+
     // Use default config if none provided
     if (config == NULL)
     {
+#ifdef DISTANCE_SENSOR_DEBUG
         ESP_LOGI(TAG, "DEBUG: Using default config");
+#endif
         sensor_config = default_config;
     }
     else
     {
-        ESP_LOGI(TAG, "DEBUG: Using provided config, smoothing_alpha=%.6f (hex: 0x%08lX)", 
-                 config->smoothing_alpha, *(uint32_t*)&config->smoothing_alpha);
+#ifdef DISTANCE_SENSOR_DEBUG
+        ESP_LOGI(TAG, "DEBUG: Using provided config, smoothing_alpha=%.6f (hex: 0x%08lX)",
+                 config->smoothing_alpha, *(uint32_t *)&config->smoothing_alpha);
+#endif
         sensor_config = *config;
     }
 
-    ESP_LOGI(TAG, "DEBUG: Config after copy - smoothing_alpha=%.6f (hex: 0x%08lX)", 
-             sensor_config.smoothing_alpha, *(uint32_t*)&sensor_config.smoothing_alpha);
-    
+#ifdef DISTANCE_SENSOR_DEBUG
+    ESP_LOGI(TAG, "DEBUG: Config after copy - smoothing_alpha=%.6f (hex: 0x%08lX)",
+             sensor_config.smoothing_alpha, *(uint32_t *)&sensor_config.smoothing_alpha);
+#endif
+
     // Validate smoothing alpha parameter
-    if (sensor_config.smoothing_alpha < 0.0f) {
+    if (sensor_config.smoothing_alpha < 0.0f)
+    {
         sensor_config.smoothing_alpha = 0.0f;
         ESP_LOGW(TAG, "Smoothing alpha cannot be negative, using 0.0 (maximum smoothing)");
-    } else if (sensor_config.smoothing_alpha > 1.0f) {
+    }
+    else if (sensor_config.smoothing_alpha > 1.0f)
+    {
         sensor_config.smoothing_alpha = 1.0f;
         ESP_LOGW(TAG, "Smoothing alpha cannot exceed 1.0, using 1.0 (no smoothing)");
     }
 
+#ifdef DISTANCE_SENSOR_DEBUG
     ESP_LOGI(TAG, "DEBUG: Config after validation - smoothing_alpha=%.6f", sensor_config.smoothing_alpha);
+#endif
 
     // Initialize EMA filter state
     previous_smoothed_value = 0.0f;
@@ -456,7 +486,7 @@ esp_err_t distance_sensor_init(const distance_sensor_config_t *config)
     gpio_set_level(sensor_config.trigger_pin, 0);
 
     ESP_LOGI(TAG, "Distance sensor initialized successfully");
-    ESP_LOGI(TAG, "EMA filter configured with alpha=%.2f (%.0f%% new, %.0f%% previous)", 
+    ESP_LOGI(TAG, "EMA filter configured with alpha=%.2f (%.0f%% new, %.0f%% previous)",
              sensor_config.smoothing_alpha,
              sensor_config.smoothing_alpha * 100.0f,
              (1.0f - sensor_config.smoothing_alpha) * 100.0f);

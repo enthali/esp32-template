@@ -10,7 +10,6 @@
 #include "wifi_manager.h"
 #include "display_logic.h"
 
-
 static const char *TAG = "main";
 
 // =============================================
@@ -22,9 +21,9 @@ static const char *TAG = "main";
 
 #define DISTANCE_TRIGGER GPIO_NUM_14
 #define DISTANCE_ECHO GPIO_NUM_13
-#define DISTANCE_INTERVAL 100  // Measurement interval in ms (100ms = 10Hz for responsive updates)
-#define DISTANCE_TIMEOUT 30    // Echo timeout in ms
-#define TEMPERATURE_C 20.0f    // Room temperature for speed of sound
+#define DISTANCE_INTERVAL 100 // Measurement interval in ms (100ms = 10Hz for responsive updates)
+#define DISTANCE_TIMEOUT 30   // Echo timeout in ms
+#define TEMPERATURE_C 20.0f   // Room temperature for speed of sound
 
 void app_main(void)
 {
@@ -67,7 +66,7 @@ void app_main(void)
         .measurement_interval_ms = DISTANCE_INTERVAL,
         .timeout_ms = DISTANCE_TIMEOUT,
         .temperature_celsius = TEMPERATURE_C,
-        .smoothing_alpha = 0.3f};  // EMA smoothing factor
+        .smoothing_alpha = 0.3f}; // EMA smoothing factor
 
     ret = distance_sensor_init(&distance_config);
     if (ret != ESP_OK)
@@ -85,7 +84,6 @@ void app_main(void)
 
     ESP_LOGI(TAG, "Distance sensor initialized and started");
     ESP_LOGI(TAG, "Hardware: LED=GPIO%d, Trigger=GPIO%d, Echo=GPIO%d", LED_DATA_PIN, DISTANCE_TRIGGER, DISTANCE_ECHO);
-
 
     // Initialize and start WiFi manager with smart boot logic
     ret = wifi_manager_init();
@@ -105,12 +103,10 @@ void app_main(void)
     ESP_LOGI(TAG, "WiFi manager initialized and started");
     ESP_LOGI(TAG, "Ready for distance measurement, LED display, and web interface...");
 
-
     // Configure and initialize display logic
     display_config_t display_config = {
         .min_distance_cm = 10.0f,
-        .max_distance_cm = 50.0f
-    };
+        .max_distance_cm = 50.0f};
 
     ret = display_logic_init(&display_config);
     if (ret != ESP_OK)
@@ -170,12 +166,12 @@ void app_main(void)
                     mode_str = "Unknown";
                     break;
                 }
-                
+
                 char ip_str[16] = "N/A";
                 wifi_manager_get_ip_address(ip_str, sizeof(ip_str));
-                
-                ESP_LOGI(TAG, "WiFi Status: %s | IP: %s | SSID: %s", 
-                         mode_str, ip_str, 
+
+                ESP_LOGI(TAG, "WiFi Status: %s | IP: %s | SSID: %s",
+                         mode_str, ip_str,
                          wifi_status.connected_ssid[0] ? wifi_status.connected_ssid : "N/A");
             }
             wifi_status_counter = 0;
