@@ -9,7 +9,7 @@ This document contains the immediate next steps for the ESP32 Distance Project. 
 ### Step 4.1: Certificate Generation and Embedding 📋 **NEXT**
 - 📋 **Build-time Certificate Generation**: Automated self-signed certificate creation during ESP-IDF build
 - 📋 **Certificate Embedding**: Embed certificates as binary data in firmware
-- 📋 **Certificate Validation**: 10-year validity period for device lifecycle
+- 📋 **Certificate Validation**: 25-year validity period for long device lifecycle
 - 📋 **OpenSSL Integration**: Use OpenSSL tools in build process for certificate generation
 
 **Implementation Strategy:**
@@ -29,15 +29,15 @@ set(COMPONENT_EMBED_FILES
 # Pre-build certificate generation
 add_custom_command(
     OUTPUT server_cert.pem server_key.pem
-    COMMAND openssl req -x509 -newkey rsa:2048 -keyout server_key.pem -out server_cert.pem -days 3650 -nodes -subj \"/CN=ESP32-Distance-Sensor\"
-    COMMENT \"Generating self-signed certificate for HTTPS\"
+    COMMAND openssl req -x509 -newkey rsa:2048 -keyout server_key.pem -out server_cert.pem -days 9125 -nodes -subj \"/CN=ESP32-Distance-Sensor\"
+    COMMENT \"Generating self-signed certificate for HTTPS (25-year validity)\"
 )
 ```
 
 **Deliverables:**
 - Automated certificate generation integrated into build system
 - Self-signed certificates embedded in firmware
-- 10-year certificate validity for long device lifecycle
+- 25-year certificate validity for long device lifecycle
 - No manual certificate management required
 
 ---
