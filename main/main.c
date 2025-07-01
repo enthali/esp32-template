@@ -125,21 +125,15 @@ void app_main(void)
     ESP_LOGI(TAG, "Display logic initialized and started");
     ESP_LOGI(TAG, "Ready for distance measurement and LED display...");
 
-    // Main application loop - Coordination and monitoring only
+    // Main application loop - Coordination and lightweight monitoring
     while (1)
     {
-        // Check for queue overflows (indicates system overload)
-        uint32_t overflows = distance_sensor_get_queue_overflows();
-        static uint32_t last_overflow_count = 0;
-        if (overflows > last_overflow_count)
-        {
-            ESP_LOGW(TAG, "Distance sensor queue overflows: %lu", overflows);
-            last_overflow_count = overflows;
-        }
-
+        // Lightweight sensor health monitoring (every 5 seconds)
+        distance_sensor_monitor();
+        
         // Periodic WiFi status logging (every 30 seconds)
         static uint32_t wifi_status_counter = 0;
-        if (++wifi_status_counter >= 3000) // 3000 * 10ms = 30 seconds
+        if (++wifi_status_counter >= 6) // 6 * 5 seconds = 30 seconds
         {
             wifi_status_t wifi_status;
             if (wifi_manager_get_status(&wifi_status) == ESP_OK)
@@ -177,6 +171,6 @@ void app_main(void)
             wifi_status_counter = 0;
         }
 
-        vTaskDelay(pdMS_TO_TICKS(10)); // Short yield to other tasks
+        vTaskDelay(pdMS_TO_TICKS(5000)); // Monitor every 5 seconds
     }
 }

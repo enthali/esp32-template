@@ -161,6 +161,21 @@ extern "C"
     uint32_t distance_sensor_get_queue_overflows(void);
 
     /**
+     * @brief Perform lightweight sensor health monitoring
+     *
+     * This function should be called periodically (every 5-10 seconds) from main.c.
+     * It performs the same monitoring that was previously done in main.c but
+     * encapsulated within the sensor component.
+     *
+     * What it monitors:
+     * - Queue overflow detection and logging
+     * - Component health status
+     *
+     * @return esp_err_t ESP_OK on success
+     */
+    esp_err_t distance_sensor_monitor(void);
+
+    /**
      * @brief Check if sensor is running
      *
      * @return true if sensor task is running, false otherwise

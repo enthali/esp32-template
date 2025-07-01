@@ -559,6 +559,27 @@ uint32_t distance_sensor_get_queue_overflows(void)
     return queue_overflow_counter;
 }
 
+esp_err_t distance_sensor_monitor(void)
+{
+    // Check for queue overflows (indicates system overload)
+    static uint32_t last_overflow_count = 0;
+    uint32_t current_overflows = distance_sensor_get_queue_overflows();
+    
+    if (current_overflows > last_overflow_count) {
+        ESP_LOGW(TAG, "Distance sensor queue overflows: %lu (+%lu new)", 
+                 current_overflows, current_overflows - last_overflow_count);
+        last_overflow_count = current_overflows;
+    }
+    
+    // Optional: Add basic health status logging
+    if (sensor_task_handle == NULL) {
+        ESP_LOGW(TAG, "Distance sensor task not running");
+        return ESP_ERR_INVALID_STATE;
+    }
+    
+    return ESP_OK;
+}
+
 bool distance_sensor_is_running(void)
 {
     return (sensor_task_handle != NULL);

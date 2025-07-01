@@ -7,73 +7,65 @@ This document contains the immediate next steps for the ESP32 Distance Project. 
 ## 3 Component Restructuring 📋 **NEXT**
 
 ### Step 3.1: Distance Sensor Internal Monitoring
-- 📋 **Sensor Health Monitoring**: Add internal health monitoring to `distance_sensor/` component
-- 📋 **Queue Overflow Tracking**: Move queue monitoring into the sensor component itself
-- 📋 **Self-Contained Component**: Sensor manages its own health and performance statistics
-- 📋 **Internal Monitoring Task**: Component starts its own low-priority monitoring task automatically
-- 📋 **Clean Sensor API**: Remove monitoring responsibilities from main.c
+- 📋 **Encapsulate Monitoring Logic**: Move queue overflow monitoring from main.c into distance_sensor component
+- 📋 **Simple Monitor Function**: Add `distance_sensor_monitor()` function to existing component
+- 📋 **Clean Main Loop**: Replace detailed monitoring logic with simple function call
+- 📋 **Minimal Changes**: Reuse existing `distance_sensor_get_queue_overflows()` API internally
+- 📋 **No New Files**: Keep implementation within existing distance_sensor.c
 
 **Architecture Benefits:**
-- **Encapsulated Monitoring**: Distance sensor fully responsible for its own health tracking
-- **Performance Statistics**: Internal tracking of queue overflows, measurement rates, and error counts
-- **Simplified Integration**: Main.c no longer needs to monitor sensor health
-- **Self-Healing**: Component can implement internal recovery mechanisms
-- **Clean API**: Public API focused purely on distance measurement functionality
+- **Encapsulated Monitoring**: Distance sensor handles its own health monitoring internally
+- **Simplified Main.c**: Main loop calls simple `distance_sensor_monitor()` function
+- **Minimal Code Changes**: Reuses existing APIs and infrastructure
+- **Resource Efficient**: No additional files, tasks, or complex statistics
+- **Clean API**: Monitoring complexity hidden from main.c
 
-**Enhanced Distance Sensor Structure:**
-```
-📁 components/distance_sensor/
-├── distance_sensor.h          # Public API (existing)
-├── distance_sensor.c          # Core sensor driver (existing)
-├── sensor_monitor.h           # Internal monitoring (new)
-└── sensor_monitor.c           # Health monitoring task (new)
-```
+**Simple Implementation:**
+```c
+// In distance_sensor.h - just add one function
+esp_err_t distance_sensor_monitor(void);
 
-**Internal Monitoring Features:**
-- Queue overflow detection and statistics
-- Measurement rate tracking (target: 10Hz)
-- Timeout and error rate monitoring
-- Performance metrics (min/max/avg response times)
-- Optional debug logging for troubleshooting
+// In distance_sensor.c - encapsulate existing monitoring logic
+esp_err_t distance_sensor_monitor(void) {
+    // Move queue overflow checking from main.c
+    static uint32_t last_overflow_count = 0;
+    uint32_t current_overflows = distance_sensor_get_queue_overflows();
+    
+    if (current_overflows > last_overflow_count) {
+        ESP_LOGW(TAG, "Distance sensor queue overflows: %lu", current_overflows);
+        last_overflow_count = current_overflows;
+    }
+    
+    return ESP_OK;
+}
+```
 
 **Implementation Strategy:**
-- `distance_sensor_init()` sets up internal monitoring structures (no task created)
-- `distance_sensor_monitor()` function called periodically by main.c for health checks
-- Monitoring is lightweight and efficient (no dedicated task overhead)
-- Statistics available via optional debug API (e.g., `distance_sensor_get_stats()`)
-- Main.c calls monitoring functions but doesn't need to understand the details
+- Add `distance_sensor_monitor()` function to existing distance_sensor.c
+- Move queue overflow checking logic from main.c into this function
+- Use existing `distance_sensor_get_queue_overflows()` API internally
+- No new files, no complex statistics - just encapsulation
+- Main.c calls simple monitoring function every 5 seconds
 
-**Efficient Main.c with Monitoring:**
+**Simplified Main.c:**
 ```c
 void app_main(void) {
-    // Hardware initialization
-    led_controller_init(&led_config);
-    distance_sensor_init(&distance_config);  // Sets up internal monitoring
-    wifi_manager_init();                      // Still needs Step 3.2
-    display_logic_init(&display_config);
+    // ...initialization...
     
-    // Start services
-    distance_sensor_start();
-    wifi_manager_start();
-    display_logic_start();
-    
-    ESP_LOGI(TAG, "Distance sensor with internal monitoring initialized");
-    
-    // Lightweight monitoring loop
+    // Clean monitoring loop
     while(1) {
-        distance_sensor_monitor();  // Lightweight health check
-        wifi_manager_log_status();   // TODO: Replace with wifi_manager_monitor() in Step 3.2
+        distance_sensor_monitor();   // Encapsulated sensor monitoring
+        wifi_manager_log_status();   // TODO: Replace in Step 3.2
         vTaskDelay(pdMS_TO_TICKS(5000));  // Monitor every 5 seconds
     }
 }
 ```
 
 **Deliverables:**
-- Enhanced `distance_sensor/` component with internal monitoring functions
-- `distance_sensor_monitor()` function for periodic health checks
-- Internal sensor statistics and performance tracking
-- Lightweight monitoring approach (no additional tasks)
-- Optional debug API for sensor performance metrics
+- Simple `distance_sensor_monitor()` function in existing distance_sensor.c
+- Encapsulated queue overflow monitoring logic
+- Cleaner main.c with reduced monitoring complexity
+- No new files or complex statistics - minimal and pragmatic approach
 
 ---
 
@@ -83,6 +75,7 @@ void app_main(void) {
 - 📋 **Automatic Reconnection**: Component handles connection recovery internally
 - 📋 **AP Mode Management**: Self-contained fallback to AP mode logic
 - 📋 **Component Restructuring**: Move `wifi_manager` to `components/wifi/` directory
+- 📋 **Lightweight Monitoring**: Function-based monitoring (no additional tasks)
 
 **Enhanced WiFi Component Structure:**
 ```
@@ -90,7 +83,7 @@ void app_main(void) {
 ├── wifi_manager.h             # Public API (existing)
 ├── wifi_manager.c             # Core WiFi management (existing)
 ├── wifi_monitor.h             # Internal monitoring (new)
-└── wifi_monitor.c             # Connection monitoring task (new)
+└── wifi_monitor.c             # Monitoring functions (new)
 ```
 
 **Internal Monitoring Features:**
