@@ -43,3 +43,19 @@ managed_components/
 
 # Custom project ignores
 # Add any project-specific files to ignore here
+
+# HTTPS Certificates and Private Keys - NEVER commit these!
+*.pem
+*.key
+*.crt
+*.cert
+*.p12
+*.pfx
+server_cert.pem
+server_key.pem
+certificates/
+ssl/
+
+# Certificate generation test files
+tools/test_*.pem
+tools/server_*.pem
