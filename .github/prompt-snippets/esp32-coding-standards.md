@@ -107,8 +107,7 @@ components/my_component/
 ├── CMakeLists.txt
 ├── include/
 │   └── my_component.h
-├── src/
-│   └── my_component.c
+├── my_component.c
 └── README.md
 ```
 
