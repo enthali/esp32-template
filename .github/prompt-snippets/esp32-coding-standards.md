@@ -147,6 +147,26 @@ extern "C" {
 esp_err_t distance_sensor_read(uint16_t* distance_cm);
 ```
 
+### File Documentation
+```c
+/**
+ * @file distance_sensor.c
+ * @brief HC-SR04 ultrasonic distance sensor implementation
+ * 
+ * This module provides functions to initialize and read from an HC-SR04
+ * ultrasonic distance sensor connected to ESP32 GPIO pins.
+ * 
+ * @author ESP32 Distance Project
+ * @date 2025
+ */
+```
+
+**Documentation Requirements:**
+- **Every function must have a Doxygen comment** explaining purpose, parameters, and return values
+- **Every file must have a header comment** describing the module's purpose
+- **Complex algorithms must include inline comments** explaining the logic
+- **Hardware dependencies must be documented** (pin assignments, timing constraints)
+
 ### Configuration Management
 ```c
 // Use Kconfig for configurable parameters

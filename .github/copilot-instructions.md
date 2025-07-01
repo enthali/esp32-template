@@ -30,9 +30,6 @@ You are working on an ESP32-based IoT distance sensor project that measures dist
 ### Coding Standards
 [ESP32 Coding Standards](./prompt-snippets/esp32-coding-standards.md)
 
-### Build and Deployment
-[ESP32 Build Commands](./prompt-snippets/esp32-build-commands.md)
-
 ### Build Instructions
 [Detailed Build Instructions](./prompt-snippets/build-instructions.md)
 
