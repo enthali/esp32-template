@@ -186,3 +186,92 @@ main/www/
 - **Symbol Resolution**: Fixed embedded file symbol names (e.g., `_binary_index_html_start`)
 - **Handler Registration**: All 11 URI handlers registered successfully
 - **Debugging**: Comprehensive logging for file serving and handler registration
+
+---
+
+## 3 Component Restructuring ✅
+
+### Step 3.1: Distance Sensor Internal Monitoring ✅ **COMPLETED**
+- ✅ **Encapsulate Monitoring Logic**: Move queue overflow monitoring from main.c into distance_sensor component
+- ✅ **Simple Monitor Function**: Add `distance_sensor_monitor()` function to existing component
+- ✅ **Clean Main Loop**: Replace detailed monitoring logic with simple function call
+- ✅ **Minimal Changes**: Reuse existing `distance_sensor_get_queue_overflows()` API internally
+- ✅ **No New Files**: Keep implementation within existing distance_sensor.c
+
+**Architecture Benefits:**
+- **Encapsulated Monitoring**: Distance sensor handles its own health monitoring internally
+- **Simplified Main.c**: Main loop calls simple `distance_sensor_monitor()` function
+- **Minimal Code Changes**: Reuses existing APIs and infrastructure
+- **Resource Efficient**: No additional files, tasks, or complex statistics
+- **Clean API**: Monitoring complexity hidden from main.c
+
+**Implementation Completed:**
+```c
+// In distance_sensor.h - added one function
+esp_err_t distance_sensor_monitor(void);
+
+// In distance_sensor.c - encapsulated existing monitoring logic
+esp_err_t distance_sensor_monitor(void) {
+    // Moved queue overflow checking from main.c
+    static uint32_t last_overflow_count = 0;
+    uint32_t current_overflows = distance_sensor_get_queue_overflows();
+    
+    if (current_overflows > last_overflow_count) {
+        ESP_LOGW(TAG, "Distance sensor queue overflows: %lu", current_overflows);
+        last_overflow_count = current_overflows;
+    }
+    
+    return ESP_OK;
+}
+```
+
+**Deliverables Completed:**
+- ✅ Simple `distance_sensor_monitor()` function in existing distance_sensor.c
+- ✅ Encapsulated queue overflow monitoring logic moved from main.c
+- ✅ Cleaner main.c with 5-second monitoring intervals
+- ✅ Maintained `distance_sensor_is_running()` for backward compatibility
+- ✅ No new files or complex statistics - minimal and pragmatic approach
+
+---
+
+### Step 3.2: WiFi Manager Internal Monitoring ✅ **COMPLETED**
+- ✅ **WiFi Health Monitoring**: Move WiFi status monitoring into `wifi_manager` component
+- ✅ **Connection Status Tracking**: Internal monitoring of WiFi connection health
+- ✅ **Lightweight Monitoring**: Function-based monitoring (no additional tasks)
+- ✅ **System Timer Integration**: Uses `esp_timer_get_time()` for precise 30-second logging intervals
+- ✅ **Call Frequency Independent**: Works regardless of how often `wifi_manager_monitor()` is called
+
+**Completed Implementation:**
+- ✅ Added `wifi_manager_monitor()` function to wifi_manager.c
+- ✅ Encapsulated WiFi status logging logic from main.c
+- ✅ Uses system timer for precise 30-second intervals
+- ✅ Clean main.c with simple function calls
+- ✅ Flexible call frequency (just needs to be called at least once every 30 seconds)
+
+**Final Clean Main.c:**
+```c
+void app_main(void) {
+    // ...initialization...
+    
+    // Simple, efficient monitoring loop
+    while(1) {
+        distance_sensor_monitor();   // Lightweight health check (Step 3.1)
+        wifi_manager_monitor();      // Connection health and recovery (Step 3.2)
+        vTaskDelay(pdMS_TO_TICKS(5000));  // Monitor every 5 seconds
+    }
+}
+```
+
+**Architecture Benefits:**
+- **Encapsulated WiFi Monitoring**: WiFi manager handles its own status logging internally
+- **Precise Timing**: Uses ESP-IDF system timer for exact 30-second intervals
+- **Flexible Integration**: Main.c can call at any frequency, monitoring happens precisely
+- **Resource Efficient**: No additional tasks or complex statistics
+- **Clean Component API**: Monitoring complexity hidden from main.c
+
+**Technical Implementation:**
+- **System Timer**: Uses `esp_timer_get_time()` for microsecond-precision timing
+- **Flexible API**: Function can be called at any frequency ≥ 30 seconds
+- **Internal State**: Static timing variables maintain logging schedule
+- **Status Logging**: Comprehensive WiFi mode, IP, and SSID information
+- **Error Handling**: Graceful handling of status retrieval failures

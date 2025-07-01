@@ -2,134 +2,172 @@
 
 This document contains the immediate next steps for the ESP32 Distance Project. Once these are completed, we'll pick the next items from `Features-intended.md`.
 
+---
 
+## 4 HTTPS Security Implementation 📋 **NEXT**
 
-## 3 Component Restructuring 📋 **NEXT**
+### Step 4.1: Certificate Generation and Embedding 📋 **NEXT**
+- 📋 **Build-time Certificate Generation**: Automated self-signed certificate creation during ESP-IDF build
+- 📋 **Certificate Embedding**: Embed certificates as binary data in firmware
+- 📋 **Certificate Validation**: 10-year validity period for device lifecycle
+- 📋 **OpenSSL Integration**: Use OpenSSL tools in build process for certificate generation
 
-### Step 3.1: Distance Sensor Internal Monitoring ✅ **COMPLETED**
-- ✅ **Encapsulate Monitoring Logic**: Move queue overflow monitoring from main.c into distance_sensor component
-- ✅ **Simple Monitor Function**: Add `distance_sensor_monitor()` function to existing component
-- ✅ **Clean Main Loop**: Replace detailed monitoring logic with simple function call
-- ✅ **Minimal Changes**: Reuse existing `distance_sensor_get_queue_overflows()` API internally
-- ✅ **No New Files**: Keep implementation within existing distance_sensor.c
+**Implementation Strategy:**
+- Add CMake build script to generate certificates if they don't exist
+- Embed certificates using ESP-IDF's `EMBED_FILES` feature
+- Create `components/certificates/` with build-time certificate generation
+- Use self-signed certificates (perfect for local IoT devices)
 
-**Architecture Benefits:**
-- **Encapsulated Monitoring**: Distance sensor handles its own health monitoring internally
-- **Simplified Main.c**: Main loop calls simple `distance_sensor_monitor()` function
-- **Minimal Code Changes**: Reuses existing APIs and infrastructure
-- **Resource Efficient**: No additional files, tasks, or complex statistics
-- **Clean API**: Monitoring complexity hidden from main.c
+**Build Integration:**
+```cmake
+# In components/certificates/CMakeLists.txt
+set(COMPONENT_EMBED_FILES
+    "server_cert.pem"
+    "server_key.pem"
+)
 
-**Simple Implementation:**
+# Pre-build certificate generation
+add_custom_command(
+    OUTPUT server_cert.pem server_key.pem
+    COMMAND openssl req -x509 -newkey rsa:2048 -keyout server_key.pem -out server_cert.pem -days 3650 -nodes -subj \"/CN=ESP32-Distance-Sensor\"
+    COMMENT \"Generating self-signed certificate for HTTPS\"
+)
+```
+
+**Deliverables:**
+- Automated certificate generation integrated into build system
+- Self-signed certificates embedded in firmware
+- 10-year certificate validity for long device lifecycle
+- No manual certificate management required
+
+---
+
+### Step 4.2: HTTPS Server Implementation 📋 
+- 📋 **Replace HTTP Server**: Migrate from `esp_http_server` to `esp_https_server`
+- 📋 **Port 443 Configuration**: Configure HTTPS server on standard port 443
+- 📋 **SSL/TLS Configuration**: Proper SSL configuration with embedded certificates
+- 📋 **Memory Optimization**: Optimize SSL buffer sizes for ESP32 constraints
+
+**HTTPS Server Configuration:**
 ```c
-// In distance_sensor.h - just add one function
-esp_err_t distance_sensor_monitor(void);
+#include \"esp_https_server.h\"
+#include \"esp_tls.h\"
 
-// In distance_sensor.c - encapsulate existing monitoring logic
-esp_err_t distance_sensor_monitor(void) {
-    // Move queue overflow checking from main.c
-    static uint32_t last_overflow_count = 0;
-    uint32_t current_overflows = distance_sensor_get_queue_overflows();
+// Certificate references (embedded at build time)
+extern const uint8_t server_cert_pem_start[] asm(\"_binary_server_cert_pem_start\");
+extern const uint8_t server_cert_pem_end[]   asm(\"_binary_server_cert_pem_end\");
+extern const uint8_t server_key_pem_start[]  asm(\"_binary_server_key_pem_start\");
+extern const uint8_t server_key_pem_end[]    asm(\"_binary_server_key_pem_end\");
+
+// HTTPS server configuration
+httpd_ssl_config_t conf = HTTPD_SSL_CONFIG_DEFAULT();
+conf.httpd.server_port = 443;
+conf.httpd.max_open_sockets = 4;  // ESP32 memory optimization
+conf.servercert = server_cert_pem_start;
+conf.servercert_len = server_cert_pem_end - server_cert_pem_start;
+conf.prvtkey_pem = server_key_pem_start;
+conf.prvtkey_len = server_key_pem_end - server_key_pem_start;
+```
+
+**Implementation Strategy:**
+- Replace all HTTP server calls with HTTPS equivalents
+- Update WiFi manager to start HTTPS server instead of HTTP
+- Configure SSL buffer sizes for ESP32 memory constraints
+- Test HTTPS functionality with self-signed certificates
+
+**Deliverables:**
+- Fully functional HTTPS server on port 443
+- All web interface functionality working over HTTPS
+- Encrypted transmission of WiFi credentials and sensor data
+- Proper SSL/TLS configuration optimized for ESP32
+
+---
+
+### Step 4.3: HTTP Redirect Server (User Experience) 📋
+- 📋 **Lightweight HTTP Server**: Minimal HTTP server on port 80 for redirects only
+- 📋 **301 Permanent Redirects**: Redirect all HTTP requests to HTTPS equivalent
+- 📋 **Memory Efficient**: Minimal memory footprint for redirect functionality
+- 📋 **User-Friendly URLs**: Handle both `http://192.168.4.1/` and direct HTTPS access
+
+**Redirect Strategy:**
+```c
+// Lightweight HTTP redirect handler
+esp_err_t http_redirect_handler(httpd_req_t *req) {
+    char redirect_url[128];
+    snprintf(redirect_url, sizeof(redirect_url), \"https://%s%s\", 
+             get_device_ip(), req->uri);
     
-    if (current_overflows > last_overflow_count) {
-        ESP_LOGW(TAG, "Distance sensor queue overflows: %lu", current_overflows);
-        last_overflow_count = current_overflows;
-    }
-    
+    httpd_resp_set_status(req, \"301 Moved Permanently\");
+    httpd_resp_set_hdr(req, \"Location\", redirect_url);
+    httpd_resp_send(req, \"<html><body><a href=\\\"\", strlen(\"<html><body><a href=\\\"\"));
+    httpd_resp_send(req, redirect_url, strlen(redirect_url));
+    httpd_resp_send(req, \"\\\">Click here for HTTPS</a></body></html>\", 
+                   strlen(\"\\\">Click here for HTTPS</a></body></html>\"));
     return ESP_OK;
 }
 ```
 
-**Implementation Strategy:**
-- Add `distance_sensor_monitor()` function to existing distance_sensor.c
-- Move queue overflow checking logic from main.c into this function
-- Use existing `distance_sensor_get_queue_overflows()` API internally
-- No new files, no complex statistics - just encapsulation
-- Main.c calls simple monitoring function every 5 seconds
+**Benefits:**
+- **User Experience**: Typing `http://192.168.4.1/` automatically works
+- **Security**: All actual functionality happens over HTTPS
+- **Memory Efficient**: HTTP server only handles redirects (minimal resources)
+- **Standards Compliant**: Proper HTTP 301 redirect responses
 
-**Simplified Main.c:**
-```c
-void app_main(void) {
-    // ...initialization...
-    
-    // Clean monitoring loop
-    while(1) {
-        distance_sensor_monitor();   // Encapsulated sensor monitoring
-        wifi_manager_log_status();   // TODO: Replace in Step 3.2
-        vTaskDelay(pdMS_TO_TICKS(5000));  // Monitor every 5 seconds
-    }
-}
-```
-
-**Deliverables Completed:**
-- ✅ Simple `distance_sensor_monitor()` function in existing distance_sensor.c
-- ✅ Encapsulated queue overflow monitoring logic moved from main.c
-- ✅ Cleaner main.c with 5-second monitoring intervals
-- ✅ Maintained `distance_sensor_is_running()` for backward compatibility
-- ✅ No new files or complex statistics - minimal and pragmatic approach
+**Deliverables:**
+- Lightweight HTTP redirect server on port 80
+- Automatic redirection to HTTPS for all HTTP requests
+- User-friendly experience for accessing device web interface
+- Minimal memory overhead for redirect functionality
 
 ---
 
-### Step 3.2: WiFi Manager Internal Monitoring 📋 **NEXT**
-- 📋 **WiFi Health Monitoring**: Move WiFi status monitoring into `wifi_manager` component
-- 📋 **Connection Status Tracking**: Internal monitoring of WiFi connection health
-- 📋 **Automatic Reconnection**: Component handles connection recovery internally
-- 📋 **AP Mode Management**: Self-contained fallback to AP mode logic
-- 📋 **Component Restructuring**: Move `wifi_manager` to `components/wifi/` directory
-- 📋 **Lightweight Monitoring**: Function-based monitoring (no additional tasks)
+### Step 4.4: Security Hardening and Testing 📋
+- 📋 **Remove HTTP Functionality**: Ensure no sensitive data is transmitted over HTTP
+- 📋 **Browser Testing**: Verify certificate acceptance workflow across browsers
+- 📋 **Security Headers**: Add appropriate HTTPS security headers
+- 📋 **Documentation**: User guide for accepting self-signed certificates
 
-**Enhanced WiFi Component Structure:**
-```
-📁 components/wifi/
-├── wifi_manager.h             # Public API (existing)
-├── wifi_manager.c             # Core WiFi management (existing)
-├── wifi_monitor.h             # Internal monitoring (new)
-└── wifi_monitor.c             # Monitoring functions (new)
-```
-
-**Internal Monitoring Features:**
-- Connection status tracking and logging
-- Automatic reconnection attempts with backoff
-- AP mode fallback management
-- Network statistics (signal strength, uptime, reconnect count)
-- Smart connection retry logic
-
-**Implementation Strategy:**
-- `wifi_manager_init()` sets up internal monitoring structures (no task created)
-- `wifi_manager_monitor()` function called periodically by main.c for connection health
-- Component handles all connection recovery automatically within monitor function
-- Lightweight monitoring approach with no dedicated task overhead
-- Main.c calls simple monitoring functions without understanding internals
-
-**Final Clean Main.c:**
+**Security Enhancements:**
 ```c
-void app_main(void) {
-    // Hardware initialization only
-    led_controller_init(&led_config);
-    distance_sensor_init(&distance_config);  // Sets up monitoring (Step 3.1)
-    wifi_manager_init();                      // Sets up monitoring (Step 3.2)
-    display_logic_init(&display_config);
-    
-    // Start services
-    distance_sensor_start();
-    wifi_manager_start();
-    display_logic_start();
-    
-    ESP_LOGI(TAG, "All systems initialized with lightweight monitoring");
-    
-    // Simple, efficient monitoring loop
-    while(1) {
-        distance_sensor_monitor();   // Lightweight health check
-        wifi_manager_monitor();      // Connection health and recovery
-        vTaskDelay(pdMS_TO_TICKS(5000));  // Monitor every 5 seconds
-    }
-}
+// Add security headers to HTTPS responses
+httpd_resp_set_hdr(req, \"Strict-Transport-Security\", \"max-age=31536000\");
+httpd_resp_set_hdr(req, \"X-Content-Type-Options\", \"nosniff\");
+httpd_resp_set_hdr(req, \"X-Frame-Options\", \"DENY\");
 ```
+
+**Testing Strategy:**
+- Test certificate acceptance on Chrome, Firefox, Safari, Edge
+- Verify all WiFi credential transmission is encrypted
+- Confirm captive portal works with HTTPS
+- Test both AP mode and STA mode HTTPS functionality
+
+**Documentation Deliverables:**
+- User guide for accepting self-signed certificates
+- Browser-specific instructions for certificate warnings
+- Security benefits explanation for end users
+- Troubleshooting guide for HTTPS connection issues
 
 **Deliverables:**
-- Restructured `components/wifi/` with internal monitoring functions
-- `wifi_manager_monitor()` function for periodic connection health checks
-- Self-contained WiFi connection management and recovery
-- Lightweight monitoring approach (no additional tasks)
-- Clean component-based architecture with efficient resource usage
+- Complete HTTPS implementation with security hardening
+- Comprehensive browser compatibility testing
+- User documentation for certificate acceptance
+- Secure transmission of all sensitive data
 
+---
+
+## Architecture Benefits
+
+After HTTPS implementation:
+- **Encrypted Communication**: All web traffic protected by SSL/TLS
+- **Secure Credential Transmission**: WiFi passwords encrypted in transit
+- **Industry Standard Security**: Following IoT security best practices
+- **User-Friendly**: Automatic HTTP→HTTPS redirection
+- **Certificate Management**: Automated, no manual certificate handling
+
+## Next Steps After HTTPS
+
+Once HTTPS is complete, we'll have a secure foundation for:
+- Configuration management system
+- Real-time data streaming
+- JSON API endpoints
+- Advanced web interface features
