@@ -458,6 +458,55 @@ static esp_err_t load_credentials_from_nvs(void)
     return ret;
 }
 
+esp_err_t wifi_manager_monitor(void)
+{
+    static int64_t last_log_time = 0;
+    const int64_t LOG_INTERVAL_US = 30 * 1000 * 1000; // 30 seconds in microseconds
+    
+    int64_t current_time = esp_timer_get_time();
+    
+    // Periodic WiFi status logging (every 30 seconds)
+    if (current_time - last_log_time >= LOG_INTERVAL_US)
+    {
+        wifi_status_t wifi_status;
+        if (wifi_manager_get_status(&wifi_status) == ESP_OK)
+        {
+            const char *mode_str = "";
+            switch (wifi_status.mode)
+            {
+            case WIFI_MODE_DISCONNECTED:
+                mode_str = "Disconnected";
+                break;
+            case WIFI_MODE_STA_CONNECTING:
+                mode_str = "Connecting";
+                break;
+            case WIFI_MODE_STA_CONNECTED:
+                mode_str = "Connected (STA)";
+                break;
+            case WIFI_MODE_AP_ACTIVE:
+                mode_str = "Access Point";
+                break;
+            case WIFI_MODE_SWITCHING:
+                mode_str = "Switching";
+                break;
+            default:
+                mode_str = "Unknown";
+                break;
+            }
+
+            char ip_str[16] = "N/A";
+            wifi_manager_get_ip_address(ip_str, sizeof(ip_str));
+
+            ESP_LOGI(TAG, "WiFi Status: %s | IP: %s | SSID: %s",
+                     mode_str, ip_str,
+                     wifi_status.connected_ssid[0] ? wifi_status.connected_ssid : "N/A");
+        }
+        last_log_time = current_time;
+    }
+    
+    return ESP_OK;
+}
+
 static esp_err_t save_credentials_to_nvs(const wifi_credentials_t *credentials)
 {
     nvs_handle_t nvs_handle;

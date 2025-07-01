@@ -117,6 +117,22 @@ esp_err_t wifi_manager_get_ip_address(char *ip_str, size_t max_len);
  */
 esp_err_t wifi_manager_switch_to_ap(void);
 
+/**
+ * @brief Perform lightweight WiFi health monitoring
+ * 
+ * This function should be called periodically from main.c (at least once every 30 seconds).
+ * Uses internal timing to log WiFi status exactly every 30 seconds regardless of call frequency.
+ * 
+ * What it monitors:
+ * - WiFi connection status and mode
+ * - IP address information
+ * - SSID and signal strength
+ * - Connection health logging
+ * 
+ * @return ESP_OK on success
+ */
+esp_err_t wifi_manager_monitor(void);
+
 #ifdef __cplusplus
 }
 #endif

@@ -128,49 +128,12 @@ void app_main(void)
     // Main application loop - Coordination and lightweight monitoring
     while (1)
     {
-        // Lightweight sensor health monitoring (every 5 seconds)
+        // Lightweight sensor health monitoring 
         distance_sensor_monitor();
         
-        // Periodic WiFi status logging (every 30 seconds)
-        static uint32_t wifi_status_counter = 0;
-        if (++wifi_status_counter >= 6) // 6 * 5 seconds = 30 seconds
-        {
-            wifi_status_t wifi_status;
-            if (wifi_manager_get_status(&wifi_status) == ESP_OK)
-            {
-                const char *mode_str = "";
-                switch (wifi_status.mode)
-                {
-                case WIFI_MODE_DISCONNECTED:
-                    mode_str = "Disconnected";
-                    break;
-                case WIFI_MODE_STA_CONNECTING:
-                    mode_str = "Connecting";
-                    break;
-                case WIFI_MODE_STA_CONNECTED:
-                    mode_str = "Connected (STA)";
-                    break;
-                case WIFI_MODE_AP_ACTIVE:
-                    mode_str = "Access Point";
-                    break;
-                case WIFI_MODE_SWITCHING:
-                    mode_str = "Switching";
-                    break;
-                default:
-                    mode_str = "Unknown";
-                    break;
-                }
+        // Periodic WiFi status logging 
+        wifi_manager_monitor();
 
-                char ip_str[16] = "N/A";
-                wifi_manager_get_ip_address(ip_str, sizeof(ip_str));
-
-                ESP_LOGI(TAG, "WiFi Status: %s | IP: %s | SSID: %s",
-                         mode_str, ip_str,
-                         wifi_status.connected_ssid[0] ? wifi_status.connected_ssid : "N/A");
-            }
-            wifi_status_counter = 0;
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(5000)); // Monitor every 5 seconds
+        vTaskDelay(pdMS_TO_TICKS(5000)); // Monitor loop every 5 seconds
     }
 }
