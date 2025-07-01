@@ -159,11 +159,42 @@ Located in `main/` directory:
 
 ### Build Configuration
 
+#### Flash Memory Configuration
+
+This project is configured for ESP32 modules with **4MB flash memory**:
+- **Flash Size**: 4MB (CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y)
+- **Partition Table**: Single App Large (maximizes application space)
+- **Free Flash**: ~41% available for application growth
+- **HTTPS Ready**: Sufficient space for SSL/TLS certificates and HTTPS implementation
+
+**Memory Usage Summary** (after optimization):
+- Used flash: ~59% (vs 86% with 2MB config)
+- Free flash: ~41% (vs 14% with 2MB config)
+- IRAM usage: ~76% (sufficient headroom)
+- DRAM usage: ~18% (low utilization, good for buffers)
+
+#### Configuration Verification
+
+To verify flash configuration:
+```bash
+idf.py size
+```
+
+To modify flash settings:
+```bash
+idf.py menuconfig
+# Navigate to: Serial flasher config > Flash size
+# Navigate to: Partition Table > Partition Table
+```
+
+#### Key Configuration Options
+
 Key configuration options in `sdkconfig`:
 - WiFi stack configuration
 - FreeRTOS task stack sizes
 - LED strip timing parameters
 - Serial monitor baud rate
+- **Flash size and partition table** (optimized for 4MB modules)
 
 ## Serial Monitor Commands
 
