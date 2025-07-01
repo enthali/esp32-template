@@ -83,26 +83,63 @@ This document describes the technical architecture and implementation details fo
 
 ### 4. Web Server Module
 
-**Purpose**: Remote monitoring and configuration interface with WiFi management.
+**Purpose**: Remote monitoring and configuration interface with WiFi management and HTTPS security.
 
 **Key Features**:
 
 - **Smart WiFi Management**: Auto-connect to stored credentials with AP fallback
 - **Captive Portal**: Automatic configuration page with network scanning
-- **HTTP Server**: Mobile-responsive web interface for status and settings
+- **HTTPS Server**: Secure mobile-responsive web interface for status and settings
+- **HTTP Redirect Server**: Lightweight HTTP server redirecting to HTTPS
 - **Credential Storage**: Secure WiFi credential management in NVS flash
 - **Network Switching**: Seamless AP ↔ STA mode transitions
 - **DNS Server**: Captive portal detection and auto-redirect
 - **Reset Functionality**: Clear stored credentials and restart system
+- **Certificate Management**: Automated self-signed certificate generation and embedding
 
-**Current Status**: ✅ **COMPLETED** (Step 4.1) - Basic implementation in `main/wifi_manager.h/c` and `main/web_server.h/c`
+**Security Implementation**:
+- HTTPS server on port 443 with embedded SSL certificates
+- HTTP redirect server on port 80 for user convenience
+- Self-signed certificates with 25-year validity period
+- Build-time certificate generation (no manual management required)
+- Certificate embedding using ESP-IDF EMBED_FILES feature
+
+**Current Status**: 🔄 **IN PROGRESS** (Step 4.2) - HTTPS implementation underway
+
+### 5. Certificate Handler Module
+
+**Purpose**: Automated SSL certificate generation and management for HTTPS security.
+
+**Technical Implementation**:
+- **Build-time Generation**: Certificates generated automatically during ESP-IDF build if missing
+- **Dual Tool Support**: OpenSSL binary (preferred) or Python cryptography library (fallback)
+- **Certificate Embedding**: Uses ESP-IDF EMBED_FILES to embed certificates in firmware
+- **Long-term Validity**: 25-year certificate validity period for device lifecycle
+- **No Manual Management**: Zero configuration required from developers or users
+
+**Certificate Properties**:
+- **Common Name**: ESP32-Distance-Sensor
+- **Organization**: ESP32 Distance Project
+- **Key Size**: RSA 2048-bit
+- **Subject Alternative Names**: DNS (esp32-distance-sensor.local), IP (192.168.4.1)
+- **Format**: PEM format for maximum compatibility
+
+**Security Features**:
+- Private keys never committed to version control (.gitignore exclusions)
+- Fresh certificate generation on clean builds
+- Self-signed certificates appropriate for local IoT devices
+- Standard SSL/TLS encryption for web traffic
+
+**Current Status**: ✅ **COMPLETED** - Component implemented in `components/cert_handler/`
 
 ## Data Flow
 
 ```text
 HC-SR04 Sensor → Distance Sensor Module → Display Logic Module → LED Controller Module → WS2812 Strip
                                      ↓
-                              Web Server Module → HTTP Client (WiFi/Captive Portal)
+                              Web Server Module (HTTPS/HTTP) → HTTP Client (WiFi/Captive Portal)
+                                     ↑
+                              Certificate Handler → Embedded SSL Certificates
 ```
 
 ## Threading Model
@@ -150,6 +187,7 @@ All configurable parameters exposed through:
 - **LED Controller**: Hardware abstraction documented in `led_controller.h`
 - **Distance Sensor**: Timing-critical implementation documented in `distance_sensor.h`  
 - **Display Logic**: Business logic patterns documented in `display_logic.h`
-- **Web Server**: HTTP/WebSocket API documented in `web_server.h`
+- **Web Server**: HTTPS/HTTP API documented in `web_server.h`
+- **Certificate Handler**: SSL certificate management documented in `cert_handler.h`
 
 Each module provides comprehensive API documentation in its respective header file.

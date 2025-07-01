@@ -53,7 +53,8 @@ managed_components/
 *.pfx
 server_cert.pem
 server_key.pem
-certificates/
+# Only ignore the generated certificate files, not the component code
+components/cert_handler/certs/
 ssl/
 
 # Certificate generation test files
