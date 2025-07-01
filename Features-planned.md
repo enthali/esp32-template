@@ -43,8 +43,7 @@ add_custom_command(
 ```
 
 **Tool Requirements:**
-- **Option 1**: OpenSSL binary (install via Chocolatey: `choco install openssl`)
-- **Option 2**: Python cryptography library (included in ESP-IDF Python environment)
+ Python cryptography library (included in ESP-IDF Python environment)
 
 **Build Integration:**
 ```cmake
