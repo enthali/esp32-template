@@ -17,6 +17,34 @@ This document contains the immediate next steps for the ESP32 Distance Project. 
 - Embed certificates using ESP-IDF's `EMBED_FILES` feature
 - Create `components/certificates/` with build-time certificate generation
 - Use self-signed certificates (perfect for local IoT devices)
+- **Certificate Tool Options**: OpenSSL binary OR Python cryptography library
+
+**Build Integration:**
+```cmake
+# In components/certificates/CMakeLists.txt
+set(COMPONENT_EMBED_FILES
+    "server_cert.pem"
+    "server_key.pem"
+)
+
+# Pre-build certificate generation (Option 1: OpenSSL)
+add_custom_command(
+    OUTPUT server_cert.pem server_key.pem
+    COMMAND openssl req -x509 -newkey rsa:2048 -keyout server_key.pem -out server_cert.pem -days 9125 -nodes -subj "/CN=ESP32-Distance-Sensor"
+    COMMENT "Generating self-signed certificate for HTTPS (25-year validity)"
+)
+
+# Alternative: Python-based generation (Option 2: No OpenSSL required)
+# add_custom_command(
+#     OUTPUT server_cert.pem server_key.pem
+#     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/generate_cert.py
+#     COMMENT "Generating self-signed certificate using Python"
+# )
+```
+
+**Tool Requirements:**
+- **Option 1**: OpenSSL binary (install via Chocolatey: `choco install openssl`)
+- **Option 2**: Python cryptography library (included in ESP-IDF Python environment)
 
 **Build Integration:**
 ```cmake
@@ -39,6 +67,8 @@ add_custom_command(
 - Self-signed certificates embedded in firmware
 - 25-year certificate validity for long device lifecycle
 - No manual certificate management required
+- **Two implementation options**: OpenSSL binary OR Python-based generation
+- **`tools/generate_cert.py`**: Fallback certificate generator (no OpenSSL dependency)
 
 ---
 
