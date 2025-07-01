@@ -6,11 +6,11 @@ This document contains the immediate next steps for the ESP32 Distance Project. 
 
 ## 4 HTTPS Security Implementation 📋 **NEXT**
 
-### Step 4.1: Certificate Generation and Embedding 📋 **NEXT**
-- 📋 **Build-time Certificate Generation**: Automated self-signed certificate creation during ESP-IDF build
-- 📋 **Certificate Embedding**: Embed certificates as binary data in firmware
-- 📋 **Certificate Validation**: 25-year validity period for long device lifecycle
-- 📋 **OpenSSL Integration**: Use OpenSSL tools in build process for certificate generation
+### Step 4.1: Certificate Generation and Embedding ✅ **COMPLETED**
+- ✅ **Build-time Certificate Generation**: Automated self-signed certificate creation during ESP-IDF build
+- ✅ **Certificate Embedding**: Embed certificates as binary data in firmware
+- ✅ **Certificate Validation**: 25-year validity period for long device lifecycle
+- ✅ **OpenSSL Integration**: Use OpenSSL tools in build process for certificate generation
 
 **Implementation Strategy:**
 - Add CMake build script to generate certificates if they don't exist
@@ -72,7 +72,7 @@ add_custom_command(
 
 ---
 
-### Step 4.2: HTTPS Server Implementation 📋 
+### Step 4.2: HTTPS Server Implementation 📋 **NEXT** 
 - 📋 **Replace HTTP Server**: Migrate from `esp_http_server` to `esp_https_server`
 - 📋 **Port 443 Configuration**: Configure HTTPS server on standard port 443
 - 📋 **SSL/TLS Configuration**: Proper SSL configuration with embedded certificates
