@@ -1,14 +1,92 @@
-# ESP32 Distance Project - Future Features & Long-term Roadmap
+# ESP32 Distance Project - Feature Intentions
 
-This document contains all planned and optional features for the ESP32 Distance Project that will be implemented after the current roadmap (see `ROADMAP.md`) is completed.
+This document contains **unnumbered** feature intentions that may or may not be implemented. These are flexible ideas that can be reordered, modified, or moved to the planned roadmap as priorities become clear.
+---
 
-## Future Web Interface Features
+## HTTPS Security Implementation 📋 **NEXT AFTER COMPONENT RESTRUCTURING**  
+- 📋 **HTTPS Server**: Replace HTTP with encrypted HTTPS using ESP32 SSL/TLS support
+- 📋 **Self-Signed Certificates**: Generate and embed certificates for local IoT device use
+- 📋 **Certificate Generation**: Build-time certificate creation and embedding
+- 📋 **Mixed Mode Support**: HTTPS for production, HTTP fallback for development
+- 📋 **Browser Compatibility**: Handle self-signed certificate warnings appropriately
 
-### Step 4.3: Configuration Management & Data Sharing 📋 **FUTURE**
-- 📋 **Configuration System**: Centralize magic numbers into `main/config.h` with NVS storage
-- 📋 **Shared Data Structure**: Implement mutex-protected shared variable for sensor→web data flow
-- 📋 **Runtime Configuration**: Store user-configurable parameters in NVS flash
-- 📋 **Default Values**: Compile-time defaults with runtime override capability
+**Security Benefits:**
+- **Encrypted Transmission**: All WiFi credentials and sensor data protected in transit
+- **Man-in-the-Middle Protection**: Prevents network eavesdropping attacks  
+- **Cross-Site Attack Prevention**: Combined with CORS removal for comprehensive security
+- **IoT Security Best Practice**: Industry standard for connected devices
+
+**Implementation Plan:**
+```c
+#include "esp_https_server.h"
+#include "esp_tls.h"
+
+// Embedded certificate files (generated at build time)
+extern const uint8_t servercert_start[] asm("_binary_servercert_pem_start");
+extern const uint8_t servercert_end[]   asm("_binary_servercert_pem_end");
+extern const uint8_t prvtkey_start[]    asm("_binary_prvtkey_pem_start");
+extern const uint8_t prvtkey_end[]      asm("_binary_prvtkey_pem_end");
+
+// HTTPS server configuration
+httpd_ssl_config_t conf = HTTPD_SSL_CONFIG_DEFAULT();
+conf.servercert = servercert_start;
+conf.servercert_len = servercert_end - servercert_start;
+conf.prvtkey_pem = prvtkey_start;
+conf.prvtkey_len = prvtkey_end - prvtkey_start;
+conf.httpd.server_port = 443;
+```
+
+**Certificate Strategy:**
+- **Self-Signed Certificates**: Perfect for local IoT devices (no external CA needed)
+- **Build-Time Generation**: Automated certificate creation during ESP-IDF build
+- **10-Year Validity**: Long-lived certificates for device lifecycle
+- **Browser Warnings**: Users manually accept certificate (standard IoT practice)
+
+**Deliverables:**
+- HTTPS server implementation replacing HTTP
+- Automated certificate generation and embedding
+- Updated web interface to use https:// URLs
+- Documentation for certificate acceptance procedure
+- Secure transmission of all WiFi credentials and sensor data
+
+---
+
+## Development Priorities
+
+1. **First Priority**: Component Architecture Restructuring
+   - Clean up the current codebase structure
+   - Implement proper component encapsulation
+   - Simplify main.c to initialization-only
+
+2. **Second Priority**: HTTPS Security Implementation
+   - Add encryption to the web interface
+   - Secure WiFi credential transmission
+   - Complete the core security foundation
+
+3. **After HTTPS**: Pick next features from `features-intended.md`
+   - Configuration management
+   - Real-time data streaming
+   - JSON API endpoints
+   - Advanced features as needed
+
+## Architecture Goals
+
+The current roadmap focuses on:
+- **Clean Architecture**: Proper component separation and encapsulation
+- **Security**: HTTPS encryption for all web communications
+- **Maintainability**: Simplified main.c and self-contained components
+- **Foundation**: Solid base for future feature additions
+
+Once these foundational improvements are complete, we'll have a clean, secure, and maintainable codebase ready for the next phase of features from the intended roadmap.
+
+
+## Web Interface Intentions 💭
+
+### Configuration Management & Data Sharing 💭 **INTENDED**
+- **Configuration System**: Centralize magic numbers into `main/config.h` with NVS storage
+- **Shared Data Structure**: Implement mutex-protected shared variable for sensor→web data flow
+- **Runtime Configuration**: Store user-configurable parameters in NVS flash
+- **Default Values**: Compile-time defaults with runtime override capability
 
 **Configuration Categories:**
 ```c
@@ -50,11 +128,11 @@ static SemaphoreHandle_t distance_mutex;
 
 ---
 
-### Step 4.4: Real-time Data Streaming 📋 **FUTURE**
-- 📋 **Server-Sent Events (SSE)**: Real-time distance updates
-- 📋 **Live Dashboard**: Auto-updating web interface without page refresh
-- 📋 **LED Visualization**: Browser-based LED strip representation
-- 📋 **WebSocket Support**: Bidirectional communication (optional upgrade)
+### Real-time Data Streaming 💭 **INTENDED**
+- **Server-Sent Events (SSE)**: Real-time distance updates
+- **Live Dashboard**: Auto-updating web interface without page refresh
+- **LED Visualization**: Browser-based LED strip representation
+- **WebSocket Support**: Bidirectional communication (optional upgrade)
 
 **Real-time Features:**
 ```c
@@ -71,14 +149,14 @@ data: {"distance": 25.4, "led_states": [...], "timestamp": 1234567890}
 
 ---
 
-### Step 4.5: JSON API Endpoints 📋 **FUTURE**
-- 📋 **RESTful API**: JSON endpoints for programmatic access
-- 📋 **Core Endpoints** (flat structure):
+### JSON API Endpoints 💭 **INTENDED**
+- **RESTful API**: JSON endpoints for programmatic access
+- **Core Endpoints** (flat structure):
   - `GET /api/distance` - Current distance measurement
   - `GET /api/status` - System health and statistics  
   - `GET /api/config` - Current configuration
   - `POST /api/config` - Update settings
-- 📋 **Error Handling**: Proper HTTP status codes and error messages
+- **Error Handling**: Proper HTTP status codes and error messages
 
 **API Design:**
 ```c
@@ -89,13 +167,13 @@ GET /api/status   -> {"uptime": 3600, "wifi": "connected", "tasks": "healthy"}
 
 ---
 
-### Step 4.6: Advanced Configuration Interface 📋 **FUTURE**
-- 📋 **Settings Management**: Web-based configuration for all system parameters
-- 📋 **Distance Calibration**: Set min/max ranges for LED mapping  
-- 📋 **LED Configuration**: Brightness, color schemes, animation modes
-- 📋 **Sensor Settings**: Timeout values, temperature compensation
-- 📋 **WiFi Management**: Change networks, view connection status
-- 📋 **System Controls**: Restart, factory reset, firmware updates
+### Advanced Configuration Interface 💭 **INTENDED**
+- **Settings Management**: Web-based configuration for all system parameters
+- **Distance Calibration**: Set min/max ranges for LED mapping  
+- **LED Configuration**: Brightness, color schemes, animation modes
+- **Sensor Settings**: Timeout values, temperature compensation
+- **WiFi Management**: Change networks, view connection status
+- **System Controls**: Restart, factory reset, firmware updates
 
 **Configuration Categories:**
 - **Distance Mapping**: 10-50cm range, LED assignment, error thresholds
@@ -106,37 +184,35 @@ GET /api/status   -> {"uptime": 3600, "wifi": "connected", "tasks": "healthy"}
 
 ---
 
-## Production & Deployment Features
+## Production & Deployment Intentions 💭
 
-### Step 5: Production & Deployment 📋 **FUTURE**
+### OTA Firmware Updates 💭 **INTENDED**
+- **Over-The-Air Updates**: ESP32 OTA partition scheme and update mechanism
+- **Version Management**: Firmware versioning and rollback capability
+- **Update Server**: Simple HTTP/HTTPS server for firmware distribution
+- **Security**: Signed firmware updates and secure boot
+- **User Interface**: Web-based firmware update with progress indication
 
-#### **Step 5.1: OTA Firmware Updates** 📋 **FUTURE**
-- 📋 **Over-The-Air Updates**: ESP32 OTA partition scheme and update mechanism
-- 📋 **Version Management**: Firmware versioning and rollback capability
-- 📋 **Update Server**: Simple HTTP/HTTPS server for firmware distribution
-- 📋 **Security**: Signed firmware updates and secure boot
-- 📋 **User Interface**: Web-based firmware update with progress indication
+### Security Hardening 💭 **INTENDED**
+- **WiFi Security**: WPA3 support and strong encryption
+- **Web Interface Security**: HTTPS, session management, CSRF protection
+- **Access Control**: Basic authentication for configuration pages
+- **Network Security**: Firewall rules and secure communication
+- **Credential Protection**: Encrypted storage of sensitive data
 
-#### **Step 5.2: Security Hardening** 📋 **FUTURE**
-- 📋 **WiFi Security**: WPA3 support and strong encryption
-- 📋 **Web Interface Security**: HTTPS, session management, CSRF protection
-- 📋 **Access Control**: Basic authentication for configuration pages
-- 📋 **Network Security**: Firewall rules and secure communication
-- 📋 **Credential Protection**: Encrypted storage of sensitive data
+### Performance Optimization 💭 **INTENDED**
+- **Memory Management**: Heap usage optimization and leak detection
+- **Task Optimization**: CPU usage profiling and optimization
+- **Network Performance**: HTTP server optimization and caching
+- **Power Management**: Sleep modes and power consumption optimization
+- **Storage Optimization**: Flash usage and wear leveling
 
-#### **Step 5.3: Performance Optimization** 📋 **FUTURE**
-- 📋 **Memory Management**: Heap usage optimization and leak detection
-- 📋 **Task Optimization**: CPU usage profiling and optimization
-- 📋 **Network Performance**: HTTP server optimization and caching
-- 📋 **Power Management**: Sleep modes and power consumption optimization
-- 📋 **Storage Optimization**: Flash usage and wear leveling
-
-#### **Step 5.4: MQTT Integration** 📋 **FUTURE**
-- 📋 **MQTT Client**: Connect to MQTT broker for IoT integration
-- 📋 **Data Publishing**: Real-time distance measurements to MQTT topics
-- 📋 **Configuration**: MQTT broker settings via web interface
-- 📋 **Status Reporting**: System health and diagnostics via MQTT
-- 📋 **Home Automation**: Integration with Home Assistant, OpenHAB, etc.
+### MQTT Integration 💭 **INTENDED**
+- **MQTT Client**: Connect to MQTT broker for IoT integration
+- **Data Publishing**: Real-time distance measurements to MQTT topics
+- **Configuration**: MQTT broker settings via web interface
+- **Status Reporting**: System health and diagnostics via MQTT
+- **Home Automation**: Integration with Home Assistant, OpenHAB, etc.
 
 **MQTT Topics:**
 ```
@@ -146,53 +222,44 @@ esp32-distance/config       - Configuration updates
 esp32-distance/led/state    - LED strip status
 ```
 
-#### **Step 5.5: System Reliability** 📋 **FUTURE**
-- 📋 **Watchdog Timers**: Hardware and software watchdog implementation
-- 📋 **Error Recovery**: Comprehensive error handling and recovery mechanisms
-- 📋 **Logging System**: Persistent log storage and remote log access
-- 📋 **Health Monitoring**: System metrics and performance monitoring
-- 📋 **Factory Reset**: Complete system reset capability
-
-**Step 5 Deliverables:**
-- Production-ready firmware with OTA updates
-- Secure web interface with authentication
-- MQTT integration for IoT platforms
-- Performance-optimized and reliable system
-- Comprehensive logging and monitoring
+### System Reliability 💭 **INTENDED**
+- **Watchdog Timers**: Hardware and software watchdog implementation
+- **Error Recovery**: Comprehensive error handling and recovery mechanisms
+- **Logging System**: Persistent log storage and remote log access
+- **Health Monitoring**: System metrics and performance monitoring
+- **Factory Reset**: Complete system reset capability
 
 ---
 
-## Garage Parking Assistant (Optional)
+## Garage Parking Assistant (Optional) 💭
 
-### Step 6: Garage Parking Assistant 📋 **FUTURE**
+### Multi-Zone Detection 💭 **INTENDED**
+- **Multiple Sensors**: Support for multiple HC-SR04 sensors
+- **Zone Configuration**: Configurable detection zones (approach, stop, too close)
+- **Sensor Fusion**: Combine multiple sensor readings for accuracy
+- **Parking Guidance**: Visual indicators for optimal parking position
+- **Vehicle Detection**: Distinguish between vehicles and other objects
 
-#### **Step 6.1: Multi-Zone Detection** 📋 **FUTURE**
-- 📋 **Multiple Sensors**: Support for multiple HC-SR04 sensors
-- 📋 **Zone Configuration**: Configurable detection zones (approach, stop, too close)
-- 📋 **Sensor Fusion**: Combine multiple sensor readings for accuracy
-- 📋 **Parking Guidance**: Visual indicators for optimal parking position
-- 📋 **Vehicle Detection**: Distinguish between vehicles and other objects
+### Audio Alert System 💭 **INTENDED**
+- **Piezo Buzzer**: Audio feedback for parking guidance (if piezo found! 🔍)
+- **Alert Patterns**: Different beep patterns for different zones
+- **Volume Control**: Configurable audio levels via web interface
+- **Silent Mode**: Option to disable audio alerts
+- **Custom Sounds**: Configurable alert tones and patterns
 
-#### **Step 6.2: Audio Alert System** 📋 **FUTURE**
-- 📋 **Piezo Buzzer**: Audio feedback for parking guidance (if piezo found! 🔍)
-- 📋 **Alert Patterns**: Different beep patterns for different zones
-- 📋 **Volume Control**: Configurable audio levels via web interface
-- 📋 **Silent Mode**: Option to disable audio alerts
-- 📋 **Custom Sounds**: Configurable alert tones and patterns
+### Advanced Parking Logic 💭 **INTENDED**
+- **Car Detection**: Algorithms to detect vehicle presence vs. absence
+- **Parking Position**: Optimal stop position calculation
+- **Multiple Vehicles**: Support for different vehicle sizes
+- **Learning Mode**: Adaptive algorithms that learn parking preferences
+- **Safety Zones**: Configurable safety margins and warning zones
 
-#### **Step 6.3: Advanced Parking Logic** 📋 **FUTURE**
-- 📋 **Car Detection**: Algorithms to detect vehicle presence vs. absence
-- 📋 **Parking Position**: Optimal stop position calculation
-- 📋 **Multiple Vehicles**: Support for different vehicle sizes
-- 📋 **Learning Mode**: Adaptive algorithms that learn parking preferences
-- 📋 **Safety Zones**: Configurable safety margins and warning zones
-
-#### **Step 6.4: Garage Integration** 📋 **FUTURE**
-- 📋 **Door Sensors**: Integration with garage door position sensors
-- 📋 **Automation**: Automatic garage door control (future expansion)
-- 📋 **Multiple Bays**: Support for multi-bay garages
-- 📋 **User Profiles**: Different settings for different drivers
-- 📋 **Mobile Notifications**: Push notifications for parking events
+### Garage Integration 💭 **INTENDED**
+- **Door Sensors**: Integration with garage door position sensors
+- **Automation**: Automatic garage door control (future expansion)
+- **Multiple Bays**: Support for multi-bay garages
+- **User Profiles**: Different settings for different drivers
+- **Mobile Notifications**: Push notifications for parking events
 
 **Hardware Requirements:**
 - Multiple HC-SR04 sensors (2-4 units)
@@ -206,42 +273,32 @@ esp32-distance/led/state    - LED strip status
 - RV/boat parking assistance
 - Workshop/storage area object positioning
 
-**Step 6 Deliverables:**
-- Multi-sensor parking guidance system
-- Audio feedback with configurable patterns
-- Advanced vehicle detection algorithms
-- Integration with garage automation systems
-
 ---
 
-## Priority Guidelines
+## Priority Guidelines 💭
 
-When picking the next feature from this document after completing the current roadmap:
+These intentions have **no fixed priority**. When ready to implement:
 
-1. **Configuration Management (Step 4.3)** - High priority for system maintainability
-2. **Real-time Data Streaming (Step 4.4)** - High priority for user experience
-3. **JSON API (Step 4.5)** - Medium priority for integration capabilities
-4. **Advanced Configuration (Step 4.6)** - Medium priority for usability
-5. **Production Features (Step 5)** - Variable priority based on deployment needs
-6. **Garage Assistant (Step 6)** - Optional/fun features when core is complete
+1. **High Interest**: Configuration management, real-time streaming
+2. **Medium Interest**: JSON API, advanced configuration
+3. **Variable Interest**: Production features (depends on deployment needs)
+4. **Fun Features**: Garage assistant (when core is complete)
 
-## Architecture Considerations
+## Architecture Considerations 💭
 
-All future features should maintain the clean architecture established in the current roadmap:
-- **Component Encapsulation**: New features should be self-contained components
-- **Security First**: All web features should use HTTPS foundation
-- **Real-time Friendly**: Features should work with existing FreeRTOS task architecture
-- **Configuration Driven**: Features should be configurable via web interface
-- **Memory Conscious**: ESP32 memory constraints should guide implementation choices
+All intended features should maintain clean architecture:
+- **Component Encapsulation**: Self-contained components
+- **Security First**: Use HTTPS foundation
+- **Real-time Friendly**: Work with FreeRTOS task architecture
+- **Configuration Driven**: Configurable via web interface
+- **Memory Conscious**: ESP32 memory constraints
 
-## Migration Path
+## Migration from Intentions to Plans 💭
 
-When implementing features from this document:
-1. Create a new branch for the feature
-2. Update documentation first (design-driven development)
-3. Implement and test the feature
-4. Update this document with completion status
-5. Move completed features to `COMPLETED.md`
-6. Update `ROADMAP.md` with the next selected feature
+When an intention becomes a plan:
+1. Move the feature to `Features-planned.md` with assigned step number
+2. Add release timeline and specific deliverables
+3. Create detailed implementation plan
+4. Remove from this intentions document
 
-This ensures continuous progress tracking and clean development cycles.
+This ensures clear separation between "what we might do" vs. "what we will do".
