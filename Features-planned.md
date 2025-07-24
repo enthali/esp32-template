@@ -4,11 +4,40 @@ This document contains the immediate next steps for the ESP32 Distance Project. 
 
 ---
 
-## No Features Currently Planned
+## Currently Planned: Configuration Management System 🔧
 
-All previously planned HTTPS features have been parked for future consideration. The project is now in a phase where the next steps will be selected from the intentions list as priorities become clear.
+**Status**: In Development  
+**Branch**: `docs/oft-requirements-structure`  
+**Priority**: High  
+**AI Implementation Target**: GitHub Copilot demonstration  
+
+### Phase 1: Requirements and Documentation ✅
+- ✅ Create OpenFastTrack documentation structure
+- ✅ Define system requirements (REQ-SYS-1 through REQ-SYS-8)
+- ✅ Specify configuration requirements (REQ-CFG-1 through REQ-CFG-11)
+- ✅ Design architecture and APIs (DSN-CFG-1 through DSN-CFG-6)
+- ✅ Create test specifications (TST-CFG-1 through TST-CFG-9)
+
+### Phase 2: Implementation (Next)
+- 🔄 **REQ-CFG-1**: Magic number consolidation into `main/config.h`
+- 🔄 **REQ-CFG-2**: Source code migration to use centralized constants
+- 📋 **REQ-CFG-3**: Runtime configuration data structures
+- 📋 **REQ-CFG-4**: NVS persistent storage implementation
+- 📋 **REQ-CFG-5**: Configuration API development
+
+### Phase 3: Web Interface (Future)
+- 📋 **REQ-CFG-7**: Web settings page
+- 📋 **REQ-CFG-8**: Real-time configuration preview
+- 📋 **REQ-CFG-9**: Configuration backup/restore
+
+**Documentation**: See [`docs/requirements/config-requirements.md`](docs/requirements/config-requirements.md) for complete requirements.
+
+**Demo Objective**: Showcase AI-assisted embedded development within formal safety-critical processes.
+
+---
 
 > **Note:**
 >
-> - This file will be updated when a new feature is selected for implementation.
-> - See `Features-intended.md` for the current pool of possible features.
+> - This marks the first feature implemented using formal OFT methodology
+> - GitHub Copilot will be assigned specific requirement sections for implementation
+> - All implementation will be validated against formal test specifications
