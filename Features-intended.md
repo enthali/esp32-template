@@ -164,7 +164,8 @@ Once these foundational improvements are complete, we'll have a clean, secure, a
 #endif // CONFIG_H
 ```
 
-**Phase 2: Runtime Configuration System**
+### Phase 2: Runtime Configuration System
+
 - **NVS Storage**: Implement persistent configuration storage in ESP32 flash
 - **Config Structure**: Define runtime configuration with validation ranges
 - **Load/Save API**: Functions to load defaults, save changes, and validate ranges
@@ -204,13 +205,15 @@ esp_err_t config_factory_reset(void);
 bool config_validate_range(const system_config_t* config);
 ```
 
-**Phase 3: Web Configuration Interface**
+### Phase 3: Web Configuration Interface
+
 - **Settings Page**: Web interface for runtime parameter modification
 - **Real-time Preview**: Live updates showing effect of changes before saving
 - **Validation**: Client and server-side range validation with user feedback
 - **Backup/Restore**: Export/import configuration as JSON
 
 **Web Interface Features:**
+
 - **Distance Calibration**: Set measurement range and LED mapping
 - **LED Settings**: Brightness, count, test animations
 - **Sensor Tuning**: Timeout, smoothing, measurement frequency
@@ -218,6 +221,7 @@ bool config_validate_range(const system_config_t* config);
 - **System Settings**: Monitor intervals, factory reset option
 
 **Implementation Priority:**
+
 1. **Phase 1** (Immediate): Consolidate magic numbers into config.h
 2. **Phase 2** (Next): Implement NVS storage and runtime configuration
 3. **Phase 3** (Future): Web interface for configuration management
@@ -335,19 +339,22 @@ esp_err_t shared_data_get_snapshot(shared_data_t* snapshot) {
 
 **Integration Points:**
 
-1. **Sensor Task Updates**: 
+1. **Sensor Task Updates**:
+
    ```c
    // In distance monitoring task
    shared_data_update_distance(distance_cm, status);
    ```
 
 2. **LED Controller Updates**:
+
    ```c
    // After LED strip update
    shared_data_update_leds(current_led_states, led_count);
    ```
 
 3. **Web Server Reads**:
+
    ```c
    // In HTTP request handler
    shared_data_t current_data;
@@ -357,6 +364,7 @@ esp_err_t shared_data_get_snapshot(shared_data_t* snapshot) {
    ```
 
 4. **System Monitor Updates**:
+
    ```c
    // In system monitor task
    shared_data_update_system(uptime, esp_get_free_heap_size(), wifi_rssi);

@@ -13,12 +13,13 @@ This document specifies the design for the Configuration Management System, cove
 ## Architecture Design
 
 ### DSN-CFG-1: Layered Configuration Architecture
+
 **Covers**: REQ-CFG-1, REQ-CFG-2  
 **Type**: System Architecture  
 
 The configuration system implements a three-layer architecture:
 
-```
+``` text
 ┌─────────────────────────────────────────┐
 │           Application Layer             │
 │  (main.c, components, web_server.c)     │
@@ -38,10 +39,11 @@ The configuration system implements a three-layer architecture:
 - **Storage Layer**: Handles NVS operations, persistence, and error recovery
 
 ### DSN-CFG-2: Configuration Data Flow
+
 **Covers**: REQ-CFG-3, REQ-CFG-4, REQ-CFG-5  
 **Type**: Data Flow Design  
 
-```
+``` text
 Startup:     NVS → config_load() → Runtime Cache → Application
 Runtime:     Application → config_get() → Runtime Cache
 Update:      Web Interface → config_save() → Validation → NVS → Runtime Cache
@@ -58,6 +60,7 @@ Factory:     config_factory_reset() → Defaults → NVS → Runtime Cache
 ## Data Structure Design
 
 ### DSN-CFG-3: Configuration Storage Format
+
 **Covers**: REQ-CFG-3, REQ-CFG-4  
 **Type**: Data Structure  
 
@@ -109,6 +112,7 @@ typedef struct {
 ## API Design
 
 ### DSN-CFG-4: Configuration API Implementation
+
 **Covers**: REQ-CFG-5, REQ-CFG-6  
 **Type**: Interface Design  
 
@@ -167,6 +171,7 @@ bool config_validate_all(const system_config_t* config, char* error_msg, size_t 
 ## Web Interface Design
 
 ### DSN-CFG-5: Web Configuration Interface
+
 **Covers**: REQ-CFG-7, REQ-CFG-8, REQ-CFG-9  
 **Type**: User Interface Design  
 
@@ -218,15 +223,16 @@ POST /api/config/import    -> Import configuration (JSON upload)
 
 ## Implementation Strategy
 
-### DSN-CFG-6: GitHub Copilot Implementation Plan
+### DSN-CFG-6: GitHub Copilot Implementation
+
 **Covers**: All REQ-CFG requirements  
 **Type**: Implementation Strategy  
 
-**Phase 1: AI-Assisted Core Implementation**
+### Phase 1: AI-Assisted Core Implementation
 
 GitHub Copilot will be assigned to implement:
 
-```
+``` text
 1. Magic Number Consolidation (REQ-CFG-1, REQ-CFG-2)
    - Create main/config.h with all centralized values
    - Update all source files to use config.h macros
@@ -243,9 +249,9 @@ GitHub Copilot will be assigned to implement:
    - Implement parameter validation
 ```
 
-**Phase 2: Human-AI Collaboration**
+### Phase 2: Human-AI Collaboration
 
-```
+``` text
 1. Web Interface (REQ-CFG-7, REQ-CFG-8)
    - AI: Generate REST API endpoints and handlers
    - Human: Review security and user experience

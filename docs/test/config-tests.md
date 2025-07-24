@@ -24,6 +24,7 @@ This document specifies test cases for the Configuration Management System, ensu
 ## Phase 1: Magic Number Consolidation Tests
 
 ### TST-CFG-1: Configuration Header Validation
+
 **Covers**: REQ-CFG-1, DSN-CFG-1  
 **Type**: Unit Test  
 **Priority**: Mandatory  
@@ -33,6 +34,7 @@ This document specifies test cases for the Configuration Management System, ensu
 **Test Cases**:
 
 #### TST-CFG-1.1: Configuration Header Completeness
+
 **Test Steps**:
 
 1. Parse config.h and extract all #define statements
@@ -46,9 +48,14 @@ This document specifies test cases for the Configuration Management System, ensu
 
 - All configuration categories represented in config.h
 - Each constant includes value and comment explaining purpose
-- Constants follow naming convention: DEFAULT_<CATEGORY>_<NAME>
+- Constants follow naming convention:
 
-#### TST-CFG-1.2: Source Code Magic Number Elimination  
+``` HTML
+DEFAULT_<CATEGORY>_<NAME>
+```
+
+#### TST-CFG-1.2: Source Code Magic Number Elimination
+
 **Test Steps**:
 
 1. Scan all .c files in main/ directory for numeric literals
@@ -65,6 +72,7 @@ This document specifies test cases for the Configuration Management System, ensu
 - No magic numbers found in components/led_controller/
 
 ### TST-CFG-2: Source Code Migration Validation
+
 **Covers**: REQ-CFG-2, DSN-CFG-1  
 **Type**: Integration Test  
 **Priority**: Mandatory  
@@ -72,6 +80,7 @@ This document specifies test cases for the Configuration Management System, ensu
 **Test Objective**: Verify source files correctly use centralized configuration
 
 #### TST-CFG-2.1: Build System Validation
+
 **Test Steps**:
 
 1. Build project with config.h modifications
@@ -90,11 +99,13 @@ This document specifies test cases for the Configuration Management System, ensu
 ## Phase 2: Runtime Configuration Tests
 
 ### TST-CFG-3: Configuration Data Structure Tests
+
 **Covers**: REQ-CFG-3, DSN-CFG-3  
 **Type**: Unit Test  
 **Priority**: Mandatory  
 
 #### TST-CFG-3.1: Structure Size Validation
+
 **Test Steps**:
 
 1. Verify sizeof(config_nvs_storage_t) equals 64 bytes
@@ -108,6 +119,7 @@ This document specifies test cases for the Configuration Management System, ensu
 - All fields aligned properly for ESP32 architecture
 
 #### TST-CFG-3.2: Default Value Consistency
+
 **Test Steps**:
 
 1. Initialize system_config_t with default values
@@ -121,11 +133,13 @@ This document specifies test cases for the Configuration Management System, ensu
 - No inconsistencies between config.h and runtime structure
 
 ### TST-CFG-4: NVS Storage Tests  
+
 **Covers**: REQ-CFG-4, DSN-CFG-2  
 **Type**: Integration Test  
 **Priority**: Mandatory  
 
 #### TST-CFG-4.1: NVS Persistence Test
+
 **Test Steps**:
 
 1. Save configuration to NVS
@@ -140,6 +154,7 @@ This document specifies test cases for the Configuration Management System, ensu
 - No data corruption during power cycle
 
 #### TST-CFG-4.2: NVS Corruption Handling
+
 **Test Steps**:
 
 1. Corrupt NVS configuration data (modify checksum)
@@ -155,11 +170,13 @@ This document specifies test cases for the Configuration Management System, ensu
 - System remains operational with defaults
 
 ### TST-CFG-5: Configuration API Tests
+
 **Covers**: REQ-CFG-5, REQ-CFG-6, DSN-CFG-4  
 **Type**: Unit Test  
 **Priority**: Mandatory  
 
 #### TST-CFG-5.1: API Function Validation
+
 **Test Steps**:
 
 1. Test config_init() return value and initialization
@@ -177,6 +194,7 @@ This document specifies test cases for the Configuration Management System, ensu
 - Range validation prevents invalid configurations
 
 #### TST-CFG-5.2: Parameter Validation Tests
+
 **Test Steps**:
 
 1. Test distance range validation (min < max)
@@ -196,11 +214,13 @@ This document specifies test cases for the Configuration Management System, ensu
 ## Phase 3: Web Interface Tests
 
 ### TST-CFG-6: Web Configuration Interface Tests
+
 **Covers**: REQ-CFG-7, REQ-CFG-8, DSN-CFG-5  
 **Type**: System Test  
 **Priority**: High  
 
 #### TST-CFG-6.1: Web Settings Page Test
+
 **Test Steps**:
 
 1. Navigate to /settings page in web browser
@@ -219,6 +239,7 @@ This document specifies test cases for the Configuration Management System, ensu
 - Invalid changes rejected with user feedback
 
 #### TST-CFG-6.2: Real-time Preview Test
+
 **Test Steps**:
 
 1. Access settings page and modify LED brightness
@@ -236,11 +257,13 @@ This document specifies test cases for the Configuration Management System, ensu
 - Cancel button reverts to saved configuration
 
 ### TST-CFG-7: Configuration Backup/Restore Tests
+
 **Covers**: REQ-CFG-9, DSN-CFG-5  
 **Type**: System Test  
 **Priority**: Low  
 
 #### TST-CFG-7.1: Configuration Export Test
+
 **Test Steps**:
 
 1. Configure system with non-default values
@@ -256,7 +279,8 @@ This document specifies test cases for the Configuration Management System, ensu
 - Configuration values match current system settings
 - Metadata included for version tracking
 
-#### TST-CFG-7.2: Configuration Import Test  
+#### TST-CFG-7.2: Configuration Import Test
+
 **Test Steps**:
 
 1. Export current configuration as baseline
@@ -277,11 +301,13 @@ This document specifies test cases for the Configuration Management System, ensu
 ## Performance Tests
 
 ### TST-CFG-8: Configuration Performance Tests
+
 **Covers**: REQ-CFG-10, DSN-CFG-4  
 **Type**: Performance Test  
 **Priority**: Mandatory  
 
 #### TST-CFG-8.1: Startup Performance Test
+
 **Test Steps**:
 
 1. Measure time from system boot to config_init() completion
@@ -297,6 +323,7 @@ This document specifies test cases for the Configuration Management System, ensu
 - No performance degradation with configuration size
 
 #### TST-CFG-8.2: Runtime Performance Test
+
 **Test Steps**:
 
 1. Measure config_get_*() function call latency
@@ -316,11 +343,13 @@ This document specifies test cases for the Configuration Management System, ensu
 ## Reliability Tests
 
 ### TST-CFG-9: Configuration Reliability Tests
+
 **Covers**: REQ-CFG-11, DSN-CFG-2  
 **Type**: Reliability Test  
 **Priority**: Mandatory  
 
 #### TST-CFG-9.1: Power Loss Simulation
+
 **Test Steps**:
 
 1. Initiate configuration save operation
@@ -336,6 +365,7 @@ This document specifies test cases for the Configuration Management System, ensu
 - Error logged for diagnostic purposes
 
 #### TST-CFG-9.2: Network Disconnection Test
+
 **Test Steps**:
 
 1. Access web configuration interface
@@ -355,6 +385,7 @@ This document specifies test cases for the Configuration Management System, ensu
 ## Test Automation
 
 ### GitHub Copilot Test Implementation
+
 **Implementation Scope**: Automated test suite generation using AI assistance
 
 **Copilot Assignment**:

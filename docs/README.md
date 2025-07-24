@@ -4,7 +4,7 @@ This directory contains the formal documentation following OpenFastTrack (OFT) m
 
 ## Documentation Structure
 
-```
+``` text
 docs/
 ├── README.md                    # This file - documentation overview
 ├── requirements/                # Requirements specifications (OFT format)
@@ -25,12 +25,14 @@ docs/
 This project demonstrates **AI-assisted embedded development** with formal requirements engineering:
 
 ### Requirements Engineering Process
+
 1. **Requirements**: Written in OFT format with unique IDs and traceability
 2. **Design**: Linked to requirements with clear traceability
 3. **Implementation**: Components linked to design specifications
 4. **Testing**: Test cases linked to requirements for coverage verification
 
 ### AI Development Workflow
+
 - **GitHub Copilot**: Assigned complete requirement sections for implementation
 - **Requirements-Driven Development**: AI implements against formal specifications
 - **Automated Traceability**: OFT tracks requirement→design→code→test links
@@ -39,6 +41,7 @@ This project demonstrates **AI-assisted embedded development** with formal requi
 ## Target Audience
 
 This project serves as a **demonstration** for:
+
 - **Safety-Critical Development Teams**: Showing AI integration with formal processes
 - **Embedded Systems Engineers**: Modern development practices for ESP32/IoT
 - **Requirements Engineers**: OFT methodology in practice
@@ -62,6 +65,7 @@ This project serves as a **demonstration** for:
 ## Development Philosophy
 
 This project demonstrates that **formal processes and AI assistance are complementary**, showing how:
+
 - Structured requirements enable better AI code generation
 - AI tools can work within safety-critical development frameworks
 - Modern tooling can make formal processes more efficient

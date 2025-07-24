@@ -23,6 +23,7 @@ This document specifies detailed requirements for the Configuration Management S
 ## Phase 1: Magic Number Consolidation
 
 ### REQ-CFG-1: Centralized Configuration Header
+
 **Type**: Implementation  
 **Priority**: Mandatory  
 **Description**: The system SHALL consolidate all hardcoded configuration values into a single header file `main/config.h`.
@@ -66,7 +67,8 @@ This document specifies detailed requirements for the Configuration Management S
 #define DEFAULT_MAX_URI_LENGTH          64       // Range: 32-256
 ```
 
-### REQ-CFG-2: Source Code Migration
+### REQ-CFG-2: Source Code
+
 **Type**: Implementation  
 **Priority**: Mandatory  
 **Description**: All source files SHALL be updated to reference centralized configuration values instead of local magic numbers.
@@ -88,6 +90,7 @@ This document specifies detailed requirements for the Configuration Management S
 ## Phase 2: Runtime Configuration System
 
 ### REQ-CFG-3: Configuration Data Structure
+
 **Type**: Design  
 **Priority**: Mandatory  
 **Description**: The system SHALL define a runtime configuration structure with validation ranges for all user-configurable parameters.
@@ -97,7 +100,7 @@ This document specifies detailed requirements for the Configuration Management S
 **Acceptance Criteria**:
 
 - AC-1: Configuration structure includes all runtime-modifiable parameters
-- AC-2: Each parameter includes minimum and maximum valid ranges  
+- AC-2: Each parameter includes minimum and maximum valid ranges
 - AC-3: Configuration structure includes versioning for compatibility
 - AC-4: Structure optimized for NVS storage efficiency
 - AC-5: Default values match compile-time constants in config.h
@@ -131,6 +134,7 @@ typedef struct {
 ```
 
 ### REQ-CFG-4: Non-Volatile Storage (NVS)
+
 **Type**: Implementation  
 **Priority**: Mandatory  
 **Description**: The system SHALL store runtime configuration in ESP32 NVS flash memory with persistence across power cycles.
@@ -147,6 +151,7 @@ typedef struct {
 - AC-6: Configuration integrity verified with checksum
 
 ### REQ-CFG-5: Configuration API
+
 **Type**: Implementation  
 **Priority**: Mandatory  
 **Description**: The system SHALL provide a well-defined API for configuration management operations.
@@ -176,6 +181,7 @@ bool config_is_valid_range(const char* param_name, float value);
 ```
 
 ### REQ-CFG-6: Parameter Validation
+
 **Type**: Implementation  
 **Priority**: Mandatory  
 **Description**: The system SHALL validate all configuration parameters against defined ranges before acceptance.
@@ -196,6 +202,7 @@ bool config_is_valid_range(const char* param_name, float value);
 ## Phase 3: Web Configuration Interface
 
 ### REQ-CFG-7: Web Settings Page
+
 **Type**: Implementation  
 **Priority**: High  
 **Description**: The system SHALL provide a web interface for runtime configuration modification.
@@ -213,6 +220,7 @@ bool config_is_valid_range(const char* param_name, float value);
 - AC-7: Success confirmation after configuration save
 
 ### REQ-CFG-8: Real-time Configuration Preview
+
 **Type**: Implementation  
 **Priority**: Medium  
 **Description**: The system SHALL provide real-time preview of configuration changes before permanent application.
@@ -229,6 +237,7 @@ bool config_is_valid_range(const char* param_name, float value);
 - AC-6: "Cancel" button reverts to saved configuration
 
 ### REQ-CFG-9: Configuration Backup and Restore
+
 **Type**: Implementation  
 **Priority**: Low  
 **Description**: The system SHALL support configuration backup and restore via JSON export/import.
@@ -248,6 +257,7 @@ bool config_is_valid_range(const char* param_name, float value);
 ## Quality Requirements
 
 ### REQ-CFG-10: Configuration Performance
+
 **Type**: Performance  
 **Priority**: Mandatory  
 **Description**: Configuration operations SHALL not impact real-time system performance.
@@ -260,6 +270,7 @@ bool config_is_valid_range(const char* param_name, float value);
 - AC-4: Web configuration interface remains responsive during operations
 
 ### REQ-CFG-11: Configuration Reliability
+
 **Type**: Reliability  
 **Priority**: Mandatory  
 **Description**: Configuration system SHALL handle all error conditions gracefully.

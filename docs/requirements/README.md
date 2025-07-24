@@ -14,11 +14,13 @@ This ESP32 Distance Sensor project demonstrates **AI-assisted embedded developme
 This project showcases how **GitHub Copilot** can implement complete requirement sections while maintaining formal traceability:
 
 ### Phase 1: GitHub Copilot Implementation
+
 - **REQ-CFG-1**: Magic number consolidation → AI generates `main/config.h`
 - **REQ-CFG-2**: Source code migration → AI updates all references
 - **REQ-CFG-3**: Data structures → AI implements configuration types
 
 ### Phase 2: Human-AI Collaboration  
+
 - **REQ-CFG-7**: Web interface → AI generates endpoints, human reviews UX
 - **REQ-CFG-8**: Real-time preview → AI implements logic, human validates safety
 - **REQ-CFG-11**: Error handling → AI generates code, human reviews reliability
@@ -26,12 +28,13 @@ This project showcases how **GitHub Copilot** can implement complete requirement
 ## OpenFastTrack Integration
 
 Run OFT validation:
+
 ```bash
 # Install OpenFastTrack (if available)
-oft trace docs/
+ oft trace docs/
 
 # Generate traceability reports
-oft report --format html --output docs/reports/
+ oft report --format html --output docs/reports/
 ```
 
 ## Document Status
