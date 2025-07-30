@@ -20,74 +20,81 @@ This document specifies detailed requirements for the Configuration Management S
 
 ---
 
-## Phase 1: Magic Number Consolidation
+## Static Configuration Management
 
 ### REQ-CFG-1: Centralized Configuration Header
 
 **Type**: Implementation  
 **Priority**: Mandatory  
-**Description**: The system SHALL consolidate all hardcoded configuration values into a single header file `main/config.h`.
+**Description**: The system SHALL consolidate all user-configurable parameters and system-level configuration values, defined in this requirement, into a single header file `main/config.h`, while hardware-specific constants and protocol specifications remain in their respective component files.
 
-**Rationale**: Eliminates scattered magic numbers throughout the codebase, improving maintainability and reducing configuration errors.
+**Rationale**: Eliminates scattered magic numbers for configurable parameters throughout the codebase, improving maintainability and reducing configuration errors, while preserving component encapsulation for hardware-specific values.
 
 **Acceptance Criteria**:
 
-- AC-1: All distance sensor configuration values centralized in config.h
-- AC-2: All LED controller configuration values centralized in config.h  
-- AC-3: All WiFi configuration values centralized in config.h
-- AC-4: All web server configuration values centralized in config.h
-- AC-5: All system timing configuration values centralized in config.h
-- AC-6: No magic numbers remain in source files outside config.h
-- AC-7: Each configuration value documented with purpose and valid range
+- AC-1: Distance sensor parameters (DEFAULT_DISTANCE_MIN_CM, DEFAULT_DISTANCE_MAX_CM, DEFAULT_MEASUREMENT_INTERVAL_MS, DEFAULT_SENSOR_TIMEOUT_MS, DEFAULT_TEMPERATURE_C, DEFAULT_SMOOTHING_ALPHA) centralized in config.h
+- AC-2: LED controller parameters (DEFAULT_LED_COUNT, DEFAULT_LED_BRIGHTNESS) centralized in config.h  
+- AC-3: WiFi parameters (DEFAULT_WIFI_AP_CHANNEL, DEFAULT_WIFI_AP_MAX_CONN, DEFAULT_WIFI_STA_MAX_RETRY, DEFAULT_WIFI_STA_TIMEOUT_MS) centralized in config.h
+- AC-4: All parameters defined in the Configuration Categories section below SHALL be in config.h
+- AC-5: No additional user-configurable magic numbers remain in source files outside config.h
+- AC-6: Each configuration value documented with purpose and valid range as shown in Configuration Categories
 
 **Configuration Categories**:
 
 ```c
-// Distance Sensor Configuration
-#define DEFAULT_DISTANCE_MIN_CM         10.0f    // Range: 5.0-100.0
-#define DEFAULT_DISTANCE_MAX_CM         50.0f    // Range: 20.0-400.0  
-#define DEFAULT_DISTANCE_INTERVAL_MS    100      // Range: 50-1000
-#define DEFAULT_DISTANCE_TIMEOUT_MS     30       // Range: 10-100
-#define DEFAULT_TEMPERATURE_C           20.0f    // Range: -20.0-60.0
-#define DEFAULT_SMOOTHING_ALPHA         0.3f     // Range: 0.1-1.0
+// Distance Sensor Configuration (User Configurable)
+#define DEFAULT_DISTANCE_MIN_CM         10.0f    // The distance mapped to the first LED : Range: 5.0-100.0 
+#define DEFAULT_DISTANCE_MAX_CM         50.0f    // The distance mapped to the last LED, must be larger than DEFAULT_DISTANCE_MIN_CM : Range: 20.0-400.0  
+#define DEFAULT_MEASUREMENT_INTERVAL_MS 100      // How often to measure distance in milliseconds : Range: 50-1000
+#define DEFAULT_SENSOR_TIMEOUT_MS       30       // Maximum time to wait for ultrasonic echo, must be < interval : Range: 10-50
+#define DEFAULT_TEMPERATURE_C           20.0f    // Ambient temperature for sound speed calculation : Range: -20.0-60.0
+#define DEFAULT_SMOOTHING_ALPHA         0.3f     // Exponential moving average smoothing factor : Range: 0.1-1.0
 
-// LED Controller Configuration  
-#define DEFAULT_LED_COUNT               40       // Range: 1-60
-#define DEFAULT_LED_BRIGHTNESS          128      // Range: 10-255
-#define DEFAULT_LED_RMT_CHANNEL         0        // Range: 0-7
+// LED Controller Configuration (User Configurable)
+#define DEFAULT_LED_COUNT               40       // Number of LEDs in the strip : Range: 1-60
+#define DEFAULT_LED_BRIGHTNESS          128      // LED brightness level (0=off, 255=max) : Range: 10-255
 
-// WiFi Configuration
-#define DEFAULT_WIFI_AP_CHANNEL         1        // Range: 1-13
-#define DEFAULT_WIFI_AP_MAX_CONN        4        // Range: 1-10
-#define DEFAULT_WIFI_STA_MAX_RETRY      3        // Range: 1-10
-#define DEFAULT_WIFI_STA_TIMEOUT_MS     5000     // Range: 1000-30000
-
-// Web Server Configuration
-#define DEFAULT_HTTP_PORT               80       // Range: 1-65535
-#define DEFAULT_MAX_URI_LENGTH          64       // Range: 32-256
+// WiFi Configuration (User Configurable)
+#define DEFAULT_WIFI_AP_CHANNEL         1        // WiFi access point channel : Range: 1-13
+#define DEFAULT_WIFI_AP_MAX_CONN        2        // Maximum simultaneous AP connections : Range: 1-10
+#define DEFAULT_WIFI_STA_MAX_RETRY      3        // Station connection retry attempts : Range: 1-10
+#define DEFAULT_WIFI_STA_TIMEOUT_MS     5000     // Station connection timeout : Range: 1000-30000
 ```
 
-### REQ-CFG-2: Source Code
+**Scope Definition**:
+
+- **Included in config.h**: User-configurable parameters, system behavior settings, timing intervals, network parameters
+- **Excluded from config.h**: Hardware timing specifications (WS2812 bit timing), ESP-IDF task stack sizes, protocol constants (HTTP status codes), component-internal buffer sizes
+
+**Note**: This selective approach maintains component encapsulation while centralizing parameters that affect system behavior or user experience.
+
+### REQ-CFG-2: Use of Centralized Configuration
 
 **Type**: Implementation  
 **Priority**: Mandatory  
-**Description**: All source files SHALL be updated to reference centralized configuration values instead of local magic numbers.
+**Description**: All system modules SHALL use centralized configuration values for parameters defined in the centralized configuration header, while retaining module-specific constants for hardware and protocol specifications.
 
-**Rationale**: Ensures consistent configuration usage across the entire codebase.
+**Rationale**: Ensures consistent use of configurable parameters across the system while allowing modules to maintain their own only module-specific constants.
 
 **Acceptance Criteria**:
 
-- AC-1: main/main.c updated to use config.h values
-- AC-2: main/wifi_manager.c updated to use config.h values
-- AC-3: main/web_server.c updated to use config.h values
-- AC-4: components/distance_sensor/ updated to use config.h values
-- AC-5: components/led_controller/ updated to use config.h values
-- AC-6: Build system validates no magic numbers in source files
-- AC-7: Code review confirms all references point to config.h
+- AC-1: All modules SHALL reference config.h for parameters defined therein
+- AC-2: Modules SHALL NOT define local copies of centrally-defined configuration values
+- AC-3: Modules MAY retain hardware-specific constants (WS2812 timing, task stack sizes, etc.)
+- AC-4: Modules MAY retain protocol-specific constants (HTTP status codes, buffer sizes, etc.)
+- AC-5: Build process SHALL validate no duplicate definitions of centralized parameters
+- AC-6: Each centralized parameter SHALL be used consistently across all referencing modules
+- AC-7: Module documentation SHALL clearly distinguish between centralized and local parameters
+
+**Scope Clarification**:
+
+- **Centralized Parameters**: All user-configurable values defined in config.h (distance ranges, LED settings, WiFi parameters)
+- **Local Parameters**: Hardware timings, protocol constants, module-internal buffer sizes, task priorities
+- **Example**: `DEFAULT_LED_COUNT` must come from config.h, but `WS2812_T0H_NS` remains in led_controller component
 
 ---
 
-## Phase 2: Runtime Configuration System
+## Dynamic Configuration Management
 
 ### REQ-CFG-3: Configuration Data Structure
 
@@ -117,7 +124,8 @@ typedef struct {
     float distance_min_cm;           // Range: 5.0 - 100.0
     float distance_max_cm;           // Range: 20.0 - 400.0
     uint16_t measurement_interval_ms; // Range: 50 - 1000
-    uint32_t sensor_timeout_ms;      // Range: 10 - 100
+    uint32_t sensor_timeout_ms;      // Range: 10 - 50 (must be < measurement_interval_ms)
+    float temperature_c;             // Range: -20.0 - 60.0
     float smoothing_alpha;           // Range: 0.1 - 1.0
     
     // LED settings (runtime configurable)
@@ -125,11 +133,12 @@ typedef struct {
     uint8_t led_brightness;          // Range: 10 - 255
     
     // WiFi settings (runtime configurable)
-    uint8_t wifi_max_retry;          // Range: 1 - 10
-    uint32_t wifi_timeout_ms;        // Range: 1000 - 30000
-    
-    // Web server settings (runtime configurable)
-    uint32_t monitor_interval_ms;    // Range: 1000 - 60000
+    char wifi_ssid[33];              // WiFi network name (null-terminated, max 32 chars)
+    char wifi_password[65];          // WiFi network password (null-terminated, max 64 chars)
+    uint8_t wifi_ap_channel;         // Range: 1 - 13
+    uint8_t wifi_ap_max_conn;        // Range: 1 - 10
+    uint8_t wifi_sta_max_retry;      // Range: 1 - 10
+    uint32_t wifi_sta_timeout_ms;    // Range: 1000 - 30000
 } system_config_t;
 ```
 
@@ -199,7 +208,7 @@ bool config_is_valid_range(const char* param_name, float value);
 
 ---
 
-## Phase 3: Web Configuration Interface
+## Configuration User Interface
 
 ### REQ-CFG-7: Web Settings Page
 
@@ -291,9 +300,18 @@ bool config_is_valid_range(const char* param_name, float value);
 
 **Copilot Assignment Areas**:
 
-1. **Phase 1**: Magic number consolidation and source code migration
-2. **Phase 2**: NVS storage implementation and configuration API
-3. **Phase 3**: Web interface development and real-time preview
+1. **Static Configuration**: Centralized parameter definition and module integration
+   - **TASK-CFG-001**: Create centralized config.h header file
+   - **TASK-CFG-002**: Source code migration to use config.h values
+   - **TASK-CFG-002.1**: WiFi manager NVS migration (see Features-planned.md)
+
+2. **Dynamic Configuration**: Runtime configuration system and persistence
+   - **TASK-CFG-003**: Configuration data structure and API implementation
+   - **TASK-CFG-004**: NVS storage with persistence and validation
+
+3. **Configuration Interface**: User-facing configuration capabilities
+   - **TASK-CFG-005**: Web settings page implementation
+   - **TASK-CFG-006**: Real-time configuration preview system
 
 **Human Review Points**:
 
