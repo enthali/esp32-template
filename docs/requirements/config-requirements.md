@@ -157,9 +157,9 @@ typedef struct {
 **Type**: Implementation  
 **Priority**: Mandatory  
 **Depends**: REQ-CFG-3  
-**Description**: The system SHALL store runtime configuration defined in REQ-CFG-3 in ESP32 NVS flash memory with persistence across power cycles.
+**Description**: The system SHALL store runtime configuration defined in REQ-CFG-3 in ESP32 NVS flash memory with persistence across power cycles, and SHALL load configuration during system startup.
 
-**Rationale**: Maintains user configuration permanently without requiring firmware recompilation, using the configuration structure defined in REQ-CFG-3.
+**Rationale**: Maintains user configuration permanently without requiring firmware recompilation, using the configuration structure defined in REQ-CFG-3. Ensures configuration is available to all components during startup sequence.
 
 **Acceptance Criteria**:
 
@@ -167,6 +167,9 @@ typedef struct {
 - AC-2: Configuration survives device reset and power loss
 - AC-3: NVS write operations are atomic and protected against power loss
 - AC-4: Configuration integrity maintained through power cycles
+- AC-5: System loads configuration from NVS during startup sequence
+- AC-6: Configuration available to all components after successful startup load
+- AC-7: Automatic fallback to defaults if NVS read fails (including first-time startup)
 
 ### REQ-CFG-5: Configuration API
 
@@ -179,16 +182,15 @@ typedef struct {
 
 **Acceptance Criteria**:
 
-- AC-1: config_init() initializes configuration subsystem
+- AC-1: config_init() initializes configuration subsystem and loads configuration from NVS
 - AC-2: config_load() reads configuration from NVS with error handling
-- AC-3: config_save() writes configuration to NVS with validation
-- AC-4: config_validate_range() validates all parameter ranges
-- AC-5: config_factory_reset() restores compile-time defaults from REQ-CFG-1
-- AC-6: All API functions return appropriate esp_err_t codes
-- AC-7: Thread-safe access with mutex protection
-- AC-8: NVS corruption detection and error handling
-- AC-9: Automatic fallback to defaults if NVS read fails
-- AC-10: Configuration integrity verified with checksum
+- AC-3: config_load() SHALL call config_factory_reset() when NVS read fails or validation fails
+- AC-4: config_save() writes configuration to NVS with validation by calling config_validate_range() before save
+- AC-5: config_validate_range() validates all parameter ranges
+- AC-6: config_factory_reset() restores compile-time defaults from REQ-CFG-1 and persists them to NVS via config_save()
+- AC-7: All API functions return appropriate esp_err_t codes
+- AC-8: Thread-safe access with mutex protection
+- AC-9: Error recovery sequence (load failure → factory reset → save defaults) completes atomically
 
 **API Specification**:
 
