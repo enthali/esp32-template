@@ -25,6 +25,13 @@ You are working on an ESP32-based IoT distance sensor project that measures dist
 - `main/web_server.c`: HTTP server implementation
 - `main/dns_server.c`: DNS server for captive portal functionality
 
+### Documentation Structure
+- `docs/requirements/`: OpenFastTrack requirements documentation
+  - [`README.md`](../docs/requirements/README.md): Requirements documentation overview and navigation guide
+- `docs/`: Technical documentation using OpenFastTrack methodology
+- `docs/design/*-design.md`: Technical architecture and system design
+- `docs/planning/Features-*.md`: Feature tracking and planning documents
+
 ## Development Guidelines
 
 ### Coding Standards
@@ -66,6 +73,14 @@ You are working on an ESP32-based IoT distance sensor project that measures dist
 - **Certificate management**: Automated self-signed certificate generation
 - **Memory efficient SSL**: Optimize SSL buffer sizes for ESP32 constraints
 - **HTTP to HTTPS redirection**: Maintain user-friendly access patterns
+
+### Requirements Engineering
+- **Methodology**: Follow OpenFastTrack (OFT) requirements engineering methodology
+- **Requirement IDs**: Use format `REQ-<AREA>-<NUMBER>` (e.g., `REQ-CFG-1`, `REQ-WEB-3`)
+- **Traceability**: Maintain bidirectional traceability from requirements → design → implementation → tests
+- **Location**: Requirements stored in `docs/requirements/` with detailed `.md` format
+- **Current Focus**: Configuration management requirements (`config-requirements.md`)
+- **Implementation Links**: Code must reference specific requirement IDs in comments for traceability
 
 ## Current Development Phase
 
@@ -118,5 +133,3 @@ Always use the correct build environment setup for Windows:
 ```powershell
 cmd /c "cd /D C:\workspace\ESP32_Projects\distance && C:\workspace\ESP32_Projects\esp\v5.4.1\esp-idf\export.bat && idf.py build"
 ```
-
-Note the **capital C** in the drive letter - this is important for the MCP filesystem tools to work correctly.
