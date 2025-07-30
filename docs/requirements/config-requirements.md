@@ -22,6 +22,7 @@ This document specifies detailed requirements for the Configuration Management S
 - REQ-CFG-2 depends on REQ-CFG-1 (cannot use centralized configuration that doesn't exist)
 - REQ-CFG-3 depends on REQ-CFG-1 (runtime structure must match compile-time constants)
 - REQ-CFG-4 depends on REQ-CFG-3 (cannot store configuration structure that doesn't exist)
+- REQ-CFG-5 depends on REQ-CFG-4 (cannot implement NVS API without NVS storage requirement)
 - REQ-CFG-6 depends on REQ-CFG-3 (cannot validate parameters without defined structure)
 
 ---
@@ -164,18 +165,17 @@ typedef struct {
 
 - AC-1: Configuration saved to NVS namespace "esp32_distance_config"
 - AC-2: Configuration survives device reset and power loss
-- AC-3: NVS corruption detection and error handling
-- AC-4: Automatic fallback to defaults if NVS read fails
-- AC-5: NVS write operations protected against power loss
-- AC-6: Configuration integrity verified with checksum
+- AC-3: NVS write operations are atomic and protected against power loss
+- AC-4: Configuration integrity maintained through power cycles
 
 ### REQ-CFG-5: Configuration API
 
 **Type**: Implementation  
 **Priority**: Mandatory  
-**Description**: The system SHALL provide a well-defined API for configuration management operations.
+**Depends**: REQ-CFG-4  
+**Description**: The system SHALL provide a well-defined API for configuration management operations with robust error handling and automatic fallback to defaults.
 
-**Rationale**: Enables consistent configuration access across all system components.
+**Rationale**: Enables consistent configuration access across all system components while handling NVS storage errors gracefully.
 
 **Acceptance Criteria**:
 
@@ -183,9 +183,12 @@ typedef struct {
 - AC-2: config_load() reads configuration from NVS with error handling
 - AC-3: config_save() writes configuration to NVS with validation
 - AC-4: config_validate_range() validates all parameter ranges
-- AC-5: config_factory_reset() restores compile-time defaults
+- AC-5: config_factory_reset() restores compile-time defaults from REQ-CFG-1
 - AC-6: All API functions return appropriate esp_err_t codes
 - AC-7: Thread-safe access with mutex protection
+- AC-8: NVS corruption detection and error handling
+- AC-9: Automatic fallback to defaults if NVS read fails
+- AC-10: Configuration integrity verified with checksum
 
 **API Specification**:
 
