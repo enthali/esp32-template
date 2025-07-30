@@ -18,6 +18,12 @@ This document specifies detailed requirements for the Configuration Management S
 | REQ-CFG-2      | REQ-SYS-5        | DSN-CFG-2        | TST-CFG-2     |
 | REQ-CFG-3      | REQ-SYS-4        | DSN-CFG-3        | TST-CFG-3     |
 
+**Dependencies**:
+- REQ-CFG-2 depends on REQ-CFG-1 (cannot use centralized configuration that doesn't exist)
+- REQ-CFG-3 depends on REQ-CFG-1 (runtime structure must match compile-time constants)
+- REQ-CFG-4 depends on REQ-CFG-3 (cannot store configuration structure that doesn't exist)
+- REQ-CFG-6 depends on REQ-CFG-3 (cannot validate parameters without defined structure)
+
 ---
 
 ## Static Configuration Management
@@ -72,9 +78,10 @@ This document specifies detailed requirements for the Configuration Management S
 
 **Type**: Implementation  
 **Priority**: Mandatory  
-**Description**: All system modules SHALL use centralized configuration values for parameters defined in the centralized configuration header, while retaining module-specific constants for hardware and protocol specifications.
+**Depends**: REQ-CFG-1  
+**Description**: All system modules SHALL use centralized configuration values defined in REQ-CFG-1 for parameters specified in the centralized configuration header, while retaining module-specific constants for hardware and protocol specifications.
 
-**Rationale**: Ensures consistent use of configurable parameters across the system while allowing modules to maintain their own only module-specific constants.
+**Rationale**: Ensures consistent use of configurable parameters across the system while allowing modules to maintain their own module-specific constants.
 
 **Acceptance Criteria**:
 
@@ -100,17 +107,19 @@ This document specifies detailed requirements for the Configuration Management S
 
 **Type**: Design  
 **Priority**: Mandatory  
-**Description**: The system SHALL define a runtime configuration structure with validation ranges for all user-configurable parameters.
+**Depends**: REQ-CFG-1  
+**Description**: The system SHALL define a runtime configuration structure containing all user-configurable parameters defined in REQ-CFG-1, optimized for NVS storage and runtime modification.
 
-**Rationale**: Enables runtime parameter modification while ensuring system stability through validation.
+**Rationale**: Enables runtime parameter modification while maintaining consistency with compile-time defaults and ensuring efficient storage in ESP32 NVS flash memory.
 
 **Acceptance Criteria**:
 
-- AC-1: Configuration structure includes all runtime-modifiable parameters
-- AC-2: Each parameter includes minimum and maximum valid ranges
-- AC-3: Configuration structure includes versioning for compatibility
-- AC-4: Structure optimized for NVS storage efficiency
-- AC-5: Default values match compile-time constants in config.h
+- AC-1: Configuration structure includes all runtime-modifiable parameters from REQ-CFG-1
+- AC-2: Structure includes metadata for versioning and change tracking
+- AC-3: Data types optimized for NVS storage efficiency (uint8_t, uint16_t, uint32_t, float)
+- AC-4: String fields sized appropriately (WiFi SSID: 33 chars, password: 65 chars)
+- AC-5: Default values match compile-time constants defined in REQ-CFG-1
+- AC-6: Structure layout compatible with ESP32 memory alignment requirements
 
 **Configuration Structure**:
 
@@ -121,24 +130,24 @@ typedef struct {
     uint32_t save_count;             // Change tracking
     
     // Distance sensor settings (runtime configurable)
-    float distance_min_cm;           // Range: 5.0 - 100.0
-    float distance_max_cm;           // Range: 20.0 - 400.0
-    uint16_t measurement_interval_ms; // Range: 50 - 1000
-    uint32_t sensor_timeout_ms;      // Range: 10 - 50 (must be < measurement_interval_ms)
-    float temperature_c;             // Range: -20.0 - 60.0
-    float smoothing_alpha;           // Range: 0.1 - 1.0
+    float distance_min_cm;           
+    float distance_max_cm;           
+    uint16_t measurement_interval_ms; 
+    uint32_t sensor_timeout_ms;      
+    float temperature_c;             
+    float smoothing_alpha;           
     
     // LED settings (runtime configurable)
-    uint8_t led_count;               // Range: 1 - 60
-    uint8_t led_brightness;          // Range: 10 - 255
+    uint8_t led_count;               
+    uint8_t led_brightness;          
     
     // WiFi settings (runtime configurable)
     char wifi_ssid[33];              // WiFi network name (null-terminated, max 32 chars)
     char wifi_password[65];          // WiFi network password (null-terminated, max 64 chars)
-    uint8_t wifi_ap_channel;         // Range: 1 - 13
-    uint8_t wifi_ap_max_conn;        // Range: 1 - 10
-    uint8_t wifi_sta_max_retry;      // Range: 1 - 10
-    uint32_t wifi_sta_timeout_ms;    // Range: 1000 - 30000
+    uint8_t wifi_ap_channel;         
+    uint8_t wifi_ap_max_conn;        
+    uint8_t wifi_sta_max_retry;      
+    uint32_t wifi_sta_timeout_ms;    
 } system_config_t;
 ```
 
@@ -146,9 +155,10 @@ typedef struct {
 
 **Type**: Implementation  
 **Priority**: Mandatory  
-**Description**: The system SHALL store runtime configuration in ESP32 NVS flash memory with persistence across power cycles.
+**Depends**: REQ-CFG-3  
+**Description**: The system SHALL store runtime configuration defined in REQ-CFG-3 in ESP32 NVS flash memory with persistence across power cycles.
 
-**Rationale**: Maintains user configuration permanently without requiring firmware recompilation.
+**Rationale**: Maintains user configuration permanently without requiring firmware recompilation, using the configuration structure defined in REQ-CFG-3.
 
 **Acceptance Criteria**:
 
@@ -193,18 +203,41 @@ bool config_is_valid_range(const char* param_name, float value);
 
 **Type**: Implementation  
 **Priority**: Mandatory  
-**Description**: The system SHALL validate all configuration parameters against defined ranges before acceptance.
+**Depends**: REQ-CFG-3  
+**Description**: The system SHALL validate all configuration parameters in the runtime configuration structure against defined ranges before acceptance.
 
-**Rationale**: Prevents invalid configurations that could cause system malfunction or instability.
+**Rationale**: Prevents invalid configurations that could cause system malfunction or instability by enforcing parameter bounds and inter-parameter relationships.
 
 **Acceptance Criteria**:
 
-- AC-1: All float parameters validated against min/max ranges
-- AC-2: All integer parameters validated against min/max ranges  
-- AC-3: Inter-parameter validation (e.g., min_distance < max_distance)
+- AC-1: All float parameters validated against min/max ranges as specified below
+- AC-2: All integer parameters validated against min/max ranges as specified below
+- AC-3: Inter-parameter validation (e.g., distance_min_cm < distance_max_cm, sensor_timeout_ms < measurement_interval_ms)
 - AC-4: Invalid parameters rejected with specific error messages
 - AC-5: Validation performed before NVS save operations
 - AC-6: Validation errors logged with parameter name and attempted value
+
+**Parameter Validation Ranges**:
+
+```c
+// Distance sensor parameter ranges
+distance_min_cm:           5.0 - 100.0
+distance_max_cm:           20.0 - 400.0 (must be > distance_min_cm)
+measurement_interval_ms:   50 - 1000
+sensor_timeout_ms:         10 - 50 (must be < measurement_interval_ms)
+temperature_c:             -20.0 - 60.0
+smoothing_alpha:           0.1 - 1.0
+
+// LED parameter ranges
+led_count:                 1 - 60
+led_brightness:            10 - 255
+
+// WiFi parameter ranges
+wifi_ap_channel:           1 - 13
+wifi_ap_max_conn:          1 - 10
+wifi_sta_max_retry:        1 - 10
+wifi_sta_timeout_ms:       1000 - 30000
+```
 
 ---
 
