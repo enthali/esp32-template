@@ -65,6 +65,43 @@ This document contains **concrete implementation tasks** ready for development. 
 - `components/distance_sensor/distance_sensor.c`: Queue sizes, timing constants
 - `components/led_controller/led_controller.c`: WS2812 timing, color constants
 
+#### TASK-CFG-002.1: WiFi Manager NVS Migration
+
+**Assignment**: 🌐 **GitHub Copilot (Integration Mode)**  
+**Dependencies**: TASK-CFG-002, TASK-CFG-003  
+**Description**: Migrate existing WiFi credential storage to centralized configuration system
+
+**Background**: The WiFi manager currently uses a separate NVS namespace ("wifi_config") for storing SSID and password. This needs to be integrated into the main configuration system.
+
+**Current Implementation**:
+
+- **Namespace**: `"wifi_config"` → migrate to `"esp32_distance_config"`
+- **Keys**: `"ssid"` and `"password"` → integrate into main config structure
+- **Functions**: `load_credentials_from_nvs()` and `save_credentials_to_nvs()` → replace with config API
+
+**Implementation Tasks**:
+
+1. **Migration Function**: Create `migrate_wifi_credentials_to_config()`
+   - Read from old NVS namespace ("wifi_config")
+   - If credentials found, save to new config system
+   - Delete old NVS entries
+   - Handle empty credential scenarios
+
+2. **WiFi Manager Update**: Modify `main/wifi_manager.c`
+   - Replace direct NVS calls with `config_load()` and `config_save()` APIs
+   - Remove duplicate NVS handling code
+   - Use centralized configuration validation
+
+3. **Backward Compatibility**: Ensure existing user credentials continue working
+   - Seamless migration on first boot with new firmware
+   - No user intervention required
+
+**Files to Modify**:
+
+- `main/wifi_manager.c`: Remove NVS functions, use config API
+- `main/wifi_manager.h`: Update function signatures if needed
+- Migration logic in configuration system initialization
+
 ### Backlog (Future Sprints) 📋
 
 #### TASK-CFG-003: Runtime Configuration Data Structures
