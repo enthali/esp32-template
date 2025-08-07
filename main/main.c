@@ -9,21 +9,9 @@
 #include "distance_sensor.h"
 #include "wifi_manager.h"
 #include "display_logic.h"
+#include "config.h"
 
 static const char *TAG = "main";
-
-// =============================================
-// HARDWARE CONFIGURATION
-// =============================================
-#define LED_DATA_PIN GPIO_NUM_12
-#define LED_COUNT 40
-#define LED_RMT_CHANNEL 0
-
-#define DISTANCE_TRIGGER GPIO_NUM_14
-#define DISTANCE_ECHO GPIO_NUM_13
-#define DISTANCE_INTERVAL 100 // Measurement interval in ms (100ms = 10Hz for responsive updates)
-#define DISTANCE_TIMEOUT 30   // Echo timeout in ms
-#define TEMPERATURE_C 20.0f   // Room temperature for speed of sound
 
 void app_main(void)
 {
@@ -32,7 +20,7 @@ void app_main(void)
     // Configure LED strip
     led_config_t led_config = {
         .gpio_pin = LED_DATA_PIN,
-        .led_count = LED_COUNT,
+        .led_count = DEFAULT_LED_COUNT,
         .rmt_channel = LED_RMT_CHANNEL};
 
     // Initialize LED controller
@@ -61,12 +49,12 @@ void app_main(void)
 
     // Configure and initialize distance sensor
     distance_sensor_config_t distance_config = {
-        .trigger_pin = DISTANCE_TRIGGER,
-        .echo_pin = DISTANCE_ECHO,
-        .measurement_interval_ms = DISTANCE_INTERVAL,
-        .timeout_ms = DISTANCE_TIMEOUT,
-        .temperature_celsius = TEMPERATURE_C,
-        .smoothing_alpha = 0.3f}; // EMA smoothing factor
+        .trigger_pin = DISTANCE_TRIGGER_PIN,
+        .echo_pin = DISTANCE_ECHO_PIN,
+        .measurement_interval_ms = DEFAULT_MEASUREMENT_INTERVAL_MS,
+        .timeout_ms = DEFAULT_SENSOR_TIMEOUT_MS,
+        .temperature_celsius = DEFAULT_TEMPERATURE_C,
+        .smoothing_alpha = DEFAULT_SMOOTHING_ALPHA}; // EMA smoothing factor
 
     ret = distance_sensor_init(&distance_config);
     if (ret != ESP_OK)
@@ -83,7 +71,7 @@ void app_main(void)
     }
 
     ESP_LOGI(TAG, "Distance sensor initialized and started");
-    ESP_LOGI(TAG, "Hardware: LED=GPIO%d, Trigger=GPIO%d, Echo=GPIO%d", LED_DATA_PIN, DISTANCE_TRIGGER, DISTANCE_ECHO);
+    ESP_LOGI(TAG, "Hardware: LED=GPIO%d, Trigger=GPIO%d, Echo=GPIO%d", LED_DATA_PIN, DISTANCE_TRIGGER_PIN, DISTANCE_ECHO_PIN);
 
     // Initialize and start WiFi manager with smart boot logic
     ret = wifi_manager_init();
@@ -105,8 +93,8 @@ void app_main(void)
 
     // Configure and initialize display logic
     display_config_t display_config = {
-        .min_distance_cm = 10.0f,
-        .max_distance_cm = 50.0f};
+        .min_distance_cm = DEFAULT_DISTANCE_MIN_CM,
+        .max_distance_cm = DEFAULT_DISTANCE_MAX_CM};
 
     ret = display_logic_init(&display_config);
     if (ret != ESP_OK)
