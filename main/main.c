@@ -10,6 +10,7 @@
 #include "wifi_manager.h"
 #include "display_logic.h"
 #include "config.h"
+#include "config_manager.h"
 
 static const char *TAG = "main";
 
@@ -17,14 +18,35 @@ void app_main(void)
 {
     ESP_LOGI(TAG, "ESP32 Distance Measurement with LED Strip Display");
 
-    // Configure LED strip
+    // Initialize configuration management first
+    esp_err_t ret = config_init();
+    if (ret != ESP_OK)
+    {
+        ESP_LOGE(TAG, "Failed to initialize configuration manager: %s", esp_err_to_name(ret));
+        esp_restart();
+    }
+
+    // Load current runtime configuration
+    system_config_t runtime_config;
+    ret = config_get_current(&runtime_config);
+    if (ret != ESP_OK)
+    {
+        ESP_LOGE(TAG, "Failed to get current configuration: %s", esp_err_to_name(ret));
+        esp_restart();
+    }
+
+    ESP_LOGI(TAG, "Configuration loaded: LED count=%d, brightness=%d, dist_range=%.1f-%.1fcm", 
+             runtime_config.led_count, runtime_config.led_brightness,
+             runtime_config.distance_min_cm, runtime_config.distance_max_cm);
+
+    // Configure LED strip using runtime configuration
     led_config_t led_config = {
         .gpio_pin = LED_DATA_PIN,
-        .led_count = DEFAULT_LED_COUNT,
+        .led_count = runtime_config.led_count,
         .rmt_channel = LED_RMT_CHANNEL};
 
     // Initialize LED controller
-    esp_err_t ret = led_controller_init(&led_config);
+    ret = led_controller_init(&led_config);
     if (ret != ESP_OK)
     {
         ESP_LOGE(TAG, "Failed to initialize LED controller: %s", esp_err_to_name(ret));
@@ -47,14 +69,14 @@ void app_main(void)
     led_clear_all();
     led_show();
 
-    // Configure and initialize distance sensor
+    // Configure and initialize distance sensor using runtime configuration
     distance_sensor_config_t distance_config = {
         .trigger_pin = DISTANCE_TRIGGER_PIN,
         .echo_pin = DISTANCE_ECHO_PIN,
-        .measurement_interval_ms = DEFAULT_MEASUREMENT_INTERVAL_MS,
-        .timeout_ms = DEFAULT_SENSOR_TIMEOUT_MS,
-        .temperature_celsius = DEFAULT_TEMPERATURE_C,
-        .smoothing_alpha = DEFAULT_SMOOTHING_ALPHA}; // EMA smoothing factor
+        .measurement_interval_ms = runtime_config.measurement_interval_ms,
+        .timeout_ms = runtime_config.sensor_timeout_ms,
+        .temperature_celsius = runtime_config.temperature_c,
+        .smoothing_alpha = runtime_config.smoothing_alpha};
 
     ret = distance_sensor_init(&distance_config);
     if (ret != ESP_OK)
@@ -91,10 +113,10 @@ void app_main(void)
     ESP_LOGI(TAG, "WiFi manager initialized and started");
     ESP_LOGI(TAG, "Ready for distance measurement, LED display, and web interface...");
 
-    // Configure and initialize display logic
+    // Configure and initialize display logic using runtime configuration
     display_config_t display_config = {
-        .min_distance_cm = DEFAULT_DISTANCE_MIN_CM,
-        .max_distance_cm = DEFAULT_DISTANCE_MAX_CM};
+        .min_distance_cm = runtime_config.distance_min_cm,
+        .max_distance_cm = runtime_config.distance_max_cm};
 
     ret = display_logic_init(&display_config);
     if (ret != ESP_OK)
