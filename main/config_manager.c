@@ -105,10 +105,16 @@ esp_err_t config_init(void)
     // Load configuration from NVS (will fall back to defaults if not found)
     ret = config_load(&current_config);
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to load initial configuration: %s", esp_err_to_name(ret));
-        vSemaphoreDelete(config_mutex);
-        config_mutex = NULL;
-        return ret;
+        ESP_LOGW(TAG, "Failed to load initial configuration, using factory defaults: %s", esp_err_to_name(ret));
+        // Don't fail initialization - use factory defaults instead
+        config_init_defaults(&current_config);
+        
+        // Try to save the factory defaults to establish a good NVS state
+        esp_err_t save_ret = config_save(&current_config);
+        if (save_ret != ESP_OK) {
+            ESP_LOGW(TAG, "Failed to save factory defaults to NVS: %s", esp_err_to_name(save_ret));
+            // Continue anyway - we have valid defaults in memory
+        }
     }
 
     config_initialized = true;
@@ -459,5 +465,61 @@ static esp_err_t config_validate_relationships(const system_config_t* config)
         return ESP_ERR_INVALID_SIZE;
     }
 
+    return ESP_OK;
+}
+
+esp_err_t config_nvs_health_check(size_t* free_entries, size_t* total_entries)
+{
+    ESP_LOGD(TAG, "Performing NVS health check");
+
+    nvs_handle_t nvs_handle;
+    esp_err_t ret = nvs_open(NVS_NAMESPACE, NVS_READONLY, &nvs_handle);
+    if (ret != ESP_OK) {
+        ESP_LOGW(TAG, "Failed to open NVS namespace for health check: %s", esp_err_to_name(ret));
+        return ret;
+    }
+
+    // Get NVS statistics
+    nvs_stats_t nvs_stats;
+    ret = nvs_get_stats(NULL, &nvs_stats);
+    if (ret == ESP_OK) {
+        if (free_entries) *free_entries = nvs_stats.free_entries;
+        if (total_entries) *total_entries = nvs_stats.total_entries;
+        
+        ESP_LOGI(TAG, "NVS Health: %zu/%zu entries used, %zu KB available space",
+                 nvs_stats.used_entries, nvs_stats.total_entries,
+                 (nvs_stats.free_entries * 32) / 1024); // Rough estimate
+        
+        // Check for low space condition
+        if (nvs_stats.free_entries < 10) {
+            ESP_LOGW(TAG, "NVS space is running low (%zu free entries)", nvs_stats.free_entries);
+        }
+    } else {
+        ESP_LOGW(TAG, "Failed to get NVS statistics: %s", esp_err_to_name(ret));
+    }
+
+    // Try to read our configuration to verify integrity
+    size_t required_size = sizeof(system_config_t);
+    system_config_t test_config;
+    esp_err_t read_ret = nvs_get_blob(nvs_handle, NVS_CONFIG_KEY, &test_config, &required_size);
+    
+    nvs_close(nvs_handle);
+
+    if (read_ret == ESP_OK) {
+        // Verify the configuration is valid
+        esp_err_t validate_ret = config_validate_range(&test_config);
+        if (validate_ret != ESP_OK) {
+            ESP_LOGE(TAG, "NVS configuration is corrupted (validation failed)");
+            return ESP_ERR_NVS_CORRUPT;
+        }
+        ESP_LOGD(TAG, "NVS configuration integrity verified");
+    } else if (read_ret == ESP_ERR_NVS_NOT_FOUND) {
+        ESP_LOGD(TAG, "No configuration found in NVS (first boot)");
+    } else {
+        ESP_LOGE(TAG, "Failed to read configuration for health check: %s", esp_err_to_name(read_ret));
+        return read_ret;
+    }
+
+    ESP_LOGI(TAG, "NVS health check completed successfully");
     return ESP_OK;
 }

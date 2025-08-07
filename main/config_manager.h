@@ -185,11 +185,6 @@ esp_err_t config_factory_reset(void);
 
 /**
  * @brief Check if parameter value is within valid range
- * 
- * Helper function for individual parameter validation. Used internally
- * by config_validate_range() and can be used by other modules for
- * real-time validation.
- * 
  * @param[in] param_name Name of parameter for logging
  * @param[in] value Value to validate
  * @param[in] min_val Minimum valid value
@@ -226,6 +221,20 @@ esp_err_t config_get_current(system_config_t* config);
  * @return ESP_ERR_INVALID_STATE if config manager not initialized
  */
 esp_err_t config_set_current(const system_config_t* config);
+
+/**
+ * @brief Perform NVS health check and diagnostics (REQ-CFG-11)
+ * 
+ * Checks NVS partition health, available space, and configuration integrity.
+ * Can be used for system monitoring and preventive maintenance.
+ * 
+ * @param[out] free_entries Number of free NVS entries (optional, can be NULL)
+ * @param[out] total_entries Total number of NVS entries (optional, can be NULL)
+ * @return ESP_OK if NVS is healthy
+ * @return ESP_ERR_NVS_CORRUPT if corruption is detected
+ * @return Other ESP error codes for NVS issues
+ */
+esp_err_t config_nvs_health_check(size_t* free_entries, size_t* total_entries);
 
 // =============================================================================
 // PARAMETER VALIDATION CONSTANTS (REQ-CFG-6)

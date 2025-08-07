@@ -39,6 +39,15 @@ void app_main(void)
              runtime_config.led_count, runtime_config.led_brightness,
              runtime_config.distance_min_cm, runtime_config.distance_max_cm);
 
+    // Perform system health check (REQ-CFG-11)
+    size_t nvs_free, nvs_total;
+    esp_err_t health_ret = config_nvs_health_check(&nvs_free, &nvs_total);
+    if (health_ret == ESP_OK) {
+        ESP_LOGI(TAG, "System health check passed - NVS: %zu/%zu entries", nvs_total - nvs_free, nvs_total);
+    } else {
+        ESP_LOGW(TAG, "System health check issues detected: %s", esp_err_to_name(health_ret));
+    }
+
     // Configure LED strip using runtime configuration
     led_config_t led_config = {
         .gpio_pin = LED_DATA_PIN,

@@ -48,6 +48,12 @@ static esp_err_t config_reset_handler(httpd_req_t *req);
 static esp_err_t config_export_handler(httpd_req_t *req);
 static esp_err_t config_import_handler(httpd_req_t *req);
 
+// System health and diagnostics (REQ-CFG-11)
+static esp_err_t system_health_handler(httpd_req_t *req);
+
+// CORS support for API endpoints
+static esp_err_t cors_preflight_handler(httpd_req_t *req);
+
 // Static file serving declarations
 extern const uint8_t index_html_start[] asm("_binary_index_html_start");
 extern const uint8_t index_html_end[] asm("_binary_index_html_end");
@@ -563,6 +569,24 @@ esp_err_t web_server_init(const web_server_config_t *config)
         .user_ctx = NULL};
     ret = httpd_register_uri_handler(server, &config_import_uri);
     ESP_LOGI(TAG, "Registered handler for '/api/config/import' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
+    // Register system health endpoint (REQ-CFG-11)
+    httpd_uri_t system_health_uri = {
+        .uri = "/api/system/health",
+        .method = HTTP_GET,
+        .handler = system_health_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &system_health_uri);
+    ESP_LOGI(TAG, "Registered handler for '/api/system/health' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
+    // Register CORS preflight handler for all API endpoints
+    httpd_uri_t options_uri = {
+        .uri = "/api/*",
+        .method = HTTP_OPTIONS,
+        .handler = cors_preflight_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &options_uri);
+    ESP_LOGI(TAG, "Registered CORS preflight handler - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
     // Register static file handlers
     httpd_uri_t index_uri = {
@@ -1171,5 +1195,121 @@ static esp_err_t config_import_handler(httpd_req_t *req)
     httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
 
     ESP_LOGI(TAG, "Configuration imported and saved successfully");
+    return ESP_OK;
+}
+
+/**
+ * @brief GET /api/system/health - System health and diagnostics (REQ-CFG-11)
+ */
+static esp_err_t system_health_handler(httpd_req_t *req)
+{
+    ESP_LOGD(TAG, "Handling GET /api/system/health");
+
+    // Set CORS headers
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    httpd_resp_set_hdr(req, "Content-Type", "application/json");
+
+    // Create JSON response
+    cJSON *json = cJSON_CreateObject();
+    if (json == NULL) {
+        ESP_LOGE(TAG, "Failed to create JSON object");
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Memory allocation failed");
+        return ESP_FAIL;
+    }
+
+    // System uptime
+    int64_t uptime_us = esp_timer_get_time();
+    cJSON_AddNumberToObject(json, "uptime_seconds", (double)uptime_us / 1000000.0);
+
+    // Memory information
+    uint32_t free_heap = esp_get_free_heap_size();
+    uint32_t min_free_heap = esp_get_minimum_free_heap_size();
+    cJSON_AddNumberToObject(json, "free_heap_bytes", free_heap);
+    cJSON_AddNumberToObject(json, "minimum_free_heap_bytes", min_free_heap);
+    cJSON_AddNumberToObject(json, "heap_fragmentation_percent", 
+                           ((float)(free_heap - min_free_heap) / free_heap) * 100.0);
+
+    // NVS health check
+    size_t nvs_free_entries, nvs_total_entries;
+    esp_err_t nvs_health = config_nvs_health_check(&nvs_free_entries, &nvs_total_entries);
+    
+    cJSON *nvs_info = cJSON_CreateObject();
+    cJSON_AddStringToObject(nvs_info, "status", 
+                           (nvs_health == ESP_OK) ? "healthy" : 
+                           (nvs_health == ESP_ERR_NVS_CORRUPT) ? "corrupted" : "error");
+    cJSON_AddStringToObject(nvs_info, "status_message", esp_err_to_name(nvs_health));
+    cJSON_AddNumberToObject(nvs_info, "free_entries", nvs_free_entries);
+    cJSON_AddNumberToObject(nvs_info, "total_entries", nvs_total_entries);
+    cJSON_AddNumberToObject(nvs_info, "used_entries", nvs_total_entries - nvs_free_entries);
+    cJSON_AddItemToObject(json, "nvs", nvs_info);
+
+    // Configuration status
+    system_config_t current_config;
+    esp_err_t config_status = config_get_current(&current_config);
+    cJSON *config_info = cJSON_CreateObject();
+    cJSON_AddStringToObject(config_info, "status", 
+                           (config_status == ESP_OK) ? "healthy" : "error");
+    if (config_status == ESP_OK) {
+        cJSON_AddNumberToObject(config_info, "version", current_config.config_version);
+        cJSON_AddNumberToObject(config_info, "save_count", current_config.save_count);
+    }
+    cJSON_AddItemToObject(json, "configuration", config_info);
+
+    // WiFi status (basic info)
+    wifi_ap_record_t ap_info;
+    esp_err_t wifi_status = esp_wifi_sta_get_ap_info(&ap_info);
+    cJSON *wifi_info = cJSON_CreateObject();
+    if (wifi_status == ESP_OK) {
+        cJSON_AddStringToObject(wifi_info, "status", "connected");
+        cJSON_AddStringToObject(wifi_info, "ssid", (char*)ap_info.ssid);
+        cJSON_AddNumberToObject(wifi_info, "rssi", ap_info.rssi);
+    } else {
+        cJSON_AddStringToObject(wifi_info, "status", "disconnected");
+    }
+    cJSON_AddItemToObject(json, "wifi", wifi_info);
+
+    // Overall system health assessment
+    bool system_healthy = (nvs_health == ESP_OK) && 
+                         (config_status == ESP_OK) && 
+                         (free_heap > 50000); // At least 50KB free
+
+    cJSON_AddStringToObject(json, "overall_status", system_healthy ? "healthy" : "degraded");
+    cJSON_AddStringToObject(json, "device_type", "ESP32 Distance Sensor");
+    cJSON_AddStringToObject(json, "firmware_version", "1.0.0");
+
+    // Convert to string and send
+    char *json_string = cJSON_Print(json);
+    if (json_string == NULL) {
+        ESP_LOGE(TAG, "Failed to print JSON");
+        cJSON_Delete(json);
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "JSON serialization failed");
+        return ESP_FAIL;
+    }
+
+    httpd_resp_send(req, json_string, HTTPD_RESP_USE_STRLEN);
+
+    // Cleanup
+    free(json_string);
+    cJSON_Delete(json);
+
+    ESP_LOGD(TAG, "System health information sent successfully");
+    return ESP_OK;
+}
+
+/**
+ * @brief OPTIONS /api/* - CORS preflight handler
+ */
+static esp_err_t cors_preflight_handler(httpd_req_t *req)
+{
+    ESP_LOGD(TAG, "Handling CORS preflight request");
+
+    // Set CORS headers
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Headers", "Content-Type, Authorization");
+    httpd_resp_set_hdr(req, "Access-Control-Max-Age", "86400"); // 24 hours
+
+    // Send empty response
+    httpd_resp_send(req, "", 0);
     return ESP_OK;
 }
