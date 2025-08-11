@@ -73,7 +73,7 @@ extern "C" {
 
 /**
  * @brief Exponential moving average smoothing factor
- * @note Range: 0.1-1.0, higher values = less smoothing
+ * @note Range: 0.1-1.0, lower values = more smoothing (stable), higher values = less smoothing (responsive)
  * @requirement REQ-CFG-1 AC-1
  */
 #define DEFAULT_SMOOTHING_ALPHA         0.3f     
