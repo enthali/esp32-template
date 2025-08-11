@@ -4,7 +4,8 @@
 # during the build process and embeds them into the firmware.
 
 # Certificate files to be generated and embedded
-set(CERT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/certs")
+# Generate certificates in build directory to avoid git commits
+set(CERT_DIR "${CMAKE_BINARY_DIR}/certs")
 set(SERVER_CERT "${CERT_DIR}/server.crt")
 set(SERVER_KEY "${CERT_DIR}/server.key")
 set(CA_CERT "${CERT_DIR}/ca.crt")
@@ -80,23 +81,18 @@ function(generate_certs_python)
     # Use the Python certificate generation script with proper environment
     set(ENV{CERT_OUTPUT_DIR} ${CERT_DIR})
     
-    # Use the project source directory that contains the tools folder
-    if(DEFINED CMAKE_SOURCE_DIR)
-        set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
-    else()
-        # Fallback to relative path
-        get_filename_component(PROJECT_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/.. ABSOLUTE)
-    endif()
+    # Use ESP-IDF project directory (reliable source directory)
+    # CMAKE_BINARY_DIR points to build, so go up one level to get project source
+    get_filename_component(PROJECT_SOURCE_DIR "${CMAKE_BINARY_DIR}/.." ABSOLUTE)
+    set(CERT_SCRIPT "${PROJECT_SOURCE_DIR}/tools/generate_cert.py")
     
-    set(CERT_SCRIPT "${PROJECT_ROOT}/tools/generate_cert.py")
-    
-    message(STATUS "Project root: ${PROJECT_ROOT}")
+    message(STATUS "Project source: ${PROJECT_SOURCE_DIR}")
     message(STATUS "Certificate script: ${CERT_SCRIPT}")
     message(STATUS "Output directory: ${CERT_DIR}")
     
     execute_process(
         COMMAND python ${CERT_SCRIPT}
-        WORKING_DIRECTORY ${PROJECT_ROOT}
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         RESULT_VARIABLE PYTHON_RESULT
         OUTPUT_VARIABLE PYTHON_OUTPUT
         ERROR_VARIABLE PYTHON_ERROR

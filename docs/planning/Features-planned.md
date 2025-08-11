@@ -153,6 +153,27 @@ This document contains **concrete implementation tasks** ready for development. 
 - ✅ **Complete**: Acceptance criteria met and tested
 - 🔍 **Review**: Needs validation against requirements
 - 🚫 **Blocked**: Waiting for dependencies or clarification
+- ⏸️ **Deferred**: Temporarily removed pending technical resolution
+
+---
+
+## 📋 Deferred Features
+
+### Export/Import Configuration (REQ-CFG-9)
+
+**Status**: ⏸️ **Deferred** (Previously implemented, temporarily removed)  
+**Priority**: Low  
+**Issue**: Connection reset during import operations (restart timer interaction)  
+**Resolution**: Future implementation after restart mechanism optimization  
+
+**Technical Details**:
+
+- Export endpoint functional (HTTP 200)
+- Import endpoint causes connection resets
+- UI buttons removed from settings page pending fix
+- Backend handlers remain in codebase for future completion
+
+**Tracked in**: Configuration Management System implementation
 
 ---
 
