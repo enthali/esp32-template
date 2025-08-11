@@ -17,13 +17,25 @@ This document specifies detailed requirements for the Configuration Management S
 | REQ-CFG-1      | REQ-SYS-5        | DSN-CFG-1        | TST-CFG-1     |
 | REQ-CFG-2      | REQ-SYS-5        | DSN-CFG-2        | TST-CFG-2     |
 | REQ-CFG-3      | REQ-SYS-4        | DSN-CFG-3        | TST-CFG-3     |
+| REQ-CFG-4      | REQ-SYS-4        | DSN-CFG-4        | TST-CFG-4     |
+| REQ-CFG-5      | REQ-SYS-4        | DSN-CFG-5        | TST-CFG-5     |
+| REQ-CFG-6      | REQ-SYS-4        | DSN-CFG-6        | TST-CFG-6     |
+| REQ-CFG-7      | REQ-SYS-6        | DSN-CFG-7        | TST-CFG-7     |
+| REQ-CFG-8      | REQ-SYS-6        | DSN-CFG-8        | TST-CFG-8     |
+| REQ-CFG-9      | REQ-SYS-6        | DSN-CFG-9        | TST-CFG-9     |
+| REQ-CFG-10     | REQ-SYS-4        | DSN-CFG-10       | TST-CFG-10    |
+| REQ-CFG-11     | REQ-SYS-4        | DSN-CFG-11       | TST-CFG-11    |
 
 **Dependencies**:
+
 - REQ-CFG-2 depends on REQ-CFG-1 (cannot use centralized configuration that doesn't exist)
 - REQ-CFG-3 depends on REQ-CFG-1 (runtime structure must match compile-time constants)
 - REQ-CFG-4 depends on REQ-CFG-3 (cannot store configuration structure that doesn't exist)
 - REQ-CFG-5 depends on REQ-CFG-4 (cannot implement NVS API without NVS storage requirement)
 - REQ-CFG-6 depends on REQ-CFG-3 (cannot validate parameters without defined structure)
+- REQ-CFG-7 depends on REQ-CFG-5 (web interface requires configuration API)
+- REQ-CFG-8 depends on REQ-CFG-7 (save functionality requires web interface)
+- REQ-CFG-9 depends on REQ-CFG-7 (reload/reset functionality requires web interface)
 
 ---
 
@@ -266,38 +278,50 @@ wifi_sta_timeout_ms:       1000 - 30000
 - AC-6: Server-side validation with error feedback
 - AC-7: Success confirmation after configuration save
 
-### REQ-CFG-8: Real-time Configuration Preview
+### REQ-CFG-8: Save Configuration
 
 **Type**: Implementation  
-**Priority**: Medium  
-**Description**: The system SHALL provide real-time preview of configuration changes before permanent application.
+**Priority**: High  
+**Description**: The system SHALL save user configuration changes permanently and restart the device to apply them.
 
-**Rationale**: Allows users to test configuration changes safely before committing them permanently.
+**Rationale**: Provides reliable configuration persistence with automatic device restart to ensure all components use the new configuration values.
 
 **Acceptance Criteria**:
 
-- AC-1: "Preview" mode applies changes temporarily (RAM only)
-- AC-2: LED brightness changes visible immediately in preview
-- AC-3: Distance range changes visible in LED mapping preview
-- AC-4: Preview timeout reverts to previous configuration automatically
-- AC-5: "Apply" button makes preview changes permanent
-- AC-6: "Cancel" button reverts to saved configuration
+- AC-1: Form validation performed before save operation
+- AC-2: Configuration written to NVS using config_save() API
+- AC-3: Success notification displayed to user
+- AC-4: Automatic device restart triggered 3 seconds after save
+- AC-5: User feedback during restart countdown
+- AC-6: Error handling with specific user feedback for validation failures
+- AC-7: All form controls disabled during restart sequence
 
-### REQ-CFG-9: Configuration Backup and Restore
+### REQ-CFG-9: Reload Configuration and Reset to Defaults
 
 **Type**: Implementation  
-**Priority**: Low  
-**Description**: The system SHALL support configuration backup and restore via JSON export/import.
+**Priority**: High  
+**Description**: The system SHALL provide reload functionality to refresh the UI with current NVS values and reset functionality to restore factory defaults.
 
-**Rationale**: Enables configuration transfer between devices and recovery from misconfiguration.
+**Rationale**: Enables users to discard unsaved changes by reloading current configuration and provides recovery mechanism through factory reset.
 
 **Acceptance Criteria**:
 
-- AC-1: "Export" function downloads configuration as JSON file
-- AC-2: "Import" function accepts JSON configuration file upload
-- AC-3: Import validation ensures JSON format and parameter ranges
-- AC-4: Import operation preserves existing configuration on validation failure
-- AC-5: Exported JSON includes configuration metadata (version, timestamp)
+**Reload Configuration**:
+
+- AC-1: "Reload" button reads current values from NVS
+- AC-2: All form fields populated with current NVS values
+- AC-3: Any unsaved changes in form are discarded
+- AC-4: Success notification confirms reload operation
+- AC-5: Error handling for NVS read failures
+
+**Reset to Factory Defaults**:
+
+- AC-6: "Reset to Defaults" button with user confirmation dialog
+- AC-7: Confirmation message clearly warns of irreversible action
+- AC-8: Factory defaults restored using config_factory_reset() API
+- AC-9: Form fields immediately updated with default values
+- AC-10: Success notification confirms reset operation
+- AC-11: Error handling with user feedback for reset failures
 
 ---
 
@@ -329,34 +353,6 @@ wifi_sta_timeout_ms:       1000 - 30000
 - AC-3: Power loss during configuration save does not corrupt NVS
 - AC-4: Network disconnection during web configuration handled gracefully
 - AC-5: System operates with default configuration if NVS unavailable
-
----
-
-## Implementation Assignment
-
-**GitHub Copilot Implementation Scope**: This requirement specification is designated for AI-assisted implementation using GitHub Copilot.
-
-**Copilot Assignment Areas**:
-
-1. **Static Configuration**: Centralized parameter definition and module integration
-   - **TASK-CFG-001**: Create centralized config.h header file
-   - **TASK-CFG-002**: Source code migration to use config.h values
-   - **TASK-CFG-002.1**: WiFi manager NVS migration (see Features-planned.md)
-
-2. **Dynamic Configuration**: Runtime configuration system and persistence
-   - **TASK-CFG-003**: Configuration data structure and API implementation
-   - **TASK-CFG-004**: NVS storage with persistence and validation
-
-3. **Configuration Interface**: User-facing configuration capabilities
-   - **TASK-CFG-005**: Web settings page implementation
-   - **TASK-CFG-006**: Real-time configuration preview system
-
-**Human Review Points**:
-
-- Requirement compliance verification
-- Security review of web interface
-- Integration testing with existing components
-- Performance validation under load
 
 ---
 
