@@ -86,8 +86,9 @@ static void update_led_display(const distance_measurement_t *measurement)
         else
         {
             // Too far: Red on last LED
-            led_set_pixel(39, LED_COLOR_RED);
-            ESP_LOGD(TAG, "Distance %.2f cm too far → LED 39 red", measurement->distance_cm);
+            uint16_t led_count = led_get_count();
+            led_set_pixel(led_count - 1, LED_COLOR_RED);
+            ESP_LOGD(TAG, "Distance %.2f cm too far → LED %d red", measurement->distance_cm, led_count - 1);
         }
         break;
     }
@@ -99,8 +100,11 @@ static void update_led_display(const distance_measurement_t *measurement)
 
     case DISTANCE_SENSOR_OUT_OF_RANGE:
         // Out of sensor range: Red on last LED
-        led_set_pixel(39, LED_COLOR_RED);
-        ESP_LOGD(TAG, "Sensor out of range → LED 39 red");
+        {
+            uint16_t led_count = led_get_count();
+            led_set_pixel(led_count - 1, LED_COLOR_RED);
+            ESP_LOGD(TAG, "Sensor out of range → LED %d red", led_count - 1);
+        }
         break;
 
     case DISTANCE_SENSOR_NO_ECHO:
