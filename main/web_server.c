@@ -18,11 +18,25 @@
 #include "dns_server.h"
 #include "config_manager.h"
 #include "esp_log.h"
+#include "esp_system.h"
+#include "esp_timer.h"
 #include "esp_http_server.h"
 #include "esp_wifi.h"
+#include "esp_timer.h"
 #include "cJSON.h"
+#include <time.h>
 
 static const char *TAG = "web_server";
+
+// Restart timer handle for safe device restart after configuration save
+static esp_timer_handle_t restart_timer = NULL;
+
+// Timer callback for delayed restart
+static void restart_timer_callback(void* arg)
+{
+    ESP_LOGI(TAG, "Restarting device now...");
+    esp_restart();
+}
 
 // Server handles
 static httpd_handle_t server = NULL;
@@ -913,10 +927,23 @@ static esp_err_t config_set_handler(httpd_req_t *req)
     }
 
     // Send success response
-    const char *response = "{\"status\":\"success\",\"message\":\"Configuration saved successfully\"}";
+    const char *response = "{\"status\":\"success\",\"message\":\"Configuration saved successfully. Device will restart in 3 seconds.\"}";
     httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
 
-    ESP_LOGI(TAG, "Configuration updated and saved successfully");
+    ESP_LOGI(TAG, "Configuration updated and saved successfully. Scheduling device restart...");
+    
+    // Schedule restart using a timer to avoid blocking the HTTP response
+    if (restart_timer == NULL) {
+        esp_timer_create_args_t timer_args = {
+            .callback = restart_timer_callback,
+            .name = "restart_timer"
+        };
+        esp_timer_create(&timer_args, &restart_timer);
+    }
+    
+    // Start the restart timer (3 seconds delay)
+    esp_timer_start_once(restart_timer, 3000000); // 3 seconds in microseconds
+    
     return ESP_OK;
 }
 
@@ -1236,7 +1263,7 @@ static esp_err_t system_health_handler(httpd_req_t *req)
     cJSON *nvs_info = cJSON_CreateObject();
     cJSON_AddStringToObject(nvs_info, "status", 
                            (nvs_health == ESP_OK) ? "healthy" : 
-                           (nvs_health == ESP_ERR_NVS_CORRUPT) ? "corrupted" : "error");
+                           (nvs_health == ESP_ERR_INVALID_STATE) ? "corrupted" : "error");
     cJSON_AddStringToObject(nvs_info, "status_message", esp_err_to_name(nvs_health));
     cJSON_AddNumberToObject(nvs_info, "free_entries", nvs_free_entries);
     cJSON_AddNumberToObject(nvs_info, "total_entries", nvs_total_entries);
@@ -1297,7 +1324,7 @@ static esp_err_t system_health_handler(httpd_req_t *req)
 }
 
 /**
- * @brief OPTIONS /api/* - CORS preflight handler
+ * @brief OPTIONS /api/ wildcard - CORS preflight handler
  */
 static esp_err_t cors_preflight_handler(httpd_req_t *req)
 {

@@ -29,7 +29,7 @@ static const char *TAG = "config_manager";
 /**
  * @brief NVS namespace for configuration storage
  */
-#define NVS_NAMESPACE "esp32_distance_config"
+#define NVS_NAMESPACE "esp32_config"
 
 /**
  * @brief NVS key for configuration blob
@@ -510,7 +510,7 @@ esp_err_t config_nvs_health_check(size_t* free_entries, size_t* total_entries)
         esp_err_t validate_ret = config_validate_range(&test_config);
         if (validate_ret != ESP_OK) {
             ESP_LOGE(TAG, "NVS configuration is corrupted (validation failed)");
-            return ESP_ERR_NVS_CORRUPT;
+            return ESP_ERR_INVALID_STATE;
         }
         ESP_LOGD(TAG, "NVS configuration integrity verified");
     } else if (read_ret == ESP_ERR_NVS_NOT_FOUND) {

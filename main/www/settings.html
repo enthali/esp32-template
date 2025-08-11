@@ -318,9 +318,10 @@
                 <button type="button" onclick="previewConfiguration()" class="btn btn-primary">👀 Preview</button>
                 <button type="submit" class="btn btn-success">💾 Save</button>
                 <button type="button" onclick="resetToDefaults()" class="btn btn-danger">🔄 Reset to Defaults</button>
-                <button type="button" onclick="exportConfiguration()" class="btn btn-secondary">📤 Export</button>
-                <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importConfiguration(this)">
-                <button type="button" onclick="document.getElementById('import-file').click()" class="btn btn-secondary">📥 Import</button>
+                <!-- Export/Import functionality (REQ-CFG-9 - Priority: Low) temporarily disabled due to restart timer issues -->
+                <!-- <button type="button" onclick="exportConfiguration()" class="btn btn-secondary">📤 Export</button> -->
+                <!-- <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importConfiguration(this)"> -->
+                <!-- <button type="button" onclick="document.getElementById('import-file').click()" class="btn btn-secondary">📥 Import</button> -->
             </div>
         </form>
     </main>
@@ -393,7 +394,26 @@
                 }
                 
                 const result = await response.json();
-                showNotification('Configuration saved successfully', 'success');
+                showNotification('Configuration saved successfully. Device will restart in 3 seconds.', 'success');
+                
+                // Disable all buttons during restart
+                document.querySelectorAll('button').forEach(btn => btn.disabled = true);
+                
+                // Show restart countdown
+                let countdown = 3;
+                const countdownInterval = setInterval(() => {
+                    countdown--;
+                    if (countdown > 0) {
+                        showNotification(`Device restarting in ${countdown} seconds...`, 'info');
+                    } else {
+                        showNotification('Device restarting now. Please wait...', 'info');
+                        clearInterval(countdownInterval);
+                        // Attempt to reconnect after restart
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 5000);
+                    }
+                }, 1000);
                 
                 // Cancel any active preview
                 if (previewTimer) {
@@ -498,6 +518,9 @@
             }
         }
         
+        // Export/Import functions (REQ-CFG-9 - Priority: Low) 
+        // Temporarily disabled due to connection reset issues with restart timer
+        /*
         async function exportConfiguration() {
             try {
                 const response = await fetch('/api/config/export');
@@ -560,15 +583,29 @@
                 input.value = ''; // Clear file input
             }
         }
+        */
         
         function populateForm(config) {
+            // Helper function to ensure float values are displayed with period decimal separator
+            function formatFloatForDisplay(value) {
+                // First ensure we have a proper number, then format to reasonable precision and ensure period separator
+                const num = parseFloat(value);
+                if (isNaN(num)) return '0';
+                // Use Number.prototype.toLocaleString with explicit 'en-US' locale to force period separator
+                return num.toLocaleString('en-US', { 
+                    minimumFractionDigits: 1, 
+                    maximumFractionDigits: 2,
+                    useGrouping: false 
+                });
+            }
+            
             // Distance sensor settings
-            document.getElementById('distance-min').value = config.distance_sensor.min_distance_cm;
-            document.getElementById('distance-max').value = config.distance_sensor.max_distance_cm;
+            document.getElementById('distance-min').value = formatFloatForDisplay(config.distance_sensor.min_distance_cm);
+            document.getElementById('distance-max').value = formatFloatForDisplay(config.distance_sensor.max_distance_cm);
             document.getElementById('measurement-interval').value = config.distance_sensor.measurement_interval_ms;
             document.getElementById('sensor-timeout').value = config.distance_sensor.sensor_timeout_ms;
-            document.getElementById('temperature').value = config.distance_sensor.temperature_c;
-            document.getElementById('smoothing-alpha').value = config.distance_sensor.smoothing_alpha;
+            document.getElementById('temperature').value = formatFloatForDisplay(config.distance_sensor.temperature_c);
+            document.getElementById('smoothing-alpha').value = formatFloatForDisplay(config.distance_sensor.smoothing_alpha);
             
             // LED settings
             document.getElementById('led-count').value = config.led.count;
@@ -584,14 +621,21 @@
         }
         
         function getFormData() {
+            // Helper function to parse float values with locale-safe decimal separator handling
+            function parseFloatSafe(value) {
+                // Replace comma with period for consistent decimal parsing
+                const normalizedValue = value.toString().replace(',', '.');
+                return parseFloat(normalizedValue);
+            }
+            
             return {
                 distance_sensor: {
-                    min_distance_cm: parseFloat(document.getElementById('distance-min').value),
-                    max_distance_cm: parseFloat(document.getElementById('distance-max').value),
+                    min_distance_cm: parseFloatSafe(document.getElementById('distance-min').value),
+                    max_distance_cm: parseFloatSafe(document.getElementById('distance-max').value),
                     measurement_interval_ms: parseInt(document.getElementById('measurement-interval').value),
                     sensor_timeout_ms: parseInt(document.getElementById('sensor-timeout').value),
-                    temperature_c: parseFloat(document.getElementById('temperature').value),
-                    smoothing_alpha: parseFloat(document.getElementById('smoothing-alpha').value)
+                    temperature_c: parseFloatSafe(document.getElementById('temperature').value),
+                    smoothing_alpha: parseFloatSafe(document.getElementById('smoothing-alpha').value)
                 },
                 led: {
                     count: parseInt(document.getElementById('led-count').value),

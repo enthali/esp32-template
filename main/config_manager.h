@@ -256,7 +256,7 @@ esp_err_t config_nvs_health_check(size_t* free_entries, size_t* total_entries);
 
 // LED parameter ranges
 #define CONFIG_LED_COUNT_MIN                1
-#define CONFIG_LED_COUNT_MAX                60
+#define CONFIG_LED_COUNT_MAX                100
 #define CONFIG_LED_BRIGHTNESS_MIN           10
 #define CONFIG_LED_BRIGHTNESS_MAX           255
 
