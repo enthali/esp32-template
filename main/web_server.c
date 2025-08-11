@@ -17,6 +17,7 @@
 #include "wifi_manager.h"
 #include "dns_server.h"
 #include "config_manager.h"
+#include "distance_sensor.h"
 #include "esp_log.h"
 #include "esp_system.h"
 #include "esp_timer.h"
@@ -64,6 +65,9 @@ static esp_err_t config_import_handler(httpd_req_t *req);
 
 // System health and diagnostics (REQ-CFG-11)
 static esp_err_t system_health_handler(httpd_req_t *req);
+
+// Distance sensor data endpoint
+static esp_err_t distance_data_handler(httpd_req_t *req);
 
 // CORS support for API endpoints
 static esp_err_t cors_preflight_handler(httpd_req_t *req);
@@ -592,6 +596,15 @@ esp_err_t web_server_init(const web_server_config_t *config)
         .user_ctx = NULL};
     ret = httpd_register_uri_handler(server, &system_health_uri);
     ESP_LOGI(TAG, "Registered handler for '/api/system/health' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
+    // Register distance data endpoint
+    httpd_uri_t distance_data_uri = {
+        .uri = "/api/distance",
+        .method = HTTP_GET,
+        .handler = distance_data_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &distance_data_uri);
+    ESP_LOGI(TAG, "Registered handler for '/api/distance' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
     // Register CORS preflight handler for all API endpoints
     httpd_uri_t options_uri = {
@@ -1321,6 +1334,88 @@ static esp_err_t system_health_handler(httpd_req_t *req)
 
     ESP_LOGD(TAG, "System health information sent successfully");
     return ESP_OK;
+}
+
+/**
+ * @brief GET /api/distance - Get current distance measurement
+ */
+static esp_err_t distance_data_handler(httpd_req_t *req)
+{
+    ESP_LOGD(TAG, "Distance data requested");
+
+    // Set JSON content type
+    httpd_resp_set_type(req, "application/json");
+    
+    // Set CORS headers
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+
+    // Get latest distance measurement
+    distance_measurement_t measurement;
+    esp_err_t ret = distance_sensor_get_latest(&measurement);
+    
+    if (ret != ESP_OK) {
+        ESP_LOGW(TAG, "Failed to get distance measurement: %s", esp_err_to_name(ret));
+        return httpd_resp_send(req, "{\"error\":\"Failed to get sensor data\"}", HTTPD_RESP_USE_STRLEN);
+    }
+
+    // Create JSON response
+    cJSON *json = cJSON_CreateObject();
+    if (json == NULL) {
+        ESP_LOGE(TAG, "Failed to create JSON object");
+        return httpd_resp_send_500(req);
+    }
+
+    // Add measurement data
+    cJSON_AddNumberToObject(json, "distance_cm", measurement.distance_cm);
+    cJSON_AddNumberToObject(json, "timestamp_us", (double)measurement.timestamp_us);
+    
+    // Add status as string for better readability
+    const char* status_str;
+    switch (measurement.status) {
+        case DISTANCE_SENSOR_OK:
+            status_str = "ok";
+            break;
+        case DISTANCE_SENSOR_TIMEOUT:
+            status_str = "timeout";
+            break;
+        case DISTANCE_SENSOR_OUT_OF_RANGE:
+            status_str = "out_of_range";
+            break;
+        case DISTANCE_SENSOR_NO_ECHO:
+            status_str = "no_echo";
+            break;
+        case DISTANCE_SENSOR_INVALID_READING:
+            status_str = "invalid";
+            break;
+        default:
+            status_str = "unknown";
+            break;
+    }
+    cJSON_AddStringToObject(json, "status", status_str);
+    
+    // Add timestamp as ISO string for convenience
+    time_t timestamp_sec = measurement.timestamp_us / 1000000;
+    struct tm timeinfo;
+    gmtime_r(&timestamp_sec, &timeinfo);
+    char iso_time[32];
+    strftime(iso_time, sizeof(iso_time), "%Y-%m-%dT%H:%M:%SZ", &timeinfo);
+    cJSON_AddStringToObject(json, "timestamp_iso", iso_time);
+
+    // Convert to string and send
+    char *json_string = cJSON_Print(json);
+    if (json_string == NULL) {
+        ESP_LOGE(TAG, "Failed to convert JSON to string");
+        cJSON_Delete(json);
+        return httpd_resp_send_500(req);
+    }
+
+    esp_err_t send_ret = httpd_resp_send(req, json_string, HTTPD_RESP_USE_STRLEN);
+    
+    // Cleanup
+    free(json_string);
+    cJSON_Delete(json);
+    
+    return send_ret;
 }
 
 /**

@@ -110,7 +110,7 @@ async function apiCall(endpoint, options = {}) {
 }
 
 // Dashboard-specific functions
-function refreshData() {
+async function refreshData() {
     // Show loading state
     const distanceValue = document.getElementById('distance-value');
     const distanceStatus = document.getElementById('distance-status');
@@ -121,21 +121,75 @@ function refreshData() {
         distanceStatus.textContent = 'Refreshing...';
     }
     
-    // For now, show static data - real API integration comes later in Step 4.3
-    setTimeout(() => {
+    try {
+        // Fetch real distance data from API
+        const response = await fetch('/api/distance', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            timeout: CONFIG.apiTimeout
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Update display with real data
         if (distanceValue) {
-            // Simulate distance reading
-            const mockDistance = (Math.random() * 350 + 50).toFixed(1);
-            distanceValue.textContent = mockDistance + ' cm';
-            distanceStatus.textContent = 'Active';
+            if (data.status === 'ok') {
+                distanceValue.textContent = `${data.distance_cm.toFixed(1)} cm`;
+                distanceStatus.textContent = 'Active';
+                distanceValue.className = 'distance-value success';
+                distanceStatus.className = 'distance-status success';
+            } else {
+                // Handle error states
+                let errorMessage;
+                switch (data.status) {
+                    case 'timeout':
+                        errorMessage = 'Sensor Timeout';
+                        break;
+                    case 'out_of_range':
+                        errorMessage = 'Out of Range';
+                        break;
+                    case 'no_echo':
+                        errorMessage = 'No Echo';
+                        break;
+                    case 'invalid':
+                        errorMessage = 'Invalid Reading';
+                        break;
+                    default:
+                        errorMessage = 'Sensor Error';
+                }
+                
+                distanceValue.textContent = '-- cm';
+                distanceStatus.textContent = errorMessage;
+                distanceValue.className = 'distance-value error';
+                distanceStatus.className = 'distance-status error';
+            }
         }
         
         if (lastUpdate) {
             lastUpdate.textContent = formatTimestamp(Date.now());
         }
         
-        showNotification('Data refreshed', 'success');
-    }, 500);
+        // Remove the annoying success notification - only show errors
+        
+    } catch (error) {
+        console.error('Failed to fetch distance data:', error);
+        
+        if (distanceValue) {
+            distanceValue.textContent = '-- cm';
+            distanceStatus.textContent = 'Connection Error';
+            distanceValue.className = 'distance-value error';
+            distanceStatus.className = 'distance-status error';
+        }
+        
+        // Only show notification for errors
+        showNotification('Failed to refresh data: ' + error.message, 'error');
+    }
 }
 
 // Auto-refresh functionality for dashboard
