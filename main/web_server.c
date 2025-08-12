@@ -54,14 +54,10 @@ static esp_err_t connect_handler(httpd_req_t *req);
 static esp_err_t status_handler(httpd_req_t *req);
 static esp_err_t reset_handler(httpd_req_t *req);
 
-// Configuration management handlers (REQ-CFG-7, REQ-CFG-8, REQ-CFG-9)
+// Configuration management handlers (REQ-CFG-7)
 static esp_err_t config_get_handler(httpd_req_t *req);
 static esp_err_t config_set_handler(httpd_req_t *req);
-static esp_err_t config_preview_handler(httpd_req_t *req);
-static esp_err_t config_apply_handler(httpd_req_t *req);
 static esp_err_t config_reset_handler(httpd_req_t *req);
-static esp_err_t config_export_handler(httpd_req_t *req);
-static esp_err_t config_import_handler(httpd_req_t *req);
 
 // System health and diagnostics (REQ-CFG-11)
 static esp_err_t system_health_handler(httpd_req_t *req);
@@ -548,22 +544,6 @@ esp_err_t web_server_init(const web_server_config_t *config)
     ret = httpd_register_uri_handler(server, &config_set_uri);
     ESP_LOGI(TAG, "Registered handler for '/api/config' POST - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
-    httpd_uri_t config_preview_uri = {
-        .uri = "/api/config/preview",
-        .method = HTTP_POST,
-        .handler = config_preview_handler,
-        .user_ctx = NULL};
-    ret = httpd_register_uri_handler(server, &config_preview_uri);
-    ESP_LOGI(TAG, "Registered handler for '/api/config/preview' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
-
-    httpd_uri_t config_apply_uri = {
-        .uri = "/api/config/apply",
-        .method = HTTP_POST,
-        .handler = config_apply_handler,
-        .user_ctx = NULL};
-    ret = httpd_register_uri_handler(server, &config_apply_uri);
-    ESP_LOGI(TAG, "Registered handler for '/api/config/apply' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
-
     httpd_uri_t config_reset_uri = {
         .uri = "/api/config/reset",
         .method = HTTP_POST,
@@ -571,22 +551,6 @@ esp_err_t web_server_init(const web_server_config_t *config)
         .user_ctx = NULL};
     ret = httpd_register_uri_handler(server, &config_reset_uri);
     ESP_LOGI(TAG, "Registered handler for '/api/config/reset' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
-
-    httpd_uri_t config_export_uri = {
-        .uri = "/api/config/export",
-        .method = HTTP_GET,
-        .handler = config_export_handler,
-        .user_ctx = NULL};
-    ret = httpd_register_uri_handler(server, &config_export_uri);
-    ESP_LOGI(TAG, "Registered handler for '/api/config/export' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
-
-    httpd_uri_t config_import_uri = {
-        .uri = "/api/config/import",
-        .method = HTTP_POST,
-        .handler = config_import_handler,
-        .user_ctx = NULL};
-    ret = httpd_register_uri_handler(server, &config_import_uri);
-    ESP_LOGI(TAG, "Registered handler for '/api/config/import' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
     // Register system health endpoint (REQ-CFG-11)
     httpd_uri_t system_health_uri = {
@@ -961,44 +925,6 @@ static esp_err_t config_set_handler(httpd_req_t *req)
 }
 
 /**
- * @brief POST /api/config/preview - Apply configuration temporarily (REQ-CFG-8)
- */
-static esp_err_t config_preview_handler(httpd_req_t *req)
-{
-    ESP_LOGD(TAG, "Handling POST /api/config/preview");
-
-    // Set CORS headers
-    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-    httpd_resp_set_hdr(req, "Content-Type", "application/json");
-
-    // For now, return success - full preview implementation requires component integration
-    const char *response = "{\"status\":\"success\",\"message\":\"Preview mode applied\",\"timeout\":30}";
-    httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
-
-    ESP_LOGI(TAG, "Configuration preview applied (placeholder implementation)");
-    return ESP_OK;
-}
-
-/**
- * @brief POST /api/config/apply - Make preview configuration permanent (REQ-CFG-8)
- */
-static esp_err_t config_apply_handler(httpd_req_t *req)
-{
-    ESP_LOGD(TAG, "Handling POST /api/config/apply");
-
-    // Set CORS headers
-    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-    httpd_resp_set_hdr(req, "Content-Type", "application/json");
-
-    // For now, return success - full apply implementation requires component integration
-    const char *response = "{\"status\":\"success\",\"message\":\"Configuration applied permanently\"}";
-    httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
-
-    ESP_LOGI(TAG, "Configuration changes applied permanently (placeholder implementation)");
-    return ESP_OK;
-}
-
-/**
  * @brief POST /api/config/reset - Reset to factory defaults (REQ-CFG-5)
  */
 static esp_err_t config_reset_handler(httpd_req_t *req)
@@ -1025,218 +951,8 @@ static esp_err_t config_reset_handler(httpd_req_t *req)
     return ESP_OK;
 }
 
-/**
- * @brief GET /api/config/export - Export configuration as JSON (REQ-CFG-9)
- */
-static esp_err_t config_export_handler(httpd_req_t *req)
-{
-    ESP_LOGD(TAG, "Handling GET /api/config/export");
 
-    // Set headers for file download
-    httpd_resp_set_hdr(req, "Content-Type", "application/json");
-    httpd_resp_set_hdr(req, "Content-Disposition", "attachment; filename=\"esp32-distance-config.json\"");
 
-    // Get current configuration
-    system_config_t config;
-    esp_err_t ret = config_get_current(&config);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to get current configuration: %s", esp_err_to_name(ret));
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to get configuration");
-        return ESP_FAIL;
-    }
-
-    // Create export JSON with metadata
-    cJSON *json = cJSON_CreateObject();
-    if (json == NULL) {
-        ESP_LOGE(TAG, "Failed to create JSON object");
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Memory allocation failed");
-        return ESP_FAIL;
-    }
-
-    // Add export metadata
-    cJSON_AddStringToObject(json, "export_version", "1.0");
-    cJSON_AddNumberToObject(json, "export_timestamp", (double)time(NULL));
-    cJSON_AddStringToObject(json, "device_type", "ESP32 Distance Sensor");
-
-    // Add complete configuration (same as config_get_handler but include metadata)
-    cJSON_AddNumberToObject(json, "config_version", config.config_version);
-    cJSON_AddNumberToObject(json, "save_count", config.save_count);
-
-    // Add distance sensor configuration
-    cJSON *distance = cJSON_CreateObject();
-    cJSON_AddNumberToObject(distance, "min_distance_cm", config.distance_min_cm);
-    cJSON_AddNumberToObject(distance, "max_distance_cm", config.distance_max_cm);
-    cJSON_AddNumberToObject(distance, "measurement_interval_ms", config.measurement_interval_ms);
-    cJSON_AddNumberToObject(distance, "sensor_timeout_ms", config.sensor_timeout_ms);
-    cJSON_AddNumberToObject(distance, "temperature_c", config.temperature_c);
-    cJSON_AddNumberToObject(distance, "smoothing_alpha", config.smoothing_alpha);
-    cJSON_AddItemToObject(json, "distance_sensor", distance);
-
-    // Add LED configuration
-    cJSON *led = cJSON_CreateObject();
-    cJSON_AddNumberToObject(led, "count", config.led_count);
-    cJSON_AddNumberToObject(led, "brightness", config.led_brightness);
-    cJSON_AddItemToObject(json, "led", led);
-
-    // Add WiFi configuration (include password for backup purposes)
-    cJSON *wifi = cJSON_CreateObject();
-    cJSON_AddStringToObject(wifi, "ssid", config.wifi_ssid);
-    cJSON_AddStringToObject(wifi, "password", config.wifi_password); // Include for backup
-    cJSON_AddNumberToObject(wifi, "ap_channel", config.wifi_ap_channel);
-    cJSON_AddNumberToObject(wifi, "ap_max_conn", config.wifi_ap_max_conn);
-    cJSON_AddNumberToObject(wifi, "sta_max_retry", config.wifi_sta_max_retry);
-    cJSON_AddNumberToObject(wifi, "sta_timeout_ms", config.wifi_sta_timeout_ms);
-    cJSON_AddItemToObject(json, "wifi", wifi);
-
-    // Convert to string and send
-    char *json_string = cJSON_Print(json);
-    if (json_string == NULL) {
-        ESP_LOGE(TAG, "Failed to print JSON");
-        cJSON_Delete(json);
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "JSON serialization failed");
-        return ESP_FAIL;
-    }
-
-    httpd_resp_send(req, json_string, HTTPD_RESP_USE_STRLEN);
-
-    // Cleanup
-    free(json_string);
-    cJSON_Delete(json);
-
-    ESP_LOGI(TAG, "Configuration exported successfully");
-    return ESP_OK;
-}
-
-/**
- * @brief POST /api/config/import - Import configuration from JSON (REQ-CFG-9)
- */
-static esp_err_t config_import_handler(httpd_req_t *req)
-{
-    ESP_LOGD(TAG, "Handling POST /api/config/import");
-
-    // Set CORS headers
-    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-    httpd_resp_set_hdr(req, "Content-Type", "application/json");
-
-    // Read request body
-    char content[2048]; // Larger buffer for import
-    int ret = httpd_req_recv(req, content, sizeof(content) - 1);
-    if (ret <= 0) {
-        if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
-            httpd_resp_send_408(req);
-        } else {
-            httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Failed to read request body");
-        }
-        return ESP_FAIL;
-    }
-    content[ret] = '\0';
-
-    ESP_LOGD(TAG, "Received import JSON: %s", content);
-
-    // Parse JSON
-    cJSON *json = cJSON_Parse(content);
-    if (json == NULL) {
-        ESP_LOGE(TAG, "Failed to parse JSON");
-        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid JSON format");
-        return ESP_FAIL;
-    }
-
-    // Validate import format
-    cJSON *export_version = cJSON_GetObjectItem(json, "export_version");
-    if (export_version == NULL || !cJSON_IsString(export_version)) {
-        ESP_LOGE(TAG, "Invalid import format - missing export_version");
-        cJSON_Delete(json);
-        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid import format");
-        return ESP_FAIL;
-    }
-
-    // Get current configuration as base
-    system_config_t new_config;
-    esp_err_t config_ret = config_get_current(&new_config);
-    if (config_ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to get current configuration");
-        cJSON_Delete(json);
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to get current configuration");
-        return ESP_FAIL;
-    }
-
-    // Update configuration from import JSON (same logic as config_set_handler)
-    cJSON *distance = cJSON_GetObjectItem(json, "distance_sensor");
-    if (distance != NULL) {
-        cJSON *item;
-        if ((item = cJSON_GetObjectItem(distance, "min_distance_cm")) != NULL && cJSON_IsNumber(item)) {
-            new_config.distance_min_cm = (float)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(distance, "max_distance_cm")) != NULL && cJSON_IsNumber(item)) {
-            new_config.distance_max_cm = (float)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(distance, "measurement_interval_ms")) != NULL && cJSON_IsNumber(item)) {
-            new_config.measurement_interval_ms = (uint16_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(distance, "sensor_timeout_ms")) != NULL && cJSON_IsNumber(item)) {
-            new_config.sensor_timeout_ms = (uint32_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(distance, "temperature_c")) != NULL && cJSON_IsNumber(item)) {
-            new_config.temperature_c = (float)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(distance, "smoothing_alpha")) != NULL && cJSON_IsNumber(item)) {
-            new_config.smoothing_alpha = (float)cJSON_GetNumberValue(item);
-        }
-    }
-
-    cJSON *led = cJSON_GetObjectItem(json, "led");
-    if (led != NULL) {
-        cJSON *item;
-        if ((item = cJSON_GetObjectItem(led, "count")) != NULL && cJSON_IsNumber(item)) {
-            new_config.led_count = (uint8_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(led, "brightness")) != NULL && cJSON_IsNumber(item)) {
-            new_config.led_brightness = (uint8_t)cJSON_GetNumberValue(item);
-        }
-    }
-
-    cJSON *wifi = cJSON_GetObjectItem(json, "wifi");
-    if (wifi != NULL) {
-        cJSON *item;
-        if ((item = cJSON_GetObjectItem(wifi, "ssid")) != NULL && cJSON_IsString(item)) {
-            strncpy(new_config.wifi_ssid, cJSON_GetStringValue(item), CONFIG_WIFI_SSID_MAX_LEN - 1);
-            new_config.wifi_ssid[CONFIG_WIFI_SSID_MAX_LEN - 1] = '\0';
-        }
-        if ((item = cJSON_GetObjectItem(wifi, "password")) != NULL && cJSON_IsString(item)) {
-            strncpy(new_config.wifi_password, cJSON_GetStringValue(item), CONFIG_WIFI_PASSWORD_MAX_LEN - 1);
-            new_config.wifi_password[CONFIG_WIFI_PASSWORD_MAX_LEN - 1] = '\0';
-        }
-        if ((item = cJSON_GetObjectItem(wifi, "ap_channel")) != NULL && cJSON_IsNumber(item)) {
-            new_config.wifi_ap_channel = (uint8_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(wifi, "ap_max_conn")) != NULL && cJSON_IsNumber(item)) {
-            new_config.wifi_ap_max_conn = (uint8_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(wifi, "sta_max_retry")) != NULL && cJSON_IsNumber(item)) {
-            new_config.wifi_sta_max_retry = (uint8_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(wifi, "sta_timeout_ms")) != NULL && cJSON_IsNumber(item)) {
-            new_config.wifi_sta_timeout_ms = (uint32_t)cJSON_GetNumberValue(item);
-        }
-    }
-
-    cJSON_Delete(json);
-
-    // Validate and save imported configuration
-    config_ret = config_save(&new_config);
-    if (config_ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to save imported configuration: %s", esp_err_to_name(config_ret));
-        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Configuration validation failed");
-        return ESP_FAIL;
-    }
-
-    // Send success response
-    const char *response = "{\"status\":\"success\",\"message\":\"Configuration imported and saved successfully\"}";
-    httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
-
-    ESP_LOGI(TAG, "Configuration imported and saved successfully");
-    return ESP_OK;
-}
 
 /**
  * @brief GET /api/system/health - System health and diagnostics (REQ-CFG-11)

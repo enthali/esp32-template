@@ -5,7 +5,7 @@
 
 // Global configuration
 const CONFIG = {
-    refreshInterval: 5000,  // 5 seconds
+    refreshInterval: 1000,  // 1 second - faster updates for testing
     notificationDuration: 3000,  // 3 seconds
     apiTimeout: 10000  // 10 seconds
 };
@@ -116,10 +116,7 @@ async function refreshData() {
     const distanceStatus = document.getElementById('distance-status');
     const lastUpdate = document.getElementById('last-update');
     
-    if (distanceValue) {
-        distanceValue.textContent = '...';
-        distanceStatus.textContent = 'Refreshing...';
-    }
+    // Skip loading state for smoother updates
     
     try {
         // Fetch real distance data from API
@@ -248,7 +245,8 @@ window.addEventListener('unhandledrejection', function(event) {
 
 // Network status detection
 window.addEventListener('online', function() {
-    showNotification('Connection restored', 'success');
+    // Connection restored silently - no popup needed
+    console.log('Connection restored');
 });
 
 window.addEventListener('offline', function() {
