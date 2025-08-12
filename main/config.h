@@ -115,18 +115,25 @@ extern "C" {
 #define DEFAULT_WIFI_AP_MAX_CONN        4        
 
 /**
- * @brief Station connection retry attempts
- * @note Range: 1-10
+ * @brief Station connection retry attempts (deprecated - restart-based approach)
+ * @note Legacy parameter, new simplified approach uses restart instead of retries
  * @requirement REQ-CFG-1 AC-3
  */
-#define DEFAULT_WIFI_STA_MAX_RETRY      3        
+#define DEFAULT_WIFI_STA_MAX_RETRY      1        
 
 /**
- * @brief Station connection timeout (milliseconds)
- * @note Range: 1000-30000
+ * @brief Station connection timeout (milliseconds) - simplified approach
+ * @note 10 seconds timeout before switching to AP mode via restart
  * @requirement REQ-CFG-1 AC-3
  */
-#define DEFAULT_WIFI_STA_TIMEOUT_MS     5000     
+#define DEFAULT_WIFI_STA_TIMEOUT_MS     (30 * 1000)  // 30 seconds for handshake issues
+
+/**
+ * @brief Auto-retry interval from AP mode back to STA (milliseconds)
+ * @note 10 minutes auto-retry cycle for unattended operation
+ * @requirement REQ-CFG-1 AC-3 
+ */
+#define DEFAULT_WIFI_AP_RETRY_MS        (10 * 60 * 1000)     
 
 // =============================================================================
 // HARDWARE PIN CONFIGURATION (System Level)

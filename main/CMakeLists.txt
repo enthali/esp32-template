@@ -1,4 +1,4 @@
-idf_component_register(SRCS "dns_server.c" "main.c" 
+idf_component_register(SRCS "main.c" 
                            "display_logic.c"
                            "config_manager.c"
                            "test/led_running_test.c"

@@ -15,7 +15,6 @@
 
 #include "web_server.h"
 #include "wifi_manager.h"
-#include "dns_server.h"
 #include "config_manager.h"
 #include "distance_sensor.h"
 #include "esp_log.h"
@@ -313,23 +312,32 @@ static esp_err_t reset_handler(httpd_req_t *req)
     // httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
     // httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "https://yourusername.github.io");  // For future hybrid approach
 
-    // Clear WiFi credentials and restart in AP mode
+    // Clear WiFi credentials and restart device for clean AP mode startup
     esp_err_t ret = wifi_manager_clear_credentials();
     if (ret == ESP_OK)
     {
         ESP_LOGI(TAG, "WiFi credentials cleared, device will restart in AP mode");
 
         // Send success response
-        httpd_resp_send(req, "{\"success\":true,\"message\":\"Device will restart in AP mode\"}", HTTPD_RESP_USE_STRLEN);
+        httpd_resp_send(req, "{\"success\":true,\"message\":\"Device will restart in AP mode in 3 seconds\"}", HTTPD_RESP_USE_STRLEN);
 
-        // Give time for response to be sent, then restart
-        vTaskDelay(pdMS_TO_TICKS(1000));
-        esp_restart();
+        // Schedule restart using a timer to allow HTTP response to complete
+        if (restart_timer == NULL) {
+            esp_timer_create_args_t timer_args = {
+                .callback = restart_timer_callback,
+                .name = "restart_timer"
+            };
+            esp_timer_create(&timer_args, &restart_timer);
+        }
+        
+        // Start the restart timer (3 seconds delay for clean restart)
+        esp_timer_start_once(restart_timer, 3000000); // 3 seconds in microseconds
 
         return ESP_OK;
     }
     else
     {
+        ESP_LOGE(TAG, "Failed to clear WiFi credentials: %s", esp_err_to_name(ret));
         return httpd_resp_send(req, "{\"success\":false,\"error\":\"Failed to clear credentials\"}", HTTPD_RESP_USE_STRLEN);
     }
 }
@@ -645,23 +653,13 @@ esp_err_t web_server_start(void)
     if (esp_wifi_get_mode(&wifi_mode) == ESP_OK &&
         (wifi_mode == WIFI_MODE_AP || wifi_mode == WIFI_MODE_APSTA))
     {
-        ESP_LOGI(TAG, "Starting DNS server for captive portal (AP mode)");
-
-        // Configure DNS server to redirect to AP IP
-        dns_server_config_t dns_config = {
-            .port = 53,
-            .ap_ip = 0xC0A80401 // 192.168.4.1 in network byte order
-        };
-
-        esp_err_t ret = dns_server_start(&dns_config);
-        if (ret != ESP_OK)
-        {
-            ESP_LOGW(TAG, "Failed to start DNS server, captive portal may not work properly");
-        }
+        ESP_LOGI(TAG, "AP mode detected - captive portal available at device IP");
+        // Note: Users can navigate directly to device IP (e.g., 192.168.4.1)
+        // DNS server removed for simplicity - manual navigation still works
     }
     else
     {
-        ESP_LOGI(TAG, "Skipping DNS server (STA mode - not needed)");
+        ESP_LOGI(TAG, "STA mode - web interface available at assigned IP");
     }
 
     server_running = true;
@@ -678,9 +676,6 @@ esp_err_t web_server_stop(void)
     }
 
     ESP_LOGI(TAG, "Stopping web server");
-
-    // Stop DNS server
-    dns_server_stop();
 
     // Stop HTTP server
     if (server != NULL)

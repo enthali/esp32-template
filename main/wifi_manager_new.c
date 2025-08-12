@@ -323,23 +323,6 @@ esp_err_t wifi_manager_switch_to_ap(void)
     return ESP_OK;
 }
 
-esp_err_t wifi_manager_get_ip_address(char *ip_str, size_t max_len)
-{
-    if (!ip_str || max_len < 16) {
-        return ESP_ERR_INVALID_ARG;
-    }
-
-    esp_netif_ip_info_t ip_info;
-    esp_netif_t *netif = (current_mode == WIFI_MODE_STA_CONNECTED) ? netif_sta : netif_ap;
-
-    if (esp_netif_get_ip_info(netif, &ip_info) == ESP_OK) {
-        snprintf(ip_str, max_len, IPSTR, IP2STR(&ip_info.ip));
-        return ESP_OK;
-    }
-
-    return ESP_ERR_INVALID_STATE;
-}
-
 //=============================================================================
 // PRIVATE HELPER FUNCTIONS
 //=============================================================================
@@ -425,11 +408,6 @@ static esp_err_t start_sta_boot(void)
     strncpy((char*)wifi_config.sta.ssid, stored_credentials.ssid, sizeof(wifi_config.sta.ssid) - 1);
     strncpy((char*)wifi_config.sta.password, stored_credentials.password, sizeof(wifi_config.sta.password) - 1);
     
-    // Add configuration for better WPA2 handshake compatibility
-    wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
-    wifi_config.sta.pmf_cfg.capable = true;
-    wifi_config.sta.pmf_cfg.required = false;
-    
     ESP_LOGI(TAG, "Attempting STA connection to: '%s'", wifi_config.sta.ssid);
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
     
@@ -471,15 +449,6 @@ static esp_err_t start_ap_boot(void)
     
     current_mode = WIFI_MODE_AP_ACTIVE;
     
-    // Start web server for AP mode
-    web_server_config_t web_config = WEB_SERVER_DEFAULT_CONFIG();
-    if (web_server_init(&web_config) == ESP_OK) {
-        web_server_start();
-        ESP_LOGI(TAG, "Web server started on 192.168.4.1");
-    } else {
-        ESP_LOGE(TAG, "Failed to start web server in AP mode");
-    }
-    
     // Start timeout timer (10 minutes)
     esp_timer_start_once(timeout_timer, AP_TIMEOUT_MS * 1000);
     
@@ -508,22 +477,23 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
                 ESP_LOGW(TAG, "WiFi STA disconnected (reason: %d)", event->reason);
                 
                 if (current_mode == WIFI_MODE_STA_CONNECTING || current_mode == WIFI_MODE_STA_CONNECTED) {
-                    if (event->reason == WIFI_REASON_4WAY_HANDSHAKE_TIMEOUT || 
-                        event->reason == WIFI_REASON_HANDSHAKE_TIMEOUT) {
-                        ESP_LOGW(TAG, "Handshake timeout - will retry connection");
-                        vTaskDelay(1000 / portTICK_PERIOD_MS); // Wait 1 second
-                        esp_wifi_connect(); // Immediate retry
-                    } else {
-                        ESP_LOGW(TAG, "STA connection failed, will timeout and restart to AP mode");
-                        // Let timeout handle the restart for other reasons
-                    }
+                    ESP_LOGW(TAG, "STA connection failed, will timeout and restart to AP mode");
+                    // Let timeout handle the restart
                 }
                 break;
             }
             
             case WIFI_EVENT_AP_START:
                 ESP_LOGI(TAG, "WiFi AP started successfully");
-                // Web server is started in start_ap_boot() function, not here
+                
+                // Start web server for AP mode
+                web_server_config_t web_config = WEB_SERVER_DEFAULT_CONFIG();
+                if (web_server_init(&web_config) == ESP_OK) {
+                    web_server_start();
+                    ESP_LOGI(TAG, "Web server started on 192.168.4.1");
+                } else {
+                    ESP_LOGE(TAG, "Failed to start web server in AP mode");
+                }
                 break;
                 
             default:
@@ -540,7 +510,7 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
         current_mode = WIFI_MODE_STA_CONNECTED;
         xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_BIT);
         
-        // Start web server for STA mode - we have an IP now!
+        // Start web server for STA mode
         web_server_config_t web_config = WEB_SERVER_DEFAULT_CONFIG();
         if (web_server_init(&web_config) == ESP_OK) {
             web_server_start();
