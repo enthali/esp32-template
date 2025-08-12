@@ -211,3 +211,74 @@ idf_component_register(
     PRIV_REQUIRES esp_timer
 )
 ```
+
+## Documentation Standards
+
+### OpenFastTrack Design Documentation in Code
+
+Instead of separate design documents, embed design documentation directly in source code using structured comments for requirements traceability.
+
+#### File-Level Design Documentation
+```c
+/**
+ * @file display_logic.c
+ * @brief LED distance display implementation
+ * 
+ * DESIGN TRACEABILITY:
+ * - DSN-DSP-IMPL-01: FreeRTOS task architecture (display_task function)
+ * - DSN-DSP-IMPL-02: LED buffer management (led_state_buffer)
+ * - DSN-DSP-IMPL-03: Distance calculation (calculate_led_position)
+ * 
+ * REQUIREMENTS TRACEABILITY:
+ * - REQ-DSP-IMPL-01: Task-based architecture implementation
+ * - REQ-DSP-VISUAL-02: Normal range display logic
+ * - REQ-DSP-VISUAL-03: Below minimum boundary display
+ * - REQ-DSP-VISUAL-04: Above maximum boundary display
+ */
+```
+
+#### Function-Level Design Documentation
+```c
+/**
+ * @brief Main display task - implements REQ-DSP-IMPL-01
+ * 
+ * DESIGN: Task blocks on distance_queue, calculates LED position,
+ * updates buffer, and sends to hardware. Priority set below
+ * measurement task per AC-3.
+ * 
+ * ARCHITECTURE: Uses FreeRTOS message queue pattern for loose coupling
+ * between measurement and display subsystems.
+ * 
+ * @param pvParameters Unused task parameter (FreeRTOS standard)
+ */
+void display_task(void* pvParameters) {
+    // Implementation with inline design rationale
+}
+```
+
+#### Algorithm Design Documentation
+```c
+/**
+ * @brief Calculate LED position from distance - implements REQ-DSP-IMPL-03
+ * 
+ * DESIGN: Linear interpolation between min/max distance to LED positions 0..led_count-1
+ * Formula: led_index = (distance - min) / (max - min) * (led_count - 1)
+ * 
+ * BOUNDARY CONDITIONS:
+ * - distance < min_distance: return 0 (first LED)
+ * - distance > max_distance: return led_count-1 (last LED)
+ * 
+ * @param distance_cm Measured distance in centimeters
+ * @return LED index [0, led_count-1]
+ */
+uint8_t calculate_led_position(float distance_cm) {
+    // Implementation with boundary checks
+}
+```
+
+#### Benefits of Code-Embedded Design Documentation
+- **Always Current**: Design documentation can't drift from implementation
+- **Single Source of Truth**: No synchronization issues between docs and code
+- **Developer-Friendly**: Engineers actually read and maintain header comments
+- **Traceability**: Direct mapping from requirements to design to implementation
+- **Embedded Reality**: Practical for small teams and rapid iteration
