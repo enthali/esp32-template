@@ -144,7 +144,7 @@ endif()
 # Register component with embedded certificate files (match existing pattern)
 idf_component_register(
     SRCS "cert_handler.c"
-    INCLUDE_DIRS "include"
+    INCLUDE_DIRS "."
     EMBED_FILES 
         ${SERVER_CERT}
         ${SERVER_KEY}

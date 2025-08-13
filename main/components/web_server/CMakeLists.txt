@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS "web_server.c"
+    SRCS "web_server.c" "wifi_manager.c"
     INCLUDE_DIRS "."
     EMBED_FILES 
         "www/index.html"

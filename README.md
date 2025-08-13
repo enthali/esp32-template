@@ -78,28 +78,23 @@ For detailed implementation progress, technical specifications, and step-by-step
 ## Project Structure
 
 ```
-├── CMakeLists.txt
-├── components/                   # Hardware abstraction components
-│   ├── distance_sensor/         # HC-SR04 ultrasonic sensor component
-│   │   ├── CMakeLists.txt
-│   │   ├── include/distance_sensor.h
-│   │   └── distance_sensor.c
-│   └── led_controller/          # WS2812 LED strip hardware interface
-│       ├── CMakeLists.txt
-│       ├── include/led_controller.h
-│       └── led_controller.c
-├── main/                        # Application logic
-│   ├── CMakeLists.txt
-│   ├── main.c                  # Main application entry point
-│   ├── display_logic.h/c       # Distance-to-LED mapping logic
-│   ├── wifi_manager.h/c        # WiFi configuration and captive portal
-│   ├── web_server.h/c          # HTTP server and web interface
-│   └── test/                   # Test modules directory
-│       ├── led_running_test.h/c     # Running light effects tests
-│       ├── led_color_test.h/c       # Color accuracy and brightness tests
-│       └── test_task.h/c            # Background test task management
-├── docs                        # planning requirment and architecture docs
-└── README.md                   # This file
+main/
+├── main.c                           # ESP-IDF required entry point
+├── config.h                         # Global configuration  
+├── CMakeLists.txt                   # Main component definition
+└── components/                      # All custom components
+    ├── cert_handler/                # SSL certificate management
+    ├── config_manager/              # Configuration management
+    ├── display_logic/               # LED display control
+    ├── distance_sensor/             # HC-SR04 sensor interface
+    ├── led_controller/              # WS2812 LED strip control
+    ├── startup_tests/               # Hardware validation tests
+    └── web_server/                  # HTTP server + WiFi manager
+        ├── wifi_manager.c           # WiFi management (merged here)
+        ├── wifi_manager.h
+        ├── web_server.c
+        ├── web_server.h
+        └── www/                     # Web assets
 ```
 
 ## Build and Flash
