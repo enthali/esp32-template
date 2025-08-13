@@ -98,9 +98,7 @@ For detailed implementation progress, technical specifications, and step-by-step
 │       ├── led_running_test.h/c     # Running light effects tests
 │       ├── led_color_test.h/c       # Color accuracy and brightness tests
 │       └── test_task.h/c            # Background test task management
-├── ARCHITECTURE.md             # Detailed technical architecture
-├── IMPLEMENTATION_PLAN.md      # Step-by-step implementation tracking
-├── .gitignore                  # Git ignore patterns
+├── docs                        # planning requirment and architecture docs
 └── README.md                   # This file
 ```
 
