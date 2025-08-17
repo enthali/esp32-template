@@ -135,4 +135,5 @@ This project is open source and available under the MIT License.
 
 ## Author
 
-Created as a learning and demo project for ESP32 development with ESP-IDF utilizing FreeRTOS, OpenFastTrack for requitement and Design Dokumentation. 
+Created as a learning and demo project for embedded ESP32 development with ESP-IDF utilizing FreeRTOS, OpenFastTrack for requitement and design dokumentation and GH Copilots latest amazing features.
+
