@@ -45,13 +45,13 @@ This document specifies detailed requirements for the Configuration Management S
 
 **Type**: Implementation  
 **Priority**: Mandatory  
-**Description**: The system SHALL consolidate all user-configurable parameters and system-level configuration values, defined in this requirement, into a single header file `main/config.h`, while hardware-specific constants and protocol specifications remain in their respective component files.
+**Description**: The system SHALL consolidate all user-configurable parameters and system-level configuration values into a single header file `main/config.h`, using integer millimeter architecture for embedded performance optimization, while hardware-specific constants and protocol specifications remain in their respective component files.
 
 **Rationale**: Eliminates scattered magic numbers for configurable parameters throughout the codebase, improving maintainability and reducing configuration errors, while preserving component encapsulation for hardware-specific values.
 
 **Acceptance Criteria**:
 
-- AC-1: Distance sensor parameters (DEFAULT_DISTANCE_MIN_CM, DEFAULT_DISTANCE_MAX_CM, DEFAULT_MEASUREMENT_INTERVAL_MS, DEFAULT_SENSOR_TIMEOUT_MS, DEFAULT_TEMPERATURE_C, DEFAULT_SMOOTHING_ALPHA) centralized in config.h
+- AC-1: Distance sensor parameters (DEFAULT_DISTANCE_MIN_MM, DEFAULT_DISTANCE_MAX_MM, DEFAULT_MEASUREMENT_INTERVAL_MS, DEFAULT_SENSOR_TIMEOUT_MS, DEFAULT_TEMPERATURE_C_X10, DEFAULT_SMOOTHING_FACTOR) centralized in config.h
 - AC-2: LED controller parameters (DEFAULT_LED_COUNT, DEFAULT_LED_BRIGHTNESS) centralized in config.h  
 - AC-3: WiFi parameters (DEFAULT_WIFI_AP_CHANNEL, DEFAULT_WIFI_AP_MAX_CONN, DEFAULT_WIFI_STA_MAX_RETRY, DEFAULT_WIFI_STA_TIMEOUT_MS) centralized in config.h
 - AC-4: All parameters defined in the Configuration Categories section below SHALL be in config.h
@@ -61,13 +61,13 @@ This document specifies detailed requirements for the Configuration Management S
 **Configuration Categories**:
 
 ```c
-// Distance Sensor Configuration (User Configurable)
-#define DEFAULT_DISTANCE_MIN_CM         10.0f    // The distance mapped to the first LED : Range: 5.0-100.0 
-#define DEFAULT_DISTANCE_MAX_CM         50.0f    // The distance mapped to the last LED, must be larger than DEFAULT_DISTANCE_MIN_CM : Range: 20.0-400.0  
+// Distance Sensor Configuration (User Configurable) - Integer Millimeter Architecture
+#define DEFAULT_DISTANCE_MIN_MM         100      // The distance mapped to the first LED in millimeters : Range: 50-1000 
+#define DEFAULT_DISTANCE_MAX_MM         500      // The distance mapped to the last LED in millimeters, must be larger than DEFAULT_DISTANCE_MIN_MM : Range: 200-4000  
 #define DEFAULT_MEASUREMENT_INTERVAL_MS 100      // How often to measure distance in milliseconds : Range: 50-1000
 #define DEFAULT_SENSOR_TIMEOUT_MS       30       // Maximum time to wait for ultrasonic echo, must be < interval : Range: 10-50
-#define DEFAULT_TEMPERATURE_C           20.0f    // Ambient temperature for sound speed calculation : Range: -20.0-60.0
-#define DEFAULT_SMOOTHING_ALPHA         0.3f     // Exponential moving average smoothing factor : Range: 0.1-1.0
+#define DEFAULT_TEMPERATURE_C_X10       200      // Ambient temperature in Celsius * 10 (20.0°C = 200) : Range: -200-600
+#define DEFAULT_SMOOTHING_FACTOR        30       // EMA smoothing factor * 100 (0.3 = 30) : Range: 1-100
 
 // LED Controller Configuration (User Configurable)
 #define DEFAULT_LED_COUNT               40       // Number of LEDs in the strip : Range: 1-60
@@ -121,15 +121,15 @@ This document specifies detailed requirements for the Configuration Management S
 **Type**: Design  
 **Priority**: Mandatory  
 **Depends**: REQ-CFG-1  
-**Description**: The system SHALL define a runtime configuration structure containing all user-configurable parameters defined in REQ-CFG-1, optimized for NVS storage and runtime modification.
+**Description**: The system SHALL define a runtime configuration structure containing all user-configurable parameters defined in REQ-CFG-1, using integer millimeter architecture for embedded performance optimization, and optimized for NVS storage and runtime modification.
 
-**Rationale**: Enables runtime parameter modification while maintaining consistency with compile-time defaults and ensuring efficient storage in ESP32 NVS flash memory.
+**Rationale**: Enables runtime parameter modification while maintaining consistency with compile-time defaults, using integer millimeter architecture for embedded performance optimization, and ensuring efficient storage in ESP32 NVS flash memory.
 
 **Acceptance Criteria**:
 
 - AC-1: Configuration structure includes all runtime-modifiable parameters from REQ-CFG-1
 - AC-2: Structure includes metadata for versioning and change tracking
-- AC-3: Data types optimized for NVS storage efficiency (uint8_t, uint16_t, uint32_t, float)
+- AC-3: Data types optimized for NVS storage efficiency and embedded performance (uint8_t, uint16_t, uint32_t, int16_t)
 - AC-4: String fields sized appropriately (WiFi SSID: 33 chars, password: 65 chars)
 - AC-5: Default values match compile-time constants defined in REQ-CFG-1
 - AC-6: Structure layout compatible with ESP32 memory alignment requirements
@@ -142,13 +142,13 @@ typedef struct {
     uint32_t config_version;         // Current: 1
     uint32_t save_count;             // Change tracking
     
-    // Distance sensor settings (runtime configurable)
-    float distance_min_cm;           
-    float distance_max_cm;           
-    uint16_t measurement_interval_ms; 
-    uint32_t sensor_timeout_ms;      
-    float temperature_c;             
-    float smoothing_alpha;           
+    // Distance sensor settings (runtime configurable) - Integer Millimeter Architecture
+    uint16_t distance_min_mm;        // Minimum distance in millimeters (50-1000mm)           
+    uint16_t distance_max_mm;        // Maximum distance in millimeters (200-4000mm)           
+    uint16_t measurement_interval_ms;// Measurement interval in milliseconds
+    uint32_t sensor_timeout_ms;      // Sensor timeout in milliseconds
+    int16_t temperature_c_x10;       // Temperature in Celsius * 10 (20.0°C = 200)             
+    uint16_t smoothing_factor;       // EMA smoothing factor * 100 (0.3 = 30)           
     
     // LED settings (runtime configurable)
     uint8_t led_count;               
@@ -213,7 +213,7 @@ esp_err_t config_load(system_config_t* config);
 esp_err_t config_save(const system_config_t* config);
 esp_err_t config_validate_range(const system_config_t* config);
 esp_err_t config_factory_reset(void);
-bool config_is_valid_range(const char* param_name, float value);
+bool config_is_valid_range(const char* param_name, int32_t value, int32_t min_val, int32_t max_val);
 ```
 
 ### REQ-CFG-6: Parameter Validation
@@ -227,9 +227,9 @@ bool config_is_valid_range(const char* param_name, float value);
 
 **Acceptance Criteria**:
 
-- AC-1: All float parameters validated against min/max ranges as specified below
-- AC-2: All integer parameters validated against min/max ranges as specified below
-- AC-3: Inter-parameter validation (e.g., distance_min_cm < distance_max_cm, sensor_timeout_ms < measurement_interval_ms)
+- AC-1: All integer parameters validated against min/max ranges as specified below
+- AC-2: All fixed-point parameters validated against min/max ranges as specified below
+- AC-3: Inter-parameter validation (e.g., distance_min_mm < distance_max_mm, sensor_timeout_ms < measurement_interval_ms)
 - AC-4: Invalid parameters rejected with specific error messages
 - AC-5: Validation performed before NVS save operations
 - AC-6: Validation errors logged with parameter name and attempted value
@@ -237,13 +237,13 @@ bool config_is_valid_range(const char* param_name, float value);
 **Parameter Validation Ranges**:
 
 ```c
-// Distance sensor parameter ranges
-distance_min_cm:           5.0 - 100.0
-distance_max_cm:           20.0 - 400.0 (must be > distance_min_cm)
+// Distance sensor parameter ranges - Integer Millimeter Architecture
+distance_min_mm:           50 - 1000      // 5.0cm - 100.0cm in millimeters
+distance_max_mm:           200 - 4000     // 20.0cm - 400.0cm in millimeters (must be > distance_min_mm)
 measurement_interval_ms:   50 - 1000
 sensor_timeout_ms:         10 - 50 (must be < measurement_interval_ms)
-temperature_c:             -20.0 - 60.0
-smoothing_alpha:           0.1 - 1.0
+temperature_c_x10:         -200 - 600     // -20.0°C - 60.0°C (* 10)
+smoothing_factor:          1 - 100       // 0.01 - 1.0 (* 100)
 
 // LED parameter ranges
 led_count:                 1 - 60
