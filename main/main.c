@@ -36,7 +36,7 @@ void app_main(void)
 
     ESP_LOGI(TAG, "Configuration loaded: LED count=%d, brightness=%d, dist_range=%.1f-%.1fcm", 
              runtime_config.led_count, runtime_config.led_brightness,
-             runtime_config.distance_min_cm, runtime_config.distance_max_cm);
+             runtime_config.distance_min_mm / 10.0, runtime_config.distance_max_mm / 10.0);
 
     // Perform system health check (REQ-CFG-11)
     size_t nvs_free, nvs_total;
@@ -83,8 +83,8 @@ void app_main(void)
         .echo_pin = DISTANCE_ECHO_PIN,
         .measurement_interval_ms = runtime_config.measurement_interval_ms,
         .timeout_ms = runtime_config.sensor_timeout_ms,
-        .temperature_celsius = runtime_config.temperature_c,
-        .smoothing_alpha = runtime_config.smoothing_alpha};
+        .temperature_c_x10 = runtime_config.temperature_c_x10,
+        .smoothing_factor = runtime_config.smoothing_factor};
 
     ret = distance_sensor_init(&distance_config);
     if (ret != ESP_OK)

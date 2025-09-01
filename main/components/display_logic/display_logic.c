@@ -204,14 +204,15 @@ static void update_led_display(const distance_measurement_t *measurement)
         if (config_valid)
         {
             // Use config directly instead of calling map_distance_to_led (avoids duplicate config_get_current)
-            if (measurement->distance_cm >= config.distance_min_cm && measurement->distance_cm <= config.distance_max_cm)
+            if (measurement->distance_mm >= config.distance_min_mm && measurement->distance_mm <= config.distance_max_mm)
             {
-                // Normal range: Calculate LED position directly
-                float range_cm = config.distance_max_cm - config.distance_min_cm;
-                float normalized = (measurement->distance_cm - config.distance_min_cm) / range_cm;
+                // Normal range: Calculate LED position directly with integer arithmetic
+                uint16_t range_mm = config.distance_max_mm - config.distance_min_mm;
+                uint16_t offset_mm = measurement->distance_mm - config.distance_min_mm;
                 
                 uint16_t led_count = led_get_count();
-                int led_index = (int)(normalized * (float)(led_count - 1));
+                // Use integer math with multiplication before division for precision
+                int led_index = (int)((offset_mm * (led_count - 1)) / range_mm);
                 
                 // Ensure within bounds
                 if (led_index < 0) led_index = 0;
@@ -220,20 +221,20 @@ static void update_led_display(const distance_measurement_t *measurement)
                 // Normal range: Green color for distance visualization
                 led_color_t color = LED_COLOR_GREEN;
                 led_set_pixel(led_index, color);
-                ESP_LOGD(TAG, "Distance %.2f cm → LED %d", measurement->distance_cm, led_index);
+                ESP_LOGD(TAG, "Distance %d mm → LED %d", measurement->distance_mm, led_index);
             }
-            else if (measurement->distance_cm < config.distance_min_cm)
+            else if (measurement->distance_mm < config.distance_min_mm)
             {
                 // Too close: Red on first LED
                 led_set_pixel(0, LED_COLOR_RED);
-                ESP_LOGD(TAG, "Distance %.2f cm too close → LED 0 red", measurement->distance_cm);
+                ESP_LOGD(TAG, "Distance %d mm too close → LED 0 red", measurement->distance_mm);
             }
             else
             {
                 // Too far: Red on last LED
                 uint16_t led_count = led_get_count();
                 led_set_pixel(led_count - 1, LED_COLOR_RED);
-                ESP_LOGD(TAG, "Distance %.2f cm too far → LED %d red", measurement->distance_cm, led_count - 1);
+                ESP_LOGD(TAG, "Distance %d mm too far → LED %d red", measurement->distance_mm, led_count - 1);
             }
         }
         else
@@ -286,7 +287,7 @@ static void display_logic_task(void *pvParameters)
     system_config_t config;
     if (config_get_current(&config) == ESP_OK) {
         ESP_LOGI(TAG, "Distance range: %.1f-%.1fcm → LEDs 0-39, blocking until new measurements",
-                 config.distance_min_cm, config.distance_max_cm);
+                 config.distance_min_mm / 10.0, config.distance_max_mm / 10.0);
     } else {
         ESP_LOGW(TAG, "Could not get configuration, using defaults");
     }
@@ -300,8 +301,8 @@ static void display_logic_task(void *pvParameters)
         {
             update_led_display(&measurement);
 
-            ESP_LOGD(TAG, "Processed distance: %.2f cm, status: %d",
-                     measurement.distance_cm, measurement.status);
+            ESP_LOGD(TAG, "Processed distance: %d mm, status: %d",
+                     measurement.distance_mm, measurement.status);
         }
         // No delay needed - function blocks until next measurement
     }
@@ -343,7 +344,7 @@ esp_err_t display_logic_start(void)
 
     ESP_LOGI(TAG, "Display logic initialized successfully");
     ESP_LOGI(TAG, "Config: %.1f-%.1fcm → LEDs 0-%d",
-             config.distance_min_cm, config.distance_max_cm, led_count - 1);
+             config.distance_min_mm / 10.0, config.distance_max_mm / 10.0, led_count - 1);
 
     // Create display logic task
     BaseType_t result = xTaskCreatePinnedToCore(
