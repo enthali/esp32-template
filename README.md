@@ -1,14 +1,14 @@
-# Distance Measurement with LED Strip 
-## Quick Overview
+# ESP32 Distance Sensor with LED Display
 
-- ✅ **Hardware Integration**: LED strip control and distance sensor measurement
-- ✅ **Real-time Visualization**: Distance-to-LED mapping with error indicators
-- ✅ **WiFi Connectivity**: Smart connection with captive portal fallback
-- 🔄 **Web Interface**: Basic server implemented, static UI in progress
+An ESP32-based IoT device that measures distance using an ultrasonic sensor and displays the results on an addressable LED strip. The system includes WiFi connectivity and a web interface for configuration and monitoring.
 
-## Technical Specificationsrview
+## Features
 
-The project uses an ESP32 to measure distance with an ultrasonic sensor HR-SR04 and displays the measurement on a WS2812 LED strip and a web interface.
+- **Real-time Distance Measurement**: HC-SR04 ultrasonic sensor with millimeter precision
+- **Visual Display**: WS2812 LED strip shows distance as position and color
+- **WiFi Connectivity**: Automatic network connection with captive portal setup
+- **Web Interface**: Mobile-responsive configuration and status interface
+- **Embedded Optimization**: Integer-only arithmetic for optimal ESP32 performance
 
 ## Hardware Requirements
 
@@ -29,28 +29,28 @@ The project uses an ESP32 to measure distance with an ultrasonic sensor HR-SR04 
 | Power | VCC | 5V/3.3V |
 | Ground | GND | GND |
 
-## Implementation Status
+## How It Works
 
-For detailed implementation progress, technical specifications, and step-by-step tracking:
-
-- **Implementation Plan**: See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
-- **Technical Architecture**: See [ARCHITECTURE.md](ARCHITECTURE.md)
-
-### Quick Status Overview
-
-- ✅ **Step 1**: LED Strip Animation - **COMPLETED**
-- ✅ **Step 2**: Ultrasonic Sensor Integration - **COMPLETED**
-- ✅ **Step 3**: Distance-to-LED Mapping - **COMPLETED**
-- � **Step 4**: Web Interface - **IN PROGRESS** (Step 4.1 WiFi/Captive Portal completed)
+1. **Power On**: ESP32 starts with hardware initialization and LED test sequence
+2. **WiFi Setup**:
+   - Connects to stored WiFi credentials automatically
+   - Creates "ESP32-Distance-Sensor" access point if no credentials stored
+   - Captive portal guides through network setup
+3. **Distance Measurement**: Continuous HC-SR04 sensor readings every 100ms
+4. **Visual Display**: LED strip shows distance as:
+   - **Green LED**: Normal range (10cm-50cm mapped to LEDs 0-39)
+   - **Red LED**: Out of range (below 10cm or above 50cm)
+5. **Web Interface**: Access at device IP for configuration and monitoring
 
 ## Technical Specifications
 
 - **LED Strip**: 40 x WS2812 individually addressable LEDs
-- **Sensor Range**: 2cm - 400cm (HC-SR04 specification)
-- **Update Rate**: up to 20Hz for real-time visual feedback (50ms measurement interval)
+- **Sensor Range**: 2cm - 400cm (HC-SR04 specification)  
+- **Update Rate**: 10Hz real-time visual feedback
 - **Communication**: WiFi with smart AP/STA switching and captive portal
 - **Web Interface**: HTTP server with mobile-responsive design
 - **Power**: USB or external 5V supply
+- **Architecture**: Integer-only arithmetic optimized for ESP32 performance
 
 ## Development Environment
 
@@ -61,7 +61,7 @@ For detailed implementation progress, technical specifications, and step-by-step
 
 ## Project Structure
 
-```
+```text
 main/
 ├── main.c                           # ESP-IDF required entry point
 ├── config.h                         # Global configuration  
@@ -103,37 +103,11 @@ main/
 
 For detailed build instructions including Windows-specific commands, see [.github/BUILD_INSTRUCTIONS.md](.github/BUILD_INSTRUCTIONS.md).
 
-## Current System Usage
-
-### Current Distance Measurement Mode
-
-1. Power on the ESP32 with connected hardware (LED strip and HC-SR04 sensor)
-2. The system performs a one-time LED hardware test at startup
-3. **WiFi Connection**:
-   - If no WiFi credentials stored: Creates "ESP32-Distance-Sensor" AP with captive portal
-   - If credentials stored: Connects to configured WiFi network
-   - Fallback to AP mode if connection fails
-4. **Real-time Operation**:
-   - Distance measurements every 100ms (10Hz update rate)
-   - LED strip displays distance: 10cm-50cm mapped to LEDs 0-39
-   - Green LEDs for normal range, red LEDs for out of Range measurement indicaton
-   
-5. **Web Interface**: Access in AP moder at 192.168.4.1 for status and configuration
-6. Monitor serial output for detailed system logging
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## License
 
 This project is open source and available under the MIT License.
 
 ## Author
 
-Created as a learning and demo project for embedded ESP32 development with ESP-IDF utilizing FreeRTOS, OpenFastTrack for requitement and design dokumentation and GH Copilots latest amazing features.
+Created as a learning and demo project for embedded ESP32 development with ESP-IDF, utilizing FreeRTOS, OpenFastTrack for requirements and design documentation, and GitHub Copilot's latest features.
 

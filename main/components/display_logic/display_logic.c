@@ -99,69 +99,6 @@
  * - No complex lifecycle management (no start/stop/pause/resume complexity)
  * - No configuration exposure through API (encapsulation)
  * VALIDATION: Single function call starts display system, no API complexity, no lifecycle state tracking
- * 
- * TARGET API DESIGN:
- * 
- * // Simplified API - no complex lifecycle management
- * esp_err_t display_logic_start(void);              // Start display task (gets config from config_manager)
- * 
- * // Internal functions (not exposed)
- * static void display_task(void* pvParameters);     // Main task loop
- * static uint8_t calculate_led_position(uint16_t distance_mm, uint16_t min_mm, uint16_t max_mm, uint8_t led_count);  // Distance-to-LED mapping
- * static void update_led_display(const distance_measurement_t* measurement);  // LED update logic
- * 
- * IMPLEMENTATION GAP ANALYSIS & REFACTORING PLAN:
- * 
- * The current implementation has several gaps relative to the target design:
- * 
- * GAP 1: CONFIGURATION ARCHITECTURE (REQ-CFG-2 Violation) ✅ **COMPLETED**
- * FIXED: Now uses config_manager API directly via config_get_current()
- * FIXED: Removed separate display_config_t structure and display_logic_init(config) parameter
- * RESULT: Satisfies centralized configuration requirement (REQ-CFG-2)
- * 
- * GAP 2: API COMPLEXITY (Restart-Based Architecture Mismatch) ✅ **COMPLETED**
- * FIXED: Removed complex init/start/stop/is_running lifecycle management
- * FIXED: Single display_logic_start() function provides unified entry point
- * RESULT: Compatible with restart-based architecture philosophy (DSN-DSP-API-01)
- * 
- * GAP 3: CONFIGURATION STATE DUPLICATION ✅ **COMPLETED**
- * FIXED: Removed static display_config storage and is_initialized flag tracking
- * FIXED: All configuration access now through config_manager API calls
- * RESULT: Eliminated data duplication and configuration synchronization issues
- * 
- * GAP 4: UNNECESSARY API EXPOSURE ✅ **COMPLETED**
- * FIXED: display_logic_get_config() function removed
- * FIXED: No internal configuration structure exposure
- * RESULT: Clean API boundary, configuration encapsulation maintained (DSN-DSP-API-01)
- * 
- * GAP 5: IMPLEMENTATION OPTIMIZATION OPPORTUNITIES
- * CURRENT: Floating-point arithmetic, complex error handling, LED count validation warnings
- * TARGET: Implementation choice freedom, simplified error handling, trust config_manager
- * IMPACT: Performance optimization opportunities, reduced complexity
- * 
- * GAP 6: SYSTEM-WIDE FLOATING-POINT ARCHITECTURE (Poor Embedded Design)
- * CURRENT: Floating-point throughout entire system (inappropriate for embedded)
- * - distance_sensor: float distance_cm
- * - config_manager: float distance_min_cm, distance_max_cm, temperature_c, smoothing_alpha
- * - Web interface: floating-point formatting and parsing
- * TARGET: Integer-only embedded arithmetic
- * - distance_sensor: uint16_t distance_mm (conversion: cm * 10)
- * - config_manager: uint16_t distance_min_mm, distance_max_mm
- * - config_manager: uint16_t smoothing_factor (fixed-point: 0-1000, where 1000=1.0)
- * - Web interface: integer values with decimal formatting for display only
- * IMPACT: Faster execution, no FPU dependency, deterministic timing, reduced code size
- *         This represents comprehensive architectural refactoring to proper embedded standards
- * 
- * REFACTORING IMPLEMENTATION PLAN:
- * 1. Replace display_config_t with config_manager API calls (Fix GAP 1, 3) ✅ **COMPLETED**
- * 2. Simplify to single display_logic_start() function (Fix GAP 2) ✅ **COMPLETED**
- * 3. Remove lifecycle management complexity and state tracking (Fix GAP 2, 3) ✅ **COMPLETED**
- * 4. Remove display_logic_get_config() and other unnecessary APIs (Fix GAP 4) ✅ **COMPLETED**
- * 5. Convert entire system from floating-point to integer arithmetic (Fix GAP 6)
- *    - Requires coordination across distance_sensor, config_manager, web_server components
- *    - Major architectural improvement for embedded performance and reliability
- * 5. Cache config values locally for performance (DSN-DSP-ARCH-02)
- * 6. Optimize implementation details as needed (Address GAP 5)
  */
 
 #include "display_logic.h"
@@ -367,6 +304,7 @@ esp_err_t display_logic_start(void)
     return ESP_OK;
 }
 
-// display_logic_get_config() function removed - configuration access via config_manager API (REQ-CFG-2)
-// display_logic_stop() function removed - restart-based architecture (GAP 2 fix)
-// display_logic_is_running() function removed - restart-based architecture (GAP 2 fix)
+// Legacy functions removed for architectural simplification:
+// - display_logic_get_config(): Configuration access now via config_manager API (REQ-CFG-2)
+// - display_logic_stop(): Restart-based architecture pattern
+// - display_logic_is_running(): Simplified lifecycle management
