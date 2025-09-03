@@ -1,43 +1,36 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.183.0/containers/ubuntu
 {
-  "name": "ESP32 Distance Sensor - ESP-IDF Development",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "args": {
-      "DOCKER_TAG": "v5.4.1"
-    }
-  },
-  "customizations": {
-    "vscode": {
-      "settings": {
-        "terminal.integrated.defaultProfile.linux": "bash",
-        "idf.espIdfPath": "/opt/esp/idf",
-        "idf.customExtraPaths": "",
-        "idf.toolsPath": "/opt/esp",
-        "idf.gitPath": "/usr/bin/git",
-        "idf.showOnboardingOnInit": false,
-        "extensions.ignoreRecommendations": true,
-        "idf.flashBaudRate": "460800",
-        "idf.monitorBaudRate": "115200"
-      },
-      "extensions": [
-        "espressif.esp-idf-extension",
-        "espressif.esp-idf-web",
-        "ms-vscode.cpptools-extension-pack",
-        "ms-vscode.cmake-tools"
-      ]
+    "name": "ESP-IDF Codespaces",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "DOCKER_TAG": "v5.4.1"
+        }
     },
-    "codespaces": {
-      "openFiles": [
-        "README.md",
-        "main/main.c"
-      ]
-    }
-  },
-  "runArgs": ["--privileged"],
-  "mounts": [
-    "source=/dev,target=/dev,type=bind"
-  ],
-  "forwardPorts": [80, 443, 3000, 8080],
-  "postCreateCommand": "echo 'ESP-IDF Development Container Ready!' && idf.py --version && df -h",
-  "overrideCommand": false
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "idf.espIdfPath": "/opt/esp/idf",
+                "idf.customExtraPaths": "",
+                "idf.pythonBinPath": "/opt/esp/python_env/idf5.4_py3.10_env/bin/python",
+                "idf.toolsPath": "/opt/esp",
+                "idf.gitPath": "/usr/bin/git",
+                "idf.showOnboardingOnInit": false,
+                "extensions.ignoreRecommendations": true
+            },
+            "extensions": [
+                "espressif.esp-idf-extension",
+                "espressif.esp-idf-web"
+            ]
+        },
+        "codespaces": {
+            "openFiles": [
+                "README.md",
+                "main/main.c"
+            ]
+        }
+    },
+    "runArgs": ["--privileged"]
 }
