@@ -58,6 +58,21 @@ An ESP32-based IoT device that measures distance using an ultrasonic sensor and 
 - **Language**: C
 - **IDE**: Visual Studio Code with ESP-IDF extension
 - **Target**: ESP32
+- **Container Support**: Docker Dev Container and GitHub Codespaces ready
+
+## Development Options
+
+### Local Development
+- **Windows**: Native ESP-IDF v5.4.1 installation
+- **Build**: `cmd /c "cd /D ... && idf.py build"`
+- **Hardware**: Direct USB connection for flashing
+
+### Containerized Development  
+- **Docker**: VS Code Dev Container with ESP-IDF pre-installed
+- **Codespaces**: GitHub Codespaces with web-based development
+- **Cross-platform**: Consistent environment on any OS
+
+See [`.devcontainer/README.md`](.devcontainer/README.md) for detailed container setup instructions.
 
 ## Project Structure
 
