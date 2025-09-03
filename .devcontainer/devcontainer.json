@@ -21,9 +21,14 @@
       },
       "extensions": [
         "espressif.esp-idf-extension",
-        "espressif.esp-idf-web",
         "ms-vscode.cpptools-extension-pack",
         "ms-vscode.cmake-tools"
+      ]
+    },
+    "codespaces": {
+      "openFiles": [
+        "README.md",
+        "main/main.c"
       ]
     }
   },
@@ -32,5 +37,6 @@
     "source=/dev,target=/dev,type=bind"
   ],
   "forwardPorts": [80, 443, 3000, 8080],
-  "postCreateCommand": "echo 'ESP-IDF Development Container Ready!' && idf.py --version"
+  "postCreateCommand": "echo 'ESP-IDF Development Container Ready!' && idf.py --version && df -h",
+  "overrideCommand": false
 }
