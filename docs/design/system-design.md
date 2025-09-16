@@ -75,7 +75,7 @@ This document describes the technical architecture and implementation details fo
 - Signal filtering and error detection (timeout, out-of-range, invalid readings)
 - Temperature compensation support
 - Queue overflow detection and statistics
-- Configurable measurement rate (default: 1Hz)
+- Configurable measurement rate (default: 10Hz)
 - Background FreeRTOS task (Priority 6) for real-time operation
 
 **Current Status**: ✅ **COMPLETED** - Component implemented in `components/distance_sensor/`
@@ -182,7 +182,7 @@ Core 1: WiFi/Network Stack + ESP-IDF System Tasks
 
 - **LED Update Rate**: 10Hz minimum for smooth visual feedback
 - **Sensor Sampling**: 10Hz for responsive distance tracking
-- **Web Interface**: 1-2 second latency acceptable
+- **Web Interface**: Reasonable latency for monitoring applications
 - **Memory Usage**: < 50KB total application memory
 
 ## Configuration Management

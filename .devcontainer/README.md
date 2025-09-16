@@ -1,17 +1,17 @@
 # Development Container Setup
 
-This project supports both local Windows development and containerized development using VS Code Dev Containers or GitHub Codespaces.
+This project uses containerized development with VS Code Dev Containers and GitHub Codespaces for consistent ESP-IDF development environment.
 
-## Two Development Options
+## Development Options
 
-### Option 1: Local Windows Development (Existing)
-- Use your existing ESP-IDF v5.4.1 Windows installation
-- Build with: `cmd /c "cd /D C:\workspace\ESP32_Projects\distance && C:\workspace\ESP32_Projects\esp\v5.4.1\esp-idf\export.bat && idf.py build"`
-- Flash with hardware connected directly to Windows
+### Recommended: GitHub Codespaces (Cloud)
+- No local setup required - works entirely in browser
+- Pre-configured ESP-IDF v5.4.1 environment ready instantly
+- USB device access through browser serial interface
 
-### Option 2: Containerized Development (New)
+### Alternative: Local Dev Container  
 - Uses Docker container with ESP-IDF v5.4.1 pre-installed  
-- Works in GitHub Codespaces or local VS Code with Dev Containers
+- Requires Docker Desktop and VS Code with Dev Containers extension
 - Identical environment across all team members and platforms
 
 ## Using the Dev Container

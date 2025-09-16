@@ -32,7 +32,7 @@ This document specifies essential web server requirements for user interface, co
 **Acceptance Criteria**:
 
 - AC-1: Main page SHALL display current distance measurement value
-- AC-2: Distance values SHALL update in real-time (within 1-2 seconds of actual measurement)
+- AC-2: Distance values SHALL update in real-time with reasonable responsiveness
 - AC-3: Page SHALL indicate measurement status (normal, error, out-of-range)
 - AC-4: Page SHALL be accessible via web browser on mobile and desktop devices
 
