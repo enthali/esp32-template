@@ -58,6 +58,54 @@ An ESP32-based IoT device that measures distance using an ultrasonic sensor and 
 - **Language**: C
 - **IDE**: Visual Studio Code with ESP-IDF extension
 - **Target**: ESP32
+- **Container Support**: Docker Dev Container and GitHub Codespaces ready
+
+## Development Environment
+
+### Dev Container (Recommended)
+- **Framework**: ESP-IDF v5.4.1 pre-installed in container
+- **Cross-platform**: Works on Windows, Mac, Linux
+- **Consistent**: Same environment for all developers
+- **No local setup**: No need to install ESP-IDF locally
+
+### USB Serial Connection for Flashing
+For Windows users, USB devices need to be attached to the dev container:
+
+#### Option 1: Automated Script (Recommended)
+1. **Double-click** `tools/attach-esp32.bat` (easiest)
+   - OR **Right-click** on `tools/attach-esp32.ps1` → **"Run as Administrator"**
+2. **Follow prompts** - the script will automatically find and attach your ESP32
+3. **Done!** Your ESP32 is now available as `/dev/ttyUSB0` in the container
+
+#### Option 2: Manual Setup
+1. **Install usbipd-win** (one-time setup):
+   ```powershell
+   # In Administrator PowerShell
+   winget install usbipd
+   ```
+
+2. **Connect ESP32** and find the device:
+   ```powershell
+   # In Administrator PowerShell
+   usbipd list
+   # Look for: USB-SERIAL CH340 (COM4) - note the BUSID (e.g., 2-1)
+   ```
+
+3. **Share and attach** the device:
+   ```powershell
+   # In Administrator PowerShell (one-time per device)
+   usbipd bind --busid 2-1
+   
+   # After each USB reconnection
+   usbipd attach --wsl --busid 2-1
+   ```
+
+4. **Verify in container**:
+   ```bash
+   ls -la /dev/ttyUSB0  # Should show the ESP32 device
+   ```
+
+**Note**: After unplugging/reconnecting the ESP32, use Option 1 (run the script) for quickest reconnection.
 
 ## Project Structure
 
@@ -83,25 +131,40 @@ main/
 
 ## Build and Flash
 
-1. Set the correct target:
+### In Dev Container (Recommended)
 
+1. **Connect ESP32**: Run `tools/attach-esp32.ps1` as Administrator on Windows
+
+2. **Open in Dev Container**: VS Code will automatically detect the `.devcontainer` configuration
+
+3. **Build and flash**:
    ```bash
-   idf.py set-target esp32
+   # Build the project
+   idf.py build
+   
+   # Flash and monitor
+   idf.py -p /dev/ttyUSB0 flash monitor
+   
+   # Or combined
+   idf.py -p /dev/ttyUSB0 build flash monitor
    ```
 
-2. Configure the project (optional):
-
+4. **Monitor only** (if already flashed):
    ```bash
-   idf.py menuconfig
+   idf.py -p /dev/ttyUSB0 monitor
    ```
 
-3. Build, flash, and monitor:
+**Exit monitor**: Press `Ctrl+]` to exit the serial monitor.
 
-   ```bash
-   idf.py build flash monitor
-   ```
+### Configuration (Optional)
 
-For detailed build instructions including Windows-specific commands, see [.github/BUILD_INSTRUCTIONS.md](.github/BUILD_INSTRUCTIONS.md).
+```bash
+# Set target (usually auto-detected)
+idf.py set-target esp32
+
+# Open configuration menu
+idf.py menuconfig
+```
 
 ## License
 

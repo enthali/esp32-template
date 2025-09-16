@@ -5,7 +5,6 @@ dependencies.lock
 
 # IDE files
 .vscode/
-.devcontainer/
 .idea/
 .playwright-mcp/
 *.swp
