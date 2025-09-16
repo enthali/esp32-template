@@ -18,6 +18,19 @@ The ESP32 Distance Sensor system is an IoT device that:
 - Provides WiFi connectivity and web interface
 - Supports runtime configuration and monitoring
 
+## Requirements Traceability
+
+| Requirement ID | Design Reference | Priority |
+|----------------|------------------|----------|
+| REQ-SYS-1      | DSN-SYS-1        | Mandatory |
+| REQ-SYS-2      | DSN-SYS-2        | Mandatory |
+| REQ-SYS-3      | DSN-SYS-3        | Mandatory |
+| REQ-SYS-4      | DSN-SYS-4        | Mandatory |
+| REQ-SYS-5      | DSN-SYS-5        | Mandatory |
+| REQ-SYS-6      | DSN-SYS-6        | Mandatory |
+| REQ-SYS-7      | DSN-SYS-7        | Mandatory |
+| REQ-SYS-8      | DSN-SYS-8        | Mandatory |
+
 ## Requirement Categories
 
 Requirements are categorized using the following prefixes:

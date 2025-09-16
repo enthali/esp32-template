@@ -53,6 +53,20 @@ idf.py menuconfig
 - **Codespaces**: Use ESP-IDF Web extension for WebSerial/WebUSB flashing
 - **Mixed workflow**: Build in container, flash on Windows if needed
 
+### Windows USB Device Setup (Local Dev Container Only)
+
+For Windows users running the dev container locally (not needed for Codespaces):
+
+**Quick Setup**: Run `tools/attach-esp32.ps1` as Administrator - script automatically finds and attaches your ESP32.
+
+**Manual Setup** (if script doesn't work):
+1. Install usbipd-win: `winget install usbipd`
+2. Find device: `usbipd list` (look for USB-SERIAL CH340)
+3. Bind device: `usbipd bind --busid <BUSID>`
+4. Attach to container: `usbipd attach --wsl --busid <BUSID>`
+
+**Note**: GitHub Codespaces handles USB through browser serial interface - no manual setup needed.
+
 ## Benefits
 
 - **Consistent environments** across Windows, macOS, Linux, Codespaces

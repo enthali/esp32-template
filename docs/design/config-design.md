@@ -10,18 +10,16 @@
 
 This document specifies the design for the Configuration Management System, covering architecture, data structures, API design, and implementation approach.
 
-## Architecture Design
+## Design Traceability
 
-**Traceability Mapping (design → requirements)**:
-
-| Design ID | Implements Requirement |
-|-----------|-----------------------|
-| DSN-CFG-1 | REQ-CFG-1            |
-| DSN-CFG-2 | REQ-CFG-2            |
-| DSN-CFG-3 | REQ-CFG-3, REQ-CFG-4 |
-| DSN-CFG-4 | REQ-CFG-5, REQ-CFG-6 |
-| DSN-CFG-5 | REQ-CFG-7, REQ-CFG-8, REQ-CFG-9 |
-
+| Design ID | Implements Requirement | Priority |
+|-----------|------------------------|----------|
+| DSN-CFG-1 | REQ-CFG-1, REQ-CFG-2 | Mandatory |
+| DSN-CFG-2 | REQ-CFG-3, REQ-CFG-4, REQ-CFG-5 | Mandatory |
+| DSN-CFG-3 | REQ-CFG-3, REQ-CFG-4 | Mandatory |
+| DSN-CFG-4 | REQ-CFG-5, REQ-CFG-6 | Mandatory |
+| DSN-CFG-5 | REQ-CFG-7, REQ-CFG-8, REQ-CFG-9 | Mandatory |
+| DSN-CFG-6 | REQ-CFG-1 through REQ-CFG-11 | Mandatory |
 
 ### DSN-CFG-1: Layered Configuration Architecture
 

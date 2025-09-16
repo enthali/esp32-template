@@ -12,17 +12,17 @@ This document specifies requirements for the Display System, enabling visual rep
 
 ## Requirements Traceability
 
-| Requirement ID | Parent Requirement | Design Reference | Test Reference | Type |
-|----------------|-------------------|------------------|----------------|------|
-| REQ-DSP-OVERVIEW-01 | REQ-SYS-3 | DSN-DSP-OVERVIEW-01 | TST-DSP-OVERVIEW-01 | System |
-| REQ-DSP-OVERVIEW-02 | REQ-CFG-1 | DSN-DSP-OVERVIEW-02 | TST-DSP-OVERVIEW-02 | Interface |
-| REQ-DSP-VISUAL-01 | REQ-SYS-3 | DSN-DSP-VISUAL-01 | TST-DSP-VISUAL-01 | User Experience |
-| REQ-DSP-VISUAL-02 | REQ-SYS-3 | DSN-DSP-VISUAL-02 | TST-DSP-VISUAL-02 | User Experience |
-| REQ-DSP-VISUAL-03 | REQ-CFG-2 | DSN-DSP-VISUAL-03 | TST-DSP-VISUAL-03 | User Experience |
-| REQ-DSP-VISUAL-04 | REQ-CFG-2 | DSN-DSP-VISUAL-04 | TST-DSP-VISUAL-04 | User Experience |
-| REQ-DSP-IMPL-01 | REQ-SYS-3 | DSN-DSP-IMPL-01 | TST-DSP-IMPL-01 | Implementation |
-| REQ-DSP-IMPL-02 | REQ-SYS-3 | DSN-DSP-IMPL-02 | TST-DSP-IMPL-02 | Implementation |
-| REQ-DSP-IMPL-03 | REQ-DSP-VISUAL-02 | DSN-DSP-IMPL-03 | TST-DSP-IMPL-03 | Implementation |
+| Requirement ID | Design Reference | Priority |
+|----------------|------------------|----------|
+| REQ-DSP-OVERVIEW-01 | DSN-DSP-OVERVIEW-01 | Mandatory |
+| REQ-DSP-OVERVIEW-02 | DSN-DSP-OVERVIEW-02 | Mandatory |
+| REQ-DSP-VISUAL-01 | DSN-DSP-VISUAL-01 | Mandatory |
+| REQ-DSP-VISUAL-02 | DSN-DSP-VISUAL-02 | Mandatory |
+| REQ-DSP-VISUAL-03 | DSN-DSP-VISUAL-03 | Mandatory |
+| REQ-DSP-VISUAL-04 | DSN-DSP-VISUAL-04 | Mandatory |
+| REQ-DSP-IMPL-01 | DSN-DSP-IMPL-01 | Mandatory |
+| REQ-DSP-IMPL-02 | DSN-DSP-IMPL-02 | Mandatory |
+| REQ-DSP-IMPL-03 | DSN-DSP-IMPL-03 | Mandatory |
 
 **Dependencies**:
 - REQ-DSP-OVERVIEW-02 depends on REQ-CFG-1 (configuration management system)

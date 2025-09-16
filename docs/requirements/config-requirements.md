@@ -12,19 +12,19 @@ This document specifies detailed requirements for the Configuration Management S
 
 ## Requirements Traceability
 
-| Requirement ID | Parent Requirement | Design Reference | Test Reference |
-|----------------|-------------------|------------------|----------------|
-| REQ-CFG-1      | REQ-SYS-5        | DSN-CFG-1        | TST-CFG-1     |
-| REQ-CFG-2      | REQ-SYS-5        | DSN-CFG-2        | TST-CFG-2     |
-| REQ-CFG-3      | REQ-SYS-4        | DSN-CFG-3        | TST-CFG-3     |
-| REQ-CFG-4      | REQ-SYS-4        | DSN-CFG-4        | TST-CFG-4     |
-| REQ-CFG-5      | REQ-SYS-4        | DSN-CFG-5        | TST-CFG-5     |
-| REQ-CFG-6      | REQ-SYS-4        | DSN-CFG-6        | TST-CFG-6     |
-| REQ-CFG-7      | REQ-SYS-6        | DSN-CFG-7        | TST-CFG-7     |
-| REQ-CFG-8      | REQ-SYS-6        | DSN-CFG-8        | TST-CFG-8     |
-| REQ-CFG-9      | REQ-SYS-6        | DSN-CFG-9        | TST-CFG-9     |
-| REQ-CFG-10     | REQ-SYS-4        | DSN-CFG-10       | TST-CFG-10    |
-| REQ-CFG-11     | REQ-SYS-4        | DSN-CFG-11       | TST-CFG-11    |
+| Requirement ID | Design Reference | Priority |
+|----------------|------------------|----------|
+| REQ-CFG-1      | DSN-CFG-1        | Mandatory |
+| REQ-CFG-2      | DSN-CFG-2        | Mandatory |
+| REQ-CFG-3      | DSN-CFG-3        | Mandatory |
+| REQ-CFG-4      | DSN-CFG-4        | Mandatory |
+| REQ-CFG-5      | DSN-CFG-5        | Mandatory |
+| REQ-CFG-6      | DSN-CFG-6        | Mandatory |
+| REQ-CFG-7      | DSN-CFG-7        | Mandatory |
+| REQ-CFG-8      | DSN-CFG-8        | Mandatory |
+| REQ-CFG-9      | DSN-CFG-9        | Mandatory |
+| REQ-CFG-10     | DSN-CFG-10       | Mandatory |
+| REQ-CFG-11     | DSN-CFG-11       | Mandatory |
 
 **Dependencies**:
 

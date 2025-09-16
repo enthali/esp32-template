@@ -4,6 +4,19 @@
 
 This document describes the technical architecture and implementation details for the ESP32 Distance Measurement with LED Strip Display project.
 
+## Design Traceability
+
+| Design ID | Implements Requirement | Priority |
+|-----------|------------------------|----------|
+| DSN-SYS-1 | REQ-SYS-1 | Mandatory |
+| DSN-SYS-2 | REQ-SYS-2 | Mandatory |
+| DSN-SYS-3 | REQ-SYS-3 | Mandatory |
+| DSN-SYS-4 | REQ-SYS-4 | Mandatory |
+| DSN-SYS-5 | REQ-SYS-5 | Mandatory |
+| DSN-SYS-6 | REQ-SYS-6 | Mandatory |
+| DSN-SYS-7 | REQ-SYS-7 | Mandatory |
+| DSN-SYS-8 | REQ-SYS-8 | Mandatory |
+
 ## System Architecture
 
 ```

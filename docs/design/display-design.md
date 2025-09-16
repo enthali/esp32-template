@@ -1,34 +1,16 @@
-<!--
-  Design documentation extracted from `main/components/display_logic/display_logic.c`.
-  Keep this document up to date with the implementation and reference requirement IDs
-  for traceability.
--->
-
 # Display Design
 
 ## Design Traceability
 
-- DSN-DSP-OVERVIEW-01: WS2812 hardware integration design (reactive LED display system)
-- DSN-DSP-ARCH-01: Task-based architecture (display_logic_task function)
-- DSN-DSP-ARCH-02: Configuration integration design (config_manager API usage)
-- DSN-DSP-ALGO-01: Distance-to-visual mapping algorithm (WHAT to display)
-- DSN-DSP-ALGO-02: LED update pattern design (HOW to display)
-- DSN-DSP-ALGO-03: Embedded arithmetic architecture design (integer-only calculations)
-- DSN-DSP-API-01: Simplified API design (single display_logic_start entry point)
-
-## Requirements Traceability
-
-- REQ-DSP-OVERVIEW-01: WS2812 LED strip support via led_controller component
-- REQ-DSP-OVERVIEW-02: Configuration integration via config_manager API
-- REQ-DSP-VISUAL-01: Single LED illumination (clear-and-set pattern)
-- REQ-DSP-VISUAL-02: Normal range green display (linear mapping to positions 0..led_count-1)
-- REQ-DSP-VISUAL-03: Below minimum red display (first LED, position 0)
-- REQ-DSP-VISUAL-04: Above maximum red display (last LED, position led_count-1)
-- REQ-DSP-IMPL-01: Task-based architecture with priority below measurement task
-- REQ-DSP-IMPL-02: LED buffer management via WS2812 clear-and-transmit pattern
-- REQ-DSP-IMPL-03: Distance-to-LED calculation with range clamping
-- REQ-CFG-1: Use centralized configuration header (config.h)
-- REQ-CFG-2: Use centralized configuration via config_manager API
+| Design ID | Implements Requirement | Priority |
+|-----------|------------------------|----------|
+| DSN-DSP-OVERVIEW-01 | REQ-DSP-OVERVIEW-01 | Mandatory |
+| DSN-DSP-ARCH-01 | REQ-DSP-IMPL-01 | Mandatory |
+| DSN-DSP-ARCH-02 | REQ-DSP-OVERVIEW-02 | Mandatory |
+| DSN-DSP-ALGO-01 | REQ-DSP-IMPL-03, REQ-DSP-VISUAL-01, REQ-DSP-VISUAL-02, REQ-DSP-VISUAL-03, REQ-DSP-VISUAL-04 | Mandatory |
+| DSN-DSP-ALGO-02 | REQ-DSP-IMPL-02 | Mandatory |
+| DSN-DSP-ALGO-03 | REQ-SYS-1 | Mandatory |
+| DSN-DSP-API-01 | REQ-DSP-IMPL-01 | Mandatory |
 
 ## Target Design Architecture
 
