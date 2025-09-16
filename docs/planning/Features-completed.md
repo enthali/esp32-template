@@ -140,3 +140,5 @@ This project has completed its core functionality and web foundation. The primar
 
 For full details of completed items and implementation notes, see the repository's planning and design documents.
 - Tested and verified with both AP and STA modes
+
+Note: All items listed as "intended" earlier in `Features-intended.md` (except the HTTPS implementation) are now implemented or scaffolded and documented in this repo.
