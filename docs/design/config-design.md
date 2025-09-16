@@ -12,9 +12,20 @@ This document specifies the design for the Configuration Management System, cove
 
 ## Architecture Design
 
+**Traceability Mapping (design → requirements)**:
+
+| Design ID | Implements Requirement |
+|-----------|-----------------------|
+| DSN-CFG-1 | REQ-CFG-1            |
+| DSN-CFG-2 | REQ-CFG-2            |
+| DSN-CFG-3 | REQ-CFG-3, REQ-CFG-4 |
+| DSN-CFG-4 | REQ-CFG-5, REQ-CFG-6 |
+| DSN-CFG-5 | REQ-CFG-7, REQ-CFG-8, REQ-CFG-9 |
+
+
 ### DSN-CFG-1: Layered Configuration Architecture
 
-**Covers**: REQ-CFG-1, REQ-CFG-2  
+**Covers / Implements**: REQ-CFG-1, REQ-CFG-2
 **Type**: System Architecture  
 
 The configuration system implements a three-layer architecture:
@@ -40,7 +51,7 @@ The configuration system implements a three-layer architecture:
 
 ### DSN-CFG-2: Configuration Data Flow
 
-**Covers**: REQ-CFG-3, REQ-CFG-4, REQ-CFG-5  
+**Covers / Implements**: REQ-CFG-3, REQ-CFG-4, REQ-CFG-5
 **Type**: Data Flow Design  
 
 ``` text
@@ -61,7 +72,7 @@ Factory:     config_factory_reset() → Defaults → NVS → Runtime Cache
 
 ### DSN-CFG-3: Configuration Storage Format
 
-**Covers**: REQ-CFG-3, REQ-CFG-4  
+**Covers / Implements**: REQ-CFG-3, REQ-CFG-4
 **Type**: Data Structure  
 
 ```c
@@ -114,7 +125,7 @@ typedef struct {
 
 ### DSN-CFG-4: Configuration API Implementation
 
-**Covers**: REQ-CFG-5, REQ-CFG-6  
+**Covers / Implements**: REQ-CFG-5, REQ-CFG-6
 **Type**: Interface Design  
 
 ```c
@@ -175,7 +186,7 @@ bool config_validate_all(const system_config_t* config, char* error_msg, size_t 
 
 ### DSN-CFG-5: Web Configuration Interface
 
-**Covers**: REQ-CFG-7, REQ-CFG-8, REQ-CFG-9  
+**Covers / Implements**: REQ-CFG-7, REQ-CFG-8, REQ-CFG-9
 **Type**: User Interface Design  
 
 **REST API Endpoints**:

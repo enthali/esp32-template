@@ -39,6 +39,8 @@ This document specifies detailed requirements for the Configuration Management S
 
 ---
 
+**Design references**: Implementation-specific details such as exact storage types, NVS packed layouts, and fixed-point scaling conventions are documented in `docs/design/config-design.md` (DSN-CFG-3). Requirements intentionally remain implementation-agnostic; design document implements the requirements.
+
 ## Static Configuration Management
 
 ### REQ-CFG-1: Centralized Configuration Header
@@ -51,34 +53,21 @@ This document specifies detailed requirements for the Configuration Management S
 
 **Acceptance Criteria**:
 
-- AC-1: Distance sensor parameters (DEFAULT_DISTANCE_MIN_MM, DEFAULT_DISTANCE_MAX_MM, DEFAULT_MEASUREMENT_INTERVAL_MS, DEFAULT_SENSOR_TIMEOUT_MS, DEFAULT_TEMPERATURE_C_X10, DEFAULT_SMOOTHING_FACTOR) centralized in config.h
-- AC-2: LED controller parameters (DEFAULT_LED_COUNT, DEFAULT_LED_BRIGHTNESS) centralized in config.h  
-- AC-3: WiFi parameters (DEFAULT_WIFI_AP_CHANNEL, DEFAULT_WIFI_AP_MAX_CONN, DEFAULT_WIFI_STA_MAX_RETRY, DEFAULT_WIFI_STA_TIMEOUT_MS) centralized in config.h
-- AC-4: All parameters defined in the Configuration Categories section below SHALL be in config.h
-- AC-5: No additional user-configurable magic numbers remain in source files outside config.h
-- AC-6: Each configuration value documented with purpose and valid range as shown in Configuration Categories
+- AC-1: Distance sensor parameters (min, max, measurement interval, sensor timeout, ambient temperature, smoothing factor) centralized in device configuration and persistent storage. Implementation-specific names, types, and on-device scaling conventions are defined in `docs/design/config-design.md`.
+- AC-2: LED controller parameters (LED count, LED brightness) centralized in device configuration and persistent storage.
+- AC-3: WiFi parameters (AP channel, AP max connections, STA retry, STA timeout) centralized in device configuration and persistent storage.
+- AC-4: All parameters listed in the Configuration Categories section below SHALL be part of the centralized configuration (logical grouping). Concrete on-device representation and default macro names are specified in `docs/design/config-design.md`.
+- AC-5: No additional user-configurable magic numbers remain in source files outside the centralized configuration.
+- AC-6: Each configuration value documented with purpose and valid range as shown in Configuration Categories; storage/encoding details are in the design document.
+
 
 **Configuration Categories**:
 
-```c
-// Distance Sensor Configuration (User Configurable) - Integer Millimeter Architecture
-#define DEFAULT_DISTANCE_MIN_MM         100      // The distance mapped to the first LED in millimeters : Range: 50-1000 
-#define DEFAULT_DISTANCE_MAX_MM         500      // The distance mapped to the last LED in millimeters, must be larger than DEFAULT_DISTANCE_MIN_MM : Range: 200-4000  
-#define DEFAULT_MEASUREMENT_INTERVAL_MS 100      // How often to measure distance in milliseconds : Range: 50-1000
-#define DEFAULT_SENSOR_TIMEOUT_MS       30       // Maximum time to wait for ultrasonic echo, must be < interval : Range: 10-50
-#define DEFAULT_TEMPERATURE_C_X10       200      // Ambient temperature in Celsius * 10 (20.0°C = 200) : Range: -200-600
-#define DEFAULT_SMOOTHING_FACTOR        300      // EMA smoothing factor * 1000 (0.3 = 300) : Range: 1-1000
+The following logical parameter categories are required; concrete macro names, default values, and on-device encoding are specified in `docs/design/config-design.md`.
 
-// LED Controller Configuration (User Configurable)
-#define DEFAULT_LED_COUNT               40       // Number of LEDs in the strip : Range: 1-60
-#define DEFAULT_LED_BRIGHTNESS          128      // LED brightness level (0=off, 255=max) : Range: 10-255
-
-// WiFi Configuration (User Configurable)
-#define DEFAULT_WIFI_AP_CHANNEL         1        // WiFi access point channel : Range: 1-13
-#define DEFAULT_WIFI_AP_MAX_CONN        2        // Maximum simultaneous AP connections : Range: 1-10
-#define DEFAULT_WIFI_STA_MAX_RETRY      3        // Station connection retry attempts : Range: 1-10
-#define DEFAULT_WIFI_STA_TIMEOUT_MS     5000     // Station connection timeout : Range: 1000-30000
-```
+- Distance sensor configuration: minimum/maximum measurement ranges, measurement interval, sensor timeout, ambient temperature override, smoothing factor
+- LED controller configuration: LED count, LED brightness
+- WiFi configuration: SSID, password, AP/channel settings, retry and timeout values
 
 **Scope Definition**:
 
@@ -121,7 +110,7 @@ This document specifies detailed requirements for the Configuration Management S
 **Type**: Design  
 **Priority**: Mandatory  
 **Depends**: REQ-CFG-1  
-**Description**: The system SHALL define a runtime configuration structure containing all user-configurable parameters defined in REQ-CFG-1, using integer millimeter architecture for embedded performance optimization, and optimized for NVS storage and runtime modification.
+**Description**: The system SHALL define a runtime configuration structure containing all user-configurable parameters defined in REQ-CFG-1. The configuration structure SHALL include metadata for versioning and change tracking. Concrete storage layout, data types, alignment, and fixed-point scaling conventions are documented in `docs/design/config-design.md`.
 
 **Rationale**: Enables runtime parameter modification while maintaining consistency with compile-time defaults, using integer millimeter architecture for embedded performance optimization, and ensuring efficient storage in ESP32 NVS flash memory.
 
@@ -129,40 +118,21 @@ This document specifies detailed requirements for the Configuration Management S
 
 - AC-1: Configuration structure includes all runtime-modifiable parameters from REQ-CFG-1
 - AC-2: Structure includes metadata for versioning and change tracking
-- AC-3: Data types optimized for NVS storage efficiency and embedded performance (uint8_t, uint16_t, uint32_t, int16_t)
-- AC-4: String fields sized appropriately (WiFi SSID: 33 chars, password: 65 chars)
-- AC-5: Default values match compile-time constants defined in REQ-CFG-1
+- AC-3: Data representation chosen for NVS storage efficiency and embedded performance; concrete type selections and packing are specified in `docs/design/config-design.md`
+- AC-4: String fields sized appropriately for WiFi credentials and documented in the design doc
+- AC-5: Default values match compile-time defaults specified in the design document
 - AC-6: Structure layout compatible with ESP32 memory alignment requirements
 
-**Configuration Structure**:
+**Configuration Structure (conceptual)**:
 
-```c
-typedef struct {
-    // Configuration metadata
-    uint32_t config_version;         // Current: 1
-    uint32_t save_count;             // Change tracking
-    
-    // Distance sensor settings (runtime configurable) - Integer Millimeter Architecture
-    uint16_t distance_min_mm;        // Minimum distance in millimeters (50-1000mm)           
-    uint16_t distance_max_mm;        // Maximum distance in millimeters (200-4000mm)           
-    uint16_t measurement_interval_ms;// Measurement interval in milliseconds
-    uint32_t sensor_timeout_ms;      // Sensor timeout in milliseconds
-    int16_t temperature_c_x10;       // Temperature in Celsius * 10 (20.0°C = 200)             
-    uint16_t smoothing_factor;       // EMA smoothing factor * 1000 (0.3 = 300)            
-    
-    // LED settings (runtime configurable)
-    uint8_t led_count;               
-    uint8_t led_brightness;          
-    
-    // WiFi settings (runtime configurable)
-    char wifi_ssid[33];              // WiFi network name (null-terminated, max 32 chars)
-    char wifi_password[65];          // WiFi network password (null-terminated, max 64 chars)
-    uint8_t wifi_ap_channel;         
-    uint8_t wifi_ap_max_conn;        
-    uint8_t wifi_sta_max_retry;      
-    uint32_t wifi_sta_timeout_ms;    
-} system_config_t;
-```
+The runtime configuration SHALL include metadata and the following parameter groups:
+
+- Configuration metadata: version and save count for migration and tracking
+- Distance sensor settings: minimum/maximum measurement ranges, measurement interval, sensor timeout, ambient temperature, smoothing factor
+- LED settings: LED count and brightness
+- WiFi settings: SSID, password, AP/channel settings, retry and timeout values
+
+Specific storage types, packed layouts, and fixed-point scaling conventions are design decisions and are documented in the configuration design specification: `docs/design/config-design.md` (see DSN-CFG-3).
 
 ### REQ-CFG-4: Non-Volatile Storage (NVS)
 
@@ -234,27 +204,25 @@ bool config_is_valid_range(const char* param_name, int32_t value, int32_t min_va
 - AC-5: Validation performed before NVS save operations
 - AC-6: Validation errors logged with parameter name and attempted value
 
+
 **Parameter Validation Ranges**:
 
-```c
-// Distance sensor parameter ranges - Integer Millimeter Architecture
-distance_min_mm:           50 - 1000      // 5.0cm - 100.0cm in millimeters
-distance_max_mm:           200 - 4000     // 20.0cm - 400.0cm in millimeters (must be > distance_min_mm)
-measurement_interval_ms:   50 - 1000
-sensor_timeout_ms:         10 - 50 (must be < measurement_interval_ms)
-temperature_c_x10:         -200 - 600     // -20.0°C - 60.0°C (* 10)
-smoothing_factor:          1 - 1000      // 0.001 - 1.0 (* 1000)
+The system SHALL validate parameters against the following human-oriented ranges. The design document `docs/design/config-design.md` specifies exact on-device representations and any fixed-point scaling used for storage.
 
-// LED parameter ranges
-led_count:                 1 - 60
-led_brightness:            10 - 255
+- distance_min_mm: 50 - 1000 (millimeters)
+- distance_max_mm: 200 - 4000 (millimeters) (must be > distance_min_mm)
+- measurement_interval_ms: 50 - 1000 (milliseconds)
+- sensor_timeout_ms: 10 - 50 (milliseconds) (must be < measurement_interval_ms)
+- temperature_c: -20.0 - 60.0 (degrees Celsius) ; storage encoding documented in design doc
+- smoothing_factor: 0.001 - 1.0 (normalized smoothing parameter) ; storage scaling documented in design doc
 
-// WiFi parameter ranges
-wifi_ap_channel:           1 - 13
-wifi_ap_max_conn:          1 - 10
-wifi_sta_max_retry:        1 - 10
-wifi_sta_timeout_ms:       1000 - 30000
-```
+- led_count: 1 - 60
+- led_brightness: 10 - 255
+
+- wifi_ap_channel: 1 - 13
+- wifi_ap_max_conn: 1 - 10
+- wifi_sta_max_retry: 1 - 10
+- wifi_sta_timeout_ms: 1000 - 30000 (milliseconds)
 
 ---
 
