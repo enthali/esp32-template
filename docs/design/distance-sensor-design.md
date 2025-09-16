@@ -34,7 +34,7 @@ Addresses: REQ-SNS-1, REQ-SNS-2
 Design: HC-SR04 ultrasonic sensor interface using ESP32 GPIO.
 
 - Trigger pin (default GPIO14): Output mode, generates 10µs pulse
-- Echo pin (default GPIO15): Input mode with `GPIO_INTR_ANYEDGE` interrupt
+- Echo pin (default GPIO13): Input mode with `GPIO_INTR_ANYEDGE` interrupt
 - GPIO configuration during `distance_sensor_init()` with validation
 - ISR handler attached to echo pin for edge detection
 

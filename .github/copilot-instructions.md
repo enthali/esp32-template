@@ -7,7 +7,7 @@ You are working on an ESP32-based IoT distance sensor project that measures dist
 ### Hardware Stack
 - **Microcontroller**: ESP32 WROOM-32F (4MB flash)
 - **Distance Sensor**: HC-SR04 ultrasonic sensor
-- **LED Display**: WS2812 addressable LED strip (60 LEDs)
+- **LED Display**: WS2812 addressable LED strip (40 LEDs)
 - **Connectivity**: WiFi (AP and STA modes)
 - **Development Framework**: ESP-IDF v5.4.1
 

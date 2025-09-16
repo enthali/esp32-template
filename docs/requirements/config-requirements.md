@@ -15,16 +15,16 @@ This document specifies detailed requirements for the Configuration Management S
 | Requirement ID | Design Reference | Priority |
 |----------------|------------------|----------|
 | REQ-CFG-1      | DSN-CFG-1        | Mandatory |
-| REQ-CFG-2      | DSN-CFG-2        | Mandatory |
-| REQ-CFG-3      | DSN-CFG-3        | Mandatory |
-| REQ-CFG-4      | DSN-CFG-4        | Mandatory |
-| REQ-CFG-5      | DSN-CFG-5        | Mandatory |
-| REQ-CFG-6      | DSN-CFG-6        | Mandatory |
-| REQ-CFG-7      | DSN-CFG-7        | Mandatory |
-| REQ-CFG-8      | DSN-CFG-8        | Mandatory |
-| REQ-CFG-9      | DSN-CFG-9        | Mandatory |
-| REQ-CFG-10     | DSN-CFG-10       | Mandatory |
-| REQ-CFG-11     | DSN-CFG-11       | Mandatory |
+| REQ-CFG-2      | DSN-CFG-1        | Mandatory |
+| REQ-CFG-3      | DSN-CFG-2, DSN-CFG-3 | Mandatory |
+| REQ-CFG-4      | DSN-CFG-3        | Mandatory |
+| REQ-CFG-5      | DSN-CFG-4        | Mandatory |
+| REQ-CFG-6      | DSN-CFG-4        | Mandatory |
+| REQ-CFG-7      | DSN-CFG-5        | Mandatory |
+| REQ-CFG-8      | DSN-CFG-5        | Mandatory |
+| REQ-CFG-9      | DSN-CFG-5        | Mandatory |
+| REQ-CFG-10     | DSN-CFG-6        | Mandatory |
+| REQ-CFG-11     | DSN-CFG-6        | Mandatory |
 
 **Dependencies**:
 

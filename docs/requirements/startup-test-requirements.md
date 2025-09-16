@@ -53,7 +53,7 @@ This document specifies requirements for the startup test sequence that provides
 
 - AC-1: LEDs SHALL light sequentially from position 0 to position (led_count-1)
 - AC-2: Each LED SHALL display a distinct color during the sequence (e.g., blue or white)
-- AC-3: Timing between LED activations SHALL be clearly visible (100-300ms per LED)
+- AC-3: Test SHALL complete within reasonable time limits (example: 40 LEDs @ 50ms each = 2.0 second maximum)
 - AC-4: Each LED SHALL turn off before the next LED activates (single moving light pattern)
 - AC-5: Normal distance measurement SHALL begin after sequence completes
 
@@ -74,7 +74,7 @@ This document specifies requirements for the startup test sequence that provides
 **Acceptance Criteria**:
 
 - AC-1: Complete startup sequence SHALL finish within 5 seconds for 60 LEDs
-- AC-2: LED activation timing SHALL be configurable (default 150ms per LED)
+- AC-2: LED activation timing SHALL be configurable (default 50ms per LED)
 - AC-3: Total startup delay SHALL not exceed 10 seconds regardless of LED count
 
 **Verification**: Measure startup sequence timing with different LED counts, verify performance meets timing requirements.
