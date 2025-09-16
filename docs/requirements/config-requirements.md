@@ -67,7 +67,7 @@ This document specifies detailed requirements for the Configuration Management S
 #define DEFAULT_MEASUREMENT_INTERVAL_MS 100      // How often to measure distance in milliseconds : Range: 50-1000
 #define DEFAULT_SENSOR_TIMEOUT_MS       30       // Maximum time to wait for ultrasonic echo, must be < interval : Range: 10-50
 #define DEFAULT_TEMPERATURE_C_X10       200      // Ambient temperature in Celsius * 10 (20.0°C = 200) : Range: -200-600
-#define DEFAULT_SMOOTHING_FACTOR        30       // EMA smoothing factor * 100 (0.3 = 30) : Range: 1-100
+#define DEFAULT_SMOOTHING_FACTOR        300      // EMA smoothing factor * 1000 (0.3 = 300) : Range: 1-1000
 
 // LED Controller Configuration (User Configurable)
 #define DEFAULT_LED_COUNT               40       // Number of LEDs in the strip : Range: 1-60
@@ -148,7 +148,7 @@ typedef struct {
     uint16_t measurement_interval_ms;// Measurement interval in milliseconds
     uint32_t sensor_timeout_ms;      // Sensor timeout in milliseconds
     int16_t temperature_c_x10;       // Temperature in Celsius * 10 (20.0°C = 200)             
-    uint16_t smoothing_factor;       // EMA smoothing factor * 100 (0.3 = 30)           
+    uint16_t smoothing_factor;       // EMA smoothing factor * 1000 (0.3 = 300)            
     
     // LED settings (runtime configurable)
     uint8_t led_count;               
@@ -243,7 +243,7 @@ distance_max_mm:           200 - 4000     // 20.0cm - 400.0cm in millimeters (mu
 measurement_interval_ms:   50 - 1000
 sensor_timeout_ms:         10 - 50 (must be < measurement_interval_ms)
 temperature_c_x10:         -200 - 600     // -20.0°C - 60.0°C (* 10)
-smoothing_factor:          1 - 100       // 0.01 - 1.0 (* 100)
+smoothing_factor:          1 - 1000      // 0.001 - 1.0 (* 1000)
 
 // LED parameter ranges
 led_count:                 1 - 60

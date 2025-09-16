@@ -73,13 +73,14 @@ typedef struct {
     uint32_t crc32_checksum;      // Data integrity verification  
     uint32_t save_count;          // Change tracking
     
-    // Distance sensor configuration (20 bytes)
-    float distance_min_cm;        // 4 bytes
-    float distance_max_cm;        // 4 bytes  
-    uint16_t measurement_interval_ms; // 2 bytes
-    uint32_t sensor_timeout_ms;   // 4 bytes
-    float smoothing_alpha;        // 4 bytes
-    uint16_t reserved1;           // 2 bytes - future expansion
+   // Distance sensor configuration (20 bytes)
+   // Stored as integers to avoid floating-point on the device
+   uint16_t distance_min_mm;     // 2 bytes (millimeters)
+   uint16_t distance_max_mm;     // 2 bytes (millimeters)
+   uint16_t measurement_interval_ms; // 2 bytes
+   uint32_t sensor_timeout_ms;   // 4 bytes
+   uint16_t smoothing_factor;    // 2 bytes - fixed-point: smoothing = smoothing_factor / 1000.0
+   uint16_t reserved1;           // 2 bytes - future expansion
     
     // LED configuration (8 bytes)
     uint8_t led_count;            // 1 byte
@@ -137,19 +138,21 @@ esp_err_t config_save_to_nvs(void);
 esp_err_t config_factory_reset(void);
 
 // Configuration value getters (thread-safe)
-float config_get_distance_min_cm(void);
-float config_get_distance_max_cm(void);
+// Note: Implementation uses integer/fixed-point types. Distances are stored in
+// millimeters (`uint16_t distance_min_mm`) and smoothing is stored as an integer
+// factor (`uint16_t smoothing_factor`) where runtime alpha = smoothing_factor / 1000.0.
+// Callers should use `config_get_current()` from `config_manager` to obtain a
+// copy of `system_config_t` and perform unit conversions as needed.
 uint16_t config_get_measurement_interval_ms(void);
 uint32_t config_get_sensor_timeout_ms(void);
-float config_get_smoothing_alpha(void);
 uint8_t config_get_led_count(void);
 uint8_t config_get_led_brightness(void);
 
 // Configuration value setters (with validation)
-esp_err_t config_set_distance_range(float min_cm, float max_cm);
+// Setters accepting decimal/floating inputs are provided at the web interface
+// layer; internal API uses integer/fixed-point setters via `config_set_current()`.
 esp_err_t config_set_measurement_interval(uint16_t interval_ms);
 esp_err_t config_set_sensor_timeout(uint32_t timeout_ms);
-esp_err_t config_set_smoothing_alpha(float alpha);
 esp_err_t config_set_led_count(uint8_t count);
 esp_err_t config_set_led_brightness(uint8_t brightness);
 

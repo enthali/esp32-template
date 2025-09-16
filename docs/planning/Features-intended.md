@@ -120,12 +120,15 @@ Once these foundational improvements are complete, we'll have a clean, secure, a
 #define CONFIG_H
 
 // === DISTANCE SENSOR CONFIGURATION ===
-#define DEFAULT_DISTANCE_MIN_CM         10.0f      // Minimum distance for LED mapping
-#define DEFAULT_DISTANCE_MAX_CM         50.0f      // Maximum distance for LED mapping  
+// Note: Runtime implementation uses integer millimeter architecture. Defaults
+// provided here are conceptual; actual code uses `DEFAULT_DISTANCE_MIN_MM` and
+// `DEFAULT_DISTANCE_MAX_MM` in `main/config.h` (millimeters).
+#define DEFAULT_DISTANCE_MIN_CM         10.0f      // Conceptual default (10.0 cm -> 100 mm)
+#define DEFAULT_DISTANCE_MAX_CM         50.0f      // Conceptual default (50.0 cm -> 500 mm)
 #define DEFAULT_DISTANCE_INTERVAL_MS    100        // Measurement interval (10Hz)
 #define DEFAULT_DISTANCE_TIMEOUT_MS     30         // Echo timeout
 #define DEFAULT_TEMPERATURE_C           20.0f      // Room temperature for sound speed
-#define DEFAULT_SMOOTHING_ALPHA         0.3f       // EMA smoothing factor
+#define DEFAULT_SMOOTHING_ALPHA         0.3f       // Conceptual smoothing alpha (0.3). Implementation stores as integer `smoothing_factor` = 300
 
 // === LED CONTROLLER CONFIGURATION ===
 #define DEFAULT_LED_COUNT               40         // Number of LEDs in strip
