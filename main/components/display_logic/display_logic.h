@@ -58,8 +58,6 @@ extern "C"
      */
     esp_err_t display_logic_start(void);
 
-    // display_logic_get_config() function removed - configuration access via config_manager API
-
 #ifdef __cplusplus
 }
 #endif

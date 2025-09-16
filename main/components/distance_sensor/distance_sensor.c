@@ -139,7 +139,7 @@ static volatile bool measurement_in_progress = false;
 // Default configuration
 static const distance_sensor_config_t default_config = {
     .trigger_pin = GPIO_NUM_14,
-    .echo_pin = GPIO_NUM_15,
+    .echo_pin = GPIO_NUM_13,
     .measurement_interval_ms = 100, // 100ms for normal operation (10 Hz measurement rate)
     .timeout_ms = 30,
     .temperature_c_x10 = 200,    // 20.0°C = 200 tenths

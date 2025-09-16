@@ -10,8 +10,7 @@
  * @date 2025
  */
 
-#ifndef CERT_HANDLER_H
-#define CERT_HANDLER_H
+#pragma once
 
 #include "esp_err.h"
 
@@ -82,5 +81,3 @@ esp_err_t cert_handler_get_info(char* info_buffer, size_t buffer_size);
 #ifdef __cplusplus
 }
 #endif
-
-#endif // CERT_HANDLER_H
