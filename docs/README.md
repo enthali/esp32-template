@@ -8,7 +8,7 @@ This project brings together the ESP32, an HC-SR04 ultrasonic sensor, and a WS28
 ## 🚀 Get Started
 - **Curious?** Jump right in fire you your codespace and explore the code, hardware, and live demos.
 - **New to ESP32?** Check out our [Getting Started Guide](workshop/gettingstartet.md) for step-by-step help.
-- **Want to build it yourself?** See the [Hardware Setup](workshop/hardwaresetup.md) and [Workshop Prerequisites](workshop/PREREQUISITES.md).
+- **Want to build it yourself?** See the [Hardware Setup](workshop/hardwaresetup.md) and [Workshop Prerequisites](workshop/prerequisites.md).
 - **Ready for a challenge?** Try the [Workshop Exercises](workshop/README.md) and level up your skills!
 
 ## 💡 Why this project?
