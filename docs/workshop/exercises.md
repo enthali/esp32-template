@@ -1,7 +1,7 @@
 # Workshop Exercises
 
-This page contains the workshop exercises. Replace this placeholder with the actual exercises when ready.
+## Exercise A: Extend LED patterns
 
-- Exercise A: Extend LED patterns
-- Exercise B: Improve distance filtering and timeouts
-- Exercise C: Test HTTPS web interface and certificates
+## Exercise B: Improve distance filtering and timeouts
+
+## Exercise C: Change the HTML web interface to display a line of virtual LEDs
