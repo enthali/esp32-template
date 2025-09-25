@@ -64,7 +64,15 @@ An ESP32-based IoT device that measures distance using an ultrasonic sensor and 
 
 > **Note**: The first setup may take a few minutes as the container and toolchain are prepared, but after that, you're ready to build and run your code instantly.
 
-> **Local Dev Container Setup**: For Windows users setting up a local dev container, see [`.devcontainer/README.md`](.devcontainer/README.md) for USB device attachment instructions.
+> **Local Dev Container Setup**: For Windows users setting up a local dev container, see .devcontainer/README.md for USB device attachment instructions.
+
+### Workshop
+#### Workshop: Hands-On with the ESP32 Distance Sensor
+
+This project is ideal for workshops and classroom demonstrations. Please feel free to explore the related documentation in **/docs/Workshop**
+
+> **Tip:** For remote workshops, Codespaces ensures a consistent environment for all participants.
+
 
 
 ## Build and Flash
@@ -81,10 +89,6 @@ idf.py -p /dev/ttyUSB0 monitor
 ```
 
 **Exit monitor**: Press `Ctrl+]` to exit the serial monitor.
-
-## Documentation
-
-See [`docs/README.md`](docs/README.md) for detailed technical documentation, requirements, and design specifications following OpenFastTrack methodology.
 
 ## License
 

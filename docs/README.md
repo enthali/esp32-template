@@ -120,3 +120,26 @@ This project demonstrates that **formal documentation and agile, incremental dev
 ## Disclaimer
 
 This documentation is **not intended to be exhaustive**. The ESP32 Distance Sensor project serves as a demonstration of the chosen requirements-driven approach and documentation methodology in principle. It is designed to illustrate process and structure, not to provide a complete or production-ready reference.
+
+## Local docs workflow (devcontainer)
+
+When working on documentation locally we recommend using the repository devcontainer and MkDocs for a reproducible preview experience.
+
+- Start the devcontainer in VS Code (Reopen in Container). MkDocs and plugins should be installed in the container image or via the devcontainer `postCreateCommand`.
+- To make the site homepage match the repository `README.md` (CI copies README -> `docs/index.md`), either edit `docs/index.md` directly, or copy the README before serving:
+
+```bash
+cp README.md docs/index.md
+mkdocs serve --dev-addr 0.0.0.0:8000
+```
+
+- `mkdocs serve` watches `docs/` and `mkdocs.yml` and will automatically rebuild and trigger a browser reload when files change. Edit files under `docs/` for immediate live reload.
+- If you prefer to keep `README.md` as the canonical homepage source, you can run a tiny watcher that copies `README.md` to `docs/index.md` on every save. A minimal script example is provided in the developer notes; running it in the container alongside `mkdocs serve` will keep the homepage in sync without restarting the server.
+
+If you run into strict-mode build errors, fix the reported nav/link issues or run a non-strict build for quick previews:
+
+```bash
+mkdocs build    # build site to ./site
+mkdocs serve    # serve without strict build
+```
+
