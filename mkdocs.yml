@@ -30,12 +30,15 @@ nav:
       - Display: design/display-design.md
       - Configuration: design/config-design.md
       - Startup test: design/startup-test-design.md
-    - Planning:
-      - Features: planning/Features-intended.md
     - Tests:
       - Config tests: test/config-tests.md
+    - Planning:
+      - Features: planning/Features-intended.md
   - Workshop:
     - Overview: workshop/README.md
+    - Prerequisites: workshop/prerequisites.md
+    - Getting Started Hardware: workshop/hardwaresetup.md
+    - Getting Started Software: workshop/gettingstartet.md
     - Exercises: workshop/exercises.md
   - API: api/README.md
   - Legal:
@@ -53,7 +56,6 @@ extra:
       link: https://github.com/enthali/esp32-distance
   generator: false
 
-  
 copyright: |
   &copy; 2025 Georg Doll - 
   <a href="/legal/impressum/">Impressum</a> | 
