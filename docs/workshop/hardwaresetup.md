@@ -38,10 +38,10 @@ This guide explains the hardware required for the ESP32 Distance Sensor Workshop
     |   5V   -----------+---------+--- 5V                   |
     |   GND  -----------+---------+--- GND                  |
     |                   |         |                         |
-    |   TX   -----------+--\   /--+--- RX (GPIO3/U0RXD)     |
+    |   TX   -----------+--\   /--+--- TX (GPIO3/U0RXD)     |
     |                   |   \ /   |                         |
     |                   |   / \   |                         |
-    |   RX   -----------+--/   \--+--- TX (GPIO1/U0TXD)     |
+    |   RX   -----------+--/   \--+--- RX (GPIO1/U0TXD)     |
     |                   |         |                         |
     +-------------------+         +-------------------------+
 ```
