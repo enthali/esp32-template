@@ -38,6 +38,8 @@ ENV/
 # Temporary files
 *.tmp
 *.temp
+temp/
+tmp/
 
 # ESP-IDF specific
 managed_components/
