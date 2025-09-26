@@ -39,7 +39,9 @@ static bool is_initialized = false;
 
 // Rate limiting for terminal output
 static uint64_t last_display_time = 0;
-static const uint64_t DISPLAY_INTERVAL_US = 1000000; // 1 second
+static const uint64_t DISPLAY_INTERVAL_US = 500000; // 0.5 second
+// Optional status text appended to simulated display (small buffer)
+static char status_text[64] = "";
 
 // Predefined color constants - same as hardware
 const led_color_t LED_COLOR_RED = {255, 0, 0};
@@ -222,13 +224,31 @@ esp_err_t led_show(void)
     last_display_time = now;
 
     // Display LED strip state using emoji blocks
-    printf("\n[LED Strip]: ");
+    printf("[LED Strip]: ");
     for (uint16_t i = 0; i < current_config.led_count; i++) {
         printf("%s", color_to_emoji(led_buffer[i]));
+    }
+
+    // Append current measurement (if available) to the end of the line
+    if (status_text[0] != '\0') {
+        printf("  %s", status_text);
     }
     printf("\n");
     fflush(stdout); // Ensure immediate output
     
+    return ESP_OK;
+}
+
+esp_err_t led_controller_set_status_text(const char *text)
+{
+    if (text == NULL) {
+        status_text[0] = '\0';
+        return ESP_OK;
+    }
+
+    // Truncate to buffer size - 1
+    strncpy(status_text, text, sizeof(status_text) - 1);
+    status_text[sizeof(status_text) - 1] = '\0';
     return ESP_OK;
 }
 

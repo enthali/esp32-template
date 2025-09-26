@@ -46,13 +46,18 @@ static uint32_t queue_overflow_counter = 0;
 
 // Simulation state
 static uint16_t sim_distance = 50;  // Start at 5.0cm (50mm)
-static int8_t direction = 1;        // 1 = increasing, -1 = decreasing
+// use step of 5mm and a direction sign (+1/-1)
+static int16_t step_mm = 4;
+static int8_t dir_sign = 1;        // +1 = increasing, -1 = decreasing
+
+// Last processed measurement snapshot (non-consuming)
+static distance_measurement_t last_processed_measurement = {0};
 
 // Default configuration - same as hardware
 static const distance_sensor_config_t default_config = {
     .trigger_pin = GPIO_NUM_14,     // Ignored in simulator
     .echo_pin = GPIO_NUM_13,        // Ignored in simulator
-    .measurement_interval_ms = 2000, // 1 second for clear animation
+    .measurement_interval_ms = 500, // 500 ms default interval
     .timeout_ms = 30,               // Ignored in simulator
     .temperature_c_x10 = 200,       // Ignored in simulator
     .smoothing_factor = 300         // Ignored in simulator
@@ -66,18 +71,29 @@ static const distance_sensor_config_t default_config = {
  */
 static void distance_sensor_task(void *pvParameters)
 {
-    ESP_LOGI(TAG, "Distance sensor simulator started (5cm→60cm→5cm sweep, interval: %lu ms)",
-             sensor_config.measurement_interval_ms);
+    ESP_LOGD(TAG, "Distance sensor simulator started (5cm→60cm→5cm sweep, step: %d mm, interval: %lu ms)",
+             step_mm, sensor_config.measurement_interval_ms);
 
     while (1)
     {
-        // Animate distance: 5cm (50mm) → 55cm (550mm) → 5cm (50mm)
-        sim_distance += direction;
+        // Animate distance: 5cm (50mm) → 60cm (600mm) → 5cm (50mm)
+        // Advance by step_mm in current direction
+        if (dir_sign > 0) {
+            sim_distance += step_mm;
+        } else {
+            // avoid underflow on unsigned
+            if (sim_distance > (uint16_t)step_mm) {
+                sim_distance -= step_mm;
+            } else {
+                sim_distance = 50;
+            }
+        }
 
-        if (sim_distance >= 550) {  // 55.0cm = 550mm
-            direction = -2;
+        // Flip direction at boundaries
+        if (sim_distance >= 600) {  // 60.0cm = 600mm
+            dir_sign = -1;
         } else if (sim_distance <= 50) {  // 5.0cm = 50mm  
-            direction = 2;
+            dir_sign = 1;
         }
 
         // Create simulated measurement
@@ -100,9 +116,12 @@ static void distance_sensor_task(void *pvParameters)
             }
         }
 
-        ESP_LOGI(TAG, "Simulated distance: %.1f cm (%s)", 
-                 sim_distance / 10.0, 
-                 direction > 0 ? "increasing" : "decreasing");
+        // Update last snapshot
+        last_processed_measurement = sim_data;
+
+        ESP_LOGD(TAG, "Simulated distance: %.1f cm (%s)", 
+             sim_distance / 10.0, 
+             dir_sign > 0 ? "increasing" : "decreasing");
 
         // Sleep for configured interval
         vTaskDelay(pdMS_TO_TICKS(sensor_config.measurement_interval_ms));
@@ -127,6 +146,7 @@ esp_err_t distance_sensor_init(const distance_sensor_config_t *config)
         sensor_config = default_config;
     }
 
+
     // Create processed measurement queue
     processed_measurement_queue = xQueueCreate(PROCESSED_QUEUE_SIZE, sizeof(distance_measurement_t));
     if (processed_measurement_queue == NULL)
@@ -136,7 +156,7 @@ esp_err_t distance_sensor_init(const distance_sensor_config_t *config)
     }
 
     is_initialized = true;
-    ESP_LOGI(TAG, "Distance sensor simulator initialized successfully");
+    ESP_LOGD(TAG, "Distance sensor simulator initialized successfully");
     return ESP_OK;
 }
 
@@ -250,7 +270,7 @@ esp_err_t distance_sensor_monitor(void)
         return ESP_ERR_INVALID_STATE;
     }
     
-    ESP_LOGI(TAG, "Distance sensor simulator status: running, queue overflow count: %lu", 
+    ESP_LOGD(TAG, "Distance sensor simulator status: running, queue overflow count: %lu", 
              queue_overflow_counter);
     
     return ESP_OK;
