@@ -8,12 +8,29 @@ theme:
     accent: indigo
   features:
     - navigation.footer
+    - content.full_width
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.details
+  - pymdownx.highlight
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10.9.1/dist/mermaid.min.js
+  - javascripts/mermaid-init.js
 
 nav:
   - Home: README.md
   - Documentation:
     - Architecture: 
       - Overview: architecture/README.md
+    - Known Limitations: known-limitations.md
     - Requirements: 
       - Overview: requirements/README.md
       - System: requirements/system-requirements.md

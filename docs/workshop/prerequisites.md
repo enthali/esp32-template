@@ -1,12 +1,14 @@
 
 # Workshop Prerequisites
 
-## SW and Licenses
+## 🖥️ SW and Licenses
 
 
 - **A Supported Browser**
 
-    To use browser-based serial port access and the ESP-IDF Web extension, you must use a browser that supports the Web Serial API. Supported browsers include the latest versions of **Google Chrome**, **Microsoft Edge**, **Opera**, and **Arc Browser**. Firefox, Safari, and most mobile browsers are **not supported** for direct device communication. For the best experience, use Chrome or Edge on desktop.
+    To use browser-based serial port access and the ESP-IDF Web extension, you must use a browser that supports the Web Serial API. **Supported browsers** include the latest versions of **Google Chrome**, **Microsoft Edge**, **Opera**, and **Arc Browser**.
+    
+    Firefox, Safari, and most mobile browsers are **not supported** for direct device communication. For the best experience, use Chrome or Edge on desktop.
 
 - **GitHub Account**
 
@@ -16,17 +18,16 @@
 
     GitHub Copilot is an AI-powered coding assistant that helps you write code faster and with fewer errors by providing real-time code suggestions, explanations, and even generating entire functions or files. It is integrated into VS Code and Codespaces, making it easy to use during the workshop.
 
-    For most workshop tasks, the free tier of Copilot is sufficient. However, to access advanced features such as the Copilot Chat (coding agent) and more interactive AI assistance, you will need at least a GitHub Copilot Pro subscription. The Pro subscription is available as a 30-day free trial, allowing you to fully explore Copilot's capabilities during the workshop without any cost.
+    For most workshop tasks, the free tier of Copilot is sufficient you can use Chat, Edit and Agent mode in VSCode. However, to access advanced features such as the Copilot coding agent, you will need at least a GitHub Copilot Pro subscription. The Pro subscription is available as a 30-day free trial, allowing you to fully explore Copilot's capabilities during the workshop without any cost.
 
 - **GitHub Codespaces**
 
     GitHub Codespaces provides a cloud-based development environment pre-configured for this project. It allows you to start coding instantly in your browser or VS Code, with all dependencies (ESP-IDF, toolchain, libraries) already set up. No local installation is required. 
 
-- **ESP-IDF (Espressif IoT Development Framework)** - is preintegrated in the project codespace, no seperate download required
 
-    The official development framework for ESP32 and ESP32-S series chips. ESP-IDF provides all necessary tools, libraries, and APIs for embedded development, including FreeRTOS, WiFi/Bluetooth stacks, and peripheral drivers. The workshop uses ESP-IDF v5.4.1, which is pre-installed in the Codespace/Dev Container. No manual installation is required if using Codespaces or the provided container;
+**Everything else is provided inside the preconfigured Codespaces working environment.**
 
-## Hardware
+## 🛠️ Hardware
 
 - **ESP32 WROOM-32F Development Board**
 
