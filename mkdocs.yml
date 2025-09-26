@@ -31,6 +31,7 @@ nav:
       - Configuration: design/config-design.md
       - Startup test: design/startup-test-design.md
     - Tests:
+      - Emulator: emulator-support.md
       - Config tests: test/config-tests.md
     - Planning:
       - Features: planning/Features-intended.md
