@@ -52,7 +52,7 @@ static int8_t direction = 1;        // 1 = increasing, -1 = decreasing
 static const distance_sensor_config_t default_config = {
     .trigger_pin = GPIO_NUM_14,     // Ignored in simulator
     .echo_pin = GPIO_NUM_13,        // Ignored in simulator
-    .measurement_interval_ms = 1000, // 1 second for clear animation
+    .measurement_interval_ms = 2000, // 1 second for clear animation
     .timeout_ms = 30,               // Ignored in simulator
     .temperature_c_x10 = 200,       // Ignored in simulator
     .smoothing_factor = 300         // Ignored in simulator
@@ -71,13 +71,13 @@ static void distance_sensor_task(void *pvParameters)
 
     while (1)
     {
-        // Animate distance: 5cm (50mm) → 60cm (600mm) → 5cm (50mm)
+        // Animate distance: 5cm (50mm) → 55cm (550mm) → 5cm (50mm)
         sim_distance += direction;
-        
-        if (sim_distance >= 600) {  // 60.0cm = 600mm
-            direction = -1;
+
+        if (sim_distance >= 550) {  // 55.0cm = 550mm
+            direction = -2;
         } else if (sim_distance <= 50) {  // 5.0cm = 50mm  
-            direction = 1;
+            direction = 2;
         }
 
         // Create simulated measurement
