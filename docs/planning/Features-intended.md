@@ -7,7 +7,7 @@ This document contains **unnumbered** feature intentions that may or may not be 
 ### Workshop (1.5h): GitHub Codespaces & Copilot Demo 🛠️ **(currently in development)**
 
 - **Introduction & Setup**: Quick overview of the ESP32 Distance Project and Codespaces environment.
-- **Codespaces Walkthrough**: Launching, configuring, and navigating a Codespace for embedded development.
+- **Codespaces Walkthrough**: Launching, configuring, and navigating a Codespace for embedded development. Compiling for emulation and target device
 - **Copilot in Action**: Live coding session—using Copilot to scaffold ESP32 components and documentation.
 - **Collaborative Coding**: Pair programming and code review using Codespaces and Copilot suggestions.
 - **Q&A and Best Practices**: Discussing workflow tips, troubleshooting, and integrating Copilot into daily development.

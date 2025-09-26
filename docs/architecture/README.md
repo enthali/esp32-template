@@ -10,22 +10,21 @@ The project is an IoT device based on the ESP32 WROOM-32F microcontroller. It me
 
 ```mermaid
 flowchart TD
-    subgraph ESP32 MCU
-        A[Distance Sensor Component<br>(HC-SR04)]
-        B[LED Controller Component<br>(WS2812)]
-        C[WiFi Manager<br>(AP/STA, Captive Portal)]
-        D[Web Server<br>(HTTP/HTTPS)]
-        E[DNS Server<br>(Captive Portal)]
-        F[Main Application<br>(FreeRTOS Tasks)]
-    end
-    A -- Distance Data --> F
-    F -- LED Updates --> B
-    F -- WiFi Events --> C
-    C -- Network Events --> F
-    C -- HTTP Requests --> D
-    D -- Web UI/API --> User
-    E -- DNS Requests --> User
+    A[Distance Sensor <br> HC-SR04]
+    B[LED Controller <br> WS2812]
+    C[WiFi Manager <br> AP/STA, Captive Portal]
+    D[Web Server <br> HTTP/HTTPS]
+    E[DNS Server <br> Captive Portal]
+    F[Main Application <br> FreeRTOS Tasks]
     User((User Devices))
+
+    A -->|Distance Data| F
+    F -->|LED Updates| B
+    F -->|WiFi Events| C
+    C -->|Network Events| F
+    C -->|HTTP Requests| D
+    D -->|Web UI/API| User
+    E -->|DNS Requests| User
 ```
 
 ## Key Components
