@@ -225,7 +225,8 @@ esp_err_t led_show(void)
     if (status_text[0] != '\0') {
         printf("  %s", status_text);
     }
-    printf("\r");
+    // printf("\r"); // would be nicer ;)
+    printf("\n");
     fflush(stdout); // Ensure immediate output
     
     return ESP_OK;
