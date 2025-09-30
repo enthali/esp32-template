@@ -62,15 +62,9 @@ Be sure to review the updated requirements and design documents. The Coding Agen
 You may wonder why this is the case, as there was nothing in the prompt explicitly asking Copilot to do so.
 
 Well, there is:
-**Coding Guidelines Reminder**
 
-> **Note:** All implementation and documentation changes must follow the project's [ESP32 Coding Standards](../../.github/prompt-snippets/esp32-coding-standards.md) and [commit message guidelines](../../.github/prompt-snippets/commit-message.md).  
->
-> - Use component-based architecture—do not place new logic in `main.c`.
-> - Reference requirement IDs in code comments for traceability.
-> - Document GPIO usage and timing constraints for new LED patterns.
-> - Ensure robust error handling and memory management as described in the guidelines.
-> - Before submitting your solution, review the [development workflow](../../.github/prompt-snippets/development.md) to ensure your changes meet project standards.
+All implementation and documentation changes must follow the project's ESP32 Coding Standards and commit message guidelines.  
+
 
 Check them out in `.github/`.
 
@@ -97,4 +91,3 @@ Not only single-file actions can be handled by the Coding Agent. This project pr
 ## Exercise C: LED Animation on the Website
 
 Let me know who gets this done first!
-I'm happy to review your pull request and merge it into the project!

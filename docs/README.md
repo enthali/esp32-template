@@ -17,7 +17,7 @@ This project brings together the ESP32, an HC-SR04 ultrasonic sensor, and a WS28
 - See your code come to life—literally lighting up!
 
 ## 🛠️ Community & Support
-If you get stuck, don’t hesitate to ask questions, open an [issue](https://github.com/your-org/your-repo/issues), or join the discussion on our [GitHub repository](https://github.com/your-org/your-repo). This is a friendly space for makers, learners, and tinkerers of all levels—everyone is welcome!
+If you get stuck, don’t hesitate to ask questions, open an [issue](https://github.com/enthali/esp32-distance), or join the discussion on our [GitHub repository](https://github.com/enthali/esp32-distance). This is a friendly space for makers, learners, and tinkerers of all levels—everyone is welcome!
 
 **Have fun, experiment, and happy coding!** 🎉
 
