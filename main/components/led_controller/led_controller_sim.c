@@ -27,10 +27,19 @@
 #include "led_controller.h"
 #include "esp_log.h"
 #include "esp_timer.h"
+#include "driver/uart.h"
 #include <string.h>
 #include <stdlib.h>
 
 static const char *TAG = "led_controller_sim";
+
+// UART1 configuration for separate LED visualization channel
+#define LED_UART_NUM UART_NUM_1
+#define LED_UART_TX_PIN 17  // GPIO17 for UART1 TX
+#define LED_UART_RX_PIN 16  // GPIO16 for UART1 RX (not used but required)
+#define LED_UART_BUF_SIZE 512
+
+static bool uart_initialized = false;
 
 // Internal state - same structure as hardware version
 static led_color_t *led_buffer = NULL;
@@ -49,6 +58,53 @@ const led_color_t LED_COLOR_YELLOW = {255, 255, 0};
 const led_color_t LED_COLOR_CYAN = {0, 255, 255};
 const led_color_t LED_COLOR_MAGENTA = {255, 0, 255};
 const led_color_t LED_COLOR_OFF = {0, 0, 0};
+
+/**
+ * @brief Initialize UART1 for LED visualization output
+ * 
+ * Configures UART1 as a separate channel for LED strip visualization,
+ * allowing it to be accessed independently from the main console output.
+ */
+static esp_err_t led_sim_init_uart(void)
+{
+    if (uart_initialized) {
+        return ESP_OK;
+    }
+
+    uart_config_t uart_config = {
+        .baud_rate = 115200,
+        .data_bits = UART_DATA_8_BITS,
+        .parity = UART_PARITY_DISABLE,
+        .stop_bits = UART_STOP_BITS_1,
+        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
+        .source_clk = UART_SCLK_APB,
+    };
+    
+    esp_err_t ret = uart_param_config(LED_UART_NUM, &uart_config);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "UART config failed: %s", esp_err_to_name(ret));
+        return ret;
+    }
+    
+    ret = uart_set_pin(LED_UART_NUM, LED_UART_TX_PIN, LED_UART_RX_PIN, 
+                       UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "UART set pin failed: %s", esp_err_to_name(ret));
+        return ret;
+    }
+    
+    ret = uart_driver_install(LED_UART_NUM, LED_UART_BUF_SIZE * 2, 
+                              LED_UART_BUF_SIZE * 2, 0, NULL, 0);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "UART driver install failed: %s", esp_err_to_name(ret));
+        return ret;
+    }
+    
+    uart_initialized = true;
+    ESP_LOGI(TAG, "UART1 initialized for LED visualization (separate channel)");
+    
+    return ESP_OK;
+}
 
 /**
  * @brief Map RGB color to appropriate emoji block
@@ -110,6 +166,13 @@ esp_err_t led_controller_init(const led_config_t *config)
     {
         ESP_LOGE(TAG, "Invalid LED count: %d", config->led_count);
         return ESP_ERR_INVALID_ARG;
+    }
+
+    // Initialize UART1 for LED visualization
+    esp_err_t ret = led_sim_init_uart();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to initialize UART for LED visualization");
+        return ret;
     }
 
     // Store configuration
@@ -213,21 +276,29 @@ esp_err_t led_show(void)
         return ESP_ERR_INVALID_STATE;
     }
 
-    // Rate limiting - only output ~1x per second to avoid terminal spam
-
-    // Display LED strip state using emoji blocks
-    printf("[LED Strip]: ");
+    // Build LED strip visualization string
+    char output[1024];  // Large enough for 40 LEDs + text
+    int pos = 0;
+    
+    pos += sprintf(output + pos, "[LED Strip]: ");
+    
     for (uint16_t i = 0; i < current_config.led_count; i++) {
-        printf("%s", color_to_emoji(led_buffer[i]));
+        const char* emoji = color_to_emoji(led_buffer[i]);
+        pos += sprintf(output + pos, "%s", emoji);
+        
+        // Safety check to prevent buffer overflow
+        if (pos > sizeof(output) - 100) break;
     }
 
     // Append current measurement (if available) to the end of the line
     if (status_text[0] != '\0') {
-        printf("  %s", status_text);
+        pos += sprintf(output + pos, "  %s", status_text);
     }
-    // printf("\r"); // would be nicer ;)
-    printf("\n");
-    fflush(stdout); // Ensure immediate output
+    
+    pos += sprintf(output + pos, "\n");
+    
+    // Send to UART1 instead of stdout
+    uart_write_bytes(LED_UART_NUM, output, pos);
     
     return ESP_OK;
 }

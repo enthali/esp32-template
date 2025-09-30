@@ -3,8 +3,12 @@ build/
 sdkconfig.old
 dependencies.lock
 
-# IDE files
-.vscode/
+# IDE files - ignore all VS Code files except debug configuration
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/settings.json
+
 .idea/
 .playwright-mcp/
 *.swp
