@@ -45,7 +45,7 @@ cleanup
 
 echo -e "${BLUE}=== ESP32 QEMU Emulator - Dual UART Mode ===${NC}"
 echo -e "${GREEN}UART0:${NC} Main console (idf_monitor on tcp:${QEMU_TCP_PORT})"
-echo -e "${GREEN}UART1:${NC} LED visualization → ${UART1_SOCKET}"
+echo -e "${GREEN}UART1:${NC} IP tunnel → tcp::5556 (for TUN device bridge)"
 echo ""
 
 # Check if firmware files exist
@@ -74,7 +74,7 @@ qemu-system-xtensa \
     -nic user,model=open_eth \
     -nographic \
     -serial tcp::${QEMU_TCP_PORT},server,nowait \
-    -serial unix:${UART1_SOCKET},server,nowait &
+    -serial tcp::5556,server,nowait &
 
 QEMU_PID=$!
 
@@ -92,10 +92,10 @@ echo ""
 echo -e "${YELLOW}========================================${NC}"
 echo -e "${GREEN}UART Channels:${NC}"
 echo -e "  ${BLUE}UART0:${NC} tcp://localhost:${QEMU_TCP_PORT} (logs + monitor)"
-echo -e "  ${BLUE}UART1:${NC} ${UART1_SOCKET} (LED visualization)"
+echo -e "  ${BLUE}UART1:${NC} tcp://localhost:5556 (IP tunnel)"
 echo ""
-echo -e "${YELLOW}To view LED output in another terminal:${NC}"
-echo -e "  ${BLUE}nc -U ${UART1_SOCKET}${NC}"
+echo -e "${YELLOW}To connect TUN bridge in another terminal:${NC}"
+echo -e "  ${BLUE}tools/serial_tun_bridge.py${NC}"
 echo ""
 echo -e "${YELLOW}For GDB debugging in another terminal:${NC}"
 echo -e "  ${BLUE}xtensa-esp32-elf-gdb -ex 'target remote :3333' build/distance.elf${NC}"

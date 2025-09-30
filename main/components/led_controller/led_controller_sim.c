@@ -168,12 +168,16 @@ esp_err_t led_controller_init(const led_config_t *config)
         return ESP_ERR_INVALID_ARG;
     }
 
-    // Initialize UART1 for LED visualization
+    // UART1 initialization disabled - UART1 now used for IP tunnel
+    // LED visualization temporarily disabled
+    // TODO: Re-enable on different channel or via web interface
+    /*
     esp_err_t ret = led_sim_init_uart();
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to initialize UART for LED visualization");
         return ret;
     }
+    */
 
     // Store configuration
     current_config = *config;
@@ -276,6 +280,9 @@ esp_err_t led_show(void)
         return ESP_ERR_INVALID_STATE;
     }
 
+    // LED visualization disabled - UART1 now used for IP tunnel
+    // Silently succeed to maintain API compatibility
+    /*
     // Build LED strip visualization string
     char output[1024];  // Large enough for 40 LEDs + text
     int pos = 0;
@@ -299,6 +306,7 @@ esp_err_t led_show(void)
     
     // Send to UART1 instead of stdout
     uart_write_bytes(LED_UART_NUM, output, pos);
+    */
     
     return ESP_OK;
 }

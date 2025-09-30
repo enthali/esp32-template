@@ -23,6 +23,7 @@ idf_component_register(
         esp_netif 
         nvs_flash 
         json
+        netif_uart_tunnel
     PRIV_REQUIRES 
         main
 )

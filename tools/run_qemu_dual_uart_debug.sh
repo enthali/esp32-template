@@ -97,7 +97,7 @@ qemu-system-xtensa \
     -gdb tcp::${QEMU_GDB_PORT} \
     -S \
     -serial tcp::${QEMU_TCP_PORT},server,nowait \
-    -serial unix:${UART1_SOCKET},server,nowait &
+    -serial tcp::5556,server,nowait &
 
 QEMU_PID=$!
 

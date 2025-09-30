@@ -1,15 +1,14 @@
 /**
  * @file wifi_manager_sim.c
- * @brief Simulator stub for wifi_manager - provides same API without using WiFi/NVS
+ * @brief Simulator stub for wifi_manager - uses UART IP tunnel instead of WiFi
  *
- * This implementation is selected during emulator builds and avoids calling
- * hardware/network drivers. It emulates basic behavior for the rest of the
- * application (init/start/stop/get_status/set_credentials/etc.) without
- * side effects.
+ * This implementation is selected during emulator builds and uses a UART-based
+ * IP tunnel to provide network connectivity in QEMU without WiFi emulation.
  */
 
 #include "wifi_manager.h"
 #include "web_server.h"
+#include "netif_uart_tunnel_sim.h"
 #include "esp_err.h"
 #include "esp_log.h"
 #include <string.h>
@@ -22,7 +21,7 @@ static const char *TAG = "wifi_manager_sim";
 
 static wifi_manager_mode_t sim_mode = WIFI_MODE_DISCONNECTED;
 static wifi_credentials_t sim_credentials = {0};
-static char sim_ip[16] = "192.168.4.2"; // default AP-like address
+static char sim_ip[16] = "192.168.100.2"; // IP address for UART tunnel
 static bool netif_initialized = false;
 
 esp_err_t wifi_manager_init(void)
@@ -63,15 +62,29 @@ esp_err_t wifi_manager_init(void)
 
 esp_err_t wifi_manager_start(void)
 {
-    ESP_LOGI(TAG, "Starting WiFi manager simulator");
+    ESP_LOGI(TAG, "Starting WiFi manager simulator with UART IP tunnel");
     
-    // In emulator we just enter AP mode so web server can operate
-    sim_mode = WIFI_MODE_AP_ACTIVE;
+    // Initialize UART-based IP tunnel
+    netif_uart_tunnel_config_t tunnel_config = {
+        .hostname = "esp32-distance",
+        .ip_addr = {192, 168, 100, 2},
+        .netmask = {255, 255, 255, 0},
+        .gateway = {192, 168, 100, 1}
+    };
     
-    // Start the webserver (this was missing!)
-    ESP_LOGI(TAG, "Starting web server in simulator mode");
+    esp_err_t ret = netif_uart_tunnel_init(&tunnel_config);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to initialize UART tunnel: %s", esp_err_to_name(ret));
+        return ret;
+    }
+    
+    // Update simulated mode
+    sim_mode = WIFI_MODE_STA_CONNECTED;  // Pretend we're connected
+    
+    // Start the webserver
+    ESP_LOGI(TAG, "Starting web server on UART tunnel interface");
     web_server_config_t web_config = WEB_SERVER_DEFAULT_CONFIG();
-    esp_err_t ret = web_server_init(&web_config);
+    ret = web_server_init(&web_config);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to initialize web server: %s", esp_err_to_name(ret));
         return ret;
@@ -83,7 +96,7 @@ esp_err_t wifi_manager_start(void)
         return ret;
     }
     
-    ESP_LOGI(TAG, "Web server started on %s", sim_ip);
+    ESP_LOGI(TAG, "UART tunnel active: IP %s, access via host TUN device", sim_ip);
     return ESP_OK;
 }
 
@@ -91,6 +104,7 @@ esp_err_t wifi_manager_stop(void)
 {
     ESP_LOGI(TAG, "Stopping WiFi manager simulator");
     web_server_stop();
+    netif_uart_tunnel_deinit();
     sim_mode = WIFI_MODE_DISCONNECTED;
     return ESP_OK;
 }
