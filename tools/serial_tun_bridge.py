@@ -300,45 +300,57 @@ class SerialTunBridge:
             self.tun = None
 
     def run(self):
-        """Main bridge loop"""
+        """Main bridge loop with automatic reconnection"""
         # Setup signal handlers
         signal.signal(signal.SIGINT, lambda s, f: self.cleanup())
         signal.signal(signal.SIGTERM, lambda s, f: self.cleanup())
         
-        # Create TUN device
+        # Create TUN device (only once)
         if not self.create_tun_device():
             logger.error("Failed to create TUN device")
             return 1
         
-        # Connect to serial
-        self.serial_sock = self.connect_to_serial()
-        if not self.serial_sock:
-            self.cleanup()
-            return 1
-        
-        logger.info("Bridge active. Press Ctrl+C to stop.")
-        logger.info(f"ESP32 should be accessible at {ESP32_IP}")
-        
         self.running = True
         
-        # Main loop
+        # Main loop with reconnection
         while self.running:
-            # Wait for data on either serial or TUN
-            rlist = [self.serial_sock, self.tun]
-            readable, _, _ = select.select(rlist, [], [], 1.0)
+            # Connect (or reconnect) to serial
+            self.serial_sock = self.connect_to_serial()
+            if not self.serial_sock:
+                logger.error("Failed to connect to serial, retrying...")
+                import time
+                time.sleep(2)
+                continue
             
-            for r in readable:
-                if r == self.serial_sock:
-                    if not self.serial_to_tun():
-                        logger.error("Serial connection lost")
-                        self.running = False
-                        break
+            logger.info("Bridge active. Press Ctrl+C to stop.")
+            logger.info(f"ESP32 should be accessible at {ESP32_IP}")
+            
+            # Bridge loop for this connection
+            while self.running:
+                # Wait for data on either serial or TUN
+                rlist = [self.serial_sock, self.tun]
+                readable, _, _ = select.select(rlist, [], [], 1.0)
                 
-                elif r == self.tun:
-                    if not self.tun_to_serial():
-                        logger.error("TUN device error")
-                        self.running = False
-                        break
+                for r in readable:
+                    if r == self.serial_sock:
+                        if not self.serial_to_tun():
+                            logger.warning("Serial connection lost, reconnecting...")
+                            try:
+                                self.serial_sock.close()
+                            except:
+                                pass
+                            self.serial_sock = None
+                            break
+                    
+                    elif r == self.tun:
+                        if not self.tun_to_serial():
+                            logger.error("TUN device error")
+                            self.running = False
+                            break
+                
+                # If serial_sock is None, break inner loop to reconnect
+                if self.serial_sock is None:
+                    break
         
         self.cleanup()
         return 0
