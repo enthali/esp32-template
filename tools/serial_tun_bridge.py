@@ -49,6 +49,13 @@ TUN_NETMASK = '255.255.255.0'
 ESP32_IP = '192.168.100.2'
 MAX_FRAME_SIZE = 1500
 
+# Ethernet Header Constants (for lwIP compatibility)
+# ESP32 lwIP expects Ethernet frames, but TUN gives us raw IP packets
+ETH_HEADER_SIZE = 14
+HOST_MAC = bytes([0x02, 0x00, 0x00, 0x00, 0x00, 0x01])  # Fake MAC for host
+ESP32_MAC = bytes([0x02, 0x00, 0x00, 0x00, 0x00, 0x02])  # Fake MAC for ESP32
+ETH_TYPE_IP = 0x0800  # EtherType for IPv4
+
 # TUN device handling
 try:
     from pytun import TunTapDevice, IFF_TUN, IFF_NO_PI
@@ -64,39 +71,46 @@ class SerialTunBridge:
         self.running = False
 
     def create_tun_device_manual(self):
-        """Create TUN device manually using system commands"""
+        """Create TUN device manually using ioctl and system commands"""
         import subprocess
+        import fcntl
+        import struct
         
         logger.info(f"Creating TUN device {TUN_NAME} manually...")
         
-        # Create TUN device
-        ret = subprocess.call(['ip', 'tuntap', 'add', 'dev', TUN_NAME, 'mode', 'tun'])
-        if ret != 0:
-            logger.error(f"Failed to create TUN device (exit code {ret})")
+        # Open /dev/net/tun
+        try:
+            tun_fd = os.open('/dev/net/tun', os.O_RDWR)
+        except Exception as e:
+            logger.error(f"Failed to open /dev/net/tun: {e}")
             return None
         
-        # Set IP address
+        # Configure TUN device using ioctl
+        IFF_TUN = 0x0001
+        IFF_NO_PI = 0x1000
+        TUNSETIFF = 0x400454ca
+        
+        try:
+            ifr = struct.pack('16sH', TUN_NAME.encode(), IFF_TUN | IFF_NO_PI)
+            fcntl.ioctl(tun_fd, TUNSETIFF, ifr)
+        except Exception as e:
+            logger.error(f"Failed to configure TUN device: {e}")
+            os.close(tun_fd)
+            return None
+        
+        # Set IP address and bring up
         ret = subprocess.call(['ip', 'addr', 'add', f'{TUN_IP}/24', 'dev', TUN_NAME])
         if ret != 0:
             logger.warning(f"Failed to set IP address (may already exist)")
         
-        # Bring interface up
         ret = subprocess.call(['ip', 'link', 'set', TUN_NAME, 'up'])
         if ret != 0:
             logger.error(f"Failed to bring up TUN device")
-            subprocess.call(['ip', 'tuntap', 'del', 'dev', TUN_NAME, 'mode', 'tun'])
+            os.close(tun_fd)
             return None
         
         logger.info(f"TUN device {TUN_NAME} created: {TUN_IP}/24")
-        
-        # Open TUN device for reading/writing
-        try:
-            tun_fd = os.open(f'/dev/net/tun', os.O_RDWR)
-            return tun_fd
-        except Exception as e:
-            logger.error(f"Failed to open TUN device: {e}")
-            subprocess.call(['ip', 'tuntap', 'del', 'dev', TUN_NAME, 'mode', 'tun'])
-            return None
+        return tun_fd
 
     def create_tun_device(self):
         """Create and configure TUN device"""
@@ -139,31 +153,30 @@ class SerialTunBridge:
             self.tun = TunDevice(tun_fd)
             return self.tun
 
-    def connect_serial(self):
-        """Connect to QEMU UART TCP socket"""
+    def connect_to_serial(self):
+        """Connect to QEMU UART TCP socket - retry forever"""
         logger.info(f"Connecting to QEMU UART at {SERIAL_HOST}:{SERIAL_PORT}...")
         
-        max_retries = 10
-        for attempt in range(max_retries):
+        attempt = 0
+        while True:  # Retry forever
             try:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 sock.connect((SERIAL_HOST, SERIAL_PORT))
-                logger.info(f"Connected to QEMU UART")
+                logger.info(f"Connected to QEMU UART (after {attempt} attempts)")
                 return sock
             except ConnectionRefusedError:
-                if attempt < max_retries - 1:
-                    logger.warning(f"Connection refused, retrying ({attempt+1}/{max_retries})...")
-                    import time
-                    time.sleep(1)
-                else:
-                    logger.error(f"Failed to connect after {max_retries} attempts")
-                    return None
+                attempt += 1
+                if attempt == 1 or attempt % 10 == 0:  # Log first and every 10th attempt
+                    logger.warning(f"Connection refused, retrying... (attempt {attempt})")
+                import time
+                time.sleep(1)
             except Exception as e:
                 logger.error(f"Failed to connect to serial: {e}")
-                return None
+                import time
+                time.sleep(1)
 
     def serial_to_tun(self):
-        """Read frame from serial and write to TUN"""
+        """Read Ethernet frame from serial, extract IP packet, write to TUN"""
         try:
             # Read frame length (2 bytes, big-endian)
             len_data = self.serial_sock.recv(2)
@@ -172,22 +185,46 @@ class SerialTunBridge:
             
             frame_len = struct.unpack('>H', len_data)[0]
             
-            if frame_len == 0 or frame_len > MAX_FRAME_SIZE:
+            if frame_len == 0 or frame_len > MAX_FRAME_SIZE + ETH_HEADER_SIZE:
                 logger.warning(f"Invalid frame length: {frame_len}")
                 return True
             
-            # Read frame data
-            frame_data = b''
-            while len(frame_data) < frame_len:
-                chunk = self.serial_sock.recv(frame_len - len(frame_data))
+            # Read Ethernet frame
+            eth_frame = b''
+            while len(eth_frame) < frame_len:
+                chunk = self.serial_sock.recv(frame_len - len(eth_frame))
                 if not chunk:
                     return False
-                frame_data += chunk
+                eth_frame += chunk
             
-            logger.debug(f"Serial→TUN: {frame_len} bytes")
+            logger.info(f"Serial→TUN: Received {frame_len} bytes Ethernet frame")
             
-            # Write to TUN
-            self.tun.write(frame_data)
+            # Strip Ethernet header (14 bytes) to get IP packet
+            if frame_len < ETH_HEADER_SIZE:
+                logger.warning(f"Frame too short for Ethernet header: {frame_len}")
+                return True
+                
+            ip_packet = eth_frame[ETH_HEADER_SIZE:]
+            ip_len = len(ip_packet)
+            
+            # Log packet info
+            src_ip = "?"
+            dst_ip = "?"
+            protocol = "?"
+            if ip_len >= 20:  # Minimum IP header
+                try:
+                    version = (ip_packet[0] >> 4) & 0xF
+                    if version == 4:
+                        src_ip = ".".join(str(b) for b in ip_packet[12:16])
+                        dst_ip = ".".join(str(b) for b in ip_packet[16:20])
+                        protocol = ip_packet[9]
+                except:
+                    pass
+            
+            logger.info(f"Serial→TUN: {ip_len} bytes IP, proto={protocol}, {src_ip}→{dst_ip}")
+            
+            # Write IP packet to TUN
+            self.tun.write(ip_packet)
             
             return True
             
@@ -196,23 +233,45 @@ class SerialTunBridge:
             return False
 
     def tun_to_serial(self):
-        """Read frame from TUN and write to serial"""
+        """Read IP packet from TUN, add Ethernet header, write to serial"""
         try:
-            # Read from TUN (blocking)
-            frame_data = self.tun.read(MAX_FRAME_SIZE)
+            # Read from TUN (raw IP packet)
+            ip_packet = self.tun.read(MAX_FRAME_SIZE)
             
-            if not frame_data:
+            if not ip_packet:
                 return True
             
-            frame_len = len(frame_data)
-            logger.debug(f"TUN→Serial: {frame_len} bytes")
+            ip_len = len(ip_packet)
+            
+            # Log packet info
+            src_ip = "?"
+            dst_ip = "?"
+            protocol = "?"
+            if ip_len >= 20:  # Minimum IP header
+                try:
+                    version = (ip_packet[0] >> 4) & 0xF
+                    if version == 4:
+                        src_ip = ".".join(str(b) for b in ip_packet[12:16])
+                        dst_ip = ".".join(str(b) for b in ip_packet[16:20])
+                        protocol = ip_packet[9]
+                except:
+                    pass
+            
+            logger.info(f"TUN→Serial: {ip_len} bytes IP, proto={protocol}, {src_ip}→{dst_ip}")
+            
+            # Build Ethernet frame: [Dest MAC][Src MAC][EtherType][IP Packet]
+            eth_header = ESP32_MAC + HOST_MAC + struct.pack('>H', ETH_TYPE_IP)
+            eth_frame = eth_header + ip_packet
+            frame_len = len(eth_frame)
+            
+            logger.info(f"TUN→Serial: Added Ethernet header, total {frame_len} bytes")
             
             # Send length header (big-endian)
             len_data = struct.pack('>H', frame_len)
             self.serial_sock.sendall(len_data)
             
-            # Send frame data
-            self.serial_sock.sendall(frame_data)
+            # Send Ethernet frame
+            self.serial_sock.sendall(eth_frame)
             
             return True
             
@@ -252,7 +311,7 @@ class SerialTunBridge:
             return 1
         
         # Connect to serial
-        self.serial_sock = self.connect_serial()
+        self.serial_sock = self.connect_to_serial()
         if not self.serial_sock:
             self.cleanup()
             return 1
