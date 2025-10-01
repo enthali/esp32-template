@@ -30,6 +30,7 @@
 #include "lwip/err.h"
 #include "lwip/tcpip.h"
 #include <string.h>
+#include <stdlib.h>
 
 static const char *TAG = "netif_uart_tunnel";
 
@@ -57,6 +58,7 @@ static uint32_t s_tx_count = 0;
 static esp_netif_t *s_netif_handle = NULL;
 static TaskHandle_t s_rx_task_handle = NULL;
 static bool s_initialized = false;
+static esp_netif_driver_base_t *s_driver_base = NULL;
 
 /**
  * @brief UART RX task - receives frames and injects into lwIP
@@ -75,6 +77,7 @@ static void uart_rx_task(void *arg)
     // Flush any garbage data in UART buffer
     uart_flush(UART_NUM);
     ESP_LOGI(TAG, "UART buffer flushed, waiting for stable connection...");
+    //TODO: why is here a task delay?
     vTaskDelay(pdMS_TO_TICKS(1000));  // Wait 1 second for things to settle
 
     while (1) {
@@ -121,9 +124,9 @@ static void uart_rx_task(void *arg)
             ESP_LOGI(TAG, "  [%02d]: %s", i, hex_str);
         }
 
-        // Inject packet into lwIP using tcpip_input (thread-safe)
+        // Inject packet into lwIP using esp_netif_receive helper
         if (s_netif_handle != NULL) {
-            ESP_LOGI(TAG, "RX: Injecting %d bytes into lwIP via tcpip_input...", frame_len);
+            ESP_LOGI(TAG, "RX: Injecting %d bytes into lwIP via esp_netif_receive...", frame_len);
             
             // Get the lwIP netif from esp_netif
             struct netif *lwip_netif = esp_netif_get_netif_impl(s_netif_handle);
@@ -138,20 +141,10 @@ static void uart_rx_task(void *arg)
                      (lwip_netif->flags & NETIF_FLAG_UP) ? 1 : 0,
                      (lwip_netif->flags & NETIF_FLAG_LINK_UP) ? 1 : 0);
             
-            // Allocate pbuf and copy data
-            struct pbuf *p = pbuf_alloc(PBUF_RAW, frame_len, PBUF_RAM);
-            if (p == NULL) {
-                ESP_LOGE(TAG, "Failed to allocate pbuf");
-                continue;
-            }
-            
-            memcpy(p->payload, frame_buffer, frame_len);
-            
-            // Feed to lwIP using tcpip_input (thread-safe, queues to TCP/IP thread)
-            err_t err = tcpip_input(p, lwip_netif);
-            if (err != ERR_OK) {
-                ESP_LOGW(TAG, "tcpip_input failed: %d", err);
-                pbuf_free(p);
+            // Feed to esp_netif - it takes ownership of the buffer contents
+            esp_err_t err = esp_netif_receive(s_netif_handle, frame_buffer, frame_len, NULL);
+            if (err != ESP_OK) {
+                ESP_LOGW(TAG, "esp_netif_receive failed: %s", esp_err_to_name(err));
             } else {
                 s_rx_count++;
                 ESP_LOGI(TAG, "RX: Packet successfully queued (count=%lu). TX count=%lu", s_rx_count, s_tx_count);
@@ -164,9 +157,80 @@ static void uart_rx_task(void *arg)
 }
 
 /**
- * @brief lwIP output function - sends IP packets to UART
+ * @brief Free RX buffer - no-op since we use stack-allocated buffer
  * 
- * Called by lwIP when it wants to transmit a packet.
+ * This callback is called by esp_netif after processing received data.
+ * Since our frame_buffer in uart_rx_task is stack-allocated (not heap),
+ * we don't need to free anything here.
+ */
+static void driver_free_rx_buffer(void *h, void *buffer)
+{
+    // No-op: frame_buffer is stack-allocated in uart_rx_task
+    // esp_netif calls this after copying data out of our buffer
+}
+
+/**
+ * @brief lwIP linkoutput function - called by lwIP to transmit Ethernet frames
+ * 
+ * This is the LOW-LEVEL output function called by lwIP's Ethernet layer.
+ * It receives a pbuf chain and must transmit the complete Ethernet frame.
+ * 
+ * Called in tcpip_thread context!
+ */
+static err_t netif_linkoutput(struct netif *netif, struct pbuf *p)
+{
+    if (p->tot_len > MAX_FRAME_SIZE) {
+        ESP_LOGE(TAG, "TX: Frame too large: %d bytes", p->tot_len);
+        return ERR_IF;
+    }
+
+    s_tx_count++;
+    ESP_LOGI(TAG, "TX: *** LINKOUTPUT CALLED *** count=%lu, tot_len=%d", s_tx_count, p->tot_len);
+
+    // Allocate temporary buffer for the complete frame
+    uint8_t *frame_buf = (uint8_t *)malloc(p->tot_len);
+    if (frame_buf == NULL) {
+        ESP_LOGE(TAG, "TX: Failed to allocate frame buffer");
+        return ERR_MEM;
+    }
+
+    // Copy pbuf chain into contiguous buffer
+    uint16_t copied = pbuf_copy_partial(p, frame_buf, p->tot_len, 0);
+    if (copied != p->tot_len) {
+        ESP_LOGW(TAG, "TX: pbuf copy incomplete: %d/%d", copied, p->tot_len);
+        free(frame_buf);
+        return ERR_BUF;
+    }
+
+    // Send frame length header (2 bytes, big-endian)
+    uint8_t len_buf[2];
+    len_buf[0] = (p->tot_len >> 8) & 0xFF;
+    len_buf[1] = p->tot_len & 0xFF;
+    
+    int written = uart_write_bytes(UART_NUM, (const char*)len_buf, 2);
+    if (written != 2) {
+        ESP_LOGE(TAG, "TX: Failed to write length header");
+        free(frame_buf);
+        return ERR_IF;
+    }
+
+    // Send frame data
+    written = uart_write_bytes(UART_NUM, (const char*)frame_buf, p->tot_len);
+    free(frame_buf);
+    
+    if (written != p->tot_len) {
+        ESP_LOGE(TAG, "TX: Incomplete write: %d/%d", written, p->tot_len);
+        return ERR_IF;
+    }
+
+    ESP_LOGI(TAG, "TX: Frame sent successfully: %d bytes", p->tot_len);
+    return ERR_OK;
+}
+
+/**
+ * @brief esp_netif transmit function - sends IP packets to UART
+ * 
+ * Called by esp_netif layer (legacy, kept for compatibility).
  */
 static esp_err_t netif_transmit(void *h, void *buffer, size_t len)
 {
@@ -296,19 +360,47 @@ esp_err_t netif_uart_tunnel_init(const netif_uart_tunnel_config_t *config)
         esp_netif_set_hostname(s_netif_handle, config->hostname);
     }
 
-    // Register transmit function
+    // Attach driver with transmit function
+    // Create a driver base structure
+    s_driver_base = (esp_netif_driver_base_t *)malloc(sizeof(esp_netif_driver_base_t));
+    if (s_driver_base == NULL) {
+        ESP_LOGE(TAG, "Failed to allocate driver structure");
+        esp_netif_destroy(s_netif_handle);
+        uart_driver_delete(UART_NUM);
+        return ESP_ERR_NO_MEM;
+    }
+    
+    // Set up driver callbacks
+    s_driver_base->post_attach = NULL;  // No post-attach callback needed
+    
+    // Attach driver to netif
+    ret = esp_netif_attach(s_netif_handle, s_driver_base);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to attach driver: %s", esp_err_to_name(ret));
+        free(s_driver_base);
+        s_driver_base = NULL;
+        esp_netif_destroy(s_netif_handle);
+        uart_driver_delete(UART_NUM);
+        return ret;
+    }
+    
+    // Register transmit function and free_rx_buffer callback
     esp_netif_driver_ifconfig_t driver_cfg = {
-        .handle = s_netif_handle,
+        .handle = s_driver_base,
         .transmit = netif_transmit,
+        .driver_free_rx_buffer = driver_free_rx_buffer,
     };
     
     ret = esp_netif_set_driver_config(s_netif_handle, &driver_cfg);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to set driver config: %s", esp_err_to_name(ret));
+        free(s_driver_base);
+        s_driver_base = NULL;
         esp_netif_destroy(s_netif_handle);
         uart_driver_delete(UART_NUM);
         return ret;
     }
+    ESP_LOGI(TAG, "Driver attached and configured successfully");
 
     // Bring interface up
     esp_netif_action_connected(s_netif_handle, 0, 0, NULL);
@@ -316,8 +408,38 @@ esp_err_t netif_uart_tunnel_init(const netif_uart_tunnel_config_t *config)
     // Set as default interface for routing
     struct netif *lwip_netif = esp_netif_get_netif_impl(s_netif_handle);
     if (lwip_netif != NULL) {
+        // Set our MAC address (ESP32_MAC: 02:00:00:00:00:02)
+        lwip_netif->hwaddr_len = 6;
+        lwip_netif->hwaddr[0] = 0x02;
+        lwip_netif->hwaddr[1] = 0x00;
+        lwip_netif->hwaddr[2] = 0x00;
+        lwip_netif->hwaddr[3] = 0x00;
+        lwip_netif->hwaddr[4] = 0x00;
+        lwip_netif->hwaddr[5] = 0x02;
+        ESP_LOGI(TAG, "Set netif MAC address: 02:00:00:00:00:02");
+        
+        // Configure as Ethernet interface
+        lwip_netif->flags |= NETIF_FLAG_ETHARP | NETIF_FLAG_ETHERNET | NETIF_FLAG_BROADCAST;
+        
+        // Set lwIP callbacks (CRITICAL - without these, netif->input is NULL!)
+        lwip_netif->input = tcpip_input;           // RX path: feeds packets to TCP/IP thread
+        lwip_netif->output = etharp_output;        // TX path: IPv4 with ARP
+        lwip_netif->linkoutput = netif_linkoutput; // LOW-LEVEL TX: called with pbuf to send frame
+        ESP_LOGI(TAG, "Set lwIP netif callbacks (input, output, linkoutput)");
+        
         netif_set_default(lwip_netif);
-        ESP_LOGI(TAG, "Set as default netif for routing");
+        ESP_LOGI(TAG, "Set as default netif for routing");        // Add static ARP entry for gateway (point-to-point, no ARP needed)
+        // Gateway MAC: 02:00:00:00:00:01 (HOST_MAC from bridge)
+        ip4_addr_t gw_ip;
+        struct eth_addr gw_mac = {{0x02, 0x00, 0x00, 0x00, 0x00, 0x01}};
+        memcpy(&gw_ip.addr, config->gateway, 4);
+        
+        err_t arp_err = etharp_add_static_entry(&gw_ip, &gw_mac);
+        if (arp_err == ERR_OK) {
+            ESP_LOGI(TAG, "Added static ARP entry for gateway");
+        } else {
+            ESP_LOGW(TAG, "Failed to add static ARP entry: %d", arp_err);
+        }
     }
 
     // STEP 3: Start RX task with low priority and timeout
@@ -359,6 +481,11 @@ esp_err_t netif_uart_tunnel_deinit(void)
     if (s_netif_handle != NULL) {
         esp_netif_destroy(s_netif_handle);
         s_netif_handle = NULL;
+    }
+
+    if (s_driver_base != NULL) {
+        free(s_driver_base);
+        s_driver_base = NULL;
     }
 
     // STEP 1: Cleanup UART (now initialized)
