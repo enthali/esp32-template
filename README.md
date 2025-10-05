@@ -65,13 +65,23 @@ This project brings together the ESP32, an HC-SR04 ultrasonic sensor, and a WS28
 
 ### 🚀 Quick Start
 1. **Clone the repository**
-2. **Open in GitHub Codespaces** (reccomended) or use a local VSC devcontainer
+2. **Open in GitHub Codespaces** (recommended) or use a local VS Code devcontainer
 3. **Connect ESP32** via USB 
 4. **Build and flash**: `idf.py -p /dev/ttyUSB0 build flash monitor`
 
 > **Note:** The first setup may take a few minutes as the container and toolchain are prepared, but after that, you're ready to build and run your code instantly.
 
-> **Local Dev Container Setup**: For Windows users setting up a local dev container, see .devcontainer/README.md for USB device attachment instructions.
+### 🐛 Debugging & Emulation
+
+**No Hardware? No Problem!** This project includes full QEMU emulation support with GDB debugging:
+
+- **QEMU Emulator** - Test without physical ESP32, includes network simulation
+- **GDB Debugging** - Set breakpoints and step through code in Codespaces
+- **Network Testing** - Full HTTP and TCP/IP support via UART tunnel
+
+See [QEMU Emulator Guide](docs/development/qemu-emulator.md) and [Debugging Guide](docs/development/debugging.md) for details.
+
+> **Local Dev Container Setup**: For Windows users setting up a local dev container, see [Dev Container Documentation](docs/development/devcontainer.md) for USB device attachment instructions.
 
 ### 🏫 Workshop
 

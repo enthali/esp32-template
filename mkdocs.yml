@@ -30,6 +30,12 @@ nav:
   - Documentation:
     - Architecture: 
       - Overview: architecture/README.md
+    - Development:
+      - Overview: development/README.md
+      - Dev Container: development/devcontainer.md
+      - QEMU Emulator: development/qemu-emulator.md
+      - Debugging: development/debugging.md
+      - Network Internals: development/qemu-network-internals.md
     - Known Limitations: known-limitations.md
     - Requirements: 
       - Overview: requirements/README.md

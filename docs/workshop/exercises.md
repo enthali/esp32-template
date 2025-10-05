@@ -64,15 +64,15 @@ You may wonder why this is the case, as there was nothing in the prompt explicit
 Well, there is:
 **Coding Guidelines Reminder**
 
-> **Note:** All implementation and documentation changes must follow the project's [ESP32 Coding Standards](../../.github/prompt-snippets/esp32-coding-standards.md) and [commit message guidelines](../../.github/prompt-snippets/commit-message.md).  
+> **Note:** All implementation and documentation changes must follow the project's coding standards and commit message guidelines found in `.github/prompt-snippets/`.  
 >
 > - Use component-based architecture—do not place new logic in `main.c`.
 > - Reference requirement IDs in code comments for traceability.
 > - Document GPIO usage and timing constraints for new LED patterns.
 > - Ensure robust error handling and memory management as described in the guidelines.
-> - Before submitting your solution, review the [development workflow](../../.github/prompt-snippets/development.md) to ensure your changes meet project standards.
+> - Before submitting your solution, review the development workflow to ensure your changes meet project standards.
 
-Check them out in `.github/`.
+Check them out in `.github/prompt-snippets/` for detailed coding standards, commit message format, and development workflow.
 
 Note that previously, there was no timing behavior for the output LEDs. The Coding Agent not only updated the LED pattern but also implemented a time-based flashing algorithm that does not interfere with the task's blocking call to receive the next measurement from the distance sensor. This ensures the new flashing behavior is robust and does not impact sensor responsiveness.
 
