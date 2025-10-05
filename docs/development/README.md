@@ -57,3 +57,7 @@ idf.py -p /dev/ttyUSB0 flash monitor
 - Want to debug? Check out [Debugging Guide](debugging.md)
 - Curious about QEMU networking? See [QEMU Emulator](qemu-emulator.md)
 - Need technical details? Read [Network Internals](qemu-network-internals.md)
+
+## Known Issues
+
+Unfortunately ESP-IDF-WEB doesn't automatically install. please search the extension in the marketplace and install it.
