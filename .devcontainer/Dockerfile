@@ -10,7 +10,12 @@ ENV LANG=C.UTF-8
 RUN groupadd --gid $USER_GID $CONTAINER_USER \
   && adduser --uid $USER_UID --gid $USER_GID --disabled-password --gecos "" ${CONTAINER_USER} \
   && usermod -a -G root $CONTAINER_USER && usermod -a -G dialout $CONTAINER_USER \
-  && apt-get update && apt-get install -y sudo \
+  && apt-get update && apt-get install -y \
+    sudo \
+    iproute2 \
+    iputils-ping \
+    net-tools \
+    netcat-openbsd \
   && echo "${CONTAINER_USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
   && rm -rf /var/lib/apt/lists/*
 
