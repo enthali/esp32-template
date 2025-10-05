@@ -8,14 +8,15 @@ This guide walks you through all steps needed to prepare for the ESP32 Distance 
 ---
 
 ##  Fork the repository (one-time)
-Start by forking the main repository to your own GitHub account. This gives you a personal copy where you can make changes freely.
+Start by forking [forking](https://github.com/enthali/esp32-distance/fork)the main repository to your own GitHub account. This gives you a personal copy where you can make changes freely.
 
 ![Fork Repository](../assets/images/fork-repro.png)
+[![Fork Repository](../assets/images/fork-repro.png)](https://github.com/enthali/esp32-distance/fork)
 
 Press **"Create a new fork"**.  
 On the next page, simply press **"Create fork"**.
 
-![Fork Repository Screen 2](../assets/images/fork-repro2.png)
+[![Fork Repository Screen 2](../assets/images/fork-repro2.png)](https://github.com/enthali/esp32-distance/fork)
 
 > **Tip:** You only need to fork once. All your workshop work will happen in your fork.
 
