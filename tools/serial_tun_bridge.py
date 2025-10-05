@@ -178,10 +178,13 @@ class SerialTunBridge:
     def serial_to_tun(self):
         """Read Ethernet frame from serial, extract IP packet, write to TUN"""
         try:
-            # Read frame length (2 bytes, big-endian)
-            len_data = self.serial_sock.recv(2)
-            if len(len_data) != 2:
-                return False
+            # Read frame length (2 bytes, big-endian) - MUST read exactly 2 bytes
+            len_data = b''
+            while len(len_data) < 2:
+                chunk = self.serial_sock.recv(2 - len(len_data))
+                if not chunk:
+                    return False
+                len_data += chunk
             
             frame_len = struct.unpack('>H', len_data)[0]
             
@@ -207,10 +210,11 @@ class SerialTunBridge:
             ip_packet = eth_frame[ETH_HEADER_SIZE:]
             ip_len = len(ip_packet)
             
-            # Log packet info
+            # Log packet info with protocol names
             src_ip = "?"
             dst_ip = "?"
             protocol = "?"
+            proto_name = "?"
             if ip_len >= 20:  # Minimum IP header
                 try:
                     version = (ip_packet[0] >> 4) & 0xF
@@ -218,10 +222,15 @@ class SerialTunBridge:
                         src_ip = ".".join(str(b) for b in ip_packet[12:16])
                         dst_ip = ".".join(str(b) for b in ip_packet[16:20])
                         protocol = ip_packet[9]
+                        # Map protocol numbers to names
+                        proto_map = {1: "ICMP", 6: "TCP", 17: "UDP"}
+                        proto_name = proto_map.get(protocol, f"Proto{protocol}")
+                        proto_map = {1: "ICMP", 6: "TCP", 17: "UDP"}
+                        proto_name = proto_map.get(protocol, f"Proto{protocol}")
                 except:
                     pass
             
-            logger.info(f"Serial→TUN: {ip_len} bytes IP, proto={protocol}, {src_ip}→{dst_ip}")
+            logger.info(f"Serial→TUN: {ip_len} bytes IP, {proto_name} (proto={protocol}), {src_ip}→{dst_ip}")
             
             # Write IP packet to TUN
             self.tun.write(ip_packet)
@@ -243,10 +252,11 @@ class SerialTunBridge:
             
             ip_len = len(ip_packet)
             
-            # Log packet info
+            # Log packet info with protocol names
             src_ip = "?"
             dst_ip = "?"
             protocol = "?"
+            proto_name = "?"
             if ip_len >= 20:  # Minimum IP header
                 try:
                     version = (ip_packet[0] >> 4) & 0xF
@@ -254,10 +264,13 @@ class SerialTunBridge:
                         src_ip = ".".join(str(b) for b in ip_packet[12:16])
                         dst_ip = ".".join(str(b) for b in ip_packet[16:20])
                         protocol = ip_packet[9]
+                        # Map protocol numbers to names
+                        proto_map = {1: "ICMP", 6: "TCP", 17: "UDP"}
+                        proto_name = proto_map.get(protocol, f"Proto{protocol}")
                 except:
                     pass
             
-            logger.info(f"TUN→Serial: {ip_len} bytes IP, proto={protocol}, {src_ip}→{dst_ip}")
+            logger.info(f"TUN→Serial: {ip_len} bytes IP, {proto_name} (proto={protocol}), {src_ip}→{dst_ip}")
             
             # Build Ethernet frame: [Dest MAC][Src MAC][EtherType][IP Packet]
             eth_header = ESP32_MAC + HOST_MAC + struct.pack('>H', ETH_TYPE_IP)
