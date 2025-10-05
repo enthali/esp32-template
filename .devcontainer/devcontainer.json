@@ -32,5 +32,6 @@
 			]
 		}
 	},
-	"runArgs": ["--privileged"]
+	"runArgs": ["--privileged"],
+	"postStartCommand": "bash .devcontainer/post-start.sh"
 }

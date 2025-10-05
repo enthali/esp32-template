@@ -32,12 +32,9 @@ import os
 import select
 import signal
 import logging
+import argparse
 
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
+# Setup logging (will be configured based on command line arguments)
 logger = logging.getLogger(__name__)
 
 # Configuration
@@ -369,11 +366,55 @@ class SerialTunBridge:
         return 0
 
 def main():
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(
+        description='Serial-TUN Bridge for ESP32 QEMU IP Tunnel',
+        epilog='Note: This script requires root privileges to create TUN device'
+    )
+    parser.add_argument(
+        '--quiet', '-q',
+        action='store_true',
+        help='Quiet mode: only log errors (to /workspaces/esp32-distance/temp/tun_errors.log)'
+    )
+    parser.add_argument(
+        '--port', '-p',
+        type=int,
+        default=SERIAL_PORT,
+        help=f'QEMU UART TCP port (default: {SERIAL_PORT})'
+    )
+    args = parser.parse_args()
+    
+    # Configure logging based on quiet mode
+    if args.quiet:
+        # In quiet mode: only errors to file
+        error_log = '/workspaces/esp32-distance/temp/tun_errors.log'
+        os.makedirs(os.path.dirname(error_log), exist_ok=True)
+        logging.basicConfig(
+            level=logging.ERROR,
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            filename=error_log,
+            filemode='a'
+        )
+    else:
+        # Verbose mode: info to console
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(levelname)s - %(message)s'
+        )
+    
     # Check for root
     if os.geteuid() != 0:
         logger.error("This script must be run as root (for TUN device)")
-        logger.info("Try: sudo ./serial_tun_bridge.py")
+        if not args.quiet:
+            print("Error: This script must be run as root (for TUN device)", file=sys.stderr)
+            print("Try: sudo ./serial_tun_bridge.py", file=sys.stderr)
         return 1
+    
+    if not args.quiet:
+        print(f"Starting TUN bridge (port {args.port})...")
+        print(f"TUN device: {TUN_NAME} ({TUN_IP})")
+        print(f"ESP32 IP: {ESP32_IP}")
+        print("Press Ctrl+C to stop\n")
     
     bridge = SerialTunBridge()
     return bridge.run()
