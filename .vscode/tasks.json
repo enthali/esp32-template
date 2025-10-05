@@ -15,7 +15,7 @@
                 "background": {
                     "activeOnStart": true,
                     "beginsPattern": ".*Starting QEMU.*",
-                    "endsPattern": ".*(QEMU is waiting|Waiting for gdb connection).*"
+                    "endsPattern": ".*QEMU is ready and waiting for GDB connection.*"
                 }
             },
             "presentation": {

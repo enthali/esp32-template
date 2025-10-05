@@ -31,12 +31,14 @@ echo -e "${BLUE}ESP32 QEMU - Network Development Mode${NC}"
 echo -e "${BLUE}========================================${NC}"
 echo ""
 
-# Check if project is built
-if [ ! -f "${PROJECT_DIR}/build/distance.elf" ]; then
-    echo -e "${RED}Error: Project not built!${NC}"
-    echo -e "${YELLOW}Please run: idf.py build${NC}"
+# Build project first (delta build is fast, ensures latest code)
+echo -e "${YELLOW}Building project...${NC}"
+cd "${PROJECT_DIR}"
+idf.py build || {
+    echo -e "${RED}Build failed!${NC}"
     exit 1
-fi
+}
+echo ""
 
 # Ensure network stack (TUN bridge + HTTP proxy) is running
 echo -e "${YELLOW}Checking network infrastructure...${NC}"
@@ -46,6 +48,7 @@ echo ""
 echo -e "${YELLOW}Starting QEMU via ESP-IDF (with automatic flash image generation)...${NC}"
 echo ""
 echo -e "${GREEN}Network Configuration:${NC}"
+echo -e "  UART0 Port: 5555 (Console/Monitor)"
 echo -e "  UART1 Port: ${NETWORK_UART_PORT} (IP tunnel)"
 echo -e "  ESP32 IP:   192.168.100.2"
 echo -e "  Gateway:    192.168.100.1 (TUN device)"
@@ -58,7 +61,26 @@ echo ""
 
 # Run QEMU via ESP-IDF with:
 # - GDB debug support (-d flag makes it wait for debugger)
-# - Extra serial port for network tunnel
+# - Two serial ports:
+#   * UART0 (5555): Main console for logs/monitor
+#   * UART1 (5556): Network tunnel for IP connectivity
 # - ESP-IDF handles flash image creation automatically
-exec idf.py qemu -d \
-    --qemu-extra-args="-serial tcp::${NETWORK_UART_PORT},server,nowait"
+
+# Start QEMU in background to capture output
+idf.py qemu -d \
+    --qemu-extra-args="-serial tcp::5555,server,nowait -serial tcp::${NETWORK_UART_PORT},server,nowait -nographic" &
+
+QEMU_PID=$!
+
+# Wait for QEMU to open GDB port (indicating it's ready)
+echo -e "${YELLOW}Waiting for QEMU to start...${NC}"
+for i in {1..30}; do
+    if nc -z localhost 3333 2>/dev/null; then
+        echo -e "${GREEN}✓ QEMU is ready and waiting for GDB connection${NC}"
+        break
+    fi
+    sleep 0.5
+done
+
+# Wait for QEMU process to finish
+wait $QEMU_PID
