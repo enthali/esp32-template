@@ -8,6 +8,7 @@ This section covers all aspects of developing the ESP32 Distance Sensor project,
 - **[QEMU Emulator](qemu-emulator.md)** - Running the project in QEMU with network support
 - **[Debugging](debugging.md)** - GDB debugging with QEMU and VS Code
 - **[Network Internals](qemu-network-internals.md)** - Deep dive into QEMU IP tunnel implementation
+- **[Pre-commit Hooks](pre-commit-hooks.md)** - Automated quality checks and documentation validation
 
 ## Getting Started
 
@@ -50,6 +51,7 @@ idf.py -p /dev/ttyUSB0 flash monitor
 - **QEMU Support**: Test without hardware using full network emulation
 - **GDB Debugging**: Full breakpoint debugging in emulator
 - **Web Interface**: Access emulated web server via browser
+- **Quality Gates**: Pre-commit hooks validate documentation and code before commits
 
 ## Next Steps
 
@@ -57,6 +59,7 @@ idf.py -p /dev/ttyUSB0 flash monitor
 - Want to debug? Check out [Debugging Guide](debugging.md)
 - Curious about QEMU networking? See [QEMU Emulator](qemu-emulator.md)
 - Need technical details? Read [Network Internals](qemu-network-internals.md)
+- Setting up quality checks? See [Pre-commit Hooks](pre-commit-hooks.md)
 
 ## Known Issues
 
