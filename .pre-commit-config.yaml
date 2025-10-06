@@ -1,0 +1,15 @@
+repos:
+  - repo: local
+    hooks:
+      - id: mkdocs-build
+        name: MkDocs build (strict)
+        # mkdocs is available in /opt/venv/bin in the devcontainer
+        # Quiet mode suppresses INFO/DEBUG, only shows WARNING/ERROR
+        entry: mkdocs build --strict
+        language: system
+        pass_filenames: false
+        # Only run if docs/ or mkdocs.yml changed (skip for code-only commits)
+        files: ^(docs/.*|mkdocs\.yml)$
+        require_serial: true
+        verbose: true
+        stages: [pre-commit]
