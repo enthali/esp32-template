@@ -8,6 +8,8 @@ dependencies.lock
 !.vscode/launch.json
 !.vscode/tasks.json
 !.vscode/settings.json
+!.vscode/mcp.json
+!.vscode/mcp.json.example
 
 .idea/
 .playwright-mcp/
