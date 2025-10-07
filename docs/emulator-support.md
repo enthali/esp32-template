@@ -34,10 +34,19 @@ The implementation uses a **clean separation approach**:
 - **Color Mapping**: Intelligent RGB-to-emoji conversion
 - **Buffer Management**: Same pixel operations as hardware
 
-#### 3. WiFi Manager
+#### 3. WiFi Manager and Network Stack
 
-- **No Changes Needed**: Runs as-is without network events
-- **Web Interface**: Still accessible (localhost without network)
+- **Full Network Implementation**: Complete TCP/IP stack via UART-based IP tunnel
+- **TUN Device Bridge** (`tools/serial_tun_bridge.py`): Bridges QEMU UART1 to Linux TUN interface
+  - ESP32 address: `192.168.100.2/24`
+  - Host TUN interface: `192.168.100.1/24`
+  - Ethernet frame encapsulation for lwIP compatibility
+- **HTTP Proxy** (`tools/http_proxy.py`): Forwards `localhost:8080` → ESP32 web server
+  - Enables browser access via GitHub Codespaces port forwarding
+  - Automatic retry with exponential backoff
+  - Handles ESP32 restarts gracefully
+- **Web Interface**: Fully accessible via network tunnel (real HTTP connections, not localhost mock)
+- **See Also**: [Network Internals Documentation](development/qemu-network-internals.md) for deep dive
 
 ## Build Configuration
 

@@ -27,24 +27,20 @@
 #include "led_controller.h"
 #include "esp_log.h"
 #include "esp_timer.h"
-#include "driver/uart.h"
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 static const char *TAG = "led_controller_sim";
-
-// UART1 configuration for separate LED visualization channel
-#define LED_UART_NUM UART_NUM_1
-#define LED_UART_TX_PIN 17  // GPIO17 for UART1 TX
-#define LED_UART_RX_PIN 16  // GPIO16 for UART1 RX (not used but required)
-#define LED_UART_BUF_SIZE 512
-
-static bool uart_initialized = false;
 
 // Internal state - same structure as hardware version
 static led_color_t *led_buffer = NULL;
 static led_config_t current_config = {0};
 static bool is_initialized = false;
+
+// Rate limiting for display updates (prevent terminal spam)
+static uint64_t last_display_time = 0;
+static const uint64_t DISPLAY_INTERVAL_US = 1000000; // 1 second
 
 // Optional status text appended to simulated display (small buffer)
 static char status_text[64] = "";
@@ -58,53 +54,6 @@ const led_color_t LED_COLOR_YELLOW = {255, 255, 0};
 const led_color_t LED_COLOR_CYAN = {0, 255, 255};
 const led_color_t LED_COLOR_MAGENTA = {255, 0, 255};
 const led_color_t LED_COLOR_OFF = {0, 0, 0};
-
-/**
- * @brief Initialize UART1 for LED visualization output
- * 
- * Configures UART1 as a separate channel for LED strip visualization,
- * allowing it to be accessed independently from the main console output.
- */
-static esp_err_t led_sim_init_uart(void)
-{
-    if (uart_initialized) {
-        return ESP_OK;
-    }
-
-    uart_config_t uart_config = {
-        .baud_rate = 115200,
-        .data_bits = UART_DATA_8_BITS,
-        .parity = UART_PARITY_DISABLE,
-        .stop_bits = UART_STOP_BITS_1,
-        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
-        .source_clk = UART_SCLK_APB,
-    };
-    
-    esp_err_t ret = uart_param_config(LED_UART_NUM, &uart_config);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "UART config failed: %s", esp_err_to_name(ret));
-        return ret;
-    }
-    
-    ret = uart_set_pin(LED_UART_NUM, LED_UART_TX_PIN, LED_UART_RX_PIN, 
-                       UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "UART set pin failed: %s", esp_err_to_name(ret));
-        return ret;
-    }
-    
-    ret = uart_driver_install(LED_UART_NUM, LED_UART_BUF_SIZE * 2, 
-                              LED_UART_BUF_SIZE * 2, 0, NULL, 0);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "UART driver install failed: %s", esp_err_to_name(ret));
-        return ret;
-    }
-    
-    uart_initialized = true;
-    ESP_LOGI(TAG, "UART1 initialized for LED visualization (separate channel)");
-    
-    return ESP_OK;
-}
 
 /**
  * @brief Map RGB color to appropriate emoji block
@@ -168,17 +117,6 @@ esp_err_t led_controller_init(const led_config_t *config)
         return ESP_ERR_INVALID_ARG;
     }
 
-    // UART1 initialization disabled - UART1 now used for IP tunnel
-    // LED visualization temporarily disabled
-    // TODO: Re-enable on different channel or via web interface
-    /*
-    esp_err_t ret = led_sim_init_uart();
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to initialize UART for LED visualization");
-        return ret;
-    }
-    */
-
     // Store configuration
     current_config = *config;
 
@@ -197,8 +135,8 @@ esp_err_t led_controller_init(const led_config_t *config)
     }
 
     is_initialized = true;
-    // ESP_LOGI(TAG, "LED controller simulator initialized: %d LEDs (terminal visualization)", 
-    //          config->led_count);
+    ESP_LOGI(TAG, "LED controller simulator initialized: %d LEDs (terminal visualization)", 
+             config->led_count);
     
     return ESP_OK;
 }
@@ -280,9 +218,13 @@ esp_err_t led_show(void)
         return ESP_ERR_INVALID_STATE;
     }
 
-    // LED visualization disabled - UART1 now used for IP tunnel
-    // Silently succeed to maintain API compatibility
-    /*
+    // Rate limiting: only display ~1Hz to prevent terminal spam
+    uint64_t now = esp_timer_get_time();
+    if (now - last_display_time < DISPLAY_INTERVAL_US) {
+        return ESP_OK;  // Suppress output, just return success
+    }
+    last_display_time = now;
+
     // Build LED strip visualization string
     char output[1024];  // Large enough for 40 LEDs + text
     int pos = 0;
@@ -302,11 +244,9 @@ esp_err_t led_show(void)
         pos += sprintf(output + pos, "  %s", status_text);
     }
     
-    pos += sprintf(output + pos, "\n");
-    
-    // Send to UART1 instead of stdout
-    uart_write_bytes(LED_UART_NUM, output, pos);
-    */
+    // Output to console (stdout)
+    printf("%s\n", output);
+    fflush(stdout);
     
     return ESP_OK;
 }
