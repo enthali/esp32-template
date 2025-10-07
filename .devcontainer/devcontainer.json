@@ -32,7 +32,9 @@
 		"espressif.esp-idf-web",
 		"ms-vscode.cpptools",
 		"ms-vscode.cpptools-extension-pack",
-		"DavidAnson.vscode-markdownlint"
+		"DavidAnson.vscode-markdownlint",
+		"github.copilot",
+		"github.copilot-chat"
 	]
 		},
 		"codespaces": {
