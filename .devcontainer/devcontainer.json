@@ -19,7 +19,13 @@
 				"idf.gitPath": "/usr/bin/git",
 				"idf.buildPath": "/workspaces/esp32-distance/build",
 				"idf.showOnboardingOnInit": false,
-				"extensions.ignoreRecommendations": true
+				"extensions.ignoreRecommendations": true,
+				"github.copilot.chat.mcp.enabled": true,
+				"github.copilot.chat.mcp.config": {
+					"github": {
+						"url": "https://api.githubcopilot.com/mcp/"
+					}
+				}
 			},
 			"extensions": [
 		"espressif.esp-idf-extension",
