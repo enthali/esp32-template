@@ -13,6 +13,7 @@ This section covers all aspects of developing the ESP32 Distance Sensor project,
 ## Getting Started
 
 ### Recommended: GitHub Codespaces (Cloud)
+
 The fastest way to start developing:
 
 1. Open the repository in GitHub Codespaces
@@ -21,6 +22,7 @@ The fastest way to start developing:
 4. Start debugging with F5 or access the web interface
 
 ### Alternative: Local Dev Container
+
 For offline development or custom hardware:
 
 1. Install Docker Desktop

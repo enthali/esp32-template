@@ -15,6 +15,7 @@
 ## Target Design Architecture
 
 ### DSN-DSP-OVERVIEW-01: WS2812 Hardware Integration Design
+
 Addresses: REQ-DSP-OVERVIEW-01
 
 Design: WS2812 addressable LED strip as primary display hardware with config-driven parameters.
@@ -28,6 +29,7 @@ Design: WS2812 addressable LED strip as primary display hardware with config-dri
 Validation: LED strip responds to configuration changes, hardware initialization successful.
 
 ### DSN-DSP-ARCH-01: Task-Based Architecture Design
+
 Addresses: REQ-DSP-IMPL-01
 
 Design: Implement single FreeRTOS task that blocks on `distance_sensor_get_latest()`.
@@ -40,6 +42,7 @@ Design: Implement single FreeRTOS task that blocks on `distance_sensor_get_lates
 Validation: Task created successfully, priority hierarchy maintained, blocks efficiently.
 
 ### DSN-DSP-ARCH-02: Configuration Integration Design
+
 Addresses: REQ-DSP-OVERVIEW-02, REQ-CFG-2
 
 Design: Use `config_manager` API for all distance range parameters.
@@ -52,6 +55,7 @@ Design: Use `config_manager` API for all distance range parameters.
 Validation: All distance parameters obtained from `config_manager` API, no separate config structures.
 
 ### DSN-DSP-ALGO-01: Distance-to-Visual Mapping Algorithm (WHAT to display)
+
 Addresses: REQ-DSP-IMPL-03, REQ-DSP-VISUAL-01/02/03/04
 
 Design:
@@ -67,6 +71,7 @@ Validation: Min distance → LED 0, max distance → LED `led_count-1`, linear i
             below/above range → correct red LED positions.
 
 ### DSN-DSP-ALGO-02: LED Update Pattern Design (HOW to display)
+
 Addresses: REQ-DSP-IMPL-02
 
 Design:
@@ -80,6 +85,7 @@ WS2812 serial protocol requires complete buffer transmission; clear-and-set patt
 Validation: Only one LED illuminated after each update, WS2812 transmission successful.
 
 ### DSN-DSP-ALGO-03: Embedded Arithmetic Architecture Design
+
 Addresses: REQ-SYS-1
 
 Design: Pure integer arithmetic for all distance calculations and display operations.
@@ -96,6 +102,7 @@ Rationale: Avoid floating-point on resource-constrained microcontrollers unless 
 Validation: All arithmetic operations complete within deterministic time bounds.
 
 ### DSN-DSP-API-01: Simplified API Design
+
 Addresses: REQ-DSP-IMPL-01
 
 Design: Single entry point for simplified lifecycle management
