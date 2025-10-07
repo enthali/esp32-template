@@ -51,6 +51,7 @@ const led_color_t LED_COLOR_GREEN = {0, 255, 0};
 const led_color_t LED_COLOR_BLUE = {0, 0, 255};
 const led_color_t LED_COLOR_WHITE = {255, 255, 255};
 const led_color_t LED_COLOR_YELLOW = {255, 255, 0};
+const led_color_t LED_COLOR_ORANGE = {255, 165, 0};
 const led_color_t LED_COLOR_CYAN = {0, 255, 255};
 const led_color_t LED_COLOR_MAGENTA = {255, 0, 255};
 const led_color_t LED_COLOR_OFF = {0, 0, 0};
@@ -82,6 +83,8 @@ static const char* color_to_emoji(led_color_t color)
     // Handle mixed colors
     if (color.red > 150 && color.blue > 150 && color.green < 100) {
         return "🟣"; // Purple/Magenta
+    } else if (color.red > 200 && color.green > 100 && color.green < 200 && color.blue < 50) {
+        return "🟠"; // Orange
     } else if (color.red > 150 && color.green > 150 && color.blue < 100) {
         return "🟡"; // Yellow
     } else if (color.green > 150 && color.blue > 150 && color.red < 100) {
