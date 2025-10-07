@@ -57,10 +57,25 @@ static void update_led_display(const distance_measurement_t *measurement)
                 if (led_index < 0) led_index = 0;
                 if (led_index >= led_count) led_index = led_count - 1;
                 
-                // Normal range: Green color for distance visualization
-                led_color_t color = LED_COLOR_GREEN;
+                // Three-zone color scheme based on LED position
+                uint16_t zone1_end = led_count / 4;        // 25% boundary
+                uint16_t zone2_end = led_count / 2;        // 50% boundary
+                
+                led_color_t color;
+                const char *zone_name;
+                if (led_index < zone1_end) {
+                    color = LED_COLOR_RED;     // Too close zone
+                    zone_name = "too close";
+                } else if (led_index < zone2_end) {
+                    color = LED_COLOR_GREEN;   // Ideal zone
+                    zone_name = "ideal";
+                } else {
+                    color = LED_COLOR_ORANGE;  // Acceptable zone
+                    zone_name = "acceptable";
+                }
+                
                 led_set_pixel(led_index, color);
-                ESP_LOGD(TAG, "Distance %d mm → LED %d", measurement->distance_mm, led_index);
+                ESP_LOGD(TAG, "Distance %d mm → LED %d (%s zone)", measurement->distance_mm, led_index, zone_name);
             }
             else if (measurement->distance_mm < config.distance_min_mm)
             {

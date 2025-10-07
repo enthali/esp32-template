@@ -95,20 +95,23 @@ This document specifies requirements for the Display System, enabling visual rep
 
 ---
 
-### REQ-DSP-VISUAL-02: Normal Range Display
+### REQ-DSP-VISUAL-02: Normal Range Display with Three-Zone Color Scheme
 
 **Type**: User Experience  
 **Priority**: Mandatory  
-**Description**: The display system SHALL illuminate a green LED at a position linearly proportional to the measured distance when the measurement is within the configured range.
+**Description**: The display system SHALL illuminate a single LED at a position linearly proportional to the measured distance when the measurement is within the configured range, with color indicating quality zones to guide optimal positioning.
 
-**Rationale**: Provides intuitive distance visualization where LED position directly correlates to distance magnitude, using green color to indicate in-range measurements.
+**Rationale**: Provides intuitive distance visualization where LED position directly correlates to distance magnitude. The three-zone color scheme helps users quickly identify the ideal positioning zone: RED indicates "too close" (0-25% of positions), GREEN indicates "ideal positioning" (25-50% of positions), and ORANGE indicates "acceptable but not ideal" (50-100% of positions).
 
 **Acceptance Criteria**:
 
-- AC-1: LED color is green for measurements within valid range
-- AC-2: Minimum configured distance maps exactly to first LED (position 0)
-- AC-3: Maximum configured distance maps exactly to last LED (position led_count-1)
-- AC-4: LED position is calculated using linear interpolation between positions 0 and led_count-1
+- AC-1: Minimum configured distance maps exactly to first LED (position 0)
+- AC-2: Maximum configured distance maps exactly to last LED (position led_count-1)
+- AC-3: LED position is calculated using linear interpolation between positions 0 and led_count-1
+- AC-4: Zone 1 (positions 0 to led_count/4-1): RED color indicates "too close"
+- AC-5: Zone 2 (positions led_count/4 to led_count/2-1): GREEN color indicates "ideal positioning"
+- AC-6: Zone 3 (positions led_count/2 to led_count-1): ORANGE color indicates "acceptable but not ideal"
+- AC-7: Zone boundaries calculated using integer arithmetic for embedded efficiency
 
 ---
 

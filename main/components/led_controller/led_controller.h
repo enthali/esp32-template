@@ -63,6 +63,7 @@ extern "C"
     extern const led_color_t LED_COLOR_BLUE;    ///< Pure blue (0,0,255)
     extern const led_color_t LED_COLOR_WHITE;   ///< Pure white (255,255,255)
     extern const led_color_t LED_COLOR_YELLOW;  ///< Yellow (255,255,0)
+    extern const led_color_t LED_COLOR_ORANGE;  ///< Orange (255,165,0)
     extern const led_color_t LED_COLOR_CYAN;    ///< Cyan (0,255,255)
     extern const led_color_t LED_COLOR_MAGENTA; ///< Magenta (255,0,255)
     extern const led_color_t LED_COLOR_OFF;     ///< Off/Black (0,0,0)

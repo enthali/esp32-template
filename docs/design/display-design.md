@@ -60,15 +60,19 @@ Addresses: REQ-DSP-IMPL-03, REQ-DSP-VISUAL-01/02/03/04
 
 Design:
 
-- Normal range (min ≤ distance ≤ max): Green LED at calculated position using linear interpolation
-  - Formula: `led_index = (distance_mm - min_mm) * (led_count - 1) / (max_mm - min_mm)`
+- Normal range (min ≤ distance ≤ max): LED at calculated position with three-zone color scheme
+  - Position Formula: `led_index = (distance_mm - min_mm) * (led_count - 1) / (max_mm - min_mm)`
+  - Zone 1 (0 ≤ led_index < led_count/4): RED - "too close" zone
+  - Zone 2 (led_count/4 ≤ led_index < led_count/2): GREEN - "ideal positioning" zone
+  - Zone 3 (led_count/2 ≤ led_index < led_count): ORANGE - "acceptable but not ideal" zone
+  - Zone boundaries use integer division for efficiency: `zone1_end = led_count / 4`, `zone2_end = led_count / 2`
 - Below minimum (distance < min): Red LED at position 0
 - Above maximum (distance > max): Red LED at position `led_count-1`
 - Boundary clamping ensures valid LED positions `[0, led_count-1]`
 - Single LED illumination enforced by logic
 
 Validation: Min distance → LED 0, max distance → LED `led_count-1`, linear interpolation between,
-            below/above range → correct red LED positions.
+            zone colors apply correctly based on position, below/above range → correct red LED positions.
 
 ### DSN-DSP-ALGO-02: LED Update Pattern Design (HOW to display)
 

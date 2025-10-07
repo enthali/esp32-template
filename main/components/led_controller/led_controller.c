@@ -36,6 +36,7 @@ const led_color_t LED_COLOR_GREEN = {0, 255, 0};
 const led_color_t LED_COLOR_BLUE = {0, 0, 255};
 const led_color_t LED_COLOR_WHITE = {255, 255, 255};
 const led_color_t LED_COLOR_YELLOW = {255, 255, 0};
+const led_color_t LED_COLOR_ORANGE = {255, 165, 0};
 const led_color_t LED_COLOR_CYAN = {0, 255, 255};
 const led_color_t LED_COLOR_MAGENTA = {255, 0, 255};
 const led_color_t LED_COLOR_OFF = {0, 0, 0};
