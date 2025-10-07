@@ -3,7 +3,7 @@
 
 ## 🚗 How This Project Was Born (Or: The Garage Door Incident)
 
-Picture this: You're backing your car into your garage after a long day. You know that sweet spot exists—where your car is fully inside, but you haven't kissed the wall with your bumper. But where is it?
+Picture this: You're driving your car into your garage after a long day. You know that sweet spot exists—where your car is fully inside, but you haven't kissed the wall with your bumper. But where is it?
 
 You inch forward... *a little more*... *just a bit further*... **CRUNCH!** 🤦
 
