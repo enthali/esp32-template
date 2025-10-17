@@ -13,11 +13,11 @@
  * - DSN-DSP-ANIM-04: Frame-based rendering pipeline
  * 
  * REQUIREMENTS TRACEABILITY:
- * - REQ-DSP-ANIM-01: "Too far" blue animation
- * - REQ-DSP-ANIM-02: "Too close" orange animation
- * - REQ-DSP-ANIM-03: Ideal zone all-red display
- * - REQ-DSP-ANIM-04: Dual-layer compositing
- * - REQ-DSP-ANIM-05: Emergency proximity warning
+ * - REQ-DSP-ANIM-01: "Too far" white animation
+ * - REQ-DSP-ANIM-02: "Too close" red animation
+ * - REQ-DSP-ANIM-03: Ideal zone all-red display with background
+ * - REQ-DSP-ANIM-04: Multi-layer compositing
+ * - REQ-DSP-ANIM-05: Emergency proximity warning with layer suppression
  */
 
 #include "display_logic.h"
@@ -37,9 +37,12 @@ static const char *TAG = "display_logic";
 #define IDEAL_SIZE_PERCENT 10     // Ideal zone spans 10% of strip width
 
 // Animation timing constants
-#define ANIMATION_FRAME_MS 100    // 100ms per animation frame (10 FPS)
-#define EMERGENCY_BLINK_MS 500    // 500ms ON/OFF for emergency blink (1 Hz)
-#define ANIMATION_BRIGHTNESS 5    // 2% brightness (~5/255)
+#define ANIMATION_FRAME_MS 100         // 100ms per animation frame (10 FPS)
+#define EMERGENCY_BLINK_MS 500         // 500ms ON/OFF for emergency blink (1 Hz)
+#define ANIMATION_BRIGHTNESS_LOW 5     // 2% brightness (~5/255) for "too far" animation
+#define ANIMATION_BRIGHTNESS_HIGH 255  // 100% brightness for "too close" animation
+#define POSITION_BRIGHTNESS_DIM 128    // 50% brightness for position LED in "too close" zone
+#define IDEAL_ZONE_BACKGROUND_BRIGHTNESS 5  // 2% brightness for always-visible ideal zone background
 
 /**
  * @brief Animation state tracking
@@ -134,7 +137,7 @@ static void calculate_zones(uint16_t led_count, zone_config_t *zones)
 static void update_animation_state(int led_index, uint16_t led_count)
 {
     if (led_index < zones.ideal_start) {
-        // Too close zone - orange animation from 0 to ideal_start
+        // Too close zone - red animation from 0 to ideal_start
         if (!anim_state.active || !anim_state.direction_forward) {
             // Start new animation
             anim_state.current_position = 0;
@@ -142,11 +145,11 @@ static void update_animation_state(int led_index, uint16_t led_count)
             anim_state.start_pos = 0;
             anim_state.end_pos = zones.ideal_start;
             anim_state.active = true;
-            ESP_LOGD(TAG, "Starting 'too close' animation: 0→%d", zones.ideal_start);
+            ESP_LOGD(TAG, "Starting 'too close' RED animation: 0→%d", zones.ideal_start);
         }
     }
     else if (led_index > zones.ideal_end) {
-        // Too far zone - blue animation from led_count-1 to ideal_end
+        // Too far zone - white animation from led_count-1 to ideal_end
         if (!anim_state.active || anim_state.direction_forward) {
             // Start new animation
             anim_state.current_position = led_count - 1;
@@ -154,7 +157,7 @@ static void update_animation_state(int led_index, uint16_t led_count)
             anim_state.start_pos = led_count - 1;
             anim_state.end_pos = zones.ideal_end;
             anim_state.active = true;
-            ESP_LOGD(TAG, "Starting 'too far' animation: %d→%d", led_count - 1, zones.ideal_end);
+            ESP_LOGD(TAG, "Starting 'too far' WHITE animation: %d→%d", led_count - 1, zones.ideal_end);
         }
     }
     else {
@@ -260,22 +263,44 @@ static void render_frame(const distance_measurement_t *measurement, const system
         }
     }
     
-    // Step 2: Render animation layer (base layer, 2% brightness)
+    // Emergency mode: Skip all normal rendering, show only blink pattern
+    if (below_min) {
+        // Step 2 (Emergency): Show only emergency blink pattern
+        if (blink_state.blink_on) {
+            // Blink every 10th LED
+            for (uint16_t i = 0; i < led_count; i += 10) {
+                led_set_pixel(i, LED_COLOR_RED);
+            }
+        }
+        // Step 3 (Emergency): Commit to hardware
+        led_show();
+        return;  // Skip all other layers during emergency
+    }
+    
+    // Normal mode rendering (not in emergency)
+    
+    // Step 2: Render ideal zone background (always visible at 2% brightness, except in emergency)
+    led_color_t ideal_bg_color = led_color_brightness(LED_COLOR_RED, IDEAL_ZONE_BACKGROUND_BRIGHTNESS);
+    for (uint8_t i = zones.ideal_start; i <= zones.ideal_end; i++) {
+        led_set_pixel(i, ideal_bg_color);
+    }
+    
+    // Step 3: Render animation layer (brightness depends on zone)
     if (anim_state.active && in_range) {
         led_color_t anim_color;
         if (anim_state.direction_forward) {
-            // Too close - orange animation
-            anim_color = led_color_brightness(LED_COLOR_ORANGE, ANIMATION_BRIGHTNESS);
+            // Too close - red animation at 100% brightness
+            anim_color = led_color_brightness(LED_COLOR_RED, ANIMATION_BRIGHTNESS_HIGH);
         }
         else {
-            // Too far - blue animation
-            anim_color = led_color_brightness(LED_COLOR_BLUE, ANIMATION_BRIGHTNESS);
+            // Too far - white animation at 2% brightness
+            anim_color = led_color_brightness(LED_COLOR_WHITE, ANIMATION_BRIGHTNESS_LOW);
         }
         led_set_pixel(anim_state.current_position, anim_color);
     }
     else if (!in_range && measurement->status == DISTANCE_SENSOR_OK && 
              measurement->distance_mm > config->distance_max_mm) {
-        // Out of range - show blue animation only (no position)
+        // Out of range - show white animation only (no position)
         // Force "too far" animation
         if (!anim_state.active || anim_state.direction_forward) {
             anim_state.current_position = led_count - 1;
@@ -284,34 +309,31 @@ static void render_frame(const distance_measurement_t *measurement, const system
             anim_state.end_pos = zones.ideal_end;
             anim_state.active = true;
         }
-        led_color_t anim_color = led_color_brightness(LED_COLOR_BLUE, ANIMATION_BRIGHTNESS);
+        led_color_t anim_color = led_color_brightness(LED_COLOR_WHITE, ANIMATION_BRIGHTNESS_LOW);
         led_set_pixel(anim_state.current_position, anim_color);
     }
     
-    // Step 3: Render position layer (overlay, 100% brightness)
+    // Step 4: Render position layer (overlay, brightness depends on zone)
     if (in_range && led_index >= 0) {
         // Check if in ideal zone
         if (led_index >= zones.ideal_start && led_index <= zones.ideal_end) {
-            // Step 3b: Ideal zone - all LEDs red (overrides position and animation)
+            // Step 4b: Ideal zone - all LEDs red at 100% (overrides background, position and animation)
             for (uint8_t i = zones.ideal_start; i <= zones.ideal_end; i++) {
                 led_set_pixel(i, LED_COLOR_RED);
             }
         }
+        else if (led_index < zones.ideal_start) {
+            // Too close zone - orange position LED at 50% brightness
+            led_color_t pos_color = led_color_brightness(LED_COLOR_ORANGE, POSITION_BRIGHTNESS_DIM);
+            led_set_pixel(led_index, pos_color);
+        }
         else {
-            // Normal position indicator - green LED
+            // Too far zone - green position LED at 100% brightness
             led_set_pixel(led_index, LED_COLOR_GREEN);
         }
     }
     
-    // Step 4: Emergency layer (highest priority, overrides all)
-    if (below_min && blink_state.blink_on) {
-        // Blink every 10th LED
-        for (uint16_t i = 0; i < led_count; i += 10) {
-            led_set_pixel(i, LED_COLOR_RED);
-        }
-    }
-    
-    // Step 5: Commit to hardware
+    // Step 5: Commit to hardware (emergency already handled with early return)
     led_show();
 }
 

@@ -73,9 +73,9 @@ Design:
 
 - **Normal range** (min ≤ distance ≤ max): Dual-layer display with zone-based behavior
   - Position Formula: `led_index = (distance_mm - min_mm) * (led_count - 1) / (max_mm - min_mm)`
-  - Zone 1 "too close" (led_index < ideal_start): Green position LED + orange animation (see DSN-DSP-ANIM-01)
+  - Zone 1 "too close" (led_index < ideal_start): Orange position LED (50% brightness) + red animation (100% brightness) (see DSN-DSP-ANIM-01)
   - Zone 2 "ideal" (ideal_start ≤ led_index ≤ ideal_end): All ideal zone LEDs red (see DSN-DSP-ANIM-02)
-  - Zone 3 "too far" (led_index > ideal_end): Green position LED + blue animation (see DSN-DSP-ANIM-01)
+  - Zone 3 "too far" (led_index > ideal_end): Green position LED + white animation (see DSN-DSP-ANIM-01)
 
 - **Below minimum** (distance < min): Emergency blinking pattern (see DSN-DSP-ANIM-03)
 - **Above maximum** (distance > max): Blue "too far" animation only (no position indicator)
@@ -84,7 +84,7 @@ Design:
 Validation: Zone boundaries calculated correctly for 20-100 LED configurations, position mapping linear,
            animations trigger in correct zones, ideal zone calculation centered properly.
 
-### DSN-DSP-ALGO-02: Dual-Layer Rendering Pipeline (HOW to display)
+### DSN-DSP-ALGO-02: Multi-Layer Rendering Pipeline (HOW to display)
 
 Addresses: REQ-DSP-IMPL-02, REQ-DSP-ANIM-04
 
@@ -93,20 +93,26 @@ Design: Frame-based rendering with priority-based layer compositing
 **Rendering Pipeline** (executed at 10 FPS / 100ms intervals):
 
 1. **Clear**: `led_clear_all()` - reset all LEDs to off state
-2. **Animation Layer** (base, 2% brightness):
-   - If in "too far" zone: Render blue animation LED at current animation position
-   - If in "too close" zone: Render orange animation LED at current animation position
-   - If out of range (above max): Render blue animation LED only
-3. **Position Layer** (overlay, 100% brightness):
-   - If in valid range AND not in ideal zone: Render green LED at measured position
+2. **Ideal Zone Background Layer** (lowest priority, 2% brightness):
+   - Always render ideal zone LEDs (ideal_start through ideal_end) at 2% red brightness
+   - Provides constant visual reference of target parking zone
+   - Visible in Zone 1 (too close) and Zone 3 (too far)
+3. **Animation Layer** (2-100% brightness depending on zone):
+   - If in "too far" zone: Render white animation LED at current animation position (2% brightness)
+   - If in "too close" zone: Render red animation LED at current animation position (100% brightness)
+   - If out of range (above max): Render white animation LED only (2% brightness)
+4. **Position Layer** (overlay, 50-100% brightness):
+   - If in "too close" zone: Render orange LED at measured position (50% brightness)
+   - If in "too far" zone: Render green LED at measured position (100% brightness)
    - Position LED overwrites animation LED if at same position (higher brightness dominates)
-4. **Ideal Zone Layer** (override):
-   - If in ideal zone: Overwrite ALL ideal zone LEDs with red (ideal_start through ideal_end)
+5. **Ideal Zone Full Brightness Layer** (override):
+   - If in ideal zone: Overwrite ALL ideal zone LEDs with red at 100% brightness (ideal_start through ideal_end)
    - No position or animation shown (entire zone is valid)
-5. **Emergency Layer** (highest priority):
+   - Brightness increase from 2% → 100% provides positive feedback
+6. **Emergency Layer** (highest priority):
    - If below minimum: Overwrite LEDs 0, 10, 20, 30... with blinking red (500ms ON/OFF)
    - Emergency pattern overrides all other layers
-6. **Commit**: `led_show()` - transmit complete buffer to WS2812 strip atomically
+7. **Commit**: `led_show()` - transmit complete buffer to WS2812 strip atomically
 
 **Timing Architecture**:
 
@@ -116,7 +122,7 @@ Design: Frame-based rendering with priority-based layer compositing
 - Non-blocking: Timer callback completes in <1ms
 
 Validation: All layers composite correctly, priority enforced, single led_show() per frame,
-           no visual tearing, animation smooth at 10 FPS.
+           no visual tearing, animation smooth at 10 FPS, ideal zone always visible as background.
 
 ### DSN-DSP-ALGO-03: Embedded Arithmetic Architecture Design
 
@@ -159,14 +165,14 @@ typedef struct {
   - Start: LED position `led_count - 1` (far end)
   - End: LED position `ideal_end` (ideal zone boundary)
   - Direction: Backward (toward ideal zone)
-  - Color: Blue at 2% brightness (RGB: ~5, ~5, ~128)
+  - Color: White at 2% brightness (RGB: ~5, ~5, ~5)
   - Loop: When reaching ideal_end, restart from led_count-1
 
 - **Too Close Zone** (position < ideal_start):
   - Start: LED position 0 (near end)
   - End: LED position `ideal_start` (ideal zone boundary)
   - Direction: Forward (toward ideal zone)
-  - Color: Orange at 2% brightness (RGB: ~128, ~42, ~0)
+  - Color: Red at 100% brightness (RGB: 255, 0, 0)
   - Loop: When reaching ideal_start, restart from 0
 
 - **Animation Update** (100ms timer callback):
@@ -174,11 +180,17 @@ typedef struct {
   - Wrap around when reaching end position
   - Update happens independent of distance measurement updates
 
-**Color Calculation** (2% brightness):
+**Color Calculation**:
 
 ```c
-// Blue: led_color_brightness(LED_COLOR_BLUE, 5)  → (~0, ~0, ~5)
-// Orange: led_color_brightness(LED_COLOR_ORANGE, 5) → (~5, ~2, ~0)
+// White (too far): led_color_brightness(LED_COLOR_WHITE, 5)  → (~5, ~5, ~5)
+// Red (too close): led_color_brightness(LED_COLOR_RED, 255) → (255, 0, 0)
+```
+
+**Position Indicator Brightness** (too close zone only):
+
+```c
+// Orange position at 50%: led_color_brightness(LED_COLOR_ORANGE, 128) → (128, 42, 0)
 ```
 
 Validation: Animation smooth, loops correctly, stops when zone changes, color brightness correct.
@@ -187,9 +199,17 @@ Validation: Animation smooth, loops correctly, stops when zone changes, color br
 
 Addresses: REQ-DSP-ANIM-03, REQ-DSP-ANIM-04
 
-Design: Solid red indication for ideal parking zone
+Design: Dual-brightness red indication for ideal parking zone providing constant visual reference and positive feedback
 
-**Ideal Zone Rendering**:
+**Ideal Zone Background Rendering** (always active):
+
+- Loop through LEDs from ideal_start to ideal_end
+- Set each LED to red at 2% brightness (~5, 0, 0)
+- Renders as base layer (Step 2 in rendering pipeline)
+- Provides constant visual target reference visible from any distance
+- Can be overwritten by higher priority layers (animation, position, full brightness ideal zone)
+
+**Ideal Zone Full Brightness Rendering** (when in zone):
 
 - When `ideal_start ≤ led_index ≤ ideal_end`:
   - Loop through LEDs from ideal_start to ideal_end
@@ -200,11 +220,14 @@ Design: Solid red indication for ideal parking zone
 
 **Zone Persistence**:
 
-- Ideal zone display persists while position remains in zone
+- Background ideal zone (2%) visible at all times
+- Full brightness ideal zone (100%) persists while position remains in zone
+- Brightness increase 2% → 100% provides immediate positive feedback when entering zone
 - Immediately switches to position+animation when exiting zone
 - No hysteresis needed (clear boundary conditions)
 
-Validation: All ideal zone LEDs illuminate red, overrides other layers, immediate transitions.
+Validation: Background ideal zone always visible at 2%, full brightness overrides other layers when in zone,
+           immediate brightness transition provides clear feedback, no visual glitches.
 
 ### DSN-DSP-ANIM-03: Emergency Blinking Pattern Design
 
@@ -237,7 +260,24 @@ typedef struct {
 
 - **Priority**: Highest - overwrites all other layers when distance < min
 
-Validation: Blink frequency accurate (1 Hz ± 10%), pattern positions correct, overrides all layers.
+**Layer Suppression During Emergency**:
+
+- When emergency active (`distance < min`), skip rendering of:
+  - Ideal zone background layer (2% red)
+  - Animation layer (directional guidance)
+  - Position layer (current location)
+  - Ideal zone full brightness layer (not reachable during emergency)
+- Only emergency blink pattern renders
+- Clear visual focus: ONLY the danger warning, no distractions
+
+**Emergency Exit**:
+
+- When distance returns to valid range, resume normal layer rendering
+- Ideal zone background becomes visible again
+- Immediate transition, no hysteresis
+
+Validation: Blink frequency accurate (1 Hz ± 10%), pattern positions correct, overrides all layers,
+           ideal zone background suppressed during emergency, clean transition when exiting emergency.
 
 ### DSN-DSP-ANIM-04: Frame-Based Timing Architecture
 

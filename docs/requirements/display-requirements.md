@@ -120,9 +120,9 @@ This document specifies requirements for the Display System, enabling visual rep
 - AC-1: Minimum configured distance maps exactly to first LED (position 0)
 - AC-2: Maximum configured distance maps exactly to last LED (position led_count-1)
 - AC-3: LED position calculated using linear interpolation between positions 0 and led_count-1
-- AC-4: Zone 1 "too close" (position < ideal_start): Green LED at position + orange animation (see REQ-DSP-ANIM-02)
+- AC-4: Zone 1 "too close" (position < ideal_start): Orange LED at position (50% brightness) + red animation (100% brightness) (see REQ-DSP-ANIM-02)
 - AC-5: Zone 2 "ideal" (ideal_start ≤ position ≤ ideal_end): All ideal zone LEDs red (see REQ-DSP-ANIM-03)
-- AC-6: Zone 3 "too far" (position > ideal_end): Green LED at position + blue animation (see REQ-DSP-ANIM-01)
+- AC-6: Zone 3 "too far" (position > ideal_end): Green LED at position + white animation (see REQ-DSP-ANIM-01)
 - AC-7: Zone boundaries calculated using integer arithmetic for embedded efficiency
 - AC-8: Ideal zone size = 10% of LED count, centered at 30% position
 
@@ -171,14 +171,14 @@ This document specifies requirements for the Display System, enabling visual rep
 
 **Type**: User Experience  
 **Priority**: Mandatory  
-**Description**: The display system SHALL show a running blue LED animation from the far end toward the ideal zone when the vehicle is in the "too far" zone, guiding the user to move closer.
+**Description**: The display system SHALL show a running white LED animation from the far end toward the ideal zone when the vehicle is in the "too far" zone, guiding the user to move closer.
 
-**Rationale**: Blue color at low brightness (2% = ~5/255) provides directional guidance without overwhelming the green position indicator. Animation runs from LED 39 (or led_count-1) toward ideal_end at 100ms per LED step, creating smooth directional motion that intuitively guides the user closer.
+**Rationale**: White color at low brightness (2% = ~5/255) provides directional guidance without overwhelming the green position indicator. Animation runs from LED 39 (or led_count-1) toward ideal_end at 100ms per LED step, creating smooth directional motion that intuitively guides the user closer.
 
 **Acceptance Criteria**:
 
 - AC-1: Animation runs when position > ideal_end (too far zone)
-- AC-2: Blue LED color at 2% brightness (~5/255 RGB values)
+- AC-2: White LED color at 2% brightness (~5/255 RGB values)
 - AC-3: Animation starts at LED position led_count-1 (far end)
 - AC-4: Animation moves toward ideal_end at 100ms per LED step
 - AC-5: Animation loops continuously while in too far zone
@@ -191,19 +191,19 @@ This document specifies requirements for the Display System, enabling visual rep
 
 **Type**: User Experience  
 **Priority**: Mandatory  
-**Description**: The display system SHALL show a running orange LED animation from the near end toward the ideal zone when the vehicle is in the "too close" zone, guiding the user to move away.
+**Description**: The display system SHALL show a running red LED animation from the near end toward the ideal zone when the vehicle is in the "too close" zone, guiding the user to move away.
 
-**Rationale**: Orange color at low brightness (2% = ~5/255) provides directional guidance without overwhelming the green position indicator. Animation runs from LED 0 toward ideal_start at 100ms per LED step, creating smooth directional motion that intuitively guides the user away.
+**Rationale**: Red color at full brightness (100% = 255/255) provides strong directional guidance and warning. Animation runs from LED 0 toward ideal_start at 100ms per LED step, creating smooth directional motion that intuitively guides the user away. Position indicator rendered at 50% brightness to remain visible but subordinate to the warning animation.
 
 **Acceptance Criteria**:
 
 - AC-1: Animation runs when position < ideal_start (too close zone)
-- AC-2: Orange LED color at 2% brightness (~5/255 RGB values)
+- AC-2: Red LED color at 100% brightness (255/255 RGB values)
 - AC-3: Animation starts at LED position 0 (near end)
 - AC-4: Animation moves toward ideal_start at 100ms per LED step
 - AC-5: Animation loops continuously while in too close zone
 - AC-6: Animation stops immediately when entering ideal zone or too far zone
-- AC-7: Animation layer renders below position layer (green position LED visible on top)
+- AC-7: Position indicator rendered at 50% brightness to maintain visibility
 
 ---
 
@@ -211,18 +211,19 @@ This document specifies requirements for the Display System, enabling visual rep
 
 **Type**: User Experience  
 **Priority**: Mandatory  
-**Description**: The display system SHALL illuminate all LEDs in the ideal zone with solid red color when the measured position is within the ideal zone, providing clear STOP signal using universal traffic signal color.
+**Description**: The display system SHALL illuminate all LEDs in the ideal zone with red color to provide visual target guidance. The ideal zone SHALL be visible at 2% brightness at all times as a background reference, and SHALL illuminate at 100% brightness when the measured position is within the ideal zone, providing clear STOP signal using universal traffic signal color.
 
-**Rationale**: Red is universally recognized as STOP signal. When vehicle reaches ideal zone, all LEDs in that zone (ideal_start through ideal_end) turn solid red, providing unmistakable "park anywhere in this zone" indication. No position indicator or animation needed - the entire zone is valid.
+**Rationale**: Red is universally recognized as STOP signal. The ideal zone is always visible at low brightness (2%) to show the driver the target parking position regardless of current location. When vehicle reaches ideal zone, all LEDs in that zone (ideal_start through ideal_end) turn solid red at 100% brightness, providing unmistakable "park anywhere in this zone" indication. No position indicator or animation needed - the entire zone is valid. The brightness increase from 2% to 100% provides clear positive feedback when the target is reached.
 
 **Acceptance Criteria**:
 
-- AC-1: All LEDs from ideal_start to ideal_end illuminate solid red when ideal_start ≤ position ≤ ideal_end
-- AC-2: Red color at 100% brightness (255, 0, 0)
-- AC-3: No position indicator shown (entire zone is valid)
-- AC-4: No animation layer shown (destination reached)
-- AC-5: Pattern persists while position remains in ideal zone
-- AC-6: Ideal zone rendering has priority over animation and position layers
+- AC-1: All LEDs from ideal_start to ideal_end illuminate red at 2% brightness at all times (background layer)
+- AC-2: When ideal_start ≤ position ≤ ideal_end, ideal zone LEDs illuminate at 100% brightness (255, 0, 0)
+- AC-3: Background ideal zone (2%) is visible in Zone 1 (too close) and Zone 3 (too far)
+- AC-4: No position indicator shown when in ideal zone (entire zone is valid)
+- AC-5: No animation layer shown when in ideal zone (destination reached)
+- AC-6: Full brightness ideal zone (100%) has priority over animation and position layers
+- AC-7: Background ideal zone (2%) renders below animation and position layers
 
 ---
 
@@ -230,19 +231,20 @@ This document specifies requirements for the Display System, enabling visual rep
 
 **Type**: Implementation  
 **Priority**: Mandatory  
-**Description**: The display system SHALL implement a dual-layer rendering architecture with clear layer priority: Emergency > Ideal Zone > Position > Animation, ensuring proper visual compositing.
+**Description**: The display system SHALL implement a multi-layer rendering architecture with clear layer priority: Emergency > Ideal Zone (full) > Position > Animation > Ideal Zone (background), ensuring proper visual compositing.
 
-**Rationale**: Layered rendering architecture allows independent animation and position updates with deterministic priority. Emergency warnings must override all other displays, ideal zone indication overrides position/animation, position indicator must be visible over animation layer for current location feedback.
+**Rationale**: Layered rendering architecture allows independent animation and position updates with deterministic priority. Emergency warnings must override all other displays, full brightness ideal zone indication overrides position/animation when reached, position indicator must be visible over animation layer for current location feedback, and background ideal zone provides constant visual reference at lowest priority.
 
 **Acceptance Criteria**:
 
-- AC-1: Animation layer renders first (base layer, 2% brightness)
-- AC-2: Position layer renders second (green LED at measured position, 100% brightness)
-- AC-3: Ideal zone rendering overrides position and animation (all red)
-- AC-4: Emergency pattern renders last (highest priority, overrides all layers)
-- AC-5: Single led_show() call per frame updates all LEDs atomically
-- AC-6: Frame rate of 10 FPS (100ms per frame) for animation steps
-- AC-7: No blocking delays in rendering pipeline (use FreeRTOS timer for animation timing)
+- AC-1: Ideal zone background layer renders first (base layer, 2% red brightness, always visible)
+- AC-2: Animation layer renders second (2-100% brightness depending on zone)
+- AC-3: Position layer renders third (orange or green LED at measured position, 50-100% brightness)
+- AC-4: Ideal zone full brightness overrides position and animation (all red at 100%)
+- AC-5: Emergency pattern renders last (highest priority, overrides all layers)
+- AC-6: Single led_show() call per frame updates all LEDs atomically
+- AC-7: Frame rate of 10 FPS (100ms per frame) for animation steps
+- AC-8: No blocking delays in rendering pipeline (use FreeRTOS timer for animation timing)
 
 ---
 
@@ -251,9 +253,9 @@ This document specifies requirements for the Display System, enabling visual rep
 **Type**: Implementation  
 **Priority**: Mandatory  
 **Depends**: REQ-DSP-VISUAL-03  
-**Description**: The display system SHALL implement a 1 Hz blinking pattern on every 10th LED position when distance is below minimum threshold, creating urgent visual warning.
+**Description**: The display system SHALL implement a 1 Hz blinking pattern on every 10th LED position when distance is below minimum threshold, creating urgent visual warning. All other display layers SHALL be suppressed during emergency mode to ensure maximum focus on the warning.
 
-**Rationale**: Blinking pattern implementation requires timing state machine with 500ms ON/OFF cycles. Every 10th LED (0, 10, 20, 30, ...) creates distributed warning pattern visible from any viewing angle. Highest priority ensures emergency always visible.
+**Rationale**: Blinking pattern implementation requires timing state machine with 500ms ON/OFF cycles. Every 10th LED (0, 10, 20, 30, ...) creates distributed warning pattern visible from any viewing angle. Highest priority ensures emergency always visible. Suppressing ideal zone background and other layers during emergency eliminates visual distractions and focuses driver attention exclusively on the danger warning, enabling faster reaction time.
 
 **Acceptance Criteria**:
 
@@ -264,6 +266,7 @@ This document specifies requirements for the Display System, enabling visual rep
 - AC-5: Pattern overrides all other layers (highest priority)
 - AC-6: Only affects multiples of 10 positions (0, 10, 20, 30, ...)
 - AC-7: Emergency pattern activates immediately when distance < min_distance_cm
+- AC-8: Ideal zone background and all other layers are suppressed during emergency mode
 
 ---
 
