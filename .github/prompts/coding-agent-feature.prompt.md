@@ -2,7 +2,13 @@
 description: Generate GitHub Issue for Coding Agent from feature description
 ---
 
-Generate a complete GitHub Issue for the ESP32 Distance Sensor project that can be assigned to the GitHub Copilot Coding Agent.
+# ⚠️ CRITICAL: This prompt uses GitHub MCP Server to create issues automatically
+
+**You MUST use the `mcp_github_create_issue` tool - DO NOT output text for manual creation!**
+
+---
+
+Generate a complete GitHub Issue for the ESP32 Distance Sensor project that will be assigned to the GitHub Copilot Coding Agent.
 
 ## Feature Request
 
@@ -22,23 +28,14 @@ Analyze the feature request above and:
    - Nice-to-have features = Low
 4. **Extract clear objective** - what needs to be done and why
 5. **Infer current behavior** from codebase context
-6. **Generate complete GitHub Issue** with all mandatory workflow steps
+6. **CREATE THE ISSUE using `mcp_github_create_issue` tool** (owner: "enthali", repo: "esp32-distance")
 
 ---
 
-## Generate Issue
+## Issue Structure Template
 
-Create a GitHub Issue with this exact structure:
+When creating the issue with `mcp_github_create_issue`, use this structure for the **body** parameter:
 
-### Issue Title
-
-```text
-[Feature]: <Generate clear, concise title from feature request> #github-pull-request_copilot-coding-agent
-```
-
-### Issue Body
-
-```markdown
 ## 🎯 Objective
 
 <Rewrite feature request as clear objective - what needs to be done and why>
@@ -73,13 +70,13 @@ Create a GitHub Issue with this exact structure:
 2. Document design decisions in code comments with traceability:
    \`\`\`c
    /**
-    * @brief Function description
-    * 
-    * DESIGN TRACEABILITY:
-    * - DSN-<AREA>-<ID>: Design decision reference
-    * 
-    * REQUIREMENTS TRACEABILITY:
-    * - REQ-<AREA>-<ID>: Requirement reference
+    - @brief Function description
+    -
+    - DESIGN TRACEABILITY:
+    - - DSN-<AREA>-<ID>: Design decision reference
+    -
+    - REQUIREMENTS TRACEABILITY:
+    - - REQ-<AREA>-<ID>: Requirement reference
     */
    \`\`\`
 3. Update \`docs/design/<component>-design.md\` if architectural changes
@@ -99,22 +96,14 @@ Follow ESP32 coding standards from \`.github/prompt-snippets/esp32-coding-standa
 **YOU MUST RUN THESE COMMANDS BEFORE COMMITTING:**
 
 \`\`\`bash
-# 1. Install tools (available in GitHub Actions environment)
 pip install pre-commit mkdocs mkdocs-material markdownlint-cli
-
-# 2. For documentation changes - auto-fix errors
-markdownlint --fix docs/**/*.md *.md
-
-# 3. Verify documentation builds
+markdownlint --fix docs/**/*.md*.md
 mkdocs build --strict
-
-# 4. Run pre-commit hooks
 pre-commit run --all-files --show-diff-on-failure
-
-# 5. ONLY commit if ALL checks pass!
 \`\`\`
 
 **Why this is critical:**
+
 - CI runs AFTER you commit (too late to fix)
 - You will be offline when CI reports errors
 - Human maintainer must manually fix your mistakes
@@ -157,22 +146,47 @@ Before submitting PR verify:
 - [ ] Memory usage acceptable (\`idf.py size\`)
 - [ ] Commit messages follow project format
 - [ ] Traceability maintained (REQ → DSN → Implementation)
-```
+
+```text
 
 ---
 
 ## Output Instructions
 
-After generating the issue:
+⚠️ **CRITICAL: USE GITHUB MCP SERVER TO CREATE ISSUE**
 
-1. **Present the complete issue** (title + body) in a code block for easy copying
-2. **Provide direct link** to create issue: `https://github.com/enthali/esp32-distance/issues/new`
-3. **Explain your analysis**:
-   - Which requirements you found (or why new ones are needed)
+**DO NOT** output issue text for manual creation. **ALWAYS** use the GitHub MCP Server tool directly.
+
+### Issue Creation Steps
+
+1. **Analyze the feature request** (search codebase, requirements, determine priority)
+
+2. **Create the issue using `mcp_github_create_issue` tool**:
+   - **owner**: `"enthali"`
+   - **repo**: `"esp32-distance"`
+   - **title**: `"[Feature]: <clear title> #github-pull-request_copilot-coding-agent"`
+   - **body**: Complete markdown issue body with all sections (Objective, Context, Technical Details, Workflow Steps, Success Criteria)
+   - **labels**: `["feature", "<component>", "coding-agent"]` (e.g., `["feature", "led-controller", "coding-agent"]`)
+
+3. **After creating the issue**, explain your analysis:
+   - Which requirements you found (or identified as needed)
    - Which components you identified as affected
    - Priority level and reasoning
    - Any technical considerations discovered
+   - Link to the created issue
 
-The user will copy-paste the generated issue to GitHub where it will be automatically assigned to the Coding Agent via the hashtag.
+### Example Tool Usage
+
+```json
+{
+  "owner": "enthali",
+  "repo": "esp32-distance",
+  "title": "[Feature]: Implement dual-layer LED animation system #github-pull-request_copilot-coding-agent",
+  "body": "## 🎯 Objective\n\n...\n\n## MANDATORY WORKFLOW...",
+  "labels": ["feature", "led-controller", "coding-agent"]
+}
+```
+
+**DO NOT** ask the user to create the issue manually. The GitHub MCP Server will create it automatically.
 
 - ✅ Traceability maintained (REQ → DSN → Implementation)
