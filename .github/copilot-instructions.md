@@ -1,5 +1,7 @@
 # ESP32 Distance Sensor Project - GitHub Copilot Instructions
 
+> **Note**: These instructions are for GitHub Copilot coding agent to help with code generation, issue resolution, and pull request improvements in this repository.
+
 You are working on an ESP32-based IoT distance sensor project that measures distance using an HC-SR04 ultrasonic sensor and displays results on a WS2812 LED strip. The project includes WiFi connectivity, a web interface with captive portal, and is being enhanced with HTTPS security.
 
 ## Project Context
