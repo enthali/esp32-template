@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: ['main', 'develop']
   push:
-    branches: ['main', 'develop', 'copilot/**']
+    branches: ['main', 'develop', 'copilot/**', 'fix/**', 'feat/**']
 
 jobs:
   quality-checks:
