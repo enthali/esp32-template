@@ -14,11 +14,13 @@ Implemented a sophisticated dual-layer LED display system that provides both pos
 ### 1. Requirements Documentation (`docs/requirements/display-requirements.md`)
 
 **Updated Requirements** (3):
+
 - **REQ-DSP-VISUAL-02**: Changed from simple three-zone color scheme to dual-layer architecture with position + animation layers
 - **REQ-DSP-VISUAL-03**: Changed from single red LED to emergency blinking pattern (every 10th LED at 1 Hz)
 - **REQ-DSP-VISUAL-04**: Changed from static red LED to animation-only display when out of range
 
 **New Requirements** (5):
+
 - **REQ-DSP-ANIM-01**: "Too far" zone animation (blue LED at 2% brightness, LED 39→ideal_end)
 - **REQ-DSP-ANIM-02**: "Too close" zone animation (orange LED at 2% brightness, LED 0→ideal_start)
 - **REQ-DSP-ANIM-03**: Ideal zone display (all ideal zone LEDs red, no position/animation)
@@ -30,10 +32,12 @@ Implemented a sophisticated dual-layer LED display system that provides both pos
 ### 2. Design Documentation (`docs/design/display-design.md`)
 
 **Updated Design Sections**:
+
 - **DSN-DSP-ALGO-01**: Updated distance-to-visual mapping for zone-based dual-layer behavior
 - **DSN-DSP-ALGO-02**: Changed from simple clear-set-show to frame-based rendering pipeline
 
 **New Design Sections** (4):
+
 - **DSN-DSP-ANIM-01**: Directional animation design (state machine, colors, looping)
 - **DSN-DSP-ANIM-02**: Ideal zone display design (all LEDs red when in target zone)
 - **DSN-DSP-ANIM-03**: Emergency blinking pattern design (1 Hz timing, every 10th LED)
@@ -59,11 +63,13 @@ Created comprehensive test specification with **10 test groups** covering:
 ### 4. Implementation (`main/components/display_logic/display_logic.c`)
 
 **Code Changes**:
+
 - **Lines**: 581 (was 226) - **+355 lines** added
 - **Functions Added**: 7 new functions
 - **Data Structures**: 3 new structs for animation/blink/zone state
 
 **New Functions**:
+
 1. `calculate_zones()`: Configuration-independent zone boundary calculation
 2. `update_animation_state()`: Zone-based animation activation/deactivation
 3. `advance_animation()`: Animation position update with looping
@@ -73,6 +79,7 @@ Created comprehensive test specification with **10 test groups** covering:
 7. `update_led_display()`: Updated for zone-based behavior and animation state management
 
 **New Data Structures**:
+
 ```c
 typedef struct {
     uint8_t current_position;    // Current animation LED position
@@ -109,6 +116,7 @@ ideal_end = ideal_start + ideal_size - 1;
 ```
 
 Example for 40 LEDs:
+
 - ideal_size = 4, ideal_center = 12
 - ideal_start = 10, ideal_end = 13
 - Zones: Too close [0-9], Ideal [10-13], Too far [14-39]
@@ -116,30 +124,35 @@ Example for 40 LEDs:
 ### Display Behavior by Zone
 
 #### Zone 1: Too Close (position < ideal_start)
+
 - **Position Layer**: Green LED at current measured position (100% brightness)
 - **Animation Layer**: Orange LED at 2% brightness, runs from LED 0 → ideal_start
 - **Speed**: 100ms per LED step, loops continuously
 - **Purpose**: Guide user to move away toward ideal zone
 
 #### Zone 2: Ideal (ideal_start ≤ position ≤ ideal_end)
+
 - **All ideal zone LEDs turn RED** (STOP signal)
 - No position indicator (entire zone is valid)
 - No animation layer (destination reached)
 - **Purpose**: Clear "park anywhere in this zone" indication
 
 #### Zone 3: Too Far (position > ideal_end)
+
 - **Position Layer**: Green LED at current measured position (100% brightness)
 - **Animation Layer**: Blue LED at 2% brightness, runs from LED 39 → ideal_end
 - **Speed**: 100ms per LED step, loops continuously
 - **Purpose**: Guide user to move closer toward ideal zone
 
 #### Emergency: Below Minimum Distance
+
 - **Every 10th LED blinks RED** (LEDs 0, 10, 20, 30)
 - Blink frequency: 1 Hz (500ms ON, 500ms OFF)
 - Overrides all other layers (highest priority)
 - **Purpose**: Urgent warning of dangerous proximity
 
 #### Out of Range: Above Maximum Distance
+
 - **Animation layer only** (blue "too far" animation)
 - No green position indicator (measurement invalid)
 - **Purpose**: Directional guidance when exact position unreliable
@@ -177,12 +190,14 @@ esp_timer_start_periodic(animation_timer, 100000);  // 100ms = 100000µs
 ```
 
 **Timer Callback** (every 100ms):
+
 1. Advance animation position
 2. Toggle blink state (every 500ms)
 3. Render frame with current state
 4. Return immediately (<1ms execution time)
 
 **Performance**:
+
 - Frame rate: 10 FPS (100ms per frame)
 - Callback execution: <1ms
 - No blocking of distance sensor task (priority 6)
@@ -227,12 +242,14 @@ Minimal additional RAM usage:
 ## Testing Status
 
 ### Automated Tests (To Be Implemented)
+
 - [ ] Zone calculation unit tests
 - [ ] Animation state machine tests
 - [ ] Layer compositing tests
 - [ ] Timer performance tests
 
 ### Manual Tests (Documented in TST-DSP-ANIM-10)
+
 - [ ] Parking approach simulation (far → ideal → close)
 - [ ] Color recognition test (blue/orange/red/green)
 - [ ] Zone transition smoothness
@@ -240,6 +257,7 @@ Minimal additional RAM usage:
 - [ ] Animation frame rate verification
 
 ### Build Verification (CI)
+
 - [ ] ESP-IDF build success
 - [ ] Memory usage check (idf.py size)
 - [ ] No compiler warnings
