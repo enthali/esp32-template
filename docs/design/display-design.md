@@ -10,6 +10,10 @@
 | DSN-DSP-ALGO-01 | REQ-DSP-IMPL-03, REQ-DSP-VISUAL-01, REQ-DSP-VISUAL-02, REQ-DSP-VISUAL-03, REQ-DSP-VISUAL-04 | Mandatory |
 | DSN-DSP-ALGO-02 | REQ-DSP-IMPL-02 | Mandatory |
 | DSN-DSP-ALGO-03 | REQ-SYS-1 | Mandatory |
+| DSN-DSP-ANIM-01 | REQ-DSP-ANIM-01, REQ-DSP-ANIM-02, REQ-DSP-ANIM-04 | Mandatory |
+| DSN-DSP-ANIM-02 | REQ-DSP-ANIM-03, REQ-DSP-ANIM-04 | Mandatory |
+| DSN-DSP-ANIM-03 | REQ-DSP-ANIM-05, REQ-DSP-VISUAL-03 | Mandatory |
+| DSN-DSP-ANIM-04 | REQ-DSP-ANIM-04 | Mandatory |
 | DSN-DSP-API-01 | REQ-DSP-IMPL-01 | Mandatory |
 
 ## Target Design Architecture
@@ -60,33 +64,59 @@ Addresses: REQ-DSP-IMPL-03, REQ-DSP-VISUAL-01/02/03/04
 
 Design:
 
-- Normal range (min ≤ distance ≤ max): LED at calculated position with three-zone color scheme
+- **Zone Calculation** (configuration-independent, integer math):
+  - `ideal_size = (led_count * 10) / 100` (10% of strip)
+  - `ideal_center = (led_count * 30) / 100` (30% position)
+  - `ideal_start = ideal_center - (ideal_size / 2)`
+  - `ideal_end = ideal_start + ideal_size - 1`
+  - Example for 40 LEDs: ideal_center=12, ideal_size=4, ideal_start=10, ideal_end=13
+
+- **Normal range** (min ≤ distance ≤ max): Dual-layer display with zone-based behavior
   - Position Formula: `led_index = (distance_mm - min_mm) * (led_count - 1) / (max_mm - min_mm)`
-  - Zone 1 (0 ≤ led_index < led_count/4): RED - "too close" zone
-  - Zone 2 (led_count/4 ≤ led_index < led_count/2): GREEN - "ideal positioning" zone
-  - Zone 3 (led_count/2 ≤ led_index < led_count): ORANGE - "acceptable but not ideal" zone
-  - Zone boundaries use integer division for efficiency: `zone1_end = led_count / 4`, `zone2_end = led_count / 2`
-- Below minimum (distance < min): Red LED at position 0
-- Above maximum (distance > max): Red LED at position `led_count-1`
-- Boundary clamping ensures valid LED positions `[0, led_count-1]`
-- Single LED illumination enforced by logic
+  - Zone 1 "too close" (led_index < ideal_start): Green position LED + orange animation (see DSN-DSP-ANIM-01)
+  - Zone 2 "ideal" (ideal_start ≤ led_index ≤ ideal_end): All ideal zone LEDs red (see DSN-DSP-ANIM-02)
+  - Zone 3 "too far" (led_index > ideal_end): Green position LED + blue animation (see DSN-DSP-ANIM-01)
 
-Validation: Min distance → LED 0, max distance → LED `led_count-1`, linear interpolation between,
-            zone colors apply correctly based on position, below/above range → correct red LED positions.
+- **Below minimum** (distance < min): Emergency blinking pattern (see DSN-DSP-ANIM-03)
+- **Above maximum** (distance > max): Blue "too far" animation only (no position indicator)
+- **Boundary clamping**: Ensures valid LED positions `[0, led_count-1]`
 
-### DSN-DSP-ALGO-02: LED Update Pattern Design (HOW to display)
+Validation: Zone boundaries calculated correctly for 20-100 LED configurations, position mapping linear,
+           animations trigger in correct zones, ideal zone calculation centered properly.
 
-Addresses: REQ-DSP-IMPL-02
+### DSN-DSP-ALGO-02: Dual-Layer Rendering Pipeline (HOW to display)
 
-Design:
+Addresses: REQ-DSP-IMPL-02, REQ-DSP-ANIM-04
 
-- Step 1: `led_clear_all()` - set all LEDs to off state
-- Step 2: `led_set_pixel(position, color)` - set desired LED from ALGO-01 decision
-- Step 3: `led_show()` - transmit complete buffer to WS2812 strip
+Design: Frame-based rendering with priority-based layer compositing
 
-WS2812 serial protocol requires complete buffer transmission; clear-and-set pattern guarantees only one LED illuminated.
+**Rendering Pipeline** (executed at 10 FPS / 100ms intervals):
 
-Validation: Only one LED illuminated after each update, WS2812 transmission successful.
+1. **Clear**: `led_clear_all()` - reset all LEDs to off state
+2. **Animation Layer** (base, 2% brightness):
+   - If in "too far" zone: Render blue animation LED at current animation position
+   - If in "too close" zone: Render orange animation LED at current animation position
+   - If out of range (above max): Render blue animation LED only
+3. **Position Layer** (overlay, 100% brightness):
+   - If in valid range AND not in ideal zone: Render green LED at measured position
+   - Position LED overwrites animation LED if at same position (higher brightness dominates)
+4. **Ideal Zone Layer** (override):
+   - If in ideal zone: Overwrite ALL ideal zone LEDs with red (ideal_start through ideal_end)
+   - No position or animation shown (entire zone is valid)
+5. **Emergency Layer** (highest priority):
+   - If below minimum: Overwrite LEDs 0, 10, 20, 30... with blinking red (500ms ON/OFF)
+   - Emergency pattern overrides all other layers
+6. **Commit**: `led_show()` - transmit complete buffer to WS2812 strip atomically
+
+**Timing Architecture**:
+
+- FreeRTOS timer callback at 100ms intervals for animation updates
+- Timer increments animation position and toggles blink state
+- Distance measurement updates position immediately (no waiting for timer)
+- Non-blocking: Timer callback completes in <1ms
+
+Validation: All layers composite correctly, priority enforced, single led_show() per frame,
+           no visual tearing, animation smooth at 10 FPS.
 
 ### DSN-DSP-ALGO-03: Embedded Arithmetic Architecture Design
 
@@ -104,6 +134,152 @@ Design: Pure integer arithmetic for all distance calculations and display operat
 Rationale: Avoid floating-point on resource-constrained microcontrollers unless necessary.
 
 Validation: All arithmetic operations complete within deterministic time bounds.
+
+### DSN-DSP-ANIM-01: Directional Animation Design
+
+Addresses: REQ-DSP-ANIM-01, REQ-DSP-ANIM-02, REQ-DSP-ANIM-04
+
+Design: Running LED animation for directional guidance
+
+**Animation State Machine**:
+
+```c
+typedef struct {
+    uint8_t current_position;    // Current animation LED position
+    bool animation_active;       // Is animation running?
+    bool animation_direction;    // true = forward (too close), false = backward (too far)
+    uint8_t animation_start;     // Start position for animation
+    uint8_t animation_end;       // End position for animation
+} animation_state_t;
+```
+
+**Animation Behavior**:
+
+- **Too Far Zone** (position > ideal_end):
+  - Start: LED position `led_count - 1` (far end)
+  - End: LED position `ideal_end` (ideal zone boundary)
+  - Direction: Backward (toward ideal zone)
+  - Color: Blue at 2% brightness (RGB: ~5, ~5, ~128)
+  - Loop: When reaching ideal_end, restart from led_count-1
+
+- **Too Close Zone** (position < ideal_start):
+  - Start: LED position 0 (near end)
+  - End: LED position `ideal_start` (ideal zone boundary)
+  - Direction: Forward (toward ideal zone)
+  - Color: Orange at 2% brightness (RGB: ~128, ~42, ~0)
+  - Loop: When reaching ideal_start, restart from 0
+
+- **Animation Update** (100ms timer callback):
+  - Increment/decrement current_position based on direction
+  - Wrap around when reaching end position
+  - Update happens independent of distance measurement updates
+
+**Color Calculation** (2% brightness):
+
+```c
+// Blue: led_color_brightness(LED_COLOR_BLUE, 5)  → (~0, ~0, ~5)
+// Orange: led_color_brightness(LED_COLOR_ORANGE, 5) → (~5, ~2, ~0)
+```
+
+Validation: Animation smooth, loops correctly, stops when zone changes, color brightness correct.
+
+### DSN-DSP-ANIM-02: Ideal Zone Display Design
+
+Addresses: REQ-DSP-ANIM-03, REQ-DSP-ANIM-04
+
+Design: Solid red indication for ideal parking zone
+
+**Ideal Zone Rendering**:
+
+- When `ideal_start ≤ led_index ≤ ideal_end`:
+  - Loop through LEDs from ideal_start to ideal_end
+  - Set each LED to solid red (255, 0, 0) at 100% brightness
+  - Overwrite any animation or position layer LEDs in this range
+  - No animation running
+  - No position indicator (entire zone valid)
+
+**Zone Persistence**:
+
+- Ideal zone display persists while position remains in zone
+- Immediately switches to position+animation when exiting zone
+- No hysteresis needed (clear boundary conditions)
+
+Validation: All ideal zone LEDs illuminate red, overrides other layers, immediate transitions.
+
+### DSN-DSP-ANIM-03: Emergency Blinking Pattern Design
+
+Addresses: REQ-DSP-ANIM-05, REQ-DSP-VISUAL-03
+
+Design: 1 Hz blinking pattern on every 10th LED for emergency warning
+
+**Blink State Machine**:
+
+```c
+typedef struct {
+    bool blink_state;           // true = ON, false = OFF
+    uint32_t last_toggle_ms;    // Last toggle timestamp
+} blink_state_t;
+```
+
+**Blink Behavior**:
+
+- **Timing**: Toggle every 500ms using FreeRTOS tick count
+  - `if (current_time_ms - last_toggle_ms >= 500) { toggle blink_state }`
+  
+- **LED Positions**: Every 10th position (0, 10, 20, 30, ...)
+  - Loop: `for (int i = 0; i < led_count; i += 10)`
+  
+- **ON State** (blink_state = true):
+  - LEDs 0, 10, 20, 30... = Red (255, 0, 0)
+  
+- **OFF State** (blink_state = false):
+  - LEDs 0, 10, 20, 30... = Off (0, 0, 0)
+
+- **Priority**: Highest - overwrites all other layers when distance < min
+
+Validation: Blink frequency accurate (1 Hz ± 10%), pattern positions correct, overrides all layers.
+
+### DSN-DSP-ANIM-04: Frame-Based Timing Architecture
+
+Addresses: REQ-DSP-ANIM-04
+
+Design: FreeRTOS timer for non-blocking animation updates
+
+**Timer Configuration**:
+
+```c
+esp_timer_handle_t animation_timer;
+esp_timer_create_args_t timer_args = {
+    .callback = animation_timer_callback,
+    .arg = NULL,
+    .dispatch_method = ESP_TIMER_TASK,  // Run in timer task context
+    .name = "anim_timer"
+};
+esp_timer_create(&timer_args, &animation_timer);
+esp_timer_start_periodic(animation_timer, 100000);  // 100ms = 100000µs
+```
+
+**Timer Callback** (100ms intervals):
+
+1. Get current distance measurement (cached from display task)
+2. Update animation state (increment position, toggle blink)
+3. Render frame using dual-layer pipeline (DSN-DSP-ALGO-02)
+4. Return immediately (non-blocking, <1ms execution time)
+
+**Synchronization**:
+
+- Distance measurement updates shared variable (atomic read/write on ESP32)
+- Timer task priority set lower than display task
+- No mutex needed (simple state machine, single writer)
+
+**Memory Overhead**:
+
+- animation_state_t: ~6 bytes
+- blink_state_t: ~8 bytes
+- Timer handle: ~4 bytes
+- Total: ~18 bytes additional RAM
+
+Validation: Timer accuracy ±5ms, callback execution <1ms, no blocking, animation smooth.
 
 ### DSN-DSP-API-01: Simplified API Design
 
