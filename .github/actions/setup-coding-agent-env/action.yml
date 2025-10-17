@@ -9,13 +9,14 @@ runs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
-        cache: 'pip'
+        # Note: No cache for pip since we don't have requirements.txt
+        # Tools are installed directly via pip install in next step
     
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-        cache: 'npm'
+        # Note: No cache for npm since we install global packages
     
     - name: Install Python tools
       shell: bash
