@@ -1,0 +1,624 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html">
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+        <title>ESP32 Template Emulator Support - ESP32 Template Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">ESP32 Template Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <span class="sidebar-brand-text">ESP32 Template Documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/emulator-support.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="esp32-template-emulator-support">
+<h1>ESP32 Template Emulator Support<a class="headerlink" href="#esp32-template-emulator-support" title="Link to this heading">¶</a></h1>
+<p>This document explains the QEMU emulator support in the ESP32 template, which enables development and testing without physical hardware.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>The template includes QEMU emulation support that allows you to:</p>
+<ul class="simple">
+<li><p>Test your application without physical ESP32 hardware</p></li>
+<li><p>Debug with GDB in a virtual environment</p></li>
+<li><p>Simulate network communication via UART bridge</p></li>
+<li><p>Develop and iterate faster without hardware constraints</p></li>
+</ul>
+<p>When building for the emulator, you can optionally create simulator implementations of your hardware components that maintain identical APIs to the real hardware versions. This allows the same application code to run in both hardware and emulated environments without modification.</p>
+</section>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading">¶</a></h2>
+<section id="hardware-abstraction-strategy-optional">
+<h3>Hardware Abstraction Strategy (Optional)<a class="headerlink" href="#hardware-abstraction-strategy-optional" title="Link to this heading">¶</a></h3>
+<p>When you need to simulate hardware components, you can use a <strong>clean separation approach</strong>:</p>
+<ul class="simple">
+<li><p><strong>Same headers</strong>: Identical APIs for both hardware and simulator versions</p></li>
+<li><p><strong>Different source files</strong>: CMake selects appropriate implementation at build time</p></li>
+<li><p><strong>No #ifdef clutter</strong>: Clean, maintainable code without conditional compilation</p></li>
+</ul>
+<p>This is entirely optional - the template’s minimal main.c doesn’t require any hardware simulation.</p>
+</section>
+<section id="network-stack-included">
+<h3>Network Stack (Included)<a class="headerlink" href="#network-stack-included" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Full Network Implementation</strong>: Complete TCP/IP stack via UART-based IP tunnel</p></li>
+<li><p><strong>TUN Device Bridge</strong> (<code class="docutils literal notranslate"><span class="pre">tools/serial_tun_bridge.py</span></code>): Bridges QEMU UART1 to Linux TUN interface</p>
+<ul>
+<li><p>ESP32 address: <code class="docutils literal notranslate"><span class="pre">192.168.100.2/24</span></code></p></li>
+<li><p>Host TUN interface: <code class="docutils literal notranslate"><span class="pre">192.168.100.1/24</span></code></p></li>
+<li><p>Ethernet frame encapsulation for lwIP compatibility</p></li>
+</ul>
+</li>
+<li><p><strong>HTTP Proxy</strong> (<code class="docutils literal notranslate"><span class="pre">tools/http_proxy.py</span></code>): Forwards <code class="docutils literal notranslate"><span class="pre">localhost:8080</span></code> → ESP32 web server</p>
+<ul>
+<li><p>Enables browser access via GitHub Codespaces port forwarding</p></li>
+<li><p>Automatic retry with exponential backoff</p></li>
+<li><p>Handles ESP32 restarts gracefully</p></li>
+</ul>
+</li>
+<li><p><strong>Web Interface</strong>: Fully accessible via network tunnel (real HTTP connections, not localhost mock)</p></li>
+<li><p><strong>See Also</strong>: <a class="reference internal" href="development/qemu-network-internals.html"><span class="std std-doc">Network Internals Documentation</span></a> for deep dive</p></li>
+</ul>
+</section>
+</section>
+<section id="build-configuration">
+<h2>Build Configuration<a class="headerlink" href="#build-configuration" title="Link to this heading">¶</a></h2>
+<section id="kconfig-options">
+<h3>Kconfig Options<a class="headerlink" href="#kconfig-options" title="Link to this heading">¶</a></h3>
+<p>Configuration options in <code class="docutils literal notranslate"><span class="pre">main/Kconfig.projbuild</span></code>:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>TARGET_EMULATOR
+<span class="w">    </span><span class="nb">bool</span><span class="w"> </span><span class="s2">&quot;Build for QEMU emulator&quot;</span>
+<span class="w">    </span><span class="k">default</span><span class="w"> </span>n
+<span class="w">    </span><span class="k">help</span>
+<span class="sd">        Enable this option to build for QEMU emulator instead of real hardware</span>
+
+<span class="k">config</span><span class="w"> </span>EMULATOR_MOCK_DATA
+<span class="w">    </span><span class="nb">bool</span><span class="w"> </span><span class="s2">&quot;Use mocked data in emulator&quot;</span>
+<span class="w">    </span><span class="k">depends on</span><span class="w"> </span>TARGET_EMULATOR
+<span class="w">    </span><span class="k">default</span><span class="w"> </span>y
+<span class="w">    </span><span class="k">help</span>
+<span class="sd">        Generate simulated data for testing</span>
+</pre></div>
+</div>
+</section>
+<section id="cmake-integration">
+<h3>CMake Integration<a class="headerlink" href="#cmake-integration" title="Link to this heading">¶</a></h3>
+<p>The build system automatically selects the correct source files:</p>
+<p><strong>Distance Sensor</strong> (<code class="docutils literal notranslate"><span class="pre">components/distance_sensor/CMakeLists.txt</span></code>):</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">if</span><span class="p">(</span><span class="s">CONFIG_TARGET_EMULATOR</span><span class="p">)</span>
+<span class="w">    </span><span class="nb">set</span><span class="p">(</span><span class="s">COMPONENT_SRCS</span><span class="w"> </span><span class="s2">&quot;distance_sensor_sim.c&quot;</span><span class="p">)</span>
+<span class="nb">else</span><span class="p">()</span>
+<span class="w">    </span><span class="nb">set</span><span class="p">(</span><span class="s">COMPONENT_SRCS</span><span class="w"> </span><span class="s2">&quot;distance_sensor.c&quot;</span><span class="p">)</span>
+<span class="nb">endif</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>LED Controller</strong> (<code class="docutils literal notranslate"><span class="pre">components/led_controller/CMakeLists.txt</span></code>):</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">if</span><span class="p">(</span><span class="s">CONFIG_TARGET_EMULATOR</span><span class="p">)</span>
+<span class="w">    </span><span class="nb">set</span><span class="p">(</span><span class="s">COMPONENT_SRCS</span><span class="w"> </span><span class="s2">&quot;led_controller_sim.c&quot;</span><span class="p">)</span>
+<span class="nb">else</span><span class="p">()</span>
+<span class="w">    </span><span class="nb">set</span><span class="p">(</span><span class="s">COMPONENT_SRCS</span><span class="w"> </span><span class="s2">&quot;led_controller.c&quot;</span><span class="p">)</span>
+<span class="nb">endif</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="usage-instructions">
+<h2>Usage Instructions<a class="headerlink" href="#usage-instructions" title="Link to this heading">¶</a></h2>
+<section id="hardware-build-default">
+<h3>1. Hardware Build (Default)<a class="headerlink" href="#hardware-build-default" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>idf.py<span class="w"> </span>build
+idf.py<span class="w"> </span>flash<span class="w"> </span>monitor
+</pre></div>
+</div>
+</section>
+<section id="emulator-build">
+<h3>2. Emulator Build<a class="headerlink" href="#emulator-build" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configure for emulator</span>
+idf.py<span class="w"> </span>menuconfig
+<span class="c1"># Navigate to: ESP32 Distance Project Configuration</span>
+<span class="c1"># Enable: [x] Build for QEMU emulator</span>
+<span class="c1"># Enable: [x] Use mocked sensor data in emulator</span>
+
+<span class="c1"># Build</span>
+idf.py<span class="w"> </span>build
+
+<span class="c1"># Run in QEMU (example)</span>
+qemu-system-xtensa<span class="w"> </span>-nographic<span class="w"> </span>-M<span class="w"> </span>esp32<span class="w"> </span>-kernel<span class="w"> </span>build/distance.elf
+</pre></div>
+</div>
+</section>
+</section>
+<section id="expected-output">
+<h2>Expected Output<a class="headerlink" href="#expected-output" title="Link to this heading">¶</a></h2>
+<section id="console-logs">
+<h3>Console Logs<a class="headerlink" href="#console-logs" title="Link to this heading">¶</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I (1000) main: ESP32 Distance Measurement with LED Strip Display
+I (1100) led_controller_sim: LED controller simulator initialized: 40 LEDs (terminal visualization)
+I (1200) distance_sensor_sim: Distance sensor simulator initialized successfully  
+I (1300) distance_sensor_sim: Distance sensor simulator started (5cm→60cm→5cm sweep, interval: 1000 ms)
+</pre></div>
+</div>
+</section>
+<section id="animated-distance-readings">
+<h3>Animated Distance Readings<a class="headerlink" href="#animated-distance-readings" title="Link to this heading">¶</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I (2000) distance_sensor_sim: Simulated distance: 5.0 cm (increasing)
+I (3000) distance_sensor_sim: Simulated distance: 5.1 cm (increasing)
+I (4000) distance_sensor_sim: Simulated distance: 5.2 cm (increasing)
+...
+I (58000) distance_sensor_sim: Simulated distance: 60.0 cm (decreasing)
+I (59000) distance_sensor_sim: Simulated distance: 59.9 cm (decreasing)
+</pre></div>
+</div>
+</section>
+<section id="led-strip-visualization">
+<h3>LED Strip Visualization<a class="headerlink" href="#led-strip-visualization" title="Link to this heading">¶</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[LED Strip]: 🔴🔴🔴⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
+
+[LED Strip]: 🟡🟡🟡🟡🟡🟡🟡🟡⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
+
+[LED Strip]: 🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
+
+[LED Strip]: 🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
+</pre></div>
+</div>
+</section>
+<section id="color-mapping-legend">
+<h3>Color Mapping Legend<a class="headerlink" href="#color-mapping-legend" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>🔴 <strong>Red</strong>: Close distances (5-15cm)</p></li>
+<li><p>🟡 <strong>Yellow</strong>: Medium distances (15-35cm)</p></li>
+<li><p>🟢 <strong>Green</strong>: Far distances (35-50cm)</p></li>
+<li><p>🔵 <strong>Blue</strong>: Maximum distances (50-60cm)</p></li>
+<li><p>⚪ <strong>White</strong>: Very bright/mixed colors</p></li>
+<li><p>🟣 <strong>Purple</strong>: Magenta/mixed colors</p></li>
+<li><p>⚫ <strong>Black</strong>: Off/very dim LEDs</p></li>
+</ul>
+</section>
+</section>
+<section id="implementation-details">
+<h2>Implementation Details<a class="headerlink" href="#implementation-details" title="Link to this heading">¶</a></h2>
+<section id="distance-sensor-simulator">
+<h3>Distance Sensor Simulator<a class="headerlink" href="#distance-sensor-simulator" title="Link to this heading">¶</a></h3>
+<p><strong>Animation Logic</strong>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Animate distance: 5cm (50mm) → 60cm (600mm) → 5cm (50mm)</span>
+<span class="n">sim_distance</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">direction</span><span class="p">;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sim_distance</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">600</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// 60.0cm = 600mm</span>
+<span class="w">    </span><span class="n">direction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sim_distance</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// 5.0cm = 50mm  </span>
+<span class="w">    </span><span class="n">direction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Queue Behavior</strong>: Identical to hardware implementation with overflow handling and statistics tracking.</p>
+</section>
+<section id="led-controller-simulator">
+<h3>LED Controller Simulator<a class="headerlink" href="#led-controller-simulator" title="Link to this heading">¶</a></h3>
+<p><strong>Rate Limiting</strong>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">last_display_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">DISPLAY_INTERVAL_US</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000000</span><span class="p">;</span><span class="w"> </span><span class="c1">// 1 second</span>
+
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">led_show</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">esp_timer_get_time</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">last_display_time</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">DISPLAY_INTERVAL_US</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ESP_OK</span><span class="p">;</span><span class="w">  </span><span class="c1">// Suppress output, just return success</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">last_display_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">now</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// ... display emoji output</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Color Analysis</strong>: Intelligent mapping from RGB values to representative emoji blocks based on dominant colors and brightness levels.</p>
+</section>
+</section>
+<section id="benefits">
+<h2>Benefits<a class="headerlink" href="#benefits" title="Link to this heading">¶</a></h2>
+<section id="development-advantages">
+<h3>Development Advantages<a class="headerlink" href="#development-advantages" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>No Hardware Dependencies</strong>: Develop without physical ESP32, sensors, or LEDs</p></li>
+<li><p><strong>Fast Iteration</strong>: Quick build-test cycles without flashing hardware</p></li>
+<li><p><strong>Visual Feedback</strong>: Clear terminal visualization of system behavior</p></li>
+<li><p><strong>CI/CD Friendly</strong>: Automated testing in continuous integration pipelines</p></li>
+<li><p><strong>Cross-Platform</strong>: Develop on any system with QEMU support</p></li>
+</ul>
+</section>
+<section id="testing-advantages">
+<h3>Testing Advantages<a class="headerlink" href="#testing-advantages" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Predictable Behavior</strong>: Animated patterns for systematic testing</p></li>
+<li><p><strong>Integration Testing</strong>: Full system testing without hardware setup</p></li>
+<li><p><strong>Algorithm Validation</strong>: Test LED display logic and distance mapping</p></li>
+<li><p><strong>Performance Analysis</strong>: Monitor queue behavior and timing</p></li>
+</ul>
+</section>
+<section id="educational-benefits">
+<h3>Educational Benefits<a class="headerlink" href="#educational-benefits" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>System Understanding</strong>: Clear visualization of sensor-to-display pipeline</p></li>
+<li><p><strong>Algorithm Learning</strong>: See distance mapping and color gradients in action</p></li>
+<li><p><strong>Real-time Concepts</strong>: Observe queue-based architecture behavior</p></li>
+</ul>
+</section>
+</section>
+<section id="files-modified-created">
+<h2>Files Modified/Created<a class="headerlink" href="#files-modified-created" title="Link to this heading">¶</a></h2>
+<section id="new-files">
+<h3>New Files<a class="headerlink" href="#new-files" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">main/Kconfig.projbuild</span></code> - Build configuration options</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">main/components/distance_sensor/distance_sensor_sim.c</span></code> - Distance sensor simulator</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">main/components/led_controller/led_controller_sim.c</span></code> - LED controller simulator</p></li>
+</ul>
+</section>
+<section id="modified-files">
+<h3>Modified Files<a class="headerlink" href="#modified-files" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">main/components/distance_sensor/CMakeLists.txt</span></code> - Conditional source selection</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">main/components/led_controller/CMakeLists.txt</span></code> - Conditional source selection</p></li>
+</ul>
+</section>
+<section id="unchanged-files">
+<h3>Unchanged Files<a class="headerlink" href="#unchanged-files" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>All header files (<code class="docutils literal notranslate"><span class="pre">.h</span></code>) - APIs remain identical</p></li>
+<li><p>Main application logic - No changes needed</p></li>
+<li><p>WiFi/web server components - Run unchanged</p></li>
+</ul>
+</section>
+</section>
+<section id="validation">
+<h2>Validation<a class="headerlink" href="#validation" title="Link to this heading">¶</a></h2>
+<p>The implementation has been validated for:</p>
+<ul class="simple">
+<li><p>✅ Complete API compatibility with hardware versions</p></li>
+<li><p>✅ Proper CMake conditional compilation</p></li>
+<li><p>✅ Animation logic and timing behavior</p></li>
+<li><p>✅ LED visualization and rate limiting</p></li>
+<li><p>✅ Queue-based architecture and error handling</p></li>
+<li><p>✅ No security vulnerabilities introduced</p></li>
+</ul>
+</section>
+<section id="future-enhancements">
+<h2>Future Enhancements<a class="headerlink" href="#future-enhancements" title="Link to this heading">¶</a></h2>
+<p>Potential improvements for the emulator support:</p>
+<ul class="simple">
+<li><p><strong>Web Interface Preview</strong>: Show LED state in browser</p></li>
+<li><p><strong>Interactive Controls</strong>: Manual distance adjustment via keyboard</p></li>
+<li><p><strong>Performance Metrics</strong>: Queue utilization and timing statistics</p></li>
+<li><p><strong>Multiple Animation Patterns</strong>: Different test sequences</p></li>
+<li><p><strong>Color Scheme Options</strong>: Alternative emoji sets or ASCII mode</p></li>
+</ul>
+<hr class="docutils" />
+<p><em>This emulator support enables efficient development and testing of the ESP32 distance sensor project without requiring physical hardware, while maintaining complete compatibility with the production system.</em></p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, ESP32 Template Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">ESP32 Template Emulator Support</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#architecture">Architecture</a><ul>
+<li><a class="reference internal" href="#hardware-abstraction-strategy-optional">Hardware Abstraction Strategy (Optional)</a></li>
+<li><a class="reference internal" href="#network-stack-included">Network Stack (Included)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#build-configuration">Build Configuration</a><ul>
+<li><a class="reference internal" href="#kconfig-options">Kconfig Options</a></li>
+<li><a class="reference internal" href="#cmake-integration">CMake Integration</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#usage-instructions">Usage Instructions</a><ul>
+<li><a class="reference internal" href="#hardware-build-default">1. Hardware Build (Default)</a></li>
+<li><a class="reference internal" href="#emulator-build">2. Emulator Build</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#expected-output">Expected Output</a><ul>
+<li><a class="reference internal" href="#console-logs">Console Logs</a></li>
+<li><a class="reference internal" href="#animated-distance-readings">Animated Distance Readings</a></li>
+<li><a class="reference internal" href="#led-strip-visualization">LED Strip Visualization</a></li>
+<li><a class="reference internal" href="#color-mapping-legend">Color Mapping Legend</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#implementation-details">Implementation Details</a><ul>
+<li><a class="reference internal" href="#distance-sensor-simulator">Distance Sensor Simulator</a></li>
+<li><a class="reference internal" href="#led-controller-simulator">LED Controller Simulator</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#benefits">Benefits</a><ul>
+<li><a class="reference internal" href="#development-advantages">Development Advantages</a></li>
+<li><a class="reference internal" href="#testing-advantages">Testing Advantages</a></li>
+<li><a class="reference internal" href="#educational-benefits">Educational Benefits</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#files-modified-created">Files Modified/Created</a><ul>
+<li><a class="reference internal" href="#new-files">New Files</a></li>
+<li><a class="reference internal" href="#modified-files">Modified Files</a></li>
+<li><a class="reference internal" href="#unchanged-files">Unchanged Files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#validation">Validation</a></li>
+<li><a class="reference internal" href="#future-enhancements">Future Enhancements</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/jquery.js?v=5d32c60e"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    </body>
+</html>
