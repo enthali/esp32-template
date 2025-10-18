@@ -20,15 +20,16 @@ ${input:featureRequest:Describe the feature you want to implement}
 
 Analyze the feature request above and:
 
-1. **Search the codebase** to identify affected components (files/modules)
-2. **Search docs/requirements/** for related REQ-* requirements
-3. **Determine priority** based on feature type:
+1. **Search docs/requirements/** for related REQ-* requirements
+2. **Search docs/design/** for related DES-* design elements
+3. **Search the codebase** to identify affected components (files/modules)
+4. **Determine priority** based on feature type:
    - Core functionality (sensor, LED, WiFi) = High
    - User experience improvements = Medium  
    - Nice-to-have features = Low
-4. **Extract clear objective** - what needs to be done and why
-5. **Infer current behavior** from codebase context
-6. **CREATE THE ISSUE using `mcp_github_create_issue` tool** (owner: "enthali", repo: "esp32-distance")
+5. **Extract clear objective** - what needs to be done and why
+6. **Infer current behavior** from codebase context
+7. **CREATE THE ISSUE using `mcp_github_create_issue` tool** (owner: "enthali", repo: "esp32-distance")
 
 ---
 
