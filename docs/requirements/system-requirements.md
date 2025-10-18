@@ -1,17 +1,21 @@
-# System Requirements Specification
+# System Requirements Specification (Example)
 
-**Document ID**: SRS-ESP32-DISTANCE  
-**Version**: 1.0  
-**Date**: 2025-07-24  
-**Author**: ESP32 Distance Project Team  
+> **📝 Note:** This is an example requirements document from the original distance sensor project.
+> It demonstrates how to structure system requirements using OpenFastTrack methodology.
+> **Replace this with your own project's requirements.**
+
+**Document ID**: SRS-ESP32-TEMPLATE-EXAMPLE  
+**Version**: 1.0 (Example)  
+**Date**: 2025-10-18  
+**Author**: ESP32 Template Team  
 
 ## Document Purpose
 
-This document specifies the high-level system requirements for the ESP32 Distance Sensor project, following OpenFastTrack (OFT) methodology for requirements engineering and traceability.
+This example document demonstrates how to specify system requirements following OpenFastTrack (OFT) methodology for requirements engineering and traceability.
 
-## System Overview
+## Example System Overview
 
-The ESP32 Distance Sensor system is an IoT device that:
+The example system described here was a distance sensor IoT device that:
 
 - Measures distance using HC-SR04 ultrasonic sensor
 - Displays distance on WS2812 LED strip

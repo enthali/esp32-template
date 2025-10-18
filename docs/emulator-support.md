@@ -1,40 +1,31 @@
-# ESP32 Distance Sensor Emulator Support
+# ESP32 Template Emulator Support
 
-This document explains the emulator support implementation for the ESP32 distance sensor project, which enables development and testing without physical hardware using QEMU.
+This document explains the QEMU emulator support in the ESP32 template, which enables development and testing without physical hardware.
 
 ## Overview
 
-The emulator support provides hardware abstraction through separate simulator implementations that maintain identical APIs to the hardware components. This allows the same application code to run in both hardware and emulated environments without modification.
+The template includes QEMU emulation support that allows you to:
+
+- Test your application without physical ESP32 hardware
+- Debug with GDB in a virtual environment
+- Simulate network communication via UART bridge
+- Develop and iterate faster without hardware constraints
+
+When building for the emulator, you can optionally create simulator implementations of your hardware components that maintain identical APIs to the real hardware versions. This allows the same application code to run in both hardware and emulated environments without modification.
 
 ## Architecture
 
-### Hardware Abstraction Strategy
+### Hardware Abstraction Strategy (Optional)
 
-The implementation uses a **clean separation approach**:
+When you need to simulate hardware components, you can use a **clean separation approach**:
 
 - **Same headers**: Identical APIs for both hardware and simulator versions
 - **Different source files**: CMake selects appropriate implementation at build time
 - **No #ifdef clutter**: Clean, maintainable code without conditional compilation
 
-### Components
+This is entirely optional - the template's minimal main.c doesn't require any hardware simulation.
 
-#### 1. Distance Sensor Simulator (`distance_sensor_sim.c`)
-
-- **API Compatibility**: Identical to hardware version (`distance_sensor.h`)
-- **Animation**: 5cm → 60cm → 5cm linear sweep with 1mm steps
-- **Timing**: Configurable interval (default 1 second for clear visualization)
-- **Queue Architecture**: Same dual-queue system as hardware for real-time behavior
-- **Error Handling**: Complete status codes and overflow management
-
-#### 2. LED Controller Simulator (`led_controller_sim.c`)
-
-- **API Compatibility**: Identical to hardware version (`led_controller.h`)
-- **Visualization**: Unicode emoji blocks in terminal (🔴🟢🔵⚪🟡🟣⚫🟤)
-- **Rate Limiting**: Output limited to ~1Hz to prevent terminal spam
-- **Color Mapping**: Intelligent RGB-to-emoji conversion
-- **Buffer Management**: Same pixel operations as hardware
-
-#### 3. WiFi Manager and Network Stack
+### Network Stack (Included)
 
 - **Full Network Implementation**: Complete TCP/IP stack via UART-based IP tunnel
 - **TUN Device Bridge** (`tools/serial_tun_bridge.py`): Bridges QEMU UART1 to Linux TUN interface
@@ -52,7 +43,7 @@ The implementation uses a **clean separation approach**:
 
 ### Kconfig Options
 
-New configuration options in `main/Kconfig.projbuild`:
+Configuration options in `main/Kconfig.projbuild`:
 
 ```kconfig
 config TARGET_EMULATOR
@@ -61,12 +52,12 @@ config TARGET_EMULATOR
     help
         Enable this option to build for QEMU emulator instead of real hardware
 
-config EMULATOR_MOCK_SENSOR
-    bool "Use mocked sensor data in emulator"
+config EMULATOR_MOCK_DATA
+    bool "Use mocked data in emulator"
     depends on TARGET_EMULATOR
     default y
     help
-        Generate simulated distance sensor readings
+        Generate simulated data for testing
 ```
 
 ### CMake Integration

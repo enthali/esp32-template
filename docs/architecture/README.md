@@ -1,10 +1,14 @@
-# ESP32 Distance Sensor Project: Architecture Overview
+# ESP32 Project Template: Architecture Overview (Example)
 
-This document provides a high-level architectural overview of the ESP32 Distance Sensor project.
+> **📝 Note:** This is an example architecture document from the original distance sensor project.
+> It demonstrates how to document system architecture and component relationships.
+> **Replace this with your own project's architecture.**
 
-## System Overview
+This document provides an example of architectural documentation for an ESP32 project.
 
-The project is an IoT device based on the ESP32 WROOM-32F microcontroller. It measures distance using an HC-SR04 ultrasonic sensor and visualizes results on a WS2812 LED strip. The device provides WiFi connectivity (AP/STA modes), a web interface with captive portal, and persistent configuration management. The project includes full QEMU emulator support for hardware-free development and testing.
+## Example System Overview
+
+The example system described here was an IoT device based on the ESP32 WROOM-32F microcontroller. It measured distance using an HC-SR04 ultrasonic sensor and visualized results on a WS2812 LED strip. The device provided WiFi connectivity (AP/STA modes), a web interface with captive portal, and persistent configuration management. The project included full QEMU emulator support for hardware-free development and testing.
 
 ## Architecture Diagram
 
