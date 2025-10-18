@@ -11,7 +11,6 @@
  */
 
 #include "config_manager.h"
-#include "config.h"
 #include "esp_log.h"
 #include "esp_err.h"
 #include "nvs_flash.h"
@@ -426,27 +425,27 @@ static void config_init_defaults(system_config_t* config)
     config->config_version = CONFIG_VERSION;
     config->save_count = 0;
 
-    // Distance sensor defaults from config.h
-    config->distance_min_mm = DEFAULT_DISTANCE_MIN_MM;
-    config->distance_max_mm = DEFAULT_DISTANCE_MAX_MM;
-    config->measurement_interval_ms = DEFAULT_MEASUREMENT_INTERVAL_MS;
-    config->sensor_timeout_ms = DEFAULT_SENSOR_TIMEOUT_MS;
-    config->temperature_c_x10 = DEFAULT_TEMPERATURE_C_X10;
-    config->smoothing_factor = DEFAULT_SMOOTHING_FACTOR;
+    // Template: Distance sensor defaults (example values - customize for your hardware)
+    config->distance_min_mm = 100;      // 10 cm minimum
+    config->distance_max_mm = 4000;     // 4 m maximum  
+    config->measurement_interval_ms = 100;
+    config->sensor_timeout_ms = 30000;
+    config->temperature_c_x10 = 200;    // 20.0°C
+    config->smoothing_factor = 300;     // 0.3 alpha
 
-    // LED defaults from config.h
-    config->led_count = DEFAULT_LED_COUNT;
-    config->led_brightness = DEFAULT_LED_BRIGHTNESS;
+    // Template: LED defaults (example values - customize for your hardware)
+    config->led_count = 30;
+    config->led_brightness = 128;
 
-    // WiFi defaults from config.h (empty SSID/password initially)
+    // WiFi defaults (empty SSID/password initially for AP mode)
     memset(config->wifi_ssid, 0, CONFIG_WIFI_SSID_MAX_LEN);
     memset(config->wifi_password, 0, CONFIG_WIFI_PASSWORD_MAX_LEN);
-    config->wifi_ap_channel = DEFAULT_WIFI_AP_CHANNEL;
-    config->wifi_ap_max_conn = DEFAULT_WIFI_AP_MAX_CONN;
-    config->wifi_sta_max_retry = DEFAULT_WIFI_STA_MAX_RETRY;
-    config->wifi_sta_timeout_ms = DEFAULT_WIFI_STA_TIMEOUT_MS;
+    config->wifi_ap_channel = 1;
+    config->wifi_ap_max_conn = 4;
+    config->wifi_sta_max_retry = 5;
+    config->wifi_sta_timeout_ms = 10000;
 
-    ESP_LOGD(TAG, "Initialized configuration with factory defaults");
+    ESP_LOGD(TAG, "Initialized configuration with template defaults");
 }
 
 static esp_err_t config_validate_relationships(const system_config_t* config)

@@ -15,6 +15,7 @@ idf_component_register(
         "www/js/app.js"
     REQUIRES 
         cert_handler 
+        config_manager
         esp_wifi 
         esp_http_server 
         esp_https_server 

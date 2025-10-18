@@ -3,6 +3,7 @@ idf_component_register(
     INCLUDE_DIRS "."
     REQUIRES 
         nvs_flash
+        esp_timer
         # Optional example components (uncomment as needed):
         # config_manager
         # web_server
