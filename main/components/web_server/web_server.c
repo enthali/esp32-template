@@ -16,7 +16,6 @@
 #include "web_server.h"
 #include "wifi_manager.h"
 #include "config_manager.h"
-#include "distance_sensor.h"
 #include "esp_log.h"
 #include "esp_system.h"
 #include "esp_timer.h"
@@ -61,8 +60,8 @@ static esp_err_t config_reset_handler(httpd_req_t *req);
 // System health and diagnostics (REQ-CFG-11)
 static esp_err_t system_health_handler(httpd_req_t *req);
 
-// Distance sensor data endpoint
-static esp_err_t distance_data_handler(httpd_req_t *req);
+// Distance sensor data endpoint - DISABLED in template
+// static esp_err_t distance_data_handler(httpd_req_t *req);
 
 // CORS support for API endpoints
 static esp_err_t cors_preflight_handler(httpd_req_t *req);
@@ -569,14 +568,8 @@ esp_err_t web_server_init(const web_server_config_t *config)
     ret = httpd_register_uri_handler(server, &system_health_uri);
     ESP_LOGI(TAG, "Registered handler for '/api/system/health' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
-    // Register distance data endpoint
-    httpd_uri_t distance_data_uri = {
-        .uri = "/api/distance",
-        .method = HTTP_GET,
-        .handler = distance_data_handler,
-        .user_ctx = NULL};
-    ret = httpd_register_uri_handler(server, &distance_data_uri);
-    ESP_LOGI(TAG, "Registered handler for '/api/distance' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+    // Distance data endpoint disabled in template - users should implement their own sensor endpoints
+    // Example code available in git history for reference
 
     // Register CORS preflight handler for all API endpoints
     httpd_uri_t options_uri = {
@@ -736,25 +729,6 @@ static esp_err_t config_get_handler(httpd_req_t *req)
     cJSON_AddNumberToObject(json, "config_version", config.config_version);
     cJSON_AddNumberToObject(json, "save_count", config.save_count);
 
-    // Add distance sensor configuration
-    cJSON *distance = cJSON_CreateObject();
-    // Convert mm back to cm for web interface display (100mm = 10.0cm)
-    cJSON_AddNumberToObject(distance, "min_distance_cm", config.distance_min_mm / 10.0);
-    cJSON_AddNumberToObject(distance, "max_distance_cm", config.distance_max_mm / 10.0);
-    cJSON_AddNumberToObject(distance, "measurement_interval_ms", config.measurement_interval_ms);
-    cJSON_AddNumberToObject(distance, "sensor_timeout_ms", config.sensor_timeout_ms);
-    // Convert fixed-point temperature back to decimal (200 = 20.0°C)
-    cJSON_AddNumberToObject(distance, "temperature_c", config.temperature_c_x10 / 10.0);
-    // Convert integer factor back to decimal (300 = 0.3)
-    cJSON_AddNumberToObject(distance, "smoothing_alpha", config.smoothing_factor / 1000.0);
-    cJSON_AddItemToObject(json, "distance_sensor", distance);
-
-    // Add LED configuration
-    cJSON *led = cJSON_CreateObject();
-    cJSON_AddNumberToObject(led, "count", config.led_count);
-    cJSON_AddNumberToObject(led, "brightness", config.led_brightness);
-    cJSON_AddItemToObject(json, "led", led);
-
     // Add WiFi configuration (exclude password for security)
     cJSON *wifi = cJSON_CreateObject();
     cJSON_AddStringToObject(wifi, "ssid", config.wifi_ssid);
@@ -829,44 +803,6 @@ static esp_err_t config_set_handler(httpd_req_t *req)
     }
 
     // Update configuration from JSON
-    cJSON *distance = cJSON_GetObjectItem(json, "distance_sensor");
-    if (distance != NULL) {
-        cJSON *item;
-        if ((item = cJSON_GetObjectItem(distance, "min_distance_cm")) != NULL && cJSON_IsNumber(item)) {
-            // Convert cm to mm (10.0cm = 100mm)
-            new_config.distance_min_mm = (uint16_t)(cJSON_GetNumberValue(item) * 10);
-        }
-        if ((item = cJSON_GetObjectItem(distance, "max_distance_cm")) != NULL && cJSON_IsNumber(item)) {
-            // Convert cm to mm (50.0cm = 500mm)
-            new_config.distance_max_mm = (uint16_t)(cJSON_GetNumberValue(item) * 10);
-        }
-        if ((item = cJSON_GetObjectItem(distance, "measurement_interval_ms")) != NULL && cJSON_IsNumber(item)) {
-            new_config.measurement_interval_ms = (uint16_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(distance, "sensor_timeout_ms")) != NULL && cJSON_IsNumber(item)) {
-            new_config.sensor_timeout_ms = (uint32_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(distance, "temperature_c")) != NULL && cJSON_IsNumber(item)) {
-            // Convert to fixed-point tenths (20.0°C = 200)
-            new_config.temperature_c_x10 = (int16_t)(cJSON_GetNumberValue(item) * 10);
-        }
-        if ((item = cJSON_GetObjectItem(distance, "smoothing_alpha")) != NULL && cJSON_IsNumber(item)) {
-            // Convert to integer factor (0.3 = 300)
-            new_config.smoothing_factor = (uint16_t)(cJSON_GetNumberValue(item) * 1000);
-        }
-    }
-
-    cJSON *led = cJSON_GetObjectItem(json, "led");
-    if (led != NULL) {
-        cJSON *item;
-        if ((item = cJSON_GetObjectItem(led, "count")) != NULL && cJSON_IsNumber(item)) {
-            new_config.led_count = (uint8_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(led, "brightness")) != NULL && cJSON_IsNumber(item)) {
-            new_config.led_brightness = (uint8_t)cJSON_GetNumberValue(item);
-        }
-    }
-
     cJSON *wifi = cJSON_GetObjectItem(json, "wifi");
     if (wifi != NULL) {
         cJSON *item;
@@ -1056,85 +992,19 @@ static esp_err_t system_health_handler(httpd_req_t *req)
 
 /**
  * @brief GET /api/distance - Get current distance measurement
+ * 
+ * NOTE: This handler is disabled in the template version.
+ * Users should implement their own sensor data endpoints based on their hardware.
  */
+/*
 static esp_err_t distance_data_handler(httpd_req_t *req)
 {
-    ESP_LOGD(TAG, "Distance data requested");
-
-    // Set JSON content type
+    // Template: Implement your own sensor data endpoint here
     httpd_resp_set_type(req, "application/json");
-    
-    // Set CORS headers
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-
-    // Get latest distance measurement
-    distance_measurement_t measurement;
-    esp_err_t ret = distance_sensor_get_latest(&measurement);
-    
-    if (ret != ESP_OK) {
-        ESP_LOGW(TAG, "Failed to get distance measurement: %s", esp_err_to_name(ret));
-        return httpd_resp_send(req, "{\"error\":\"Failed to get sensor data\"}", HTTPD_RESP_USE_STRLEN);
-    }
-
-    // Create JSON response
-    cJSON *json = cJSON_CreateObject();
-    if (json == NULL) {
-        ESP_LOGE(TAG, "Failed to create JSON object");
-        return httpd_resp_send_500(req);
-    }
-
-    // Add measurement data - convert mm to cm for web interface display
-    cJSON_AddNumberToObject(json, "distance_cm", measurement.distance_mm / 10.0);
-    cJSON_AddNumberToObject(json, "timestamp_us", (double)measurement.timestamp_us);
-    
-    // Add status as string for better readability
-    const char* status_str;
-    switch (measurement.status) {
-        case DISTANCE_SENSOR_OK:
-            status_str = "ok";
-            break;
-        case DISTANCE_SENSOR_TIMEOUT:
-            status_str = "timeout";
-            break;
-        case DISTANCE_SENSOR_OUT_OF_RANGE:
-            status_str = "out_of_range";
-            break;
-        case DISTANCE_SENSOR_NO_ECHO:
-            status_str = "no_echo";
-            break;
-        case DISTANCE_SENSOR_INVALID_READING:
-            status_str = "invalid";
-            break;
-        default:
-            status_str = "unknown";
-            break;
-    }
-    cJSON_AddStringToObject(json, "status", status_str);
-    
-    // Add timestamp as ISO string for convenience
-    time_t timestamp_sec = measurement.timestamp_us / 1000000;
-    struct tm timeinfo;
-    gmtime_r(&timestamp_sec, &timeinfo);
-    char iso_time[32];
-    strftime(iso_time, sizeof(iso_time), "%Y-%m-%dT%H:%M:%SZ", &timeinfo);
-    cJSON_AddStringToObject(json, "timestamp_iso", iso_time);
-
-    // Convert to string and send
-    char *json_string = cJSON_Print(json);
-    if (json_string == NULL) {
-        ESP_LOGE(TAG, "Failed to convert JSON to string");
-        cJSON_Delete(json);
-        return httpd_resp_send_500(req);
-    }
-
-    esp_err_t send_ret = httpd_resp_send(req, json_string, HTTPD_RESP_USE_STRLEN);
-    
-    // Cleanup
-    free(json_string);
-    cJSON_Delete(json);
-    
-    return send_ret;
+    return httpd_resp_send(req, "{\"error\":\"Not implemented in template\"}", HTTPD_RESP_USE_STRLEN);
 }
+*/
 
 /**
  * @brief OPTIONS /api/ wildcard - CORS preflight handler

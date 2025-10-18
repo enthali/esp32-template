@@ -5,7 +5,7 @@
             "name": "QEMU ESP32 Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/distance.elf",
+            "program": "${workspaceFolder}/build/esp32-template.elf",
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
             "miDebuggerPath": "xtensa-esp32-elf-gdb",

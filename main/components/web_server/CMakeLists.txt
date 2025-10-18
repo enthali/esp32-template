@@ -14,8 +14,6 @@ idf_component_register(
         "www/css/style.css"
         "www/js/app.js"
     REQUIRES 
-        led_controller 
-        distance_sensor 
         cert_handler 
         esp_wifi 
         esp_http_server 
