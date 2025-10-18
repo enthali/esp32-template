@@ -1,34 +1,46 @@
-# ESP32 Distance Sensor Project - GitHub Copilot Instructions
+# ESP32 Project Template - GitHub Copilot Instructions
 
 > **Note**: These instructions are for GitHub Copilot coding agent to help with code generation, issue resolution, and pull request improvements in this repository.
 
-You are working on an ESP32-based IoT distance sensor project that measures distance using an HC-SR04 ultrasonic sensor and displays results on a WS2812 LED strip. The project includes WiFi connectivity, a web interface with captive portal, and is being enhanced with HTTPS security.
+You are working on an ESP32 project template designed for rapid prototyping and production applications. This template provides a complete development environment with GitHub Codespaces, QEMU emulation, and example components for common IoT patterns.
 
 ## Project Context
 
-### Hardware Stack
+### Template Purpose
 
-- **Microcontroller**: ESP32 WROOM-32F (4MB flash)
-- **Distance Sensor**: HC-SR04 ultrasonic sensor
-- **LED Display**: WS2812 addressable LED strip (40 LEDs)
-- **Connectivity**: WiFi (AP and STA modes)
+This is a **template repository** designed to be:
+
+- **Forked for new projects** - Starting point for ESP32 applications
+- **Zero-setup development** - GitHub Codespaces with ESP-IDF pre-configured
+- **Hardware optional** - QEMU emulation for testing without physical devices
+- **Production-ready structure** - Component-based architecture following ESP-IDF best practices
+- **Documentation included** - OpenFastTrack requirements/design methodology
+
+### Hardware Stack (When Using Real Hardware)
+
+- **Microcontroller**: ESP32 (any variant supported by ESP-IDF)
 - **Development Framework**: ESP-IDF v5.4.1
+- **User adds their own**: Sensors, displays, or other peripherals
 
 ### Software Architecture
 
-- **Component-based design**: Modular components for distance sensor, LED controller, WiFi manager
-- **Real-time monitoring**: FreeRTOS tasks for continuous sensor monitoring
-- **Web interface**: HTTP server with captive portal for configuration
-- **Memory optimized**: 4MB flash configuration with Single App Large partition table
+- **Component-based design**: Modular components in `main/components/`
+- **Example components provided**:
+  - `config_manager`: NVS configuration storage patterns
+  - `web_server`: HTTP server with captive portal
+  - `cert_handler`: HTTPS certificate handling (WIP)
+  - `netif_uart_tunnel`: QEMU network bridge
+- **Minimal main.c**: Template entry point users customize
+- **Real-time OS**: FreeRTOS for task management
+- **Memory optimized**: 4MB flash configuration
 
 ### Key Files and Components
 
-- `main/main.c`: Main application logic and task coordination
-- `components/distance_sensor/`: HC-SR04 sensor interface and monitoring
-- `components/led_controller/`: WS2812 LED strip control
-- `main/wifi_manager.c`: WiFi connectivity and captive portal management
-- `main/web_server.c`: HTTP server implementation
-- `main/dns_server.c`: DNS server for captive portal functionality
+- `main/main.c`: Application entry point (users customize this!)
+- `main/components/config_manager/`: Example NVS configuration management
+- `main/components/web_server/`: Example HTTP server with captive portal
+- `main/components/cert_handler/`: HTTPS certificate handling (TODO: fix HTTPS)
+- `main/components/netif_uart_tunnel/`: QEMU network bridge (required for emulation)
 
 ### Documentation Structure
 
@@ -76,17 +88,18 @@ You are working on an ESP32-based IoT distance sensor project that measures dist
 
 ### Hardware-Specific Considerations
 
-- **GPIO pin assignments**: Document and validate pin usage before modifications
-- **Timing constraints**: HC-SR04 requires precise timing (10μs trigger, timeout handling)
-- **LED strip timing**: WS2812 requires specific bit timing (T0H, T1H, TL, TH)
-- **Power management**: Consider current draw when adding new peripherals
+- **GPIO pin assignments**: Document and validate pin usage in user's hardware configuration
+- **Timing constraints**: Be aware of peripheral timing requirements (RMT, I2C, SPI)
+- **Power management**: Consider current draw when adding peripherals
+- **Pin conflicts**: Check ESP32 strapping pins and boot mode pins
 
-### Security Implementation
+### Template-Specific Guidelines
 
-- **Current focus**: HTTPS implementation for secure web interface
-- **Certificate management**: Automated self-signed certificate generation
-- **Memory efficient SSL**: Optimize SSL buffer sizes for ESP32 constraints
-- **HTTP to HTTPS redirection**: Maintain user-friendly access patterns
+- **Keep main.c minimal**: Application entry point should be simple and well-documented
+- **Example components**: Maintain as reference implementations, not project code
+- **Documentation**: Keep generic and applicable to any ESP32 project
+- **QEMU support**: Ensure emulation works for testing without hardware
+- **Codespaces first**: Prioritize GitHub Codespaces workflow over local setup
 
 ### Requirements Engineering
 
@@ -97,39 +110,42 @@ You are working on an ESP32-based IoT distance sensor project that measures dist
 - **Current Focus**: Configuration management requirements (`config-requirements.md`)
 - **Implementation Links**: Code must reference specific requirement IDs in comments for traceability
 
-## Current Development Phase
+## Template Features
 
-### Active Features (Ready for Enhancement)
+### Ready to Use
 
-- ✅ Distance sensor monitoring with component-based architecture
-- ✅ LED strip control with smooth color transitions
-- ✅ WiFi manager with captive portal
-- ✅ HTTP web interface for configuration
-- ✅ Memory optimization (4MB flash, 41% free space)
+- ✅ Minimal application template in `main/main.c`
+- ✅ Component-based architecture examples
+- ✅ GitHub Codespaces with ESP-IDF pre-configured
+- ✅ QEMU emulation with network support
+- ✅ GDB debugging in VS Code
+- ✅ Pre-commit hooks for quality gates
+- ✅ MkDocs documentation with GitHub Pages
+- ✅ OpenFastTrack requirements/design structure
 
-### In Progress (HTTPS Implementation)
+### Example Components (Optional)
 
-- 🔄 Certificate generation and embedding system
-- 🔄 HTTPS server migration from HTTP
-- 🔄 HTTP to HTTPS redirect server
-- 🔄 Security hardening and browser compatibility
+- ✅ Configuration manager (NVS storage patterns)
+- ✅ Web server (HTTP with captive portal)
+- ✅ Network bridge (QEMU UART tunnel)
+- 🚧 Certificate handler (HTTPS - needs fixing)
 
-### Planned Features
+### Known Limitations
 
-- 📋 Configuration management system
-- 📋 Real-time data streaming
-- 📋 JSON API endpoints
-- 📋 Advanced web interface features
+- 🚧 HTTPS not working in QEMU - HTTP works fine
+- ℹ️ QEMU requires HTTP proxy for web access from host
+- ℹ️ Codespaces only - local dev container not officially supported
 
 ## Important Notes
 
 ### When Suggesting Code Changes
 
-1. **Always consider ESP32 memory constraints** and current usage (41% flash free)
-2. **Maintain component-based architecture** - don't put everything in main.c
-3. **Use proper ESP-IDF error handling** and logging
-4. **Test memory impact** of new features using `idf.py size`
-5. **Document GPIO pin usage** when adding new hardware interfaces
+1. **Always consider ESP32 memory constraints** when adding features
+2. **Maintain component-based architecture** - create new components instead of cluttering main.c
+3. **Use proper ESP-IDF error handling** and logging (ESP_ERROR_CHECK, ESP_LOG*)
+4. **Keep template minimal** - users should add their own application logic
+5. **Document everything** - this is a learning resource for ESP32 developers
+6. **Test in QEMU** when possible before suggesting hardware-specific code
 
 ### When Working with Network Code
 
@@ -139,13 +155,13 @@ You are working on an ESP32-based IoT distance sensor project that measures dist
 4. **Implement timeouts** for network operations
 5. **Test captive portal compatibility** across different devices
 
-### When Implementing HTTPS Features
+### When Users Ask About Template Usage
 
-1. **Optimize SSL buffer sizes** for ESP32 memory constraints
-2. **Use self-signed certificates** for local IoT device security
-3. **Implement HTTP→HTTPS redirection** for user experience
-4. **Test certificate acceptance** across different browsers
-5. **Document security configuration** for end users
+1. **Guide them to customize main.c** - This is their entry point
+2. **Point to example components** - Show how to structure their code
+3. **Explain QEMU workflow** - Test without hardware first
+4. **Recommend Codespaces** - Best development experience
+5. **Reference OpenFastTrack docs** - For requirements/design methodology
 
 ## Quality Gates for Coding Agent
 
