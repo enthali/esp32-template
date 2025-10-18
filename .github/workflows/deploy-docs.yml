@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/sphinx-needs-documentation  # Temporary for testing
   # Allow manual runs from the Actions UI for testing and one-off deploys
   workflow_dispatch: {}
 
