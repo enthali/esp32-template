@@ -1,52 +1,72 @@
 # Development Environment
 
-This section covers all aspects of developing the ESP32 Distance Sensor project, from setting up your environment to debugging and testing.
+This section covers all aspects of developing with the ESP32 Template, from setting up your environment to debugging and testing.
 
 ## Quick Links
 
-- **[Dev Container Setup](devcontainer.md)** - GitHub Codespaces and local Docker development
-- **[QEMU Emulator](qemu-emulator.md)** - Running the project in QEMU with network support
+- **[Dev Container Setup](devcontainer.md)** - GitHub Codespaces (recommended)
+- **[QEMU Emulator](qemu-emulator.md)** - Running in QEMU with network support
 - **[Debugging](debugging.md)** - GDB debugging with QEMU and VS Code
 - **[Network Internals](qemu-network-internals.md)** - Deep dive into QEMU IP tunnel implementation
 - **[Pre-commit Hooks](pre-commit-hooks.md)** - Automated quality checks and documentation validation
 
 ## Getting Started
 
-### Recommended: GitHub Codespaces (Cloud)
+### Recommended: GitHub Codespaces
 
 The fastest way to start developing:
 
-1. Open the repository in GitHub Codespaces
-2. Wait for container to build (first time only)
-3. Run QEMU: `./tools/run-qemu-network.sh`
-4. Start debugging with F5 or access the web interface
+1. Click "Use this template" to create your repository
+2. Open in GitHub Codespaces (Code → Codespaces → Create)
+3. Wait for container to build (first time only, ~2 minutes)
+4. Start coding in `main/main.c`
 
-### Alternative: Local Dev Container
+### Testing Without Hardware
 
-For offline development or custom hardware:
-
-1. Install Docker Desktop
-2. Open project in VS Code
-3. "Reopen in Container" when prompted
-4. Connect hardware via USB (see [Dev Container Setup](devcontainer.md))
-
-## Development Workflow
+Use QEMU emulation:
 
 ```bash
 # Build the project
 idf.py build
 
-# Flash to hardware (hardware mode)
-idf.py -p /dev/ttyUSB0 flash monitor
-
-# Run in emulator (emulator mode)
+# Run in QEMU with network support
 ./tools/run-qemu-network.sh
 
-# Debug in emulator
+# Debug in QEMU
 # Press F5 in VS Code or use Debug panel
 ```
 
-## Key Features
+### Flashing Real Hardware
+
+When you have physical ESP32:
+
+```bash
+# Build the project
+idf.py build
+
+# Flash and monitor (replace /dev/ttyUSB0 with your port)
+idf.py -p /dev/ttyUSB0 flash monitor
+
+# Exit monitor: Press Ctrl+]
+```
+
+## Development Workflow
+
+```bash
+# 1. Customize application
+vim main/main.c
+
+# 2. Build
+idf.py build
+
+# 3. Test in QEMU (optional)
+./tools/run-qemu-network.sh
+
+# 4. Flash to hardware
+idf.py -p /dev/ttyUSB0 flash monitor
+```
+
+## Template Customization
 
 - **Consistent Environment**: Same toolchain everywhere (Codespaces, Docker, CI/CD)
 - **ESP-IDF v5.4.1**: Latest stable version pre-configured

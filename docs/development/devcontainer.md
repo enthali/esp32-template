@@ -1,20 +1,21 @@
 # Development Container Setup
 
-This project uses containerized development with VS Code Dev Containers and GitHub Codespaces for consistent ESP-IDF development environment.
+This template uses containerized development with VS Code Dev Containers and GitHub Codespaces for consistent ESP-IDF development environment.
 
 ## Development Options
 
 ### Recommended: GitHub Codespaces (Cloud)
 
-- No local setup required - works entirely in browser
-- Pre-configured ESP-IDF v5.4.1 environment ready instantly
-- USB device access through browser serial interface
+- ✅ No local setup required - works entirely in browser
+- ✅ Pre-configured ESP-IDF v5.4.1 environment ready instantly
+- ✅ USB device access through browser serial interface
+- ✅ Perfect for trying the template before committing to hardware
 
-### Alternative: Local Dev Container  
+### Alternative: Local Dev Container (Not Officially Supported)
 
 - Uses Docker container with ESP-IDF v5.4.1 pre-installed  
 - Requires Docker Desktop and VS Code with Dev Containers extension
-- Identical environment across all team members and platforms
+- Note: This template focuses on Codespaces workflow
 
 ## Using the Dev Container
 

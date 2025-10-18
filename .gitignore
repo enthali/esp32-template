@@ -44,7 +44,7 @@ ENV/
 # Temporary files
 *.tmp
 *.temp
-#temp/
+temp/
 tmp/
 
 # ESP-IDF specific
