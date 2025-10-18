@@ -1,5 +1,5 @@
-site_name: "ESP32 Distance"
-site_description: "This project is a proof of concept project to learn about GH Codespaces and GH Copilot including a Hands-on Workshop"
+site_name: "ESP32 Template"
+site_description: "Production-ready ESP32 project template with GitHub Codespaces, QEMU emulation, and modern development tools"
 
 theme:
   name: material
@@ -27,45 +27,27 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - Documentation:
-    - Architecture: 
-      - Overview: architecture/README.md
-    - Development:
-      - Overview: development/README.md
-      - Dev Container: development/devcontainer.md
-      - QEMU Emulator: development/qemu-emulator.md
-      - Debugging: development/debugging.md
-      - Network Internals: development/qemu-network-internals.md
-      - Pre-commit Hooks: development/pre-commit-hooks.md
+  - Getting Started:
+    - Quick Start: development/README.md
+    - GitHub Codespaces: development/devcontainer.md
+    - QEMU Emulator: development/qemu-emulator.md
+    - Debugging: development/debugging.md
+  - Documentation Structure:
+    - Requirements: requirements/README.md
+    - Design: design/README.md
+    - Architecture: architecture/README.md
+    - API: api/README.md
+  - Development Tools:
+    - QEMU Network Bridge: development/qemu-network-internals.md
+    - Pre-commit Hooks: development/pre-commit-hooks.md
     - Known Limitations: known-limitations.md
-    - Requirements: 
-      - Overview: requirements/README.md
-      - System: requirements/system-requirements.md
-      - Distance sensor: requirements/distance-sensor-requirements.md
-      - LED controller: requirements/led-controller-requirements.md
-      - Display: requirements/display-requirements.md
-      - Configuration: requirements/config-requirements.md
-      - Startup test: requirements/startup-test-requirements.md
-      - Web server: requirements/web-server-requirements.md
-    - Design:
-      - System: design/system-design.md
-      - Distance sensor: design/distance-sensor-design.md
-      - LED controller: design/led-controller-design.md
-      - Display: design/display-design.md
-      - Configuration: design/config-design.md
-      - Startup test: design/startup-test-design.md
-    - Tests:
-      - Emulator: emulator-support.md
-      - Config tests: test/config-tests.md
-    - Planning:
-      - Features: planning/Features-intended.md
-  - Workshop:
-    - Overview: workshop/README.md
-    - Prerequisites: workshop/prerequisites.md
-    - Getting Started Hardware: workshop/hardwaresetup.md
-    - Getting Started Software: workshop/gettingstartet.md
-    - Exercises: workshop/exercises.md
-  - API: api/README.md
+    - Emulator Support: emulator-support.md
+  - Example Documentation:
+    - System Requirements: requirements/system-requirements.md
+    - System Design: design/system-design.md
+    - Config Requirements: requirements/config-requirements.md
+    - Config Design: design/config-design.md
+    - Web Server Requirements: requirements/web-server-requirements.md
   - Legal:
     - Impressum: legal/impressum.md
     - Datenschutz: legal/datenschutz.md
@@ -78,7 +60,7 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/enthali/esp32-distance
+      link: https://github.com/enthali/esp32-template
   generator: false
 
 copyright: |

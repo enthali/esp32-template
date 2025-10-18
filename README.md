@@ -1,122 +1,264 @@
+# 🚀 ESP32 Project Template
 
-# 🎉 Welcome to the ESP32 Distance Sensor Project
+A production-ready ESP32 project template with GitHub Codespaces, QEMU emulation, and modern development tools.
 
-[![Project Demo](docs/assets/images/setup.jpg)](https://enthali.github.io/esp32-distance/)
+**Documentation:** 👉 [View the Documentation on GitHub Pages](https://enthali.github.io/esp32-template/) 👈
 
-**Live Demo & Docs:** 👉 [View the Project Website on GitHub Pages!](https://enthali.github.io/esp32-distance/) 👈
-
-This project brings together the ESP32, an HC-SR04 ultrasonic sensor, and a WS2812 LED strip to create a fun, interactive distance display. Whether you're here to tinker, learn embedded development, or join our hands-on workshop—you're in the right place!
+This template provides a complete development environment for ESP32 projects with zero local setup required. Whether you're building an IoT device, learning embedded development, or creating a proof-of-concept—this template has everything you need to get started quickly.
 
 ---
 
 ## ✨ Features
 
-- **Real-time Distance Measurement**: HC-SR04 ultrasonic sensor with millimeter precision
-- **Visual Display**: WS2812 LED strip shows distance as position and color
-- **WiFi Connectivity**: Automatic network connection with captive portal setup
-- **Web Interface**: Mobile-responsive configuration and status interface
-- **Embedded Optimization**: Integer-only arithmetic for optimal ESP32 performance
+- 🚀 **GitHub Codespaces** - Zero-setup cloud development environment
+- 🖥️ **QEMU Emulation** - Test without hardware, includes network support
+- 🐛 **GDB Debugging** - Full debugging in QEMU with VS Code integration
+- 🌐 **Example Components** - Web server with captive portal, configuration management
+- ⚙️ **Configuration Management** - NVS storage pattern examples
+- 📝 **Documentation** - MkDocs with GitHub Pages deployment
+- 🤖 **GitHub Copilot Ready** - AI-assisted development instructions included
+- ✅ **Quality Gates** - Pre-commit hooks for linting and validation
+- 📚 **OpenFastTrack** - Requirements and design documentation structure
 
-## 🛠️ Hardware Requirements
+## 🎯 Quick Start
 
-- ESP32 development board (ESP32-WROOM-32 or compatible)
-- 40x WS2812 LED strip
-- HC-SR04 ultrasonic sensor
-- USB cable for power and programming
-- Jumper wires for connections
-- External 5V power supply (if needed for LED strip)
+### Use This Template
 
-## 📌 Pin Configuration
-
-| Component | Pin | GPIO |
-|-----------|-----|------|
-| WS2812 LED Strip | Data | GPIO12 |
-| HC-SR04 Trigger | Trigger | GPIO14 |
-| HC-SR04 Echo | Echo | GPIO13 |
-| Power | VCC | 5V/3.3V |
-| Ground | GND | GND |
-
-## 🚦 How It Works
-
-1. **Power On**: ESP32 starts with hardware initialization and LED test sequence
-2. **WiFi Setup**:
-   - Connects to stored WiFi credentials automatically
-   - Creates "ESP32-Distance-Sensor" access point if no credentials stored
-   - Captive portal guides through network setup
-3. **Distance Measurement**: Continuous HC-SR04 sensor readings every 100ms
-4. **Visual Display**: LED strip shows distance as:
-   - **Green LED**: Normal range (10cm-50cm mapped to LEDs 0-39)
-   - **Red LED**: Out of range (below 10cm or above 50cm)
-5. **Web Interface**: Access at device IP for configuration and monitoring
-
-## 📊 Technical Specifications
-
-- **LED Strip**: 40 x WS2812 individually addressable LEDs
-- **Sensor Range**: 2cm - 400cm (HC-SR04 specification)  
-- **Update Rate**: 10Hz real-time visual feedback
-- **Communication**: WiFi with smart AP/STA switching and captive portal
-- **Web Interface**: HTTP server with mobile-responsive design
-- **Power**: USB or external 5V supply
-- **Architecture**: Integer-only arithmetic optimized for ESP32 performance
-
-## 💻 Development Environment
-
-**Prerequisites**: Just a browser that supports serial connections (Chrome/Edge recommended)
-
-### 🚀 Quick Start
-
-1. **Clone the repository**
-2. **Open in GitHub Codespaces** (recommended) or use a local VS Code devcontainer
-3. **Connect ESP32** via USB
-4. **Build and flash**: `idf.py -p /dev/ttyUSB0 build flash monitor`
-
-> **Note:** The first setup may take a few minutes as the container and toolchain are prepared, but after that, you're ready to build and run your code instantly.
-
-### 🐛 Debugging & Emulation
-
-**No Hardware? No Problem!** This project includes full QEMU emulation support with GDB debugging:
-
-- **QEMU Emulator** - Test without physical ESP32, includes network simulation
-- **GDB Debugging** - Set breakpoints and step through code in Codespaces
-- **Network Testing** - Full HTTP and TCP/IP support via UART tunnel
-
-See [QEMU Emulator Guide](docs/development/qemu-emulator.md) and [Debugging Guide](docs/development/debugging.md) for details.
-
-> **Local Dev Container Setup**: For Windows users setting up a local dev container, see [Dev Container Documentation](docs/development/devcontainer.md) for USB device attachment instructions.
-
-### 🏫 Workshop
-
-This project is ideal for workshops and classroom demonstrations. Please feel free to explore the related documentation in [docs/workshop/](docs/workshop/)
-
-> **Tip:** For remote workshops, Codespaces ensures a consistent environment for all participants.
-
-## 🔥 Build and Flash
+1. Click **"Use this template"** at the top of this repository
+2. Create your new repository
+3. Open in **GitHub Codespaces** (click Code → Codespaces → Create)
+4. Wait for the environment to initialize (~2 minutes first time)
+5. Build and run:
 
 ```bash
 # Build the project
 idf.py build
 
-# Flash and monitor
-idf.py -p /dev/ttyUSB0 flash monitor
-
-# Monitor only (if already flashed)
-idf.py -p /dev/ttyUSB0 monitor
+# Run in QEMU emulator
+# Use VS Code task: "Start QEMU Debug Server"
+# Or run manually:
+./tools/run-qemu-network.sh
 ```
 
-**Exit monitor**: Press `Ctrl+]` to exit the serial monitor.
+### Hardware Development
+
+To flash a physical ESP32 device:
+
+```bash
+# Build the project
+idf.py build
+
+# Flash and monitor (replace /dev/ttyUSB0 with your port)
+idf.py -p /dev/ttyUSB0 flash monitor
+
+# Exit monitor: Press Ctrl+]
+```
+
+## 📁 Project Structure
+
+```text
+esp32-template/
+├── main/                      # Main application code
+│   ├── main.c                # Application entry point (customize this!)
+│   ├── CMakeLists.txt        # Component dependencies
+│   └── components/           # Optional example components
+│       ├── config_manager/   # NVS configuration example
+│       ├── web_server/       # HTTP server with captive portal
+│       ├── cert_handler/     # HTTPS certificate handling (WIP)
+│       └── netif_uart_tunnel/# QEMU network bridge
+├── docs/                     # MkDocs documentation
+│   ├── requirements/         # OpenFastTrack requirements
+│   ├── design/              # System design documents
+│   └── development/         # Development guides
+├── tools/                    # Development tools
+│   ├── run-qemu-network.sh  # QEMU with network bridge
+│   └── http_proxy.py        # HTTP proxy for QEMU access
+├── .devcontainer/           # GitHub Codespaces configuration
+├── .github/                 # GitHub workflows and Copilot config
+└── .vscode/                 # VS Code tasks and settings
+```
+
+## 🛠️ Customizing This Template
+
+### 1. Update Project Metadata
+
+- Edit `CMakeLists.txt`: Change `project(esp32-template)` to your project name
+- Edit `README.md`: Update title, description, and features
+- Edit `docs/index.md`: Update documentation homepage
+
+### 2. Add Your Application Code
+
+Start with `main/main.c` - this is your application entry point:
+
+```c
+void app_main(void)
+{
+    ESP_LOGI(TAG, "Your Application Starting...");
+    
+    // Initialize your components here
+    // your_component_init();
+    
+    // Your application logic
+    while (1) {
+        // Your code here
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+```
+
+### 3. Use Example Components (Optional)
+
+Uncomment components in `main/CMakeLists.txt`:
+
+```cmake
+REQUIRES 
+    nvs_flash
+    config_manager    # Uncomment to use configuration management
+    web_server        # Uncomment to use web server
+```
+
+### 4. Add Your Own Components
+
+Create new components in `main/components/`:
+
+```bash
+mkdir -p main/components/my_component
+# Add CMakeLists.txt, headers, and source files
+```
+
+## 🐛 QEMU Emulation & Debugging
+
+### Run in QEMU
+
+```bash
+# Start QEMU with network bridge
+./tools/run-qemu-network.sh
+
+# In another terminal, access web interface via HTTP proxy
+python3 tools/http_proxy.py
+# Then browse to http://localhost:8888
+```
+
+### Debug with GDB
+
+1. Use VS Code task: **"Start QEMU Debug Server"**
+2. Set breakpoints in your code
+3. Use VS Code task: **"Debug ESP32 in QEMU"**
+4. Step through code, inspect variables, etc.
+
+See [Debugging Guide](docs/development/debugging.md) for details.
+
+## 📚 Documentation
+
+Full documentation is available at [GitHub Pages](https://enthali.github.io/esp32-template/) or build locally:
+
+```bash
+# Install MkDocs (if not in Codespaces)
+pip install mkdocs mkdocs-material
+
+# Serve documentation locally
+mkdocs serve
+# Browse to http://localhost:8000
+
+# Build static site
+mkdocs build --strict
+```
+
+## 🤖 GitHub Copilot Integration
+
+This template includes comprehensive GitHub Copilot instructions in `.github/copilot-instructions.md`:
+
+- ESP32-specific coding standards
+- Component architecture patterns
+- Memory optimization guidelines
+- OpenFastTrack requirements methodology
+- Build and testing workflows
+
+Just ask Copilot for help and it will use these project-specific guidelines!
+
+## ✅ Quality Gates
+
+Pre-commit hooks ensure code quality:
+
+```bash
+# Run all checks
+pre-commit run --all-files
+
+# Install hooks (automatic in Codespaces)
+pre-commit install
+```
+
+Checks include:
+
+- Markdown linting
+- MkDocs build validation
+- Link verification
+- Trailing whitespace removal
+
+## 🌐 Example Components
+
+### Configuration Manager
+
+NVS-based configuration storage with defaults:
+
+```c
+#include "config_manager.h"
+
+// Initialize and load configuration
+config_init();
+system_config_t config;
+config_get_current(&config);
+
+// Update configuration
+config.wifi_ssid = "MyNetwork";
+config_save(&config);
+```
+
+### Web Server
+
+HTTP server with captive portal:
+
+- Landing page at `/`
+- Configuration API at `/api/config`
+- Captive portal for WiFi setup
+- Mobile-responsive interface
+
+## 📖 Requirements Engineering
+
+This template uses **OpenFastTrack** methodology:
+
+- **Requirements** in `docs/requirements/` - What to build
+- **Design** in `docs/design/` - How to build it
+- **Architecture** in `docs/architecture/` - System structure
+- **Traceability** - Bidirectional links between requirements, design, and code
+
+See [Requirements Documentation](docs/requirements/README.md) for the guide.
+
+## 🚧 Known Limitations
+
+- **HTTPS**: Certificate handling is work-in-progress (HTTP works fine)
+- **QEMU Network**: Requires HTTP proxy for web access from host
+- **Codespaces Only**: Local dev container setup not officially supported
 
 ## 📄 License
 
-This project is open source and available under the MIT License.
+This project template is open source and available under the MIT License.
 
-## 🤖 About
+## 🎉 About
+
+ESP32 embedded development template featuring:
+
+- **ESP-IDF v5.4.1** - Espressif IoT Development Framework
+- **FreeRTOS** - Real-time operating system
+- **QEMU** - Full system emulation with networking
+- **OpenFastTrack** - Requirements engineering methodology
+- **GitHub Codespaces** - Cloud-based development
+- **GitHub Copilot** - AI-assisted development
 
 ---
 
-**Ready to tinker?**
+**Ready to build something awesome?**
 
-Start exploring, build something cool, or join the workshop. If you get stuck, ask questions, open an issue, or join the discussion. This is a friendly space for makers, learners, and tinkerers of all levels.
+Fork this template, customize it for your project, and start coding! If you have questions or suggestions, open an issue or start a discussion.
 
-**Have fun, experiment, and happy coding!** 🎉
-
-ESP32 embedded development demo featuring ESP-IDF, FreeRTOS, OpenFastTrack requirements engineering, and cloud based development (Github codespaces) and of cause Vibe Coding :) with GitHub Copilot.
+**Happy coding!** 🚀

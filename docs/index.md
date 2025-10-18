@@ -1,54 +1,261 @@
+# Welcome to the ESP32 Project Template
 
-# Welcome to the ESP32 Distance Sensor Project
+A production-ready ESP32 project template with GitHub Codespaces, QEMU emulation, and modern development tools.
 
-## 🚗 How This Project Was Born (Or: The Garage Door Incident)
+## 🚀 Why Use This Template?
 
-Picture this: You're driving your car into your garage after a long day. You know that sweet spot exists—where your car is fully inside, but you haven't kissed the wall with your bumper. But where is it?
+Starting an ESP32 project from scratch can be overwhelming. This template provides:
 
-You inch forward... *a little more*... *just a bit further*... **CRUNCH!** 🤦
+- ✅ **Zero-setup development** - Open in GitHub Codespaces and start coding immediately
+- ✅ **No hardware required** - Test with QEMU emulation before buying hardware
+- ✅ **Professional structure** - Component-based architecture following ESP-IDF best practices
+- ✅ **Quality gates** - Pre-commit hooks ensure code quality from day one
+- ✅ **Documentation ready** - MkDocs with GitHub Pages deployment included
+- ✅ **AI-assisted development** - GitHub Copilot instructions for ESP32-specific guidance
 
-Or worse: You play it safe, stop too early, and the garage door guillotines your trunk.
+## 🎯 Perfect For
 
-Sound familiar? That's exactly how this project started. One frustrated evening, one slightly dented bumper, and one thought: *"There has to be a better way!"*
+- 🔨 **Prototyping** - Quickly test ideas with QEMU before committing to hardware
+- 📚 **Learning** - Clean example code demonstrating ESP32 development patterns
+- 🏢 **Production projects** - Professional structure ready to scale
+- 👥 **Team collaboration** - Consistent environment for all developers
+- 🎓 **Teaching** - Pre-configured environment for workshops and courses
 
-Enter the ESP32 Distance Sensor: Your garage's new best friend. An ultrasonic sensor measures the distance, and a LED strip lights up to show you exactly where you are. Right now, you'll see a single 🟢 **green LED** moving along the strip as you get closer or further away—simple, effective, and it works!
+## 🚀 Quick Start
 
-But here's where it gets fun: **Want color zones?** (🔴 Red for "STOP!", 🟡 Yellow for "careful...", 🟢 Green for "perfect spot"?) That's what the workshop is for! We'll show you how to customize the LED display, add features, and make it your own. Because why solve one problem when you can over-engineer it beautifully? 🎉
+### 1. Create Your Repository
 
-![Project Demo](assets/images/setup.jpg)
+Click **"Use this template"** at the top of the [GitHub repository](https://github.com/enthali/esp32-template) to create your own project.
 
----
+### 2. Open in Codespaces
 
-This project brings together the ESP32, an HC-SR04 ultrasonic sensor, and a WS2812 LED strip to create a fun, interactive distance display. Whether you're here to tinker, learn embedded development, or join our hands-on workshop—you're in the right place!
+- Click **Code** → **Codespaces** → **Create codespace on main**
+- Wait ~2 minutes for environment setup (first time only)
+- Everything is ready to use!
 
-## 🚀 Get Started
+### 3. Build Your First Project
 
-- **Curious?** Jump right in, fire up your codespace and explore the code, hardware, and live demos.
-- **New to ESP32?** Check out our [Getting Started Guide](workshop/gettingstartet.md) for step-by-step help.
-- **Want to build it yourself?** See the [Hardware Setup](workshop/hardwaresetup.md) and [Workshop Prerequisites](workshop/prerequisites.md).
-- **Ready for a challenge?** Try the [Workshop Exercises](workshop/README.md) and level up your skills!
+```bash
+# Build the minimal template
+idf.py build
 
-## 💡 Why this project?
+# Run in QEMU emulator
+./tools/run-qemu-network.sh
 
-- Learn modern embedded development with real hardware
-- Use GitHub Codespaces and Copilot for a seamless dev experience
-- See your code come to life—literally lighting up!
+# Or flash to real hardware
+idf.py -p /dev/ttyUSB0 flash monitor
+```
 
-## 🛠️ Development Resources
+## 📁 What's Included
 
-### Emulation & Debugging
+### Example Components
 
-- **[QEMU Emulator Guide](development/qemu-emulator.md)** - Develop without hardware using full ESP32 emulation
-- **[Debugging with GDB](development/debugging.md)** - Step through code with breakpoints in Codespaces
-- **[Network Internals](development/qemu-network-internals.md)** - Deep dive into UART-based IP tunnel
+- **Configuration Manager** - NVS storage patterns for persistent settings
+- **Web Server** - HTTP server with captive portal for WiFi setup
+- **Certificate Handler** - HTTPS support (work in progress)
+- **Network Bridge** - UART tunnel for QEMU networking
 
-### Development Environment
+### Development Tools
 
-- **[Dev Container Setup](development/devcontainer.md)** - GitHub Codespaces and local Docker setup
-- **Getting Started** - Build, flash, and monitor your ESP32
+- **QEMU Emulator** - Full ESP32 emulation with network support
+- **GDB Debugging** - Set breakpoints and step through code
+- **HTTP Proxy** - Access emulated web servers from host
+- **Pre-commit Hooks** - Automated code quality checks
 
-## 🎯 Community & Support
+### Documentation
 
-If you get stuck, don't hesitate to ask questions, open an [issue](https://github.com/enthali/esp32-distance/issues), or join the discussion on our [GitHub repository](https://github.com/enthali/esp32-distance). This is a friendly space for makers, learners, and tinkerers of all levels—everyone is welcome!
+- **Requirements** - OpenFastTrack requirements engineering structure
+- **Design** - System architecture and component design
+- **Development Guides** - QEMU, debugging, and environment setup
+- **API Documentation** - Structure ready for API doc generation
 
-**Have fun, experiment, and happy coding!** 🎉
+## 🛠️ Customization Guide
+
+### Update Project Metadata
+
+1. **CMakeLists.txt** - Change project name from `esp32-template`
+2. **README.md** - Update title and description
+3. **docs/index.md** - Update documentation homepage
+4. **mkdocs.yml** - Update site name and description
+
+### Add Your Application Logic
+
+Edit `main/main.c` - this is your entry point:
+
+```c
+void app_main(void)
+{
+    ESP_LOGI(TAG, "Your Application Starting...");
+    
+    // Initialize NVS (already included)
+    // Add your component initialization here
+    // Start your application logic
+    
+    while (1) {
+        // Your main loop
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+```
+
+### Use Example Components
+
+Uncomment components in `main/CMakeLists.txt`:
+
+```cmake
+REQUIRES 
+    nvs_flash
+    config_manager    # Uncomment to use
+    web_server        # Uncomment to use
+```
+
+See component directories for usage examples.
+
+### Create New Components
+
+```bash
+mkdir -p main/components/my_component
+# Add CMakeLists.txt, headers, and source files
+# Follow existing components as examples
+```
+
+## 🧪 Development Workflow
+
+### QEMU Emulation
+
+Test without hardware:
+
+```bash
+# Build for emulator
+idf.py build
+
+# Start QEMU with network
+./tools/run-qemu-network.sh
+
+# In another terminal, start HTTP proxy
+python3 tools/http_proxy.py
+
+# Access web interface at http://localhost:8888
+```
+
+### Hardware Testing
+
+Flash to real ESP32:
+
+```bash
+# Build project
+idf.py build
+
+# Flash and monitor
+idf.py -p /dev/ttyUSB0 flash monitor
+
+# Exit monitor: Ctrl+]
+```
+
+### Debugging
+
+Use VS Code tasks:
+
+1. **Start QEMU Debug Server** - Launches QEMU with GDB
+2. **Debug ESP32 in QEMU** - Attaches debugger
+3. Set breakpoints and step through code
+
+See [Debugging Guide](development/debugging.md) for details.
+
+## 📚 Documentation
+
+### For Developers
+
+- **[QEMU Emulator](development/qemu-emulator.md)** - Emulation setup and usage
+- **[Debugging](development/debugging.md)** - GDB debugging guide
+- **[Dev Container](development/devcontainer.md)** - Codespaces configuration
+- **[Pre-commit Hooks](development/pre-commit-hooks.md)** - Quality gates
+
+### For Architects
+
+- **[Requirements](requirements/README.md)** - OpenFastTrack methodology
+- **[Design](design/README.md)** - System design documentation
+- **[Architecture](architecture/README.md)** - Component architecture
+
+### Example Documentation
+
+- **[Config Requirements](requirements/config-requirements.md)** - Example requirements doc
+- **[Config Design](design/config-design.md)** - Example design doc
+- **[Web Server Requirements](requirements/web-server-requirements.md)** - Another example
+
+## 🤖 GitHub Copilot Integration
+
+This template includes comprehensive instructions for GitHub Copilot in `.github/copilot-instructions.md`:
+
+- ESP32-specific coding standards (memory management, error handling)
+- Component architecture patterns
+- QEMU and Codespaces workflows
+- OpenFastTrack requirements methodology
+- Build and testing procedures
+
+Just ask Copilot for help and it will follow these guidelines!
+
+## ✅ Quality Gates
+
+Pre-commit hooks ensure quality:
+
+```bash
+# Run all checks
+pre-commit run --all-files
+
+# Checks include:
+# - Markdown linting
+# - MkDocs build validation  
+# - Link verification
+# - File encoding
+```
+
+CI/CD automatically runs these checks on pull requests.
+
+## 🎓 Learning Resources
+
+### ESP-IDF Documentation
+
+- [ESP-IDF Programming Guide](https://docs.espressif.com/projects/esp-idf/en/latest/)
+- [API Reference](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/index.html)
+- [FreeRTOS](https://www.freertos.org/Documentation/RTOS_book.html)
+
+### This Template
+
+- Browse example components in `main/components/`
+- Read inline code comments for usage patterns
+- Check requirements and design docs for methodology
+
+## 🌟 Template Features
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| **GitHub Codespaces** | ✅ Ready | Zero-setup cloud development |
+| **QEMU Emulation** | ✅ Ready | Test without hardware |
+| **GDB Debugging** | ✅ Ready | Full debugging support |
+| **Example Components** | ✅ Ready | Config manager, web server |
+| **Pre-commit Hooks** | ✅ Ready | Automated quality checks |
+| **GitHub Pages** | ✅ Ready | Documentation deployment |
+| **Copilot Instructions** | ✅ Ready | AI-assisted development |
+| **OpenFastTrack Docs** | ✅ Ready | Requirements engineering |
+| **HTTPS Support** | 🚧 WIP | Certificate handling in progress |
+
+## 🎯 Next Steps
+
+1. **Explore the code** - Check out `main/main.c` and example components
+2. **Build and run** - Try the QEMU emulator
+3. **Read the docs** - Browse the development guides
+4. **Customize** - Make it your own!
+5. **Deploy** - Push to GitHub for automatic documentation deployment
+
+## 💬 Community & Support
+
+Questions? Suggestions? Found a bug?
+
+- Open an [issue](https://github.com/enthali/esp32-template/issues)
+- Start a [discussion](https://github.com/enthali/esp32-template/discussions)
+- Check existing documentation
+
+This is a community project - contributions are welcome!
+
+**Happy coding!** 🚀
