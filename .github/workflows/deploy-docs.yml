@@ -8,6 +8,12 @@ on:
   # Allow manual runs from the Actions UI for testing and one-off deploys
   workflow_dispatch: {}
 
+# Required permissions for GitHub Pages deployment
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
