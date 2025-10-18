@@ -23,7 +23,7 @@ RUN groupadd --gid $USER_GID $CONTAINER_USER \
 # the system-managed Python environment (avoids PEP 668 issues)
 USER root
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends python3-venv python3-pip nodejs npm \
+  && apt-get install -y --no-install-recommends python3-venv python3-pip nodejs npm doxygen graphviz \
   # create a system venv for documentation tools
   && python3 -m venv /opt/venv \
   && /opt/venv/bin/python -m pip install --upgrade pip setuptools wheel \
@@ -32,6 +32,13 @@ RUN apt-get update \
     "mkdocs-material>=9.0" \
     "mkdocstrings>=0.19" \
     pymdown-extensions \
+    "sphinx>=8.0" \
+    "sphinx-needs>=6.0" \
+    "sphinx-rtd-theme>=3.0" \
+    "furo>=2025.0" \
+    "myst-parser>=4.0" \
+    "sphinxcontrib-plantuml>=0.31" \
+    "breathe>=4.35" \
   # install markdownlint-cli for markdown validation
   && npm install -g markdownlint-cli \
   # make the venv binaries available system-wide via /etc/profile.d
