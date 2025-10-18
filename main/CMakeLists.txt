@@ -1,3 +1,11 @@
-idf_component_register(SRCS "main.c" 
-                    INCLUDE_DIRS "."
-                    REQUIRES led_controller distance_sensor cert_handler startup_tests web_server config_manager display_logic esp_wifi esp_http_server esp_https_server esp_netif nvs_flash json)
+idf_component_register(
+    SRCS "main.c"
+    INCLUDE_DIRS "."
+    REQUIRES 
+        nvs_flash
+        # Optional example components (uncomment as needed):
+        # config_manager
+        # web_server
+        # cert_handler
+        # netif_uart_tunnel
+)

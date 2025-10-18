@@ -1,20 +1,18 @@
-menu "ESP32 Distance Project Configuration"
+menu "ESP32 Template Configuration"
 
     config TARGET_EMULATOR
         bool "Build for QEMU emulator"
         default n
         help
             Enable this option to build for QEMU emulator instead of real hardware.
-            This will use simulator components that provide identical APIs but
-            simulate hardware behavior without requiring physical sensors or LEDs.
+            This allows testing and development without physical ESP32 hardware.
 
-    config EMULATOR_MOCK_SENSOR
-        bool "Use mocked sensor data in emulator"
+    config EMULATOR_MOCK_DATA
+        bool "Use mocked data in emulator"
         depends on TARGET_EMULATOR
         default y
         help
-            Generate simulated distance sensor readings that animate between
-            5cm and 60cm in a continuous sweep pattern. This provides visual
-            feedback for testing the LED display logic without hardware.
+            Generate simulated data for testing. This provides feedback
+            for testing application logic without requiring hardware.
 
 endmenu

@@ -1,146 +1,63 @@
+/**
+ * @file main.c
+ * @brief ESP32 Template - Minimal Application Entry Point
+ * 
+ * This is a minimal template for ESP32 applications. It demonstrates:
+ * - Basic initialization and logging
+ * - NVS flash initialization
+ * - Main application loop structure
+ * 
+ * Add your application components and logic here.
+ */
+
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "esp_system.h"
-#include "led_controller.h"
-#include "led_running_test.h"
-#include "distance_sensor.h"
-#include "wifi_manager.h"
-#include "display_logic.h"
-#include "config.h"
-#include "config_manager.h"
+#include "nvs_flash.h"
 
 static const char *TAG = "main";
 
+/**
+ * @brief Main application entry point
+ * 
+ * This is where your ESP32 application starts. Initialize your components
+ * and start your application logic here.
+ */
 void app_main(void)
 {
-    ESP_LOGI(TAG, "ESP32 Distance Measurement with LED Strip Display");
-
-    // Initialize configuration management first
-    esp_err_t ret = config_init();
-    if (ret != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Failed to initialize configuration manager: %s", esp_err_to_name(ret));
-        esp_restart();
+    ESP_LOGI(TAG, "ESP32 Template Starting...");
+    ESP_LOGI(TAG, "ESP-IDF Version: %s", esp_get_idf_version());
+    
+    // Initialize NVS (Non-Volatile Storage)
+    // This is required for WiFi, Bluetooth, and other system components
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_LOGW(TAG, "NVS partition was truncated and needs to be erased");
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
     }
-
-    // Load current runtime configuration
-    system_config_t runtime_config;
-    ret = config_get_current(&runtime_config);
-    if (ret != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Failed to get current configuration: %s", esp_err_to_name(ret));
-        esp_restart();
-    }
-
-    ESP_LOGI(TAG, "Configuration loaded: LED count=%d, brightness=%d, dist_range=%.1f-%.1fcm", 
-             runtime_config.led_count, runtime_config.led_brightness,
-             runtime_config.distance_min_mm / 10.0, runtime_config.distance_max_mm / 10.0);
-
-    // Perform system health check (REQ-CFG-11)
-    size_t nvs_free, nvs_total;
-    esp_err_t health_ret = config_nvs_health_check(&nvs_free, &nvs_total);
-    if (health_ret == ESP_OK) {
-        ESP_LOGI(TAG, "System health check passed - NVS: %zu/%zu entries", nvs_total - nvs_free, nvs_total);
-    } else {
-        ESP_LOGW(TAG, "System health check issues detected: %s", esp_err_to_name(health_ret));
-    }
-
-    // Configure LED strip using runtime configuration
-    led_config_t led_config = {
-        .gpio_pin = LED_DATA_PIN,
-        .led_count = runtime_config.led_count,
-        .rmt_channel = LED_RMT_CHANNEL};
-
-    // Initialize LED controller
-    ret = led_controller_init(&led_config);
-    if (ret != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Failed to initialize LED controller: %s", esp_err_to_name(ret));
-        esp_restart();
-    }
-
-    ESP_LOGI(TAG, "LED controller initialized successfully");
-    ESP_LOGI(TAG, "LED count: %d", led_get_count());
-
-    // Clear all LEDs first
-    led_clear_all();
-    led_show();
-
-    // Run hardware test once at startup (not continuous background task)
-    ESP_LOGI(TAG, "Running one-time LED hardware test...");
-    led_running_test_single_cycle(LED_COLOR_GREEN, 50);
-    ESP_LOGI(TAG, "Hardware test completed");
-
-    // Clear LEDs after test
-    led_clear_all();
-    led_show();
-
-    // Configure and initialize distance sensor using runtime configuration
-    distance_sensor_config_t distance_config = {
-        .trigger_pin = DISTANCE_TRIGGER_PIN,
-        .echo_pin = DISTANCE_ECHO_PIN,
-        .measurement_interval_ms = runtime_config.measurement_interval_ms,
-        .timeout_ms = runtime_config.sensor_timeout_ms,
-        .temperature_c_x10 = runtime_config.temperature_c_x10,
-        .smoothing_factor = runtime_config.smoothing_factor};
-
-    ret = distance_sensor_init(&distance_config);
-    if (ret != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Failed to initialize distance sensor: %s", esp_err_to_name(ret));
-        esp_restart();
-    }
-
-    ret = distance_sensor_start();
-    if (ret != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Failed to start distance sensor: %s", esp_err_to_name(ret));
-        esp_restart();
-    }
-
-    ESP_LOGI(TAG, "Distance sensor initialized and started");
-    ESP_LOGI(TAG, "Hardware: LED=GPIO%d, Trigger=GPIO%d, Echo=GPIO%d", LED_DATA_PIN, DISTANCE_TRIGGER_PIN, DISTANCE_ECHO_PIN);
-
-    // Initialize and start WiFi manager with smart boot logic
-    ret = wifi_manager_init();
-    if (ret != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Failed to initialize WiFi manager: %s", esp_err_to_name(ret));
-        return;
-    }
-
-    ret = wifi_manager_start();
-    if (ret != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Failed to start WiFi manager: %s", esp_err_to_name(ret));
-        return;
-    }
-
-    ESP_LOGI(TAG, "WiFi manager initialized and started");
-    ESP_LOGI(TAG, "Ready for distance measurement, LED display, and web interface...");
-
-    // Start display logic (single entry point - handles initialization and task startup)
-    ret = display_logic_start();
-    if (ret != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Failed to start display logic: %s", esp_err_to_name(ret));
-        esp_restart();
-    }
-
-    ESP_LOGI(TAG, "Display logic initialized and started");
-    ESP_LOGI(TAG, "Ready for distance measurement and LED display...");
-
-    // Main application loop - Coordination and lightweight monitoring
-    while (1)
-    {
-        // Lightweight sensor health monitoring 
-        distance_sensor_monitor();
-        
-        // Periodic WiFi status logging 
-        wifi_manager_monitor();
-
-        vTaskDelay(pdMS_TO_TICKS(5000)); // Monitor loop every 5 seconds
+    ESP_ERROR_CHECK(ret);
+    ESP_LOGI(TAG, "NVS Flash initialized successfully");
+    
+    // TODO: Initialize your components here
+    // Example: config_manager_init();
+    // Example: wifi_manager_init();
+    // Example: web_server_start();
+    
+    ESP_LOGI(TAG, "Template initialized successfully");
+    ESP_LOGI(TAG, "");
+    ESP_LOGI(TAG, "==============================================");
+    ESP_LOGI(TAG, "  ESP32 Project Template");
+    ESP_LOGI(TAG, "  Add your application code in main/main.c");
+    ESP_LOGI(TAG, "==============================================");
+    ESP_LOGI(TAG, "");
+    
+    // Main application loop
+    // Replace this with your application logic
+    while (1) {
+        vTaskDelay(pdMS_TO_TICKS(10000));
+        ESP_LOGI(TAG, "Template running... (uptime: %lu seconds)", (unsigned long)(esp_timer_get_time() / 1000000));
     }
 }
