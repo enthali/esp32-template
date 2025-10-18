@@ -1,0 +1,69 @@
+site_name: "ESP32 Template"
+site_description: "Production-ready ESP32 project template with GitHub Codespaces, QEMU emulation, and modern development tools"
+
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: indigo
+  features:
+    - navigation.footer
+    - content.full_width
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.details
+  - pymdownx.highlight
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10.9.1/dist/mermaid.min.js
+  - javascripts/mermaid-init.js
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Quick Start: development/README.md
+    - GitHub Codespaces: development/devcontainer.md
+    - QEMU Emulator: development/qemu-emulator.md
+    - Debugging: development/debugging.md
+  - Documentation Structure:
+    - Requirements: requirements/README.md
+    - Design: design/README.md
+    - Architecture: architecture/README.md
+    - API: api/README.md
+  - Development Tools:
+    - QEMU Network Bridge: development/qemu-network-internals.md
+    - Pre-commit Hooks: development/pre-commit-hooks.md
+    - Known Limitations: known-limitations.md
+    - Emulator Support: emulator-support.md
+  - Example Documentation:
+    - System Requirements: requirements/system-requirements.md
+    - System Design: design/system-design.md
+    - Config Requirements: requirements/config-requirements.md
+    - Config Design: design/config-design.md
+    - Web Server Requirements: requirements/web-server-requirements.md
+  - Legal:
+    - Impressum: legal/impressum.md
+    - Datenschutz: legal/datenschutz.md
+
+plugins:
+  - search
+  - mkdocstrings
+
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/enthali/esp32-template
+  generator: false
+
+copyright: |
+  &copy; 2025 Georg Doll - 
+  <a href="/legal/impressum/">Impressum</a> | 
+  <a href="/legal/datenschutz/">Datenschutz</a>

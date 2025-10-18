@@ -1,0 +1,18 @@
+menu "ESP32 Template Configuration"
+
+    config TARGET_EMULATOR
+        bool "Build for QEMU emulator"
+        default n
+        help
+            Enable this option to build for QEMU emulator instead of real hardware.
+            This allows testing and development without physical ESP32 hardware.
+
+    config EMULATOR_MOCK_DATA
+        bool "Use mocked data in emulator"
+        depends on TARGET_EMULATOR
+        default y
+        help
+            Generate simulated data for testing. This provides feedback
+            for testing application logic without requiring hardware.
+
+endmenu
