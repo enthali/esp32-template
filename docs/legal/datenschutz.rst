@@ -1,17 +1,21 @@
-# Datenschutzerklärung
+Datenschutzerklärung
+====================
 
-## Verantwortliche Stelle
+Verantwortliche Stelle
+----------------------
 
-Georg Doll  
-Lohweg 10  
-58375 Neufahrn  
-Deutschland  
+| Georg Doll
+| Lohweg 10
+| 58375 Neufahrn
+| Deutschland
 
-E-Mail: <georg_doll@freenet.de>
+E-Mail: georg_doll@freenet.de
 
-## Hosting und Datenverarbeitung
+Hosting und Datenverarbeitung
+------------------------------
 
-### GitHub Pages
+GitHub Pages
+~~~~~~~~~~~~
 
 Diese Website wird auf GitHub Pages gehostet, einem Service der GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA.
 
@@ -34,13 +38,14 @@ Als Websitebetreiber haben wir **keinen direkten Zugriff** auf die von GitHub Pa
 
 Für Auskunfts-, Berichtigungs-, Löschungs- oder andere Anfragen bezüglich der von GitHub Pages erfassten Daten wenden Sie sich bitte direkt an:
 
-- **GitHub Support**: [https://support.github.com/](https://support.github.com/)
-- **GitHub Privacy Statement**: [https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement](https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement)
-- **GitHub Data Protection Officer**: <privacy@github.com>
+- **GitHub Support**: https://support.github.com/
+- **GitHub Privacy Statement**: https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement
+- **GitHub Data Protection Officer**: privacy@github.com
 
 Die Nutzung von GitHub Pages erfolgt auf Grundlage unserer berechtigten Interessen im Sinne des Art. 6 Abs. 1 lit. f DSGVO an einer kosteneffizienten und sicheren Bereitstellung unserer Website.
 
-## Keine eigene Datenerhebung
+Keine eigene Datenerhebung
+---------------------------
 
 **Wichtiger Hinweis:** Diese Website erhebt und speichert **keine personenbezogenen Daten** der Besucher:
 
@@ -50,17 +55,19 @@ Die Nutzung von GitHub Pages erfolgt auf Grundlage unserer berechtigten Interess
 - ✅ Keine Newsletter oder Anmeldungen
 - ✅ Keine Nutzerprofile oder Accounts
 
-## Kontakt und Kommunikation
+Kontakt und Kommunikation
+--------------------------
 
 Für Fragen, Anregungen oder Support zu diesem Open-Source-Projekt nutzen Sie bitte die Kommunikationskanäle auf GitHub:
 
-- **GitHub Repository**: [https://github.com/enthali/esp32-distance](https://github.com/enthali/esp32-distance)
+- **GitHub Repository**: https://github.com/enthali/esp32-template
 - **Issues** für Bugs und Feature-Requests
 - **Discussions** für allgemeine Fragen
 
 Bei der Nutzung von GitHub gelten die Datenschutzbestimmungen von GitHub.
 
-## Ihre Rechte
+Ihre Rechte
+-----------
 
 Grundsätzlich haben Sie folgende Rechte nach der DSGVO:
 
@@ -74,6 +81,6 @@ Grundsätzlich haben Sie folgende Rechte nach der DSGVO:
 
 **Da wir keine personenbezogenen Daten erheben**, beziehen sich diese Rechte in Ihrem Fall ausschließlich auf die von GitHub erfassten Daten. Wenden Sie sich hierfür direkt an GitHub (siehe oben).
 
----
+----
 
-*Diese Datenschutzerklärung wurde erstellt am 25. September 2025.*
+*Diese Datenschutzerklärung wurde erstellt am 19. Oktober 2025.*
