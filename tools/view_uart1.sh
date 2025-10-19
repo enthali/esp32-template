@@ -4,7 +4,10 @@
 # Run this in a separate terminal while QEMU is running
 # to see the LED strip visualization on a separate channel.
 
-UART1_SOCKET="/workspaces/esp32-distance/build/esp32-uart1.sock"
+# Determine project directory (script location parent directory)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+UART1_SOCKET="${PROJECT_DIR}/build/esp32-uart1.sock"
 
 # Colors
 GREEN='\033[0;32m'

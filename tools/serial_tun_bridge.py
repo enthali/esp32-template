@@ -33,6 +33,12 @@ import select
 import signal
 import logging
 import argparse
+from pathlib import Path
+
+# Determine project directory dynamically
+SCRIPT_DIR = Path(__file__).parent.resolve()
+PROJECT_DIR = SCRIPT_DIR.parent
+TEMP_DIR = PROJECT_DIR / "temp"
 
 # Setup logging (will be configured based on command line arguments)
 logger = logging.getLogger(__name__)
@@ -374,7 +380,7 @@ def main():
     parser.add_argument(
         '--quiet', '-q',
         action='store_true',
-        help='Quiet mode: only log errors (to /workspaces/esp32-distance/temp/tun_errors.log)'
+        help='Quiet mode: only log errors (to ${PROJECT_DIR}/temp/tun_errors.log)'
     )
     parser.add_argument(
         '--port', '-p',
@@ -387,12 +393,12 @@ def main():
     # Configure logging based on quiet mode
     if args.quiet:
         # In quiet mode: only errors to file
-        error_log = '/workspaces/esp32-distance/temp/tun_errors.log'
-        os.makedirs(os.path.dirname(error_log), exist_ok=True)
+        error_log = TEMP_DIR / 'tun_errors.log'
+        error_log.parent.mkdir(parents=True, exist_ok=True)
         logging.basicConfig(
             level=logging.ERROR,
             format='%(asctime)s - %(levelname)s - %(message)s',
-            filename=error_log,
+            filename=str(error_log),
             filemode='a'
         )
     else:

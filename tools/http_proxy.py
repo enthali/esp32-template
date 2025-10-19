@@ -19,6 +19,7 @@ import time
 import sys
 import os
 from datetime import datetime
+from pathlib import Path
 
 PORT = 8080
 ESP32_URL = "http://192.168.100.2"
@@ -27,7 +28,11 @@ INITIAL_BACKOFF = 0.5  # seconds
 
 # Parse command line arguments
 QUIET_MODE = '--quiet' in sys.argv
-ERROR_LOG = "/workspaces/esp32-distance/temp/proxy_errors.log"
+
+# Determine project directory dynamically
+SCRIPT_DIR = Path(__file__).parent.resolve()
+PROJECT_DIR = SCRIPT_DIR.parent
+ERROR_LOG = PROJECT_DIR / "temp" / "proxy_errors.log"
 
 def log_error(message):
     """Log errors to file and optionally to console"""
@@ -35,7 +40,7 @@ def log_error(message):
     log_message = f"[{timestamp}] {message}\n"
     
     # Always log to file
-    os.makedirs(os.path.dirname(ERROR_LOG), exist_ok=True)
+    ERROR_LOG.parent.mkdir(parents=True, exist_ok=True)
     with open(ERROR_LOG, 'a') as f:
         f.write(log_message)
     

@@ -10,6 +10,10 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
+# Determine project directory (script location parent directory)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
 echo -e "${YELLOW}Stopping QEMU ESP32...${NC}"
 
 # Find and kill QEMU processes
@@ -42,7 +46,7 @@ else
 fi
 
 # Cleanup sockets
-UART1_SOCKET="/workspaces/esp32-distance/build/esp32-uart1.sock"
+UART1_SOCKET="${PROJECT_DIR}/build/esp32-uart1.sock"
 if [ -S "$UART1_SOCKET" ]; then
     rm -f "$UART1_SOCKET"
     echo -e "${GREEN}Removed UART1 socket.${NC}"

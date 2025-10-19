@@ -17,7 +17,7 @@
 				"idf.pythonBinPath": "/opt/esp/python_env/idf5.4_py3.12_env/bin/python",
 				"idf.toolsPath": "/opt/esp",
 				"idf.gitPath": "/usr/bin/git",
-				"idf.buildPath": "/workspaces/esp32-distance/build",
+				"idf.buildPath": "${containerWorkspaceFolder}/build",
 				"idf.showOnboardingOnInit": false,
 				"extensions.ignoreRecommendations": true
 			},
@@ -38,6 +38,5 @@
 			]
 		}
 	},
-	"runArgs": ["--privileged"],
-	"postStartCommand": "bash .devcontainer/post-start.sh"
+	"runArgs": ["--privileged"]
 }
