@@ -15,10 +15,10 @@ This template provides a complete development environment for ESP32 projects wit
 - 🐛 **GDB Debugging** - Full debugging in QEMU with VS Code integration
 - 🌐 **Example Components** - Web server with captive portal, configuration management
 - ⚙️ **Configuration Management** - NVS storage pattern examples
-- 📝 **Documentation** - MkDocs with GitHub Pages deployment
+- 📝 **Documentation** - Sphinx with GitHub Pages deployment
 - 🤖 **GitHub Copilot Ready** - AI-assisted development instructions included
 - ✅ **Quality Gates** - Pre-commit hooks for linting and validation
-- 📚 **OpenFastTrack** - Requirements and design documentation structure
+- 📚 **Sphinx-Needs** - Requirements engineering with traceability matrices
 
 ## 🎯 Quick Start
 
@@ -66,10 +66,11 @@ esp32-template/
 │       ├── web_server/       # HTTP server with captive portal
 │       ├── cert_handler/     # HTTPS certificate handling (WIP)
 │       └── netif_uart_tunnel/# QEMU network bridge
-├── docs/                     # MkDocs documentation
-│   ├── requirements/         # OpenFastTrack requirements
-│   ├── design/              # System design documents
-│   └── development/         # Development guides
+├── docs/                     # Sphinx documentation
+│   ├── 11_requirements/     # Sphinx-Needs requirements
+│   ├── 12_design/           # Design specifications  
+│   ├── 21_api/              # API documentation
+│   └── 31_traceability/     # Traceability matrices
 ├── tools/                    # Development tools
 │   ├── run-qemu-network.sh  # QEMU with network bridge
 │   └── http_proxy.py        # HTTP proxy for QEMU access
@@ -153,15 +154,15 @@ See [Debugging Guide](docs/development/debugging.md) for details.
 Full documentation is available at [GitHub Pages](https://enthali.github.io/esp32-template/) or build locally:
 
 ```bash
-# Install MkDocs (if not in Codespaces)
-pip install mkdocs mkdocs-material
-
 # Serve documentation locally
-mkdocs serve
+cd docs
+sphinx-build -b html . _build/html
+python -m http.server 8000 -d _build/html
 # Browse to http://localhost:8000
 
-# Build static site
-mkdocs build --strict
+# Build documentation
+cd docs
+sphinx-build -b html . _build/html
 ```
 
 ## 🤖 GitHub Copilot Integration
@@ -171,7 +172,7 @@ This template includes comprehensive GitHub Copilot instructions in `.github/cop
 - ESP32-specific coding standards
 - Component architecture patterns
 - Memory optimization guidelines
-- OpenFastTrack requirements methodology
+- Sphinx-Needs requirements methodology
 - Build and testing workflows
 
 Just ask Copilot for help and it will use these project-specific guidelines!
@@ -191,7 +192,7 @@ pre-commit install
 Checks include:
 
 - Markdown linting
-- MkDocs build validation
+- Sphinx documentation build validation
 - Link verification
 - Trailing whitespace removal
 
@@ -225,14 +226,22 @@ HTTP server with captive portal:
 
 ## 📖 Requirements Engineering
 
-This template uses **OpenFastTrack** methodology:
+This template uses **Sphinx-Needs** for professional requirements management:
 
-- **Requirements** in `docs/requirements/` - What to build
-- **Design** in `docs/design/` - How to build it
-- **Architecture** in `docs/architecture/` - System structure
-- **Traceability** - Bidirectional links between requirements, design, and code
+- **Requirements** in `docs/11_requirements/` - System and component requirements
+- **Design** in `docs/12_design/` - Design specifications
+- **API Reference** in `docs/21_api/` - Code documentation
+- **Traceability** in `docs/31_traceability/` - Auto-generated relationship graphs
 
-See [Requirements Documentation](docs/requirements/README.md) for the guide.
+Features:
+
+- ✅ Unique requirement IDs with automatic validation
+- ✅ Bidirectional traceability links
+- ✅ Visual dependency graphs (needflow)
+- ✅ Filterable requirement tables
+- ✅ Coverage analysis and statistics
+
+See [Requirements Documentation](https://enthali.github.io/esp32-template/11_requirements/) for details.
 
 ## 🚧 Known Limitations
 
@@ -251,7 +260,7 @@ ESP32 embedded development template featuring:
 - **ESP-IDF v5.4.1** - Espressif IoT Development Framework
 - **FreeRTOS** - Real-time operating system
 - **QEMU** - Full system emulation with networking
-- **OpenFastTrack** - Requirements engineering methodology
+- **Sphinx-Needs** - Requirements engineering with traceability
 - **GitHub Codespaces** - Cloud-based development
 - **GitHub Copilot** - AI-assisted development
 

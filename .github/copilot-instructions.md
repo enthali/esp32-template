@@ -14,7 +14,7 @@ This is a **template repository** designed to be:
 - **Zero-setup development** - GitHub Codespaces with ESP-IDF pre-configured
 - **Hardware optional** - QEMU emulation for testing without physical devices
 - **Production-ready structure** - Component-based architecture following ESP-IDF best practices
-- **Documentation included** - OpenFastTrack requirements/design methodology
+- **Documentation included** - Sphinx-Needs requirements/design methodology
 
 ### Hardware Stack (When Using Real Hardware)
 
@@ -44,9 +44,9 @@ This is a **template repository** designed to be:
 
 ### Documentation Structure
 
-- `docs/requirements/`: OpenFastTrack requirements documentation
-  - [`README.md`](../docs/requirements/README.md): Requirements documentation overview and navigation guide
-- `docs/`: Technical documentation using OpenFastTrack methodology
+- `docs/requirements/`: Sphinx-Needs requirements documentation
+  - [`README.md`](../docs/11_requirements/index.rst): Requirements documentation overview and navigation guide
+- `docs/`: Technical documentation using Sphinx-Needs methodology
 - `docs/design/*-design.md`: Technical architecture and system design
 - `docs/planning/Features-*.md`: Feature tracking and planning documents
 
@@ -103,11 +103,11 @@ This is a **template repository** designed to be:
 
 ### Requirements Engineering
 
-- **Methodology**: Follow OpenFastTrack (OFT) requirements engineering methodology
-- **Requirement IDs**: Use format `REQ-<AREA>-<NUMBER>` (e.g., `REQ-CFG-1`, `REQ-WEB-3`)
+- **Methodology**: Follow Sphinx-Needs requirements engineering methodology
+- **Requirement IDs**: Use format `REQ_<AREA>_<NUMBER>` (e.g., `REQ_CFG_1`, `REQ_WEB_3`)
 - **Traceability**: Maintain bidirectional traceability from requirements → design → implementation → tests
-- **Location**: Requirements stored in `docs/requirements/` with detailed `.md` format
-- **Current Focus**: Configuration management requirements (`config-requirements.md`)
+- **Location**: Requirements stored in `docs/11_requirements/` with `.rst` format
+- **Current Focus**: System, web server, config manager, and network tunnel requirements
 - **Implementation Links**: Code must reference specific requirement IDs in comments for traceability
 
 ## Template Features
@@ -120,8 +120,8 @@ This is a **template repository** designed to be:
 - ✅ QEMU emulation with network support
 - ✅ GDB debugging in VS Code
 - ✅ Pre-commit hooks for quality gates
-- ✅ MkDocs documentation with GitHub Pages
-- ✅ OpenFastTrack requirements/design structure
+- ✅ Sphinx documentation with GitHub Pages
+- ✅ Sphinx-Needs requirements/design structure
 
 ### Example Components (Optional)
 
@@ -161,7 +161,7 @@ This is a **template repository** designed to be:
 2. **Point to example components** - Show how to structure their code
 3. **Explain QEMU workflow** - Test without hardware first
 4. **Recommend Codespaces** - Best development experience
-5. **Reference OpenFastTrack docs** - For requirements/design methodology
+5. **Reference Sphinx-Needs docs** - For requirements/design methodology
 
 ## Quality Gates for Coding Agent
 
@@ -174,7 +174,7 @@ This project uses automated quality gates to ensure documentation and code quali
 **GitHub Actions will automatically run** on all PRs and commits to main branches:
 
 - **Markdown linting**: Checks syntax, formatting, and style consistency
-- **MkDocs build validation**: Ensures documentation builds without errors
+- **Sphinx build validation**: Ensures documentation builds without errors
 - **Link verification**: Validates all internal and external links
 
 **Environment Setup**: The `.github/actions/setup-coding-agent-env/action.yml` ensures all required tools are available in CI.
@@ -184,7 +184,7 @@ This project uses automated quality gates to ensure documentation and code quali
 When working on documentation changes, ensure these tools work:
 
 1. **markdownlint-cli**: Markdown syntax and style validation
-2. **mkdocs**: Documentation build system with strict mode
+2. **sphinx**: Documentation build system with Sphinx-Needs
 3. **pre-commit**: Automated hook management
 
 #### How to Pass Quality Checks
@@ -223,7 +223,7 @@ When modifying Markdown files:
 - **Always add blank lines** around lists, code blocks, and headings
 - **Use fenced code blocks** with language specifiers: ` ```yaml `
 - **Validate links** before committing
-- **Test MkDocs build** locally: `mkdocs build --strict`
+- **Test Sphinx build** locally: `sphinx-build -b html docs docs/_build/html`
 
 #### If Tools Are Not Available
 
