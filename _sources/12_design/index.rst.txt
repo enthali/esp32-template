@@ -7,7 +7,7 @@ This section contains detailed design specifications for system components follo
    :maxdepth: 2
    :caption: Design Documents:
 
-   system-architecture
+   high-level-architecture
    config-manager
 
 Overview
@@ -23,20 +23,20 @@ Design specifications define **how** the system implements requirements. They ar
 Design Hierarchy
 ----------------
 
-Design specifications are organized by architectural layer:
+Design specifications are organized by scope:
 
-1. **System Architecture** (``SPEC_SYS_*``) - Overall system design
+1. **High-Level Architecture** (``SPEC_ARCH_*``) - System-wide design decisions
 
-   * Component interactions
-   * Threading model
-   * Memory management
-   * Build system integration
+   * Layered architecture and component organization
+   * Threading model and memory management
+   * Build system and QEMU integration
+   * Network architecture (WiFi, HTTP)
+   * Performance targets and development workflow
 
-2. **Component Designs** - Detailed component specifications
+2. **Component-Specific Designs** - Detailed component specifications
 
-   * ``SPEC_CFG_*`` - Configuration Manager design
-   * ``SPEC_WEB_*`` - Web Server design (to be added)
-   * ``SPEC_NETIF_TUNNEL_*`` - Network Tunnel design (to be added)
+   * ``SPEC_CFG_*`` - Configuration Manager implementation details
+   * Additional component designs to be added as needed
 
 Each design specification uses Sphinx-Needs ``:spec:`` directive and links to parent requirements using ``:links:`` attribute.
 

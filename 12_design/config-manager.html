@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="API Reference" href="../21_api/index.html"><link rel="prev" title="System Architecture Design Specification" href="system-architecture.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="API Reference" href="../21_api/index.html"><link rel="prev" title="High-Level Architecture Design Specification" href="high-level-architecture.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
         <title>Configuration Manager Design Specification - ESP32 Template Documentation</title>
@@ -200,24 +200,17 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
-<ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../10_architecture/index.html">Architecture Documentation</a><input aria-label="Toggle navigation of Architecture Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../10_architecture/overview.html">ESP32 Template Architecture Overview</a></li>
-</ul>
-</li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
 <ul class="current">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/system.html">System Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/web-server.html">Web Server Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/config-manager.html">Configuration Manager Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html">System Architecture Design Specification</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="high-level-architecture.html">High-Level Architecture Design Specification</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Configuration Manager Design Specification</a></li>
 </ul>
 </li>
@@ -228,7 +221,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development Guides:</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
@@ -304,7 +297,7 @@
 </section>
 <section id="architecture-design">
 <h2>Architecture Design<a class="headerlink" href="#architecture-design" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-f3ac4dab">
+<div class="need_container docutils container" id="SNCB-d5df4655">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_ARCH_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -347,7 +340,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-cafe9c24">
+<div class="need_container docutils container" id="SNCB-e0356488">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_FLOW_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -387,7 +380,7 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </section>
 <section id="data-structure-design">
 <h2>Data Structure Design<a class="headerlink" href="#data-structure-design" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-86cb3f70">
+<div class="need_container docutils container" id="SNCB-05009dcb">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_STORAGE_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -435,7 +428,7 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-3eb93a77">
+<div class="need_container docutils container" id="SNCB-c8f3797f">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_RUNTIME_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -479,7 +472,7 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </section>
 <section id="api-design">
 <h2>API Design<a class="headerlink" href="#api-design" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-40a9b966">
+<div class="need_container docutils container" id="SNCB-2fae7cfd">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_API_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -527,7 +520,7 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-a065b1ea">
+<div class="need_container docutils container" id="SNCB-9025d258">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_VALIDATION_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -564,7 +557,7 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </section>
 <section id="web-interface-design">
 <h2>Web Interface Design<a class="headerlink" href="#web-interface-design" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-c770376a">
+<div class="need_container docutils container" id="SNCB-296c29ce">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_WEB_API_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -610,7 +603,7 @@ POST /api/config/import    -&gt; Import configuration (JSON upload)
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-f1e1abca">
+<div class="need_container docutils container" id="SNCB-d4a2b28c">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_PREVIEW_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -643,7 +636,7 @@ POST /api/config/import    -&gt; Import configuration (JSON upload)
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-aa31783c">
+<div class="need_container docutils container" id="SNCB-d17e5b48">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_UI_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -692,7 +685,7 @@ POST /api/config/import    -&gt; Import configuration (JSON upload)
 </section>
 <section id="error-handling-design">
 <h2>Error Handling Design<a class="headerlink" href="#error-handling-design" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-fe3513c5">
+<div class="need_container docutils container" id="SNCB-35601bbe">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_ERROR_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -725,7 +718,7 @@ POST /api/config/import    -&gt; Import configuration (JSON upload)
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-a8015ed3">
+<div class="need_container docutils container" id="SNCB-95df08fb">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_LOGGING_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -765,7 +758,7 @@ POST /api/config/import    -&gt; Import configuration (JSON upload)
 </section>
 <section id="implementation-strategy">
 <h2>Implementation Strategy<a class="headerlink" href="#implementation-strategy" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-053fbf2a">
+<div class="need_container docutils container" id="SNCB-6ccc960c">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_IMPL_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -858,14 +851,14 @@ POST /api/config/import    -&gt; Import configuration (JSON upload)
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="system-architecture.html">
+          <a class="prev-page" href="high-level-architecture.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">System Architecture Design Specification</div>
+                <div class="title">High-Level Architecture Design Specification</div>
                 
               </div>
             </a>

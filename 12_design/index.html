@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="System Architecture Design Specification" href="system-architecture.html"><link rel="prev" title="Network Interface Tunnel Requirements" href="../11_requirements/netif-tunnel.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="High-Level Architecture Design Specification" href="high-level-architecture.html"><link rel="prev" title="Network Interface Tunnel Requirements" href="../11_requirements/netif-tunnel.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
         <title>Design Specifications - ESP32 Template Documentation</title>
@@ -200,24 +200,17 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
-<ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../10_architecture/index.html">Architecture Documentation</a><input aria-label="Toggle navigation of Architecture Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../10_architecture/overview.html">ESP32 Template Architecture Overview</a></li>
-</ul>
-</li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
 <ul class="current">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/system.html">System Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/web-server.html">Web Server Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/config-manager.html">Configuration Manager Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html">System Architecture Design Specification</a></li>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="high-level-architecture.html">High-Level Architecture Design Specification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="config-manager.html">Configuration Manager Design Specification</a></li>
 </ul>
 </li>
@@ -228,7 +221,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development Guides:</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
@@ -288,18 +281,17 @@
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Design Documents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="system-architecture.html">System Architecture Design Specification</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#document-metadata">Document Metadata</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#component-specifications">Component Specifications</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#threading-and-task-model">Threading and Task Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#data-flow-design">Data Flow Design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#network-architecture">Network Architecture</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#qemu-emulation-support">QEMU Emulation Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#build-and-configuration">Build and Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#performance-targets">Performance Targets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#development-workflow">Development Workflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#traceability">Traceability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="high-level-architecture.html">High-Level Architecture Design Specification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="high-level-architecture.html#document-metadata">Document Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level-architecture.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level-architecture.html#component-design-specifications">Component Design Specifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level-architecture.html#data-flow-architecture">Data Flow Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level-architecture.html#qemu-emulation-architecture">QEMU Emulation Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level-architecture.html#threading-architecture">Threading Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level-architecture.html#build-system-integration">Build System Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level-architecture.html#development-workflow-design">Development Workflow Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level-architecture.html#performance-targets">Performance Targets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="high-level-architecture.html#traceability">Traceability</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="config-manager.html">Configuration Manager Design Specification</a><ul>
@@ -327,21 +319,21 @@
 </section>
 <section id="design-hierarchy">
 <h2>Design Hierarchy<a class="headerlink" href="#design-hierarchy" title="Link to this heading">¶</a></h2>
-<p>Design specifications are organized by architectural layer:</p>
+<p>Design specifications are organized by scope:</p>
 <ol class="arabic simple">
-<li><p><strong>System Architecture</strong> (<code class="docutils literal notranslate"><span class="pre">SPEC_SYS_*</span></code>) - Overall system design</p>
+<li><p><strong>High-Level Architecture</strong> (<code class="docutils literal notranslate"><span class="pre">SPEC_ARCH_*</span></code>) - System-wide design decisions</p>
 <ul class="simple">
-<li><p>Component interactions</p></li>
-<li><p>Threading model</p></li>
-<li><p>Memory management</p></li>
-<li><p>Build system integration</p></li>
+<li><p>Layered architecture and component organization</p></li>
+<li><p>Threading model and memory management</p></li>
+<li><p>Build system and QEMU integration</p></li>
+<li><p>Network architecture (WiFi, HTTP)</p></li>
+<li><p>Performance targets and development workflow</p></li>
 </ul>
 </li>
-<li><p><strong>Component Designs</strong> - Detailed component specifications</p>
+<li><p><strong>Component-Specific Designs</strong> - Detailed component specifications</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">SPEC_CFG_*</span></code> - Configuration Manager design</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SPEC_WEB_*</span></code> - Web Server design (to be added)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SPEC_NETIF_TUNNEL_*</span></code> - Network Tunnel design (to be added)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SPEC_CFG_*</span></code> - Configuration Manager implementation details</p></li>
+<li><p>Additional component designs to be added as needed</p></li>
 </ul>
 </li>
 </ol>
@@ -396,12 +388,12 @@ Tests (to be added)
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="system-architecture.html">
+          <a class="next-page" href="high-level-architecture.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">System Architecture Design Specification</div>
+                <div class="title">High-Level Architecture Design Specification</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
