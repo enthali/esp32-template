@@ -1,0 +1,1071 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Configuration Manager Design Specification" href="config-manager.html"><link rel="prev" title="Design Specifications" href="index.html">
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+        <title>System Architecture Design Specification - ESP32 Template Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=2dda3639" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">ESP32 Template Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">ESP32 Template Documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../10_architecture/index.html">Architecture Documentation</a><input aria-label="Toggle navigation of Architecture Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../10_architecture/overview.html">ESP32 Template Architecture Overview</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/system.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/web-server.html">Web Server Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/config-manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">System Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html">Configuration Manager Design Specification</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development Guides:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Traceability:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Legal:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../legal/impressum.html">Impressum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/datenschutz.html">Datenschutzerklärung</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/12_design/system-architecture.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="system-architecture-design-specification">
+<h1>System Architecture Design Specification<a class="headerlink" href="#system-architecture-design-specification" title="Link to this heading">¶</a></h1>
+<p>This document defines the system-level architecture for the ESP32 Template, including component interactions, threading model, and data flow.</p>
+<section id="document-metadata">
+<h2>Document Metadata<a class="headerlink" href="#document-metadata" title="Link to this heading">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Version<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Date<span class="colon">:</span></dt>
+<dd class="field-even"><p>2025-07-24</p>
+</dd>
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ESP32 Template Team</p>
+</dd>
+<dt class="field-even">Requirements<span class="colon">:</span></dt>
+<dd class="field-even"><p>REQ_SYS_1 through REQ_SYS_8</p>
+</dd>
+</dl>
+</section>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-360ef64c">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_ARCH_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">ESP32 Component-Based Architecture</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_ARCH_1" title="SPEC_SYS_ARCH_1">SPEC_SYS_ARCH_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">architecture</span><span class="needs_spacer">, </span><span class="needs_data">system</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_ARCH_1" title="SPEC_SYS_ARCH_1">REQ_SYS_ARCH_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> The system follows ESP-IDF component-based architecture with clear separation of concerns.</p>
+<p><strong>System Structure:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────┐
+│                    Main Application (main.c)                │
+├─────────────────────────────────────────────────────────────┤
+│                   Example Components                        │
+├───────────────┬──────────────┬──────────────┬───────────────┤
+│ config_manager│  web_server  │ cert_handler │ netif_tunnel  │
+│  - NVS mgmt   │  - HTTP API  │  - SSL certs │  - QEMU net   │
+│  - Validation │  - WiFi mgr  │  - Auto-gen  │  - UART tun   │
+│  - Runtime    │  - Captive   │  - Embedding │  - Bridge     │
+├───────────────┴──────────────┴──────────────┴───────────────┤
+│              ESP-IDF Hardware Abstraction Layer             │
+│   NVS | HTTP | WiFi | GPIO | FreeRTOS | Netif | TCP/IP     │
+└─────────────────────────────────────────────────────────────┘
+</pre></div>
+</div>
+<p><strong>Component Organization:</strong></p>
+<ul class="simple">
+<li><p><strong>main/</strong>: Application entry point and user-customizable code</p></li>
+<li><p><strong>main/components/</strong>: Reusable components following ESP-IDF conventions</p></li>
+<li><p><strong>ESP-IDF HAL</strong>: Hardware abstraction provided by ESP-IDF framework</p></li>
+</ul>
+<p><strong>Design Philosophy:</strong> Template provides example components, users add their own application logic.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="component-specifications">
+<h2>Component Specifications<a class="headerlink" href="#component-specifications" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-9fb5ae42">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_CONFIG_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Configuration Manager Component</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_CONFIG_1" title="SPEC_SYS_CONFIG_1">SPEC_SYS_CONFIG_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">component</span><span class="needs_spacer">, </span><span class="needs_data">config</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_CFG_1" title="SPEC_SYS_CONFIG_1">REQ_SYS_CFG_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Example configuration management component demonstrating NVS usage patterns.</p>
+<p><strong>Component Purpose:</strong></p>
+<ul class="simple">
+<li><p>Demonstrates persistent storage with ESP-IDF NVS</p></li>
+<li><p>Shows runtime configuration structure patterns</p></li>
+<li><p>Provides validation and error recovery examples</p></li>
+<li><p>Template for user-specific configuration needs</p></li>
+</ul>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>NVS-backed persistent storage</p></li>
+<li><p>Runtime configuration caching</p></li>
+<li><p>Parameter validation framework</p></li>
+<li><p>Factory reset capability</p></li>
+</ul>
+<p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">main/components/config_manager/</span></code></p>
+<p><strong>Status</strong>: ✅ Complete example implementation</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-cf9e046e">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_WEB_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Web Server Component</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_WEB_1" title="SPEC_SYS_WEB_1">SPEC_SYS_WEB_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">component</span><span class="needs_spacer">, </span><span class="needs_data">web</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_WEB_1" title="SPEC_SYS_WEB_1">REQ_SYS_WEB_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Example HTTP server component with captive portal and WiFi management.</p>
+<p><strong>Component Purpose:</strong></p>
+<ul class="simple">
+<li><p>Demonstrates ESP-IDF HTTP server usage</p></li>
+<li><p>Shows captive portal implementation pattern</p></li>
+<li><p>Provides WiFi management examples (AP/STA modes)</p></li>
+<li><p>Template for web-based device configuration</p></li>
+</ul>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>HTTP server with static file serving</p></li>
+<li><p>Captive portal for WiFi setup</p></li>
+<li><p>WiFi credential storage in NVS</p></li>
+<li><p>Automatic AP fallback on connection failure</p></li>
+</ul>
+<p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">main/components/web_server/</span></code></p>
+<p><strong>Status</strong>: ✅ Complete HTTP implementation, 🚧 HTTPS pending</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-621ec017">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_CERT_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Certificate Handler Component</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_CERT_1" title="SPEC_SYS_CERT_1">SPEC_SYS_CERT_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">draft</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">component</span><span class="needs_spacer">, </span><span class="needs_data">security</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_WEB_1" title="SPEC_SYS_CERT_1">REQ_SYS_WEB_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Certificate management component for HTTPS (work in progress).</p>
+<p><strong>Component Purpose:</strong></p>
+<ul class="simple">
+<li><p>Automate SSL certificate generation</p></li>
+<li><p>Embed certificates in firmware build</p></li>
+<li><p>Enable HTTPS for web server component</p></li>
+</ul>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>Build-time certificate generation</p></li>
+<li><p>OpenSSL and Python fallback support</p></li>
+<li><p>ESP-IDF EMBED_FILES integration</p></li>
+<li><p>25-year certificate validity</p></li>
+</ul>
+<p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">main/components/cert_handler/</span></code></p>
+<p><strong>Status</strong>: 🚧 <strong>WIP</strong> - HTTPS not yet working in QEMU</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-01cdfd49">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_NETIF_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Network Tunnel Component</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_NETIF_1" title="SPEC_SYS_NETIF_1">SPEC_SYS_NETIF_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">component</span><span class="needs_spacer">, </span><span class="needs_data">qemu</span><span class="needs_spacer">, </span><span class="needs_data">network</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_SIM_1" title="SPEC_SYS_NETIF_1">REQ_SYS_SIM_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> QEMU-specific network bridge component for emulator support.</p>
+<p><strong>Component Purpose:</strong></p>
+<ul class="simple">
+<li><p>Enable network access in QEMU emulation</p></li>
+<li><p>Bridge UART to host network stack</p></li>
+<li><p>Support development without physical hardware</p></li>
+</ul>
+<p><strong>Key Features:</strong></p>
+<ul class="simple">
+<li><p>UART-based network tunneling</p></li>
+<li><p>Python bridge script for host side</p></li>
+<li><p>Transparent TCP/IP pass-through</p></li>
+<li><p>QEMU-only compilation (conditional)</p></li>
+</ul>
+<p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">main/components/netif_uart_tunnel/</span></code></p>
+<p><strong>Status</strong>: ✅ Complete QEMU network support</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="threading-and-task-model">
+<h2>Threading and Task Model<a class="headerlink" href="#threading-and-task-model" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-c11513fd">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_THREAD_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">FreeRTOS Task Architecture</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_THREAD_1" title="SPEC_SYS_THREAD_1">SPEC_SYS_THREAD_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">threading</span><span class="needs_spacer">, </span><span class="needs_data">rtos</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_ARCH_1" title="SPEC_SYS_THREAD_1">REQ_SYS_ARCH_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Application uses FreeRTOS tasks for concurrent operations.</p>
+<p><strong>Task Structure:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Main Task (Priority 1, Core 0)
+└── Application-defined tasks (users add their own)
+
+WiFi/Network Tasks (Priority 2+, Core 1)
+├── WiFi Management (connection handling)
+├── HTTP Server (request processing)
+└── TCP/IP Stack (ESP-IDF managed)
+
+Core 1: WiFi/Network + ESP-IDF System Tasks (reserved)
+</pre></div>
+</div>
+<p><strong>Design Guidelines:</strong></p>
+<ul class="simple">
+<li><p>Use Core 0 for application tasks</p></li>
+<li><p>Core 1 reserved for WiFi/network stack</p></li>
+<li><p>Prioritize tasks appropriately (0-25)</p></li>
+<li><p>Monitor stack usage with uxTaskGetStackHighWaterMark()</p></li>
+</ul>
+<p><strong>Template Approach:</strong> Users define their own tasks in main.c</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-9836a9cb">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_MEMORY_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Memory Management Strategy</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_MEMORY_1" title="SPEC_SYS_MEMORY_1">SPEC_SYS_MEMORY_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">memory</span><span class="needs_spacer">, </span><span class="needs_data">performance</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_ARCH_1" title="SPEC_SYS_MEMORY_1">REQ_SYS_ARCH_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Memory managed with FreeRTOS heap and ESP-IDF capabilities.</p>
+<p><strong>Memory Allocation:</strong></p>
+<ul class="simple">
+<li><p><strong>Static</strong>: Component structures allocated at compile time</p></li>
+<li><p><strong>Dynamic</strong>: Runtime allocations use heap_caps_malloc()</p></li>
+<li><p><strong>DMA</strong>: Use MALLOC_CAP_DMA for peripheral buffers</p></li>
+<li><p><strong>IRAM</strong>: Use IRAM_ATTR only for interrupt handlers</p></li>
+</ul>
+<p><strong>Memory Constraints:</strong></p>
+<ul class="simple">
+<li><p>4MB flash configured (typical ESP32 module)</p></li>
+<li><p>~41% free flash after base system</p></li>
+<li><p>Monitor heap with esp_get_free_heap_size()</p></li>
+<li><p>Stack overflow protection enabled</p></li>
+</ul>
+<p><strong>Template Guidance:</strong> Users monitor memory usage for their specific application</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="data-flow-design">
+<h2>Data Flow Design<a class="headerlink" href="#data-flow-design" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-f94f06e3">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_DATAFLOW_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Component Communication Pattern</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_DATAFLOW_1" title="SPEC_SYS_DATAFLOW_1">SPEC_SYS_DATAFLOW_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">dataflow</span><span class="needs_spacer">, </span><span class="needs_data">communication</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_ARCH_1" title="SPEC_SYS_DATAFLOW_1">REQ_SYS_ARCH_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Components communicate through well-defined APIs and FreeRTOS primitives.</p>
+<p><strong>Communication Patterns:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>User Application (main.c)
+     ↕ (API calls)
+Component Layer
+     ↕ (FreeRTOS queues/events)
+ESP-IDF HAL
+     ↕ (Hardware registers)
+Physical Hardware
+</pre></div>
+</div>
+<p><strong>Synchronization Primitives:</strong></p>
+<ul class="simple">
+<li><p><strong>Mutexes</strong>: Protect shared configuration state</p></li>
+<li><p><strong>Queues</strong>: Producer-consumer data flow</p></li>
+<li><p><strong>Event Groups</strong>: Task coordination and signaling</p></li>
+<li><p><strong>Semaphores</strong>: Resource counting and blocking</p></li>
+</ul>
+<p><strong>Template Pattern:</strong> Components expose clean APIs; internal synchronization hidden</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="network-architecture">
+<h2>Network Architecture<a class="headerlink" href="#network-architecture" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-f46ae733">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_WIFI_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">WiFi Manager Design</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_WIFI_1" title="SPEC_SYS_WIFI_1">SPEC_SYS_WIFI_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">network</span><span class="needs_spacer">, </span><span class="needs_data">wifi</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_WEB_1" title="SPEC_SYS_WIFI_1">REQ_SYS_WEB_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> WiFi management with automatic reconnection and AP fallback.</p>
+<p><strong>WiFi Operation Modes:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Station (STA) Mode</strong>: Connect to existing WiFi network</p></li>
+<li><p><strong>Access Point (AP) Mode</strong>: Create configuration network</p></li>
+<li><p><strong>Fallback Logic</strong>: Auto-switch to AP if STA fails</p></li>
+</ol>
+<p><strong>Connection Flow:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Boot → Load NVS Credentials → STA Connection Attempt
+                                     ↓ (success)
+                                STA Connected
+                                     ↓ (failure after timeout)
+                                AP Mode + Captive Portal
+</pre></div>
+</div>
+<p><strong>Credential Management:</strong></p>
+<ul class="simple">
+<li><p>WiFi SSID/password stored in NVS</p></li>
+<li><p>Factory reset clears credentials</p></li>
+<li><p>Web interface provides credential update</p></li>
+</ul>
+<p><strong>Status</strong>: ✅ Complete with NVS integration</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-2a92bab7">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_HTTP_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">HTTP Server Architecture</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_HTTP_1" title="SPEC_SYS_HTTP_1">SPEC_SYS_HTTP_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">network</span><span class="needs_spacer">, </span><span class="needs_data">http</span><span class="needs_spacer">, </span><span class="needs_data">web</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_WEB_1" title="SPEC_SYS_HTTP_1">REQ_SYS_WEB_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> HTTP server provides web interface and REST API.</p>
+<p><strong>Server Features:</strong></p>
+<ul class="simple">
+<li><p>Static file serving from embedded filesystem</p></li>
+<li><p>RESTful API endpoints for configuration</p></li>
+<li><p>Captive portal detection and redirect</p></li>
+<li><p>CORS headers for development</p></li>
+</ul>
+<p><strong>URL Structure:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/                   → index.html (main page)
+/settings           → settings.html (configuration)
+/wifi-setup         → wifi-setup.html (captive portal)
+/api/config         → REST API (GET/POST)
+/api/wifi           → WiFi management API
+</pre></div>
+</div>
+<p><strong>Status</strong>: ✅ HTTP working, 🚧 HTTPS in progress</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="qemu-emulation-support">
+<h2>QEMU Emulation Support<a class="headerlink" href="#qemu-emulation-support" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-7b1d2c81">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_QEMU_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">QEMU Emulation Architecture</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_QEMU_1" title="SPEC_SYS_QEMU_1">SPEC_SYS_QEMU_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">qemu</span><span class="needs_spacer">, </span><span class="needs_data">emulation</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_SIM_1" title="SPEC_SYS_QEMU_1">REQ_SYS_SIM_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Template supports QEMU emulation for hardware-less development.</p>
+<p><strong>QEMU Components:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>ESP32 QEMU Emulator</strong>: Hardware emulation (CPU, peripherals)</p></li>
+<li><p><strong>UART Tunnel Driver</strong>: Network bridge (netif_uart_tunnel)</p></li>
+<li><p><strong>Python Bridge Script</strong>: Host-side network proxy</p></li>
+<li><p><strong>HTTP Proxy</strong>: Web access from host browser</p></li>
+</ol>
+<p><strong>Network Architecture:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Host Browser → HTTP Proxy (tools/http_proxy.py)
+                    ↓ (port 8080)
+QEMU ESP32 (192.168.5.2) → UART1 Tunnel
+                    ↓ (serial_tun_bridge.py)
+Host Network Stack → Internet
+</pre></div>
+</div>
+<p><strong>Usage Workflow:</strong></p>
+<ol class="arabic simple">
+<li><p>Start QEMU with network script: <code class="docutils literal notranslate"><span class="pre">./tools/run-qemu-network.sh</span></code></p></li>
+<li><p>ESP32 boots and initializes network tunnel</p></li>
+<li><p>Access web interface via HTTP proxy</p></li>
+<li><p>Test application without physical hardware</p></li>
+</ol>
+<p><strong>Limitations</strong>: HTTPS not working in QEMU (HTTP works fine)</p>
+<p><strong>Status</strong>: ✅ Complete QEMU support with network</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="build-and-configuration">
+<h2>Build and Configuration<a class="headerlink" href="#build-and-configuration" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-b96db6fa">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_BUILD_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">ESP-IDF Build System Integration</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_BUILD_1" title="SPEC_SYS_BUILD_1">SPEC_SYS_BUILD_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">build</span><span class="needs_spacer">, </span><span class="needs_data">cmake</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_HW_1" title="SPEC_SYS_BUILD_1">REQ_SYS_HW_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Project uses ESP-IDF CMake build system with component registration.</p>
+<p><strong>Build Structure:</strong></p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="c"># Top-level CMakeLists.txt</span>
+<span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.16</span><span class="p">)</span>
+<span class="nb">include</span><span class="p">(</span><span class="o">$ENV{</span><span class="nv">IDF_PATH</span><span class="o">}</span><span class="s">/tools/cmake/project.cmake</span><span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span><span class="s">esp32-template</span><span class="p">)</span>
+
+<span class="c"># Component CMakeLists.txt</span>
+<span class="nb">idf_component_register</span><span class="p">(</span>
+<span class="w">    </span><span class="s">SRCS</span><span class="w"> </span><span class="s2">&quot;component.c&quot;</span>
+<span class="w">    </span><span class="s">INCLUDE_DIRS</span><span class="w"> </span><span class="s2">&quot;.&quot;</span>
+<span class="w">    </span><span class="s">REQUIRES</span><span class="w"> </span><span class="s">esp_http_server</span><span class="w"> </span><span class="s">nvs_flash</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Configuration Files:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sdkconfig</span></code>: ESP-IDF configuration (flash size, partition table)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>: Build system definition</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">main/Kconfig.projbuild</span></code>: Custom menuconfig options</p></li>
+</ul>
+<p><strong>Build Commands:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>idf.py<span class="w"> </span>build<span class="w">              </span><span class="c1"># Build firmware</span>
+idf.py<span class="w"> </span>flash<span class="w">              </span><span class="c1"># Flash to hardware</span>
+idf.py<span class="w"> </span>monitor<span class="w">            </span><span class="c1"># Serial monitor</span>
+idf.py<span class="w"> </span>flash<span class="w"> </span>monitor<span class="w">      </span><span class="c1"># Flash and monitor</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-5e4afda9">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_FLASH_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Flash Memory Configuration</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_FLASH_1" title="SPEC_SYS_FLASH_1">SPEC_SYS_FLASH_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">flash</span><span class="needs_spacer">, </span><span class="needs_data">memory</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_HW_1" title="SPEC_SYS_FLASH_1">REQ_SYS_HW_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Template configured for 4MB flash modules with single app partition.</p>
+<p><strong>Flash Configuration:</strong></p>
+<ul class="simple">
+<li><p><strong>Flash Size</strong>: 4MB (CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y)</p></li>
+<li><p><strong>Partition Table</strong>: Single App Large (maximum app space)</p></li>
+<li><p><strong>Free Space</strong>: ~41% available for application growth</p></li>
+<li><p><strong>HTTPS Ready</strong>: Sufficient space for SSL/TLS certificates</p></li>
+</ul>
+<p><strong>Partition Layout:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Name        Type  Offset   Size
+nvs         data  0x9000   24K   (configuration storage)
+phy_init    data  0xf000   4K    (RF calibration)
+factory     app   0x10000  ~3.8MB (application firmware)
+</pre></div>
+</div>
+<p><strong>Verification</strong>: Use <code class="docutils literal notranslate"><span class="pre">idf.py</span> <span class="pre">size</span></code> to check memory usage</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="performance-targets">
+<h2>Performance Targets<a class="headerlink" href="#performance-targets" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-00932095">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_PERF_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">System Performance Requirements</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_PERF_1" title="SPEC_SYS_PERF_1">SPEC_SYS_PERF_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">performance</span><span class="needs_spacer">, </span><span class="needs_data">requirements</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_PERF_1" title="SPEC_SYS_PERF_1">REQ_SYS_PERF_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Template targets reasonable performance for IoT applications.</p>
+<p><strong>Performance Targets:</strong></p>
+<ul class="simple">
+<li><p><strong>Boot Time</strong>: &lt; 3 seconds to WiFi connection</p></li>
+<li><p><strong>Web Response</strong>: &lt; 500ms for configuration API calls</p></li>
+<li><p><strong>Memory Usage</strong>: &lt; 100KB application heap usage</p></li>
+<li><p><strong>Task Latency</strong>: &lt; 100ms for application tasks</p></li>
+</ul>
+<p><strong>Monitoring:</strong></p>
+<ul class="simple">
+<li><p>Use ESP_LOGI() for timing measurements</p></li>
+<li><p>Monitor heap with esp_get_free_heap_size()</p></li>
+<li><p>Check stack watermarks with uxTaskGetStackHighWaterMark()</p></li>
+</ul>
+<p><strong>Note</strong>: Users optimize for their specific application requirements</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="development-workflow">
+<h2>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-5ac9002c">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_SYS_DEV_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">GitHub Codespaces Development</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_SYS_DEV_1" title="SPEC_SYS_DEV_1">SPEC_SYS_DEV_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">development</span><span class="needs_spacer">, </span><span class="needs_data">codespaces</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_SIM_1" title="SPEC_SYS_DEV_1">REQ_SYS_SIM_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Template optimized for GitHub Codespaces with pre-configured environment.</p>
+<p><strong>Development Environment:</strong></p>
+<ul class="simple">
+<li><p><strong>DevContainer</strong>: Ubuntu 24.04 with ESP-IDF 5.4.1 pre-installed</p></li>
+<li><p><strong>QEMU</strong>: Integrated for emulation without hardware</p></li>
+<li><p><strong>VS Code</strong>: Extensions for C/C++, Python, ESP-IDF</p></li>
+<li><p><strong>Pre-commit Hooks</strong>: Automated quality checks</p></li>
+</ul>
+<p><strong>Workflow:</strong></p>
+<ol class="arabic simple">
+<li><p>Fork/clone template repository</p></li>
+<li><p>Open in GitHub Codespaces (or local devcontainer)</p></li>
+<li><p>Customize main.c and add components</p></li>
+<li><p>Build and test in QEMU</p></li>
+<li><p>Flash to physical hardware when ready</p></li>
+</ol>
+<p><strong>Benefits</strong>: Zero local setup, consistent environment, works anywhere</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="traceability">
+<h2>Traceability<a class="headerlink" href="#traceability" title="Link to this heading">¶</a></h2>
+<p><strong>Requirements Coverage:</strong></p>
+<p>This design specification implements the following system requirements:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_HW_1" title="REQ_SYS_HW_1"><em class="xref need">ESP32 Hardware Platform (REQ_SYS_HW_1)</em></a> - ESP32 hardware platform</p></li>
+<li><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_ARCH_1" title="REQ_SYS_ARCH_1"><em class="xref need">Component-based Architecture (REQ_SYS_ARCH_1)</em></a> - Component-based architecture</p></li>
+<li><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_PERF_1" title="REQ_SYS_PERF_1"><em class="xref need">Memory Management (REQ_SYS_PERF_1)</em></a> - System performance</p></li>
+<li><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_CFG_1" title="REQ_SYS_CFG_1"><em class="xref need">Non-volatile Configuration ... (REQ_SYS_CFG_1)</em></a> - Configuration management</p></li>
+<li><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_WEB_1" title="REQ_SYS_WEB_1"><em class="xref need">Web-based Configuration (REQ_SYS_WEB_1)</em></a> - Web interface</p></li>
+<li><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_SIM_1" title="REQ_SYS_SIM_1"><em class="xref need">Emulator Support (REQ_SYS_SIM_1)</em></a> - QEMU emulation support</p></li>
+</ul>
+<p><strong>Design Specifications:</strong></p>
+<ul class="simple">
+<li><p>SPEC_SYS_ARCH_1: Component-based architecture</p></li>
+<li><p>SPEC_SYS_CONFIG_1: Configuration manager component</p></li>
+<li><p>SPEC_SYS_WEB_1: Web server component</p></li>
+<li><p>SPEC_SYS_CERT_1: Certificate handler (WIP)</p></li>
+<li><p>SPEC_SYS_NETIF_1: Network tunnel component</p></li>
+<li><p>SPEC_SYS_THREAD_1: Threading model</p></li>
+<li><p>SPEC_SYS_MEMORY_1: Memory management</p></li>
+<li><p>SPEC_SYS_DATAFLOW_1: Component communication</p></li>
+<li><p>SPEC_SYS_WIFI_1: WiFi management</p></li>
+<li><p>SPEC_SYS_HTTP_1: HTTP server architecture</p></li>
+<li><p>SPEC_SYS_QEMU_1: QEMU emulation</p></li>
+<li><p>SPEC_SYS_BUILD_1: Build system</p></li>
+<li><p>SPEC_SYS_FLASH_1: Flash configuration</p></li>
+<li><p>SPEC_SYS_PERF_1: Performance targets</p></li>
+<li><p>SPEC_SYS_DEV_1: Development workflow</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="config-manager.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Configuration Manager Design Specification</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Design Specifications</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, ESP32 Template Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">System Architecture Design Specification</a><ul>
+<li><a class="reference internal" href="#document-metadata">Document Metadata</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#component-specifications">Component Specifications</a></li>
+<li><a class="reference internal" href="#threading-and-task-model">Threading and Task Model</a></li>
+<li><a class="reference internal" href="#data-flow-design">Data Flow Design</a></li>
+<li><a class="reference internal" href="#network-architecture">Network Architecture</a></li>
+<li><a class="reference internal" href="#qemu-emulation-support">QEMU Emulation Support</a></li>
+<li><a class="reference internal" href="#build-and-configuration">Build and Configuration</a></li>
+<li><a class="reference internal" href="#performance-targets">Performance Targets</a></li>
+<li><a class="reference internal" href="#development-workflow">Development Workflow</a></li>
+<li><a class="reference internal" href="#traceability">Traceability</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    </body>
+</html>

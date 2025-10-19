@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="prev" title="API Reference" href="../21_api/index.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Impressum" href="../legal/impressum.html"><link rel="prev" title="QEMU Network Internals" href="../90_guides/qemu-network-internals.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
         <title>Traceability - ESP32 Template Documentation</title>
@@ -200,16 +200,25 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../10_architecture/index.html">Architecture Documentation</a><input aria-label="Toggle navigation of Architecture Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../10_architecture/overview.html">ESP32 Template Architecture Overview</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/system.html">System Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/web-server.html">Web Server Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/config-manager.html">Configuration Manager Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/system-architecture.html">System Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/config-manager.html">Configuration Manager Design Specification</a></li>
 </ul>
 </li>
 </ul>
@@ -217,9 +226,24 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Development Guides:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+</ul>
+</li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">Traceability:</span></p>
 <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Traceability</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Legal:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../legal/impressum.html">Impressum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/datenschutz.html">Datenschutzerklärung</a></li>
 </ul>
 
 </div>
@@ -800,6 +824,87 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/web-server.html#REQ_WEB_NF_2">REQ_WEB_NF_2</a></p></td>
 </tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1">SPEC_CFG_IMPL_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_ARCH_1">SPEC_SYS_ARCH_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_BUILD_1">SPEC_SYS_BUILD_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_CERT_1">SPEC_SYS_CERT_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_CONFIG_1">SPEC_SYS_CONFIG_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_DATAFLOW_1">SPEC_SYS_DATAFLOW_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_DEV_1">SPEC_SYS_DEV_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_FLASH_1">SPEC_SYS_FLASH_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_HTTP_1">SPEC_SYS_HTTP_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_MEMORY_1">SPEC_SYS_MEMORY_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_NETIF_1">SPEC_SYS_NETIF_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_PERF_1">SPEC_SYS_PERF_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_QEMU_1">SPEC_SYS_QEMU_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_THREAD_1">SPEC_SYS_THREAD_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_WEB_1">SPEC_SYS_WEB_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_WIFI_1">SPEC_SYS_WIFI_1</a></p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -919,6 +1024,87 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p>optional</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/web-server.html#REQ_WEB_NF_2">REQ_WEB_NF_2</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1">SPEC_CFG_IMPL_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_ARCH_1">SPEC_SYS_ARCH_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_BUILD_1">SPEC_SYS_BUILD_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_CERT_1">SPEC_SYS_CERT_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_CONFIG_1">SPEC_SYS_CONFIG_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_DATAFLOW_1">SPEC_SYS_DATAFLOW_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_DEV_1">SPEC_SYS_DEV_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_FLASH_1">SPEC_SYS_FLASH_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_HTTP_1">SPEC_SYS_HTTP_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_MEMORY_1">SPEC_SYS_MEMORY_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_NETIF_1">SPEC_SYS_NETIF_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_PERF_1">SPEC_SYS_PERF_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_QEMU_1">SPEC_SYS_QEMU_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_THREAD_1">SPEC_SYS_THREAD_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_WEB_1">SPEC_SYS_WEB_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_WIFI_1">SPEC_SYS_WIFI_1</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1079,6 +1265,114 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/web-server.html#REQ_WEB_NF_2">REQ_WEB_NF_2</a></p></td>
 <td class="needs_title"><p>Mobile-First Design</p></td>
 </tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1</a></p></td>
+<td class="needs_title"><p>Configuration API Interface</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1</a></p></td>
+<td class="needs_title"><p>Layered Configuration Architecture</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1</a></p></td>
+<td class="needs_title"><p>NVS Error Recovery Strategy</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1</a></p></td>
+<td class="needs_title"><p>Configuration Data Flow</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1">SPEC_CFG_IMPL_1</a></p></td>
+<td class="needs_title"><p>Phased Implementation Approach</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1</a></p></td>
+<td class="needs_title"><p>Configuration Logging</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></p></td>
+<td class="needs_title"><p>Real-time Configuration Preview</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1</a></p></td>
+<td class="needs_title"><p>Runtime Configuration Structure</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1</a></p></td>
+<td class="needs_title"><p>NVS Storage Format</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1</a></p></td>
+<td class="needs_title"><p>Web Settings Page</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1</a></p></td>
+<td class="needs_title"><p>Parameter Validation Rules</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1</a></p></td>
+<td class="needs_title"><p>Configuration REST API</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_ARCH_1">SPEC_SYS_ARCH_1</a></p></td>
+<td class="needs_title"><p>ESP32 Component-Based Architecture</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_BUILD_1">SPEC_SYS_BUILD_1</a></p></td>
+<td class="needs_title"><p>ESP-IDF Build System Integration</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_CERT_1">SPEC_SYS_CERT_1</a></p></td>
+<td class="needs_title"><p>Certificate Handler Component</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_CONFIG_1">SPEC_SYS_CONFIG_1</a></p></td>
+<td class="needs_title"><p>Configuration Manager Component</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_DATAFLOW_1">SPEC_SYS_DATAFLOW_1</a></p></td>
+<td class="needs_title"><p>Component Communication Pattern</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_DEV_1">SPEC_SYS_DEV_1</a></p></td>
+<td class="needs_title"><p>GitHub Codespaces Development</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_FLASH_1">SPEC_SYS_FLASH_1</a></p></td>
+<td class="needs_title"><p>Flash Memory Configuration</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_HTTP_1">SPEC_SYS_HTTP_1</a></p></td>
+<td class="needs_title"><p>HTTP Server Architecture</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_MEMORY_1">SPEC_SYS_MEMORY_1</a></p></td>
+<td class="needs_title"><p>Memory Management Strategy</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_NETIF_1">SPEC_SYS_NETIF_1</a></p></td>
+<td class="needs_title"><p>Network Tunnel Component</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_PERF_1">SPEC_SYS_PERF_1</a></p></td>
+<td class="needs_title"><p>System Performance Requirements</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_QEMU_1">SPEC_SYS_QEMU_1</a></p></td>
+<td class="needs_title"><p>QEMU Emulation Architecture</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_THREAD_1">SPEC_SYS_THREAD_1</a></p></td>
+<td class="needs_title"><p>FreeRTOS Task Architecture</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_WEB_1">SPEC_SYS_WEB_1</a></p></td>
+<td class="needs_title"><p>Web Server Component</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_WIFI_1">SPEC_SYS_WIFI_1</a></p></td>
+<td class="needs_title"><p>WiFi Manager Design</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1121,6 +1415,33 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <div class="line"><a class="reference external" href="../11_requirements/web-server.html#REQ_WEB_5">REQ_WEB_5: HTTP Server Concurrency (approved) [web; performance]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/web-server.html#REQ_WEB_NF_1">REQ_WEB_NF_1: Web UI Responsiveness (approved) [web; performance; ux]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/web-server.html#REQ_WEB_NF_2">REQ_WEB_NF_2: Mobile-First Design (approved) [web; ui; mobile]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1: Layered Configuration Architecture (approved) [architecture; config]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1: Configuration Data Flow (approved) [architecture; dataflow]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1: NVS Storage Format (approved) [data-structure; storage]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1: Runtime Configuration Structure (approved) [data-structure; runtime]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1: Configuration API Interface (approved) [api; interface]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1: Parameter Validation Rules (approved) [validation; api]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1: Configuration REST API (approved) [web; api; rest]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1: Real-time Configuration Preview (approved) [web; ui; preview]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1: Web Settings Page (approved) [web; ui; html]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1: NVS Error Recovery Strategy (approved) [error-handling; nvs]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1: Configuration Logging (approved) [logging; debugging]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1">SPEC_CFG_IMPL_1: Phased Implementation Approach (approved) [implementation; strategy]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_ARCH_1">SPEC_SYS_ARCH_1: ESP32 Component-Based Architecture (approved) [architecture; system]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_CONFIG_1">SPEC_SYS_CONFIG_1: Configuration Manager Component (approved) [component; config]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_WEB_1">SPEC_SYS_WEB_1: Web Server Component (approved) [component; web]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_CERT_1">SPEC_SYS_CERT_1: Certificate Handler Component (draft) [component; security]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_NETIF_1">SPEC_SYS_NETIF_1: Network Tunnel Component (approved) [component; qemu; network]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_THREAD_1">SPEC_SYS_THREAD_1: FreeRTOS Task Architecture (approved) [threading; rtos]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_MEMORY_1">SPEC_SYS_MEMORY_1: Memory Management Strategy (approved) [memory; performance]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_DATAFLOW_1">SPEC_SYS_DATAFLOW_1: Component Communication Pattern (approved) [dataflow; communication]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_WIFI_1">SPEC_SYS_WIFI_1: WiFi Manager Design (approved) [network; wifi]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_HTTP_1">SPEC_SYS_HTTP_1: HTTP Server Architecture (approved) [network; http; web]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_QEMU_1">SPEC_SYS_QEMU_1: QEMU Emulation Architecture (approved) [qemu; emulation]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_BUILD_1">SPEC_SYS_BUILD_1: ESP-IDF Build System Integration (approved) [build; cmake]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_FLASH_1">SPEC_SYS_FLASH_1: Flash Memory Configuration (approved) [flash; memory]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_PERF_1">SPEC_SYS_PERF_1: System Performance Requirements (approved) [performance; requirements]</a></div>
+<div class="line"><a class="reference external" href="../12_design/system-architecture.html#SPEC_SYS_DEV_1">SPEC_SYS_DEV_1: GitHub Codespaces Development (approved) [development; codespaces]</a></div>
 </div>
 </section>
 </section>
@@ -1131,15 +1452,23 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
       <footer>
         
         <div class="related-pages">
-          
-          <a class="prev-page" href="../21_api/index.html">
+          <a class="next-page" href="../legal/impressum.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Impressum</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../90_guides/qemu-network-internals.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">API Reference</div>
+                <div class="title">QEMU Network Internals</div>
                 
               </div>
             </a>

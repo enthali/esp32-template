@@ -200,16 +200,25 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../10_architecture/index.html">Architecture Documentation</a><input aria-label="Toggle navigation of Architecture Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../10_architecture/overview.html">ESP32 Template Architecture Overview</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
 <ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">System Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web-server.html">Web Server Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="config-manager.html">Configuration Manager Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/system-architecture.html">System Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/config-manager.html">Configuration Manager Design Specification</a></li>
 </ul>
 </li>
 </ul>
@@ -217,9 +226,24 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Development Guides:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+</ul>
+</li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">Traceability:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Legal:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../legal/impressum.html">Impressum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/datenschutz.html">Datenschutzerklärung</a></li>
 </ul>
 
 </div>
@@ -261,7 +285,7 @@
           <section id="system-requirements">
 <h1>System Requirements<a class="headerlink" href="#system-requirements" title="Link to this heading">¶</a></h1>
 <p>This document contains high-level system requirements for the ESP32 Template project.</p>
-<div class="need_container docutils container" id="SNCB-030ac414">
+<div class="need_container docutils container" id="SNCB-f081a422">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_HW_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -274,7 +298,8 @@
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">hardware</span><span class="needs_spacer">, </span><span class="needs_data">platform</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_BUILD_1" title="REQ_SYS_HW_1">SPEC_SYS_BUILD_1</a>, <a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_FLASH_1" title="REQ_SYS_HW_1">SPEC_SYS_FLASH_1</a></span></span></div>
+</span></div>
 </div>
 </td>
 </tr>
@@ -293,7 +318,7 @@ ESP32 provides WiFi connectivity, sufficient processing power, and adequate flas
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-86088969">
+<div class="need_container docutils container" id="SNCB-e100b416">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_NET_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -326,7 +351,7 @@ Enables web interface access and network configuration flexibility.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-1dea85b4">
+<div class="need_container docutils container" id="SNCB-5c8802a0">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_WEB_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -340,7 +365,7 @@ Enables web interface access and network configuration flexibility.</p>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="#REQ_SYS_NET_1" title="REQ_SYS_WEB_1">REQ_SYS_NET_1</a></span></span></div>
-<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="web-server.html#REQ_WEB_1" title="REQ_SYS_WEB_1">REQ_WEB_1</a>, <a class="reference internal" href="web-server.html#REQ_WEB_2" title="REQ_SYS_WEB_1">REQ_WEB_2</a>, <a class="reference internal" href="web-server.html#REQ_WEB_4" title="REQ_SYS_WEB_1">REQ_WEB_4</a>, <a class="reference internal" href="web-server.html#REQ_WEB_5" title="REQ_SYS_WEB_1">REQ_WEB_5</a></span></span></div>
+<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="web-server.html#REQ_WEB_1" title="REQ_SYS_WEB_1">REQ_WEB_1</a>, <a class="reference internal" href="web-server.html#REQ_WEB_2" title="REQ_SYS_WEB_1">REQ_WEB_2</a>, <a class="reference internal" href="web-server.html#REQ_WEB_4" title="REQ_SYS_WEB_1">REQ_WEB_4</a>, <a class="reference internal" href="web-server.html#REQ_WEB_5" title="REQ_SYS_WEB_1">REQ_WEB_5</a>, <a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_WEB_1" title="REQ_SYS_WEB_1">SPEC_SYS_WEB_1</a>, <a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_CERT_1" title="REQ_SYS_WEB_1">SPEC_SYS_CERT_1</a>, <a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_WIFI_1" title="REQ_SYS_WEB_1">SPEC_SYS_WIFI_1</a>, <a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_HTTP_1" title="REQ_SYS_WEB_1">SPEC_SYS_HTTP_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -360,7 +385,7 @@ User-friendly interface for system setup and operation without firmware recompil
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-ddaf5674">
+<div class="need_container docutils container" id="SNCB-a06a774c">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_CFG_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -373,7 +398,7 @@ User-friendly interface for system setup and operation without firmware recompil
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">storage</span><span class="needs_spacer">, </span><span class="needs_data">nvs</span><span class="needs_spacer">, </span><span class="needs_data">configuration</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="config-manager.html#REQ_CFG_1" title="REQ_SYS_CFG_1">REQ_CFG_1</a>, <a class="reference internal" href="config-manager.html#REQ_CFG_3" title="REQ_SYS_CFG_1">REQ_CFG_3</a>, <a class="reference internal" href="config-manager.html#REQ_CFG_4" title="REQ_SYS_CFG_1">REQ_CFG_4</a></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="config-manager.html#REQ_CFG_1" title="REQ_SYS_CFG_1">REQ_CFG_1</a>, <a class="reference internal" href="config-manager.html#REQ_CFG_3" title="REQ_SYS_CFG_1">REQ_CFG_3</a>, <a class="reference internal" href="config-manager.html#REQ_CFG_4" title="REQ_SYS_CFG_1">REQ_CFG_4</a>, <a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_CONFIG_1" title="REQ_SYS_CFG_1">SPEC_SYS_CONFIG_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -393,7 +418,7 @@ Maintains user settings and system configuration permanently.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-4123a233">
+<div class="need_container docutils container" id="SNCB-5c67fc5c">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_ARCH_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -406,7 +431,8 @@ Maintains user settings and system configuration permanently.</p>
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">architecture</span><span class="needs_spacer">, </span><span class="needs_data">modularity</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_ARCH_1" title="REQ_SYS_ARCH_1">SPEC_SYS_ARCH_1</a>, <a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_THREAD_1" title="REQ_SYS_ARCH_1">SPEC_SYS_THREAD_1</a>, <a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_MEMORY_1" title="REQ_SYS_ARCH_1">SPEC_SYS_MEMORY_1</a>, <a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_DATAFLOW_1" title="REQ_SYS_ARCH_1">SPEC_SYS_DATAFLOW_1</a></span></span></div>
+</span></div>
 </div>
 </td>
 </tr>
@@ -425,7 +451,7 @@ Enables maintainability, testability, and reusability.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-e9184ad9">
+<div class="need_container docutils container" id="SNCB-0b0cd82e">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_REL_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -458,7 +484,7 @@ Ensures system reliability and user experience.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-cf9aee0e">
+<div class="need_container docutils container" id="SNCB-d75b76bd">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_PERF_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -471,7 +497,8 @@ Ensures system reliability and user experience.</p>
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">performance</span><span class="needs_spacer">, </span><span class="needs_data">memory</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_PERF_1" title="REQ_SYS_PERF_1">SPEC_SYS_PERF_1</a></span></span></div>
+</span></div>
 </div>
 </td>
 </tr>
@@ -491,7 +518,7 @@ Prevents memory leaks and ensures stable operation.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-dd0f2bd6">
+<div class="need_container docutils container" id="SNCB-94e3d981">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_SIM_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -504,7 +531,7 @@ Prevents memory leaks and ensures stable operation.</p>
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">emulator</span><span class="needs_spacer">, </span><span class="needs_data">qemu</span><span class="needs_spacer">, </span><span class="needs_data">testing</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="netif-tunnel.html#REQ_NETIF_TUNNEL_1" title="REQ_SYS_SIM_1">REQ_NETIF_TUNNEL_1</a>, <a class="reference internal" href="netif-tunnel.html#REQ_NETIF_TUNNEL_DOC_1" title="REQ_SYS_SIM_1">REQ_NETIF_TUNNEL_DOC_1</a></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="netif-tunnel.html#REQ_NETIF_TUNNEL_1" title="REQ_SYS_SIM_1">REQ_NETIF_TUNNEL_1</a>, <a class="reference internal" href="netif-tunnel.html#REQ_NETIF_TUNNEL_DOC_1" title="REQ_SYS_SIM_1">REQ_NETIF_TUNNEL_DOC_1</a>, <a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_NETIF_1" title="REQ_SYS_SIM_1">SPEC_SYS_NETIF_1</a>, <a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_QEMU_1" title="REQ_SYS_SIM_1">SPEC_SYS_QEMU_1</a>, <a class="reference internal" href="../12_design/system-architecture.html#SPEC_SYS_DEV_1" title="REQ_SYS_SIM_1">SPEC_SYS_DEV_1</a></span></span></div>
 </span></div>
 </div>
 </td>

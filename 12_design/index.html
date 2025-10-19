@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="API Reference" href="../21_api/index.html"><link rel="prev" title="Network Interface Tunnel Requirements" href="../11_requirements/netif-tunnel.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="System Architecture Design Specification" href="system-architecture.html"><link rel="prev" title="Network Interface Tunnel Requirements" href="../11_requirements/netif-tunnel.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
         <title>Design Specifications - ESP32 Template Documentation</title>
@@ -200,16 +200,25 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../10_architecture/index.html">Architecture Documentation</a><input aria-label="Toggle navigation of Architecture Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../10_architecture/overview.html">ESP32 Template Architecture Overview</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
 <ul class="current">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/system.html">System Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/web-server.html">Web Server Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/config-manager.html">Configuration Manager Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html">System Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html">Configuration Manager Design Specification</a></li>
 </ul>
 </li>
 </ul>
@@ -217,9 +226,24 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Development Guides:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+</ul>
+</li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">Traceability:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Legal:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../legal/impressum.html">Impressum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/datenschutz.html">Datenschutzerklärung</a></li>
 </ul>
 
 </div>
@@ -260,29 +284,110 @@
         <article role="main" id="furo-main-content">
           <section id="design-specifications">
 <h1>Design Specifications<a class="headerlink" href="#design-specifications" title="Link to this heading">¶</a></h1>
-<p>This section contains system and component design specifications following Sphinx-Needs methodology.</p>
+<p>This section contains detailed design specifications for system components following Sphinx-Needs methodology.</p>
 <div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Design Documents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="system-architecture.html">System Architecture Design Specification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#document-metadata">Document Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#component-specifications">Component Specifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#threading-and-task-model">Threading and Task Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#data-flow-design">Data Flow Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#network-architecture">Network Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#qemu-emulation-support">QEMU Emulation Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#build-and-configuration">Build and Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#performance-targets">Performance Targets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#development-workflow">Development Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html#traceability">Traceability</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config-manager.html">Configuration Manager Design Specification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#document-metadata">Document Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#architecture-design">Architecture Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#data-structure-design">Data Structure Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#api-design">API Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#web-interface-design">Web Interface Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#error-handling-design">Error Handling Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#implementation-strategy">Implementation Strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#traceability">Traceability</a></li>
+</ul>
+</li>
+</ul>
 </div>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<p>Design specifications define <strong>how</strong> requirements are implemented. They provide:</p>
+<p>Design specifications define <strong>how</strong> the system implements requirements. They are:</p>
 <ul class="simple">
-<li><p><strong>Architecture</strong> - System structure and components</p></li>
-<li><p><strong>Interfaces</strong> - Component APIs and interactions</p></li>
-<li><p><strong>Data Structures</strong> - Key data formats and storage</p></li>
-<li><p><strong>Algorithms</strong> - Implementation approaches</p></li>
+<li><p><strong>Traceable</strong> - Each design spec links to parent requirements</p></li>
+<li><p><strong>Detailed</strong> - Include architecture, data structures, APIs, and algorithms</p></li>
+<li><p><strong>Testable</strong> - Provide basis for implementation and verification</p></li>
+<li><p><strong>Versioned</strong> - Tracked in Git alongside code</p></li>
 </ul>
-<p>All design specifications are linked to requirements using Sphinx-Needs for full traceability.</p>
 </section>
-<section id="design-categories">
-<h2>Design Categories<a class="headerlink" href="#design-categories" title="Link to this heading">¶</a></h2>
-<p>Design documents are categorized using the following prefixes:</p>
+<section id="design-hierarchy">
+<h2>Design Hierarchy<a class="headerlink" href="#design-hierarchy" title="Link to this heading">¶</a></h2>
+<p>Design specifications are organized by architectural layer:</p>
+<ol class="arabic simple">
+<li><p><strong>System Architecture</strong> (<code class="docutils literal notranslate"><span class="pre">SPEC_SYS_*</span></code>) - Overall system design</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">DSN-SYS-*</span></code> - System-level design</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">DSN-CFG-*</span></code> - Configuration management design</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">DSN-WEB-*</span></code> - Web interface design</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">DSN-NET-*</span></code> - Network and connectivity design</p></li>
+<li><p>Component interactions</p></li>
+<li><p>Threading model</p></li>
+<li><p>Memory management</p></li>
+<li><p>Build system integration</p></li>
 </ul>
+</li>
+<li><p><strong>Component Designs</strong> - Detailed component specifications</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SPEC_CFG_*</span></code> - Configuration Manager design</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SPEC_WEB_*</span></code> - Web Server design (to be added)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SPEC_NETIF_TUNNEL_*</span></code> - Network Tunnel design (to be added)</p></li>
+</ul>
+</li>
+</ol>
+<p>Each design specification uses Sphinx-Needs <code class="docutils literal notranslate"><span class="pre">:spec:</span></code> directive and links to parent requirements using <code class="docutils literal notranslate"><span class="pre">:links:</span></code> attribute.</p>
+</section>
+<section id="document-standards">
+<h2>Document Standards<a class="headerlink" href="#document-standards" title="Link to this heading">¶</a></h2>
+<p>All design documents follow this structure:</p>
+<ul class="simple">
+<li><p><strong>Metadata</strong>: Version, date, author, requirements coverage</p></li>
+<li><p><strong>Architecture</strong>: High-level design decisions and patterns</p></li>
+<li><p><strong>Data Structures</strong>: Internal data layouts and formats</p></li>
+<li><p><strong>API Design</strong>: Public interfaces and contracts</p></li>
+<li><p><strong>Implementation</strong>: Detailed algorithms and approaches</p></li>
+<li><p><strong>Traceability</strong>: Requirement coverage matrix</p></li>
+</ul>
+</section>
+<section id="design-vs-code">
+<h2>Design vs. Code<a class="headerlink" href="#design-vs-code" title="Link to this heading">¶</a></h2>
+<p>Design documents are <strong>separate from code</strong> to avoid bloat:</p>
+<ul class="simple">
+<li><p><strong>Design docs</strong> (<code class="docutils literal notranslate"><span class="pre">docs/12_design/</span></code>): Architecture, algorithms, rationale</p></li>
+<li><p><strong>Code comments</strong>: Implementation notes, requirement IDs</p></li>
+<li><p><strong>API docs</strong> (Doxygen): Function signatures, parameter descriptions</p></li>
+</ul>
+<p>This separation enables:</p>
+<ul class="simple">
+<li><p>Professional documentation tooling (Sphinx-Needs traceability matrices)</p></li>
+<li><p>Design review without code complexity</p></li>
+<li><p>Version control for design decisions</p></li>
+<li><p>Scalability for large projects</p></li>
+</ul>
+</section>
+<section id="traceability-chain">
+<h2>Traceability Chain<a class="headerlink" href="#traceability-chain" title="Link to this heading">¶</a></h2>
+<p>The complete traceability chain:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Requirements (docs/11_requirements/)
+     ↓ :links: attribute
+Design Specs (docs/12_design/)
+     ↓ @file comments with REQ/SPEC IDs
+Implementation (main/, components/)
+     ↓ test suite references
+Tests (to be added)
+</pre></div>
+</div>
+<p>See the <strong>Traceability</strong> section for visualizations of the complete chain.</p>
 </section>
 </section>
 
@@ -291,12 +396,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../21_api/index.html">
+          <a class="next-page" href="system-architecture.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">API Reference</div>
+                <div class="title">System Architecture Design Specification</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -343,7 +448,10 @@
             <ul>
 <li><a class="reference internal" href="#">Design Specifications</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a></li>
-<li><a class="reference internal" href="#design-categories">Design Categories</a></li>
+<li><a class="reference internal" href="#design-hierarchy">Design Hierarchy</a></li>
+<li><a class="reference internal" href="#document-standards">Document Standards</a></li>
+<li><a class="reference internal" href="#design-vs-code">Design vs. Code</a></li>
+<li><a class="reference internal" href="#traceability-chain">Traceability Chain</a></li>
 </ul>
 </li>
 </ul>

@@ -1,0 +1,934 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="API Reference" href="../21_api/index.html"><link rel="prev" title="System Architecture Design Specification" href="system-architecture.html">
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+        <title>Configuration Manager Design Specification - ESP32 Template Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=2dda3639" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">ESP32 Template Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">ESP32 Template Documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../10_architecture/index.html">Architecture Documentation</a><input aria-label="Toggle navigation of Architecture Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../10_architecture/overview.html">ESP32 Template Architecture Overview</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/system.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/web-server.html">Web Server Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/config-manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="system-architecture.html">System Architecture Design Specification</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Configuration Manager Design Specification</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development Guides:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Traceability:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Legal:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../legal/impressum.html">Impressum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/datenschutz.html">Datenschutzerklärung</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/12_design/config-manager.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="configuration-manager-design-specification">
+<h1>Configuration Manager Design Specification<a class="headerlink" href="#configuration-manager-design-specification" title="Link to this heading">¶</a></h1>
+<p>This document specifies the design for the Configuration Management System, covering architecture, data structures, API design, and implementation approach.</p>
+<section id="document-metadata">
+<h2>Document Metadata<a class="headerlink" href="#document-metadata" title="Link to this heading">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Version<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1.0</p>
+</dd>
+<dt class="field-even">Date<span class="colon">:</span></dt>
+<dd class="field-even"><p>2025-07-24</p>
+</dd>
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ESP32 Template Team</p>
+</dd>
+<dt class="field-even">Requirements<span class="colon">:</span></dt>
+<dd class="field-even"><p>REQ_CFG_1 through REQ_CFG_11</p>
+</dd>
+</dl>
+</section>
+<section id="architecture-design">
+<h2>Architecture Design<a class="headerlink" href="#architecture-design" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-873bca66">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_ARCH_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Layered Configuration Architecture</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_ARCH_1" title="SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">architecture</span><span class="needs_spacer">, </span><span class="needs_data">config</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_1" title="SPEC_CFG_ARCH_1">REQ_CFG_1</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_2" title="SPEC_CFG_ARCH_1">REQ_CFG_2</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> The configuration system implements a three-layer architecture for separation of concerns.</p>
+<p><strong>Architecture Layers:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────┐
+│           Application Layer             │
+│  (main.c, components, web_server.c)     │
+├─────────────────────────────────────────┤
+│         Configuration API Layer         │
+│    (config.h, config.c - Public API)    │
+├─────────────────────────────────────────┤
+│           Storage Layer                 │
+│     (NVS abstraction, validation)       │
+└─────────────────────────────────────────┘
+</pre></div>
+</div>
+<p><strong>Layer Responsibilities:</strong></p>
+<ul class="simple">
+<li><p><strong>Application Layer</strong>: Consumes configuration values through standardized API</p></li>
+<li><p><strong>Configuration API Layer</strong>: Provides thread-safe access, validation, and caching</p></li>
+<li><p><strong>Storage Layer</strong>: Handles NVS operations, persistence, and error recovery</p></li>
+</ul>
+<p><strong>Design Rationale:</strong> Layered architecture enables independent testing, simplifies maintenance, and provides clear separation between business logic and storage concerns.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-ff026676">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_FLOW_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Configuration Data Flow</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_FLOW_1" title="SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">architecture</span><span class="needs_spacer">, </span><span class="needs_data">dataflow</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_3" title="SPEC_CFG_FLOW_1">REQ_CFG_3</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_4" title="SPEC_CFG_FLOW_1">REQ_CFG_4</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_5" title="SPEC_CFG_FLOW_1">REQ_CFG_5</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Configuration data flows through the system with caching and validation.</p>
+<p><strong>Data Flow Stages:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Startup:  NVS → config_load() → Runtime Cache → Application
+Runtime:  Application → config_get() → Runtime Cache
+Update:   Web Interface → config_save() → Validation → NVS → Runtime Cache
+Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
+</pre></div>
+</div>
+<p><strong>Key Design Decisions:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Runtime Cache</strong>: Configuration cached in RAM for fast access (&lt;10 CPU cycles)</p></li>
+<li><p><strong>Atomic Updates</strong>: Configuration changes applied atomically to prevent partial updates</p></li>
+<li><p><strong>Validation Gate</strong>: All changes validated before persistence to prevent invalid state</p></li>
+<li><p><strong>Error Recovery</strong>: Automatic fallback to defaults on NVS corruption</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="data-structure-design">
+<h2>Data Structure Design<a class="headerlink" href="#data-structure-design" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-c28103ad">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_STORAGE_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">NVS Storage Format</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_STORAGE_1" title="SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">data-structure</span><span class="needs_spacer">, </span><span class="needs_data">storage</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_3" title="SPEC_CFG_STORAGE_1">REQ_CFG_3</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_4" title="SPEC_CFG_STORAGE_1">REQ_CFG_4</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Configuration stored in NVS as packed 64-byte structure with metadata and checksums.</p>
+<p><strong>Storage Layout:</strong></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Metadata (16 bytes)</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">magic_number</span><span class="p">;</span><span class="w">        </span><span class="c1">// 0xCFG12345 - corruption detection</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">config_version</span><span class="p">;</span><span class="w">      </span><span class="c1">// Schema version for migration</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">crc32_checksum</span><span class="p">;</span><span class="w">      </span><span class="c1">// Data integrity verification</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">save_count</span><span class="p">;</span><span class="w">          </span><span class="c1">// Change tracking</span>
+
+<span class="w">    </span><span class="c1">// Component configurations (~48 bytes)</span>
+<span class="w">    </span><span class="c1">// ... component-specific fields ...</span>
+
+<span class="w">    </span><span class="c1">// Reserved for expansion</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">reserved</span><span class="p">[</span><span class="n">N</span><span class="p">];</span><span class="w">          </span><span class="c1">// Future-proofing</span>
+
+<span class="p">}</span><span class="w"> </span><span class="n">__attribute__</span><span class="p">((</span><span class="n">packed</span><span class="p">))</span><span class="w"> </span><span class="n">config_nvs_storage_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><strong>Storage Optimization:</strong></p>
+<ul class="simple">
+<li><p>Fixed Size: 64-byte structure for efficient NVS operations</p></li>
+<li><p>Alignment: Packed structure to minimize flash usage</p></li>
+<li><p>Reserved Fields: Expansion capability without breaking compatibility</p></li>
+<li><p>Checksum: CRC32 for corruption detection and recovery</p></li>
+</ul>
+<p><strong>Migration Strategy:</strong> Version field enables schema migration when structure changes.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-06e85306">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_RUNTIME_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Runtime Configuration Structure</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_RUNTIME_1" title="SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">data-structure</span><span class="needs_spacer">, </span><span class="needs_data">runtime</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_3" title="SPEC_CFG_RUNTIME_1">REQ_CFG_3</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Runtime configuration structure mirrors NVS layout but uses application-friendly types.</p>
+<p><strong>Structure Definition:</strong></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Application uses native types for convenience</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">distance_min_cm</span><span class="p">;</span><span class="w">        </span><span class="c1">// Converted from mm storage</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">distance_max_cm</span><span class="p">;</span><span class="w">        </span><span class="c1">// Converted from mm storage</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">measurement_interval_ms</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sensor_timeout_ms</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">smoothing_alpha</span><span class="p">;</span><span class="w">        </span><span class="c1">// Converted from fixed-point</span>
+
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">led_count</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">led_brightness</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// ... other component configurations ...</span>
+
+<span class="p">}</span><span class="w"> </span><span class="n">system_config_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><strong>Type Conversion:</strong> NVS uses integers/fixed-point for efficiency; runtime uses floats for convenience.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="api-design">
+<h2>API Design<a class="headerlink" href="#api-design" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-c5ab7173">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_API_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Configuration API Interface</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_API_1" title="SPEC_CFG_API_1">SPEC_CFG_API_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">api</span><span class="needs_spacer">, </span><span class="needs_data">interface</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_5" title="SPEC_CFG_API_1">REQ_CFG_5</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_6" title="SPEC_CFG_API_1">REQ_CFG_6</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Public API provides thread-safe access to configuration with validation.</p>
+<p><strong>Core API Functions:</strong></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Lifecycle management</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_init</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_load_from_nvs</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_save_to_nvs</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_factory_reset</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+
+<span class="c1">// Individual getters (thread-safe, no blocking)</span>
+<span class="kt">uint16_t</span><span class="w"> </span><span class="nf">config_get_measurement_interval_ms</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">config_get_led_count</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">config_get_led_brightness</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+
+<span class="c1">// Individual setters (with validation)</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_set_measurement_interval</span><span class="p">(</span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">interval_ms</span><span class="p">);</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_set_led_count</span><span class="p">(</span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_set_led_brightness</span><span class="p">(</span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">brightness</span><span class="p">);</span>
+
+<span class="c1">// Bulk operations</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_get_all</span><span class="p">(</span><span class="n">system_config_t</span><span class="o">*</span><span class="w"> </span><span class="n">config</span><span class="p">);</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_set_all</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">system_config_t</span><span class="o">*</span><span class="w"> </span><span class="n">config</span><span class="p">);</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">config_validate_all</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">system_config_t</span><span class="o">*</span><span class="w"> </span><span class="n">config</span><span class="p">,</span>
+<span class="w">                         </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">error_msg</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">msg_len</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><strong>Thread Safety:</strong> All functions protected by FreeRTOS mutex with configurable timeout.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-c126ce66">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_VALIDATION_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Parameter Validation Rules</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_VALIDATION_1" title="SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">validation</span><span class="needs_spacer">, </span><span class="needs_data">api</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_6" title="SPEC_CFG_VALIDATION_1">REQ_CFG_6</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> All configuration parameters validated against defined ranges before acceptance.</p>
+<p><strong>Validation Rules:</strong></p>
+<ul class="simple">
+<li><p>distance_min: 5.0 to 100.0 cm</p></li>
+<li><p>distance_max: 20.0 to 400.0 cm, must be &gt; distance_min</p></li>
+<li><p>measurement_interval: 50 to 1000 ms</p></li>
+<li><p>sensor_timeout: 100 to 5000 ms</p></li>
+<li><p>led_count: 1 to 60</p></li>
+<li><p>led_brightness: 10 to 255</p></li>
+</ul>
+<p><strong>Error Handling:</strong> Invalid values return ESP_ERR_INVALID_ARG with descriptive error message.</p>
+<p><strong>Validation Timing:</strong> Performed before NVS write to prevent persisting invalid state.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="web-interface-design">
+<h2>Web Interface Design<a class="headerlink" href="#web-interface-design" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-591a61ab">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_WEB_API_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Configuration REST API</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_WEB_API_1" title="SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">web</span><span class="needs_spacer">, </span><span class="needs_data">api</span><span class="needs_spacer">, </span><span class="needs_data">rest</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_7" title="SPEC_CFG_WEB_API_1">REQ_CFG_7</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_8" title="SPEC_CFG_WEB_API_1">REQ_CFG_8</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_9" title="SPEC_CFG_WEB_API_1">REQ_CFG_9</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> RESTful HTTP API for configuration management via web interface.</p>
+<p><strong>API Endpoints:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>GET  /api/config           -&gt; Current configuration (JSON)
+POST /api/config           -&gt; Update configuration (JSON)
+POST /api/config/preview   -&gt; Temporary configuration preview
+POST /api/config/apply     -&gt; Apply previewed configuration
+POST /api/config/reset     -&gt; Factory reset
+GET  /api/config/export    -&gt; Export configuration (JSON download)
+POST /api/config/import    -&gt; Import configuration (JSON upload)
+</pre></div>
+</div>
+<p><strong>JSON Format:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-07-24T12:34:56Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;measurement_interval_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;led_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;led_brightness&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Authentication:</strong> Currently open; future versions may add basic auth or API tokens.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-48e7f77a">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_PREVIEW_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Real-time Configuration Preview</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_PREVIEW_1" title="SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">web</span><span class="needs_spacer">, </span><span class="needs_data">ui</span><span class="needs_spacer">, </span><span class="needs_data">preview</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_8" title="SPEC_CFG_PREVIEW_1">REQ_CFG_8</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Web interface supports temporary configuration preview with auto-revert.</p>
+<p><strong>Preview Workflow:</strong></p>
+<ol class="arabic simple">
+<li><p>User adjusts sliders on /settings page</p></li>
+<li><p>JavaScript POSTs to /api/config/preview</p></li>
+<li><p>ESP32 applies changes temporarily (30-second timeout)</p></li>
+<li><p>User sees real-time visual feedback (e.g., LED brightness)</p></li>
+<li><p>User clicks “Apply” to persist, or timeout auto-reverts</p></li>
+</ol>
+<p><strong>Safety Feature:</strong> Preview timeout prevents bricking device if user navigates away.</p>
+<p><strong>Implementation:</strong> Separate preview_config buffer, swapped with active config on apply.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-ef273ad7">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_UI_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Web Settings Page</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_UI_1" title="SPEC_CFG_UI_1">SPEC_CFG_UI_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">web</span><span class="needs_spacer">, </span><span class="needs_data">ui</span><span class="needs_spacer">, </span><span class="needs_data">html</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_7" title="SPEC_CFG_UI_1">REQ_CFG_7</a>, <a class="reference internal" href="../11_requirements/web-server.html#REQ_WEB_2" title="SPEC_CFG_UI_1">REQ_WEB_2</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> HTML5 settings page with form validation and real-time updates.</p>
+<p><strong>Page Structure:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;form id=&quot;config-form&quot;&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;Component Settings&lt;/legend&gt;
+    &lt;input type=&quot;range&quot; id=&quot;param1&quot; min=&quot;X&quot; max=&quot;Y&quot; step=&quot;Z&quot;&gt;
+    &lt;span class=&quot;value-display&quot;&gt;Current: &lt;span id=&quot;param1-value&quot;&gt;&lt;/span&gt;&lt;/span&gt;
+  &lt;/fieldset&gt;
+
+  &lt;div class=&quot;config-actions&quot;&gt;
+    &lt;button type=&quot;button&quot; id=&quot;preview-btn&quot;&gt;Preview&lt;/button&gt;
+    &lt;button type=&quot;button&quot; id=&quot;apply-btn&quot;&gt;Apply &amp;amp; Save&lt;/button&gt;
+    &lt;button type=&quot;button&quot; id=&quot;reset-btn&quot;&gt;Factory Reset&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/form&gt;
+</pre></div>
+</div>
+<p><strong>JavaScript Behavior:</strong></p>
+<ul class="simple">
+<li><p>Range inputs trigger live preview (debounced 500ms)</p></li>
+<li><p>Value displays update in real-time</p></li>
+<li><p>Factory reset requires confirmation dialog</p></li>
+<li><p>Success/error messages displayed via toast notifications</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="error-handling-design">
+<h2>Error Handling Design<a class="headerlink" href="#error-handling-design" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-82733357">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_ERROR_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">NVS Error Recovery Strategy</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_ERROR_1" title="SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">error-handling</span><span class="needs_spacer">, </span><span class="needs_data">nvs</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_10" title="SPEC_CFG_ERROR_1">REQ_CFG_10</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Configuration system handles NVS failures gracefully with automatic recovery.</p>
+<p><strong>Error Recovery Strategy:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Corruption Detection</strong>: CRC32 mismatch triggers recovery</p></li>
+<li><p><strong>Magic Number Check</strong>: Invalid magic triggers factory reset</p></li>
+<li><p><strong>Version Migration</strong>: Unsupported version triggers controlled migration or reset</p></li>
+<li><p><strong>Fallback to Defaults</strong>: Any read failure results in default configuration</p></li>
+<li><p><strong>Logging</strong>: All errors logged with ESP_LOGE for debugging</p></li>
+</ol>
+<p><strong>Boot Behavior:</strong> System always boots successfully even with corrupted NVS.</p>
+<p><strong>User Notification:</strong> Web interface displays warning banner if defaults used.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-3640b40a">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_LOGGING_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Configuration Logging</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_LOGGING_1" title="SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">logging</span><span class="needs_spacer">, </span><span class="needs_data">debugging</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_11" title="SPEC_CFG_LOGGING_1">REQ_CFG_11</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> All configuration changes logged for debugging and audit trail.</p>
+<p><strong>Logging Format:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[CONFIG] Parameter changed: led_brightness 128 -&gt; 255 (user: web)
+[CONFIG] Configuration saved to NVS (save_count: 42)
+[CONFIG] Factory reset performed (reason: user request)
+</pre></div>
+</div>
+<p><strong>Log Levels:</strong></p>
+<ul class="simple">
+<li><p>ESP_LOGI: Normal configuration changes</p></li>
+<li><p>ESP_LOGW: Validation failures, preview timeouts</p></li>
+<li><p>ESP_LOGE: NVS errors, corruption detected</p></li>
+<li><p>ESP_LOGD: Detailed debug info (disabled in production)</p></li>
+</ul>
+<p><strong>Performance:</strong> Logging does not block configuration operations.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="implementation-strategy">
+<h2>Implementation Strategy<a class="headerlink" href="#implementation-strategy" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-21ee5392">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_IMPL_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Phased Implementation Approach</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_IMPL_1" title="SPEC_CFG_IMPL_1">SPEC_CFG_IMPL_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">implementation</span><span class="needs_spacer">, </span><span class="needs_data">strategy</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_1" title="SPEC_CFG_IMPL_1">REQ_CFG_1</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_2" title="SPEC_CFG_IMPL_1">REQ_CFG_2</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_3" title="SPEC_CFG_IMPL_1">REQ_CFG_3</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_4" title="SPEC_CFG_IMPL_1">REQ_CFG_4</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_5" title="SPEC_CFG_IMPL_1">REQ_CFG_5</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Configuration system implemented in phases to manage complexity.</p>
+<p><strong>Phase 1: Core Configuration (Milestone 1)</strong></p>
+<ul class="simple">
+<li><p>Implement config.h centralized header (REQ_CFG_1, REQ_CFG_2)</p></li>
+<li><p>Define system_config_t structure (REQ_CFG_3)</p></li>
+<li><p>Implement NVS storage layout (REQ_CFG_4)</p></li>
+<li><p>Create basic getter/setter API (REQ_CFG_5)</p></li>
+</ul>
+<p><strong>Phase 2: Web Interface (Milestone 2)</strong></p>
+<ul class="simple">
+<li><p>Implement REST API endpoints (REQ_CFG_7)</p></li>
+<li><p>Create /settings HTML page (REQ_CFG_8)</p></li>
+<li><p>Add preview functionality (REQ_CFG_9)</p></li>
+</ul>
+<p><strong>Phase 3: Advanced Features (Milestone 3)</strong></p>
+<ul class="simple">
+<li><p>Add parameter validation (REQ_CFG_6)</p></li>
+<li><p>Implement error recovery (REQ_CFG_10)</p></li>
+<li><p>Add comprehensive logging (REQ_CFG_11)</p></li>
+</ul>
+<p><strong>Testing Strategy:</strong> Each phase includes unit tests and integration tests before proceeding.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="traceability">
+<h2>Traceability<a class="headerlink" href="#traceability" title="Link to this heading">¶</a></h2>
+<p><strong>Requirements Coverage:</strong></p>
+<p>This design specification implements the following requirements:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_1" title="REQ_CFG_1"><em class="xref need">Centralized Configuration H... (REQ_CFG_1)</em></a> - Centralized configuration</p></li>
+<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_2" title="REQ_CFG_2"><em class="xref need">Compile-Time Configuration ... (REQ_CFG_2)</em></a> - Compile-time access</p></li>
+<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_3" title="REQ_CFG_3"><em class="xref need">Runtime Configuration Struc... (REQ_CFG_3)</em></a> - Runtime configuration structure</p></li>
+<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_4" title="REQ_CFG_4"><em class="xref need">Persistent Configuration St... (REQ_CFG_4)</em></a> - Persistent NVS storage</p></li>
+<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_5" title="REQ_CFG_5"><em class="xref need">Configuration Read API (REQ_CFG_5)</em></a> - Configuration read API</p></li>
+<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_6" title="REQ_CFG_6"><em class="xref need">Configuration Validation (REQ_CFG_6)</em></a> - Parameter validation</p></li>
+<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_7" title="REQ_CFG_7"><em class="xref need">Configuration Web Interface (REQ_CFG_7)</em></a> - Web interface API</p></li>
+<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_8" title="REQ_CFG_8"><em class="xref need">Configuration Save Operation (REQ_CFG_8)</em></a> - Configuration save operation</p></li>
+<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_9" title="REQ_CFG_9"><em class="xref need">Configuration Reset/Reload (REQ_CFG_9)</em></a> - Reset/reload functionality</p></li>
+<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_10" title="REQ_CFG_10"><em class="xref need">NVS Error Recovery (REQ_CFG_10)</em></a> - NVS error recovery</p></li>
+<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_11" title="REQ_CFG_11"><em class="xref need">Configuration Logging (REQ_CFG_11)</em></a> - Configuration logging</p></li>
+</ul>
+<p><strong>Design Specifications:</strong></p>
+<ul class="simple">
+<li><p>SPEC_CFG_ARCH_1: Architecture design</p></li>
+<li><p>SPEC_CFG_FLOW_1: Data flow design</p></li>
+<li><p>SPEC_CFG_STORAGE_1: NVS storage format</p></li>
+<li><p>SPEC_CFG_RUNTIME_1: Runtime data structure</p></li>
+<li><p>SPEC_CFG_API_1: Public API interface</p></li>
+<li><p>SPEC_CFG_VALIDATION_1: Validation rules</p></li>
+<li><p>SPEC_CFG_WEB_API_1: REST API design</p></li>
+<li><p>SPEC_CFG_PREVIEW_1: Preview functionality</p></li>
+<li><p>SPEC_CFG_UI_1: Web UI design</p></li>
+<li><p>SPEC_CFG_ERROR_1: Error recovery</p></li>
+<li><p>SPEC_CFG_LOGGING_1: Logging design</p></li>
+<li><p>SPEC_CFG_IMPL_1: Implementation strategy</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../21_api/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">API Reference</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="system-architecture.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">System Architecture Design Specification</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, ESP32 Template Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Configuration Manager Design Specification</a><ul>
+<li><a class="reference internal" href="#document-metadata">Document Metadata</a></li>
+<li><a class="reference internal" href="#architecture-design">Architecture Design</a></li>
+<li><a class="reference internal" href="#data-structure-design">Data Structure Design</a></li>
+<li><a class="reference internal" href="#api-design">API Design</a></li>
+<li><a class="reference internal" href="#web-interface-design">Web Interface Design</a></li>
+<li><a class="reference internal" href="#error-handling-design">Error Handling Design</a></li>
+<li><a class="reference internal" href="#implementation-strategy">Implementation Strategy</a></li>
+<li><a class="reference internal" href="#traceability">Traceability</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    </body>
+</html>

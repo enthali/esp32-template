@@ -5,6 +5,12 @@ Welcome to the ESP32 Template project documentation. This template provides a co
 
 .. toctree::
    :maxdepth: 2
+   :caption: Architecture:
+
+   10_architecture/index
+
+.. toctree::
+   :maxdepth: 2
    :caption: Requirements Engineering:
 
    11_requirements/index
@@ -18,9 +24,22 @@ Welcome to the ESP32 Template project documentation. This template provides a co
 
 .. toctree::
    :maxdepth: 2
+   :caption: Development Guides:
+
+   90_guides/index
+
+.. toctree::
+   :maxdepth: 2
    :caption: Traceability:
 
    31_traceability/index
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Legal:
+
+   legal/impressum
+   legal/datenschutz
 
 About This Template
 -------------------

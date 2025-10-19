@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Requirements Documentation" href="11_requirements/index.html">
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Architecture Documentation" href="10_architecture/index.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
         <title>ESP32 Template Documentation</title>
@@ -200,16 +200,25 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="10_architecture/index.html">Architecture Documentation</a><input aria-label="Toggle navigation of Architecture Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="10_architecture/overview.html">ESP32 Template Architecture Overview</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="11_requirements/system.html">System Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="11_requirements/web-server.html">Web Server Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="11_requirements/config-manager.html">Configuration Manager Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="11_requirements/netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+<li class="toctree-l1 has-children"><a class="reference internal" href="12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="12_design/system-architecture.html">System Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_design/config-manager.html">Configuration Manager Design Specification</a></li>
 </ul>
 </li>
 </ul>
@@ -217,9 +226,24 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="21_api/index.html">API Reference</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Development Guides:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/debugging.html">Debugging Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+</ul>
+</li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">Traceability:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="31_traceability/index.html">Traceability</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Legal:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="legal/impressum.html">Impressum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legal/datenschutz.html">Datenschutzerklärung</a></li>
 </ul>
 
 </div>
@@ -262,6 +286,19 @@
 <h1>ESP32 Template Documentation<a class="headerlink" href="#esp32-template-documentation" title="Link to this heading">¶</a></h1>
 <p>Welcome to the ESP32 Template project documentation. This template provides a complete development environment for ESP32 IoT projects with GitHub Codespaces, QEMU emulation, and professional requirements engineering methodology.</p>
 <div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="10_architecture/index.html">Architecture Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="10_architecture/overview.html">ESP32 Template Architecture Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_architecture/index.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_architecture/index.html#purpose">Purpose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_architecture/index.html#relationship-to-other-documentation">Relationship to Other Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_architecture/index.html#navigation">Navigation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="11_requirements/index.html">Requirements Documentation</a><ul>
@@ -274,8 +311,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="12_design/index.html">Design Specifications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="12_design/system-architecture.html">System Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_design/config-manager.html">Configuration Manager Design Specification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="12_design/index.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="12_design/index.html#design-categories">Design Categories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_design/index.html#design-hierarchy">Design Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_design/index.html#document-standards">Document Standards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_design/index.html#design-vs-code">Design vs. Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_design/index.html#traceability-chain">Traceability Chain</a></li>
 </ul>
 </li>
 </ul>
@@ -290,6 +332,23 @@
 </ul>
 </div>
 <div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Development Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="90_guides/index.html">Development Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/debugging.html">Debugging Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/index.html#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/index.html#development-workflow">Development Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/index.html#template-benefits">Template Benefits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/index.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/index.html#known-issues">Known Issues</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Traceability:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="31_traceability/index.html">Traceability</a><ul>
@@ -299,6 +358,13 @@
 <li class="toctree-l2"><a class="reference internal" href="31_traceability/index.html#coverage-analysis">Coverage Analysis</a></li>
 </ul>
 </li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Legal:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="legal/impressum.html">Impressum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="legal/datenschutz.html">Datenschutzerklärung</a></li>
 </ul>
 </div>
 <section id="about-this-template">
@@ -384,6 +450,33 @@
 <div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_5">REQ_WEB_5: HTTP Server Concurrency (approved) [web; performance]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_NF_1">REQ_WEB_NF_1: Web UI Responsiveness (approved) [web; performance; ux]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_NF_2">REQ_WEB_NF_2: Mobile-First Design (approved) [web; ui; mobile]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1: Layered Configuration Architecture (approved) [architecture; config]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1: Configuration Data Flow (approved) [architecture; dataflow]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1: NVS Storage Format (approved) [data-structure; storage]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1: Runtime Configuration Structure (approved) [data-structure; runtime]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1: Configuration API Interface (approved) [api; interface]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1: Parameter Validation Rules (approved) [validation; api]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1: Configuration REST API (approved) [web; api; rest]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1: Real-time Configuration Preview (approved) [web; ui; preview]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1: Web Settings Page (approved) [web; ui; html]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1: NVS Error Recovery Strategy (approved) [error-handling; nvs]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1: Configuration Logging (approved) [logging; debugging]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_IMPL_1">SPEC_CFG_IMPL_1: Phased Implementation Approach (approved) [implementation; strategy]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_ARCH_1">SPEC_SYS_ARCH_1: ESP32 Component-Based Architecture (approved) [architecture; system]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_CONFIG_1">SPEC_SYS_CONFIG_1: Configuration Manager Component (approved) [component; config]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_WEB_1">SPEC_SYS_WEB_1: Web Server Component (approved) [component; web]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_CERT_1">SPEC_SYS_CERT_1: Certificate Handler Component (draft) [component; security]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_NETIF_1">SPEC_SYS_NETIF_1: Network Tunnel Component (approved) [component; qemu; network]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_THREAD_1">SPEC_SYS_THREAD_1: FreeRTOS Task Architecture (approved) [threading; rtos]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_MEMORY_1">SPEC_SYS_MEMORY_1: Memory Management Strategy (approved) [memory; performance]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_DATAFLOW_1">SPEC_SYS_DATAFLOW_1: Component Communication Pattern (approved) [dataflow; communication]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_WIFI_1">SPEC_SYS_WIFI_1: WiFi Manager Design (approved) [network; wifi]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_HTTP_1">SPEC_SYS_HTTP_1: HTTP Server Architecture (approved) [network; http; web]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_QEMU_1">SPEC_SYS_QEMU_1: QEMU Emulation Architecture (approved) [qemu; emulation]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_BUILD_1">SPEC_SYS_BUILD_1: ESP-IDF Build System Integration (approved) [build; cmake]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_FLASH_1">SPEC_SYS_FLASH_1: Flash Memory Configuration (approved) [flash; memory]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_PERF_1">SPEC_SYS_PERF_1: System Performance Requirements (approved) [performance; requirements]</a></div>
+<div class="line"><a class="reference external" href="12_design/system-architecture.html#SPEC_SYS_DEV_1">SPEC_SYS_DEV_1: GitHub Codespaces Development (approved) [development; codespaces]</a></div>
 </div>
 </section>
 
@@ -392,12 +485,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="11_requirements/index.html">
+          <a class="next-page" href="10_architecture/index.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Requirements Documentation</div>
+                <div class="title">Architecture Documentation</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>

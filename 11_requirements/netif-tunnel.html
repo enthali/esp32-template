@@ -200,16 +200,25 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../10_architecture/index.html">Architecture Documentation</a><input aria-label="Toggle navigation of Architecture Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../10_architecture/overview.html">ESP32 Template Architecture Overview</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Requirements Engineering:</span></p>
 <ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="system.html">System Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="web-server.html">Web Server Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="config-manager.html">Configuration Manager Requirements</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/system-architecture.html">System Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/config-manager.html">Configuration Manager Design Specification</a></li>
 </ul>
 </li>
 </ul>
@@ -217,9 +226,24 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Development Guides:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+</ul>
+</li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">Traceability:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Legal:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../legal/impressum.html">Impressum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/datenschutz.html">Datenschutzerklärung</a></li>
 </ul>
 
 </div>
@@ -267,7 +291,7 @@
 </section>
 <section id="functional-requirements">
 <h2>Functional Requirements<a class="headerlink" href="#functional-requirements" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-8ecc4466">
+<div class="need_container docutils container" id="SNCB-0b261fa4">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -300,7 +324,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-2236d200">
+<div class="need_container docutils container" id="SNCB-f81e1e62">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_2">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -333,7 +357,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-ea2f0424">
+<div class="need_container docutils container" id="SNCB-78336bc7">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_3">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -367,7 +391,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-2418b971">
+<div class="need_container docutils container" id="SNCB-b033c94d">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_4">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -399,7 +423,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-c3d12657">
+<div class="need_container docutils container" id="SNCB-1c7228e1">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_5">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -434,7 +458,7 @@
 </section>
 <section id="performance-requirements">
 <h2>Performance Requirements<a class="headerlink" href="#performance-requirements" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-3a2e7c1f">
+<div class="need_container docutils container" id="SNCB-f60f7702">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_NF_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -465,7 +489,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-e8e3987e">
+<div class="need_container docutils container" id="SNCB-c3ede72b">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_NF_2">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -499,7 +523,7 @@
 </section>
 <section id="documentation-requirements">
 <h2>Documentation Requirements<a class="headerlink" href="#documentation-requirements" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-27d2aeeb">
+<div class="need_container docutils container" id="SNCB-159f37e8">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_DOC_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
