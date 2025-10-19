@@ -204,6 +204,9 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/system.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/web-server.html">Web Server Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/config-manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
@@ -276,45 +279,175 @@
 </tr>
 </thead>
 <tbody>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_ARCH_1">REQ_SYS_ARCH_1</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_1">REQ_CFG_1</a></p></td>
+<td class="needs_title"><p>Centralized Configuration Header</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_10">REQ_CFG_10</a></p></td>
+<td class="needs_title"><p>NVS Error Recovery</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_11">REQ_CFG_11</a></p></td>
+<td class="needs_title"><p>Configuration Logging</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>optional</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_2">REQ_CFG_2</a></p></td>
+<td class="needs_title"><p>Compile-Time Configuration Access</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_3">REQ_CFG_3</a></p></td>
+<td class="needs_title"><p>Runtime Configuration Structure</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_4">REQ_CFG_4</a></p></td>
+<td class="needs_title"><p>Persistent Configuration Storage</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_5">REQ_CFG_5</a></p></td>
+<td class="needs_title"><p>Configuration Read API</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_6">REQ_CFG_6</a></p></td>
+<td class="needs_title"><p>Configuration Validation</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_7">REQ_CFG_7</a></p></td>
+<td class="needs_title"><p>Configuration Web Interface</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_8">REQ_CFG_8</a></p></td>
+<td class="needs_title"><p>Configuration Save Operation</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_9">REQ_CFG_9</a></p></td>
+<td class="needs_title"><p>Configuration Reset/Reload</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_1</a></p></td>
+<td class="needs_title"><p>QEMU UART Network Bridge</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_2">REQ_NETIF_TUNNEL_2</a></p></td>
+<td class="needs_title"><p>Packet Encapsulation</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_3">REQ_NETIF_TUNNEL_3</a></p></td>
+<td class="needs_title"><p>Host-Side Bridge Script</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_4">REQ_NETIF_TUNNEL_4</a></p></td>
+<td class="needs_title"><p>DHCP Client Support</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_5">REQ_NETIF_TUNNEL_5</a></p></td>
+<td class="needs_title"><p>Conditional Compilation</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_DOC_1">REQ_NETIF_TUNNEL_DOC_1</a></p></td>
+<td class="needs_title"><p>Emulation Setup Documentation</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_NF_1">REQ_NETIF_TUNNEL_NF_1</a></p></td>
+<td class="needs_title"><p>Tunnel Throughput</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>optional</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_NF_2">REQ_NETIF_TUNNEL_NF_2</a></p></td>
+<td class="needs_title"><p>Packet Loss Handling</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>optional</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_ARCH_1">REQ_SYS_ARCH_1</a></p></td>
 <td class="needs_title"><p>Component-based Architecture</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_CFG_1">REQ_SYS_CFG_1</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_CFG_1">REQ_SYS_CFG_1</a></p></td>
 <td class="needs_title"><p>Non-volatile Configuration Storage</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_HW_1">REQ_SYS_HW_1</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_HW_1">REQ_SYS_HW_1</a></p></td>
 <td class="needs_title"><p>ESP32 Hardware Platform</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_NET_1">REQ_SYS_NET_1</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_NET_1">REQ_SYS_NET_1</a></p></td>
 <td class="needs_title"><p>WiFi Connectivity</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_PERF_1">REQ_SYS_PERF_1</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_PERF_1">REQ_SYS_PERF_1</a></p></td>
 <td class="needs_title"><p>Memory Management</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_REL_1">REQ_SYS_REL_1</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_REL_1">REQ_SYS_REL_1</a></p></td>
 <td class="needs_title"><p>Error Handling and Recovery</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_SIM_1">REQ_SYS_SIM_1</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_SIM_1">REQ_SYS_SIM_1</a></p></td>
 <td class="needs_title"><p>Emulator Support</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a></p></td>
 <td class="needs_title"><p>Web-based Configuration</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/web-server.html#REQ_WEB_1">REQ_WEB_1</a></p></td>
+<td class="needs_title"><p>Real-time Status Display</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/web-server.html#REQ_WEB_2">REQ_WEB_2</a></p></td>
+<td class="needs_title"><p>Configuration Interface</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/web-server.html#REQ_WEB_3">REQ_WEB_3</a></p></td>
+<td class="needs_title"><p>WiFi Setup Interface</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/web-server.html#REQ_WEB_4">REQ_WEB_4</a></p></td>
+<td class="needs_title"><p>Web Interface Navigation</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/web-server.html#REQ_WEB_5">REQ_WEB_5</a></p></td>
+<td class="needs_title"><p>HTTP Server Concurrency</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/web-server.html#REQ_WEB_NF_1">REQ_WEB_NF_1</a></p></td>
+<td class="needs_title"><p>Web UI Responsiveness</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>optional</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/web-server.html#REQ_WEB_NF_2">REQ_WEB_NF_2</a></p></td>
+<td class="needs_title"><p>Mobile-First Design</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>optional</p></td>
 </tr>
 </tbody>
 </table>

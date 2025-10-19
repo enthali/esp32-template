@@ -204,6 +204,9 @@
 <ul class="current">
 <li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="system.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-server.html">Web Server Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
@@ -262,6 +265,30 @@
 <p class="caption" role="heading"><span class="caption-text">Requirements:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="system.html">System Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web-server.html">Web Server Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="web-server.html#component-overview">Component Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-server.html#functional-requirements">Functional Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-server.html#non-functional-requirements">Non-Functional Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-server.html#traceability">Traceability</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config-manager.html">Configuration Manager Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#component-overview">Component Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#static-configuration-management">Static Configuration Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#runtime-configuration-management">Runtime Configuration Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#configuration-api">Configuration API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#configuration-error-handling">Configuration Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html#traceability">Traceability</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="netif-tunnel.html">Network Interface Tunnel Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="netif-tunnel.html#component-overview">Component Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netif-tunnel.html#functional-requirements">Functional Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netif-tunnel.html#performance-requirements">Performance Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netif-tunnel.html#documentation-requirements">Documentation Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netif-tunnel.html#traceability">Traceability</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <section id="overview">
@@ -274,15 +301,20 @@
 <li><p><strong>Linked</strong> - Connected to design and implementation</p></li>
 </ul>
 </section>
-<section id="requirement-categories">
-<h2>Requirement Categories<a class="headerlink" href="#requirement-categories" title="Link to this heading">¶</a></h2>
-<p>Requirements are categorized using the following prefixes:</p>
+<section id="requirement-hierarchy">
+<h2>Requirement Hierarchy<a class="headerlink" href="#requirement-hierarchy" title="Link to this heading">¶</a></h2>
+<p>Requirements are organized in two levels:</p>
+<ol class="arabic simple">
+<li><p><strong>System Requirements</strong> (<code class="docutils literal notranslate"><span class="pre">REQ_SYS_*</span></code>) - High-level system capabilities</p></li>
+<li><p><strong>Component Requirements</strong> - Detailed component-level specifications</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">REQ-SYS-*</span></code> - System-level requirements</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">REQ-CFG-*</span></code> - Configuration management requirements</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">REQ-WEB-*</span></code> - Web interface requirements</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">REQ-NET-*</span></code> - Network and connectivity requirements</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">REQ_WEB_*</span></code> - Web server and user interface</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">REQ_CFG_*</span></code> - Configuration management</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">REQ_NETIF_TUNNEL_*</span></code> - QEMU network tunnel driver</p></li>
 </ul>
+</li>
+</ol>
+<p>Component requirements are <strong>linked</strong> to their parent system requirements using Sphinx-Needs <code class="docutils literal notranslate"><span class="pre">:links:</span></code> attribute.</p>
 <p>All requirements use Sphinx-Needs directives for automatic traceability and validation.</p>
 </section>
 </section>
@@ -344,7 +376,7 @@
             <ul>
 <li><a class="reference internal" href="#">Requirements Documentation</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a></li>
-<li><a class="reference internal" href="#requirement-categories">Requirement Categories</a></li>
+<li><a class="reference internal" href="#requirement-hierarchy">Requirement Hierarchy</a></li>
 </ul>
 </li>
 </ul>

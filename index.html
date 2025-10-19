@@ -204,6 +204,9 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="11_requirements/system.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_requirements/web-server.html">Web Server Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_requirements/config-manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_requirements/netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
@@ -263,8 +266,11 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="11_requirements/index.html">Requirements Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="11_requirements/system.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_requirements/web-server.html">Web Server Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_requirements/config-manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_requirements/netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="11_requirements/index.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="11_requirements/index.html#requirement-categories">Requirement Categories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_requirements/index.html#requirement-hierarchy">Requirement Hierarchy</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="12_design/index.html">Design Specifications</a><ul>
@@ -342,6 +348,25 @@
 <section id="all-requirements-overview">
 <h1>All Requirements Overview<a class="headerlink" href="#all-requirements-overview" title="Link to this heading">¶</a></h1>
 <div class="line-block" id="needlist-index-0">
+<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_1">REQ_CFG_1: Centralized Configuration Header (approved) [config; architecture]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_2">REQ_CFG_2: Compile-Time Configuration Access (approved) [config; api]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_3">REQ_CFG_3: Runtime Configuration Structure (approved) [config; runtime]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_4">REQ_CFG_4: Persistent Configuration Storage (approved) [config; storage; nvs]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_5">REQ_CFG_5: Configuration Read API (approved) [config; api]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_6">REQ_CFG_6: Configuration Validation (approved) [config; validation]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_7">REQ_CFG_7: Configuration Web Interface (approved) [config; web; api]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_8">REQ_CFG_8: Configuration Save Operation (approved) [config; web; persistence]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_9">REQ_CFG_9: Configuration Reset/Reload (approved) [config; web; factory-reset]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_10">REQ_CFG_10: NVS Error Recovery (approved) [config; error-handling]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_11">REQ_CFG_11: Configuration Logging (approved) [config; logging; debugging]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_1: QEMU UART Network Bridge (approved) [emulation; network; qemu; uart]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_2">REQ_NETIF_TUNNEL_2: Packet Encapsulation (approved) [emulation; protocol]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_3">REQ_NETIF_TUNNEL_3: Host-Side Bridge Script (approved) [emulation; tooling; host]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_4">REQ_NETIF_TUNNEL_4: DHCP Client Support (approved) [emulation; network; dhcp]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_5">REQ_NETIF_TUNNEL_5: Conditional Compilation (approved) [emulation; build]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_NF_1">REQ_NETIF_TUNNEL_NF_1: Tunnel Throughput (approved) [emulation; performance]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_NF_2">REQ_NETIF_TUNNEL_NF_2: Packet Loss Handling (approved) [emulation; reliability]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_DOC_1">REQ_NETIF_TUNNEL_DOC_1: Emulation Setup Documentation (approved) [emulation; documentation]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_HW_1">REQ_SYS_HW_1: ESP32 Hardware Platform (approved) [hardware; platform]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_NET_1">REQ_SYS_NET_1: WiFi Connectivity (approved) [network; wifi]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1: Web-based Configuration (approved) [web; configuration]</a></div>
@@ -350,6 +375,13 @@
 <div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_REL_1">REQ_SYS_REL_1: Error Handling and Recovery (approved) [reliability; error-handling]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_PERF_1">REQ_SYS_PERF_1: Memory Management (approved) [performance; memory]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_SIM_1">REQ_SYS_SIM_1: Emulator Support (approved) [emulator; qemu; testing]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_1">REQ_WEB_1: Real-time Status Display (approved) [web; ui; monitoring]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_2">REQ_WEB_2: Configuration Interface (approved) [web; ui; configuration]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_3">REQ_WEB_3: WiFi Setup Interface (approved) [web; wifi; network]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_4">REQ_WEB_4: Web Interface Navigation (approved) [web; ui; navigation]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_5">REQ_WEB_5: HTTP Server Concurrency (approved) [web; performance]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_NF_1">REQ_WEB_NF_1: Web UI Responsiveness (approved) [web; performance; ux]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_NF_2">REQ_WEB_NF_2: Mobile-First Design (approved) [web; ui; mobile]</a></div>
 </div>
 </section>
 
