@@ -241,5 +241,5 @@ Traceability
 
 **Related Requirements:**
 
-- Web Server requirements (REQ-WEB-*) consume configuration API
+- Web Server requirements (REQ-WEB-\*) consume configuration API
 - All component requirements depend on configuration management

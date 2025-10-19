@@ -26,7 +26,13 @@ extensions = [
 ]
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '01_general', '02_development', 'api', 'architecture', 'assets', 'javascripts', 'legal']
+exclude_patterns = [
+    '_build',
+    'Thumbs.db',
+    '.DS_Store',
+    '01_general',  # Empty placeholder folders
+    '02_development',
+]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -104,6 +110,9 @@ needs_id_required = True
 # Configure needs file output
 needs_build_json = True
 needs_build_json_per_id = True
+
+# Use Graphviz for needflow diagrams instead of PlantUML
+needs_flow_engine = "graphviz"
 
 # -- MyST Parser Configuration -----------------------------------------------
 # https://myst-parser.readthedocs.io/

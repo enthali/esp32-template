@@ -159,5 +159,5 @@ Traceability
 
 **Related Requirements:**
 
-- Configuration Manager requirements (REQ-CFG-*) define configurable parameters
+- Configuration Manager requirements (REQ-CFG-\*) define configurable parameters
 - Network requirements define WiFi connectivity behavior
