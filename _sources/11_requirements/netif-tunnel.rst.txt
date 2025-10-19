@@ -179,5 +179,5 @@ Traceability
 
 **Related Requirements:**
 
-- Web Server requirements (REQ-WEB-*) are testable via tunnel in QEMU
-- Configuration requirements (REQ-CFG-*) are testable in QEMU
+- Web Server requirements (REQ-WEB-\*) are testable via tunnel in QEMU
+- Configuration requirements (REQ-CFG-\*) are testable in QEMU
