@@ -64,4 +64,10 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`search`
-* :ref:`needs-index`
+
+All Requirements Overview
+=========================
+
+.. needlist::
+   :show_status:
+   :show_tags:
