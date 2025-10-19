@@ -35,6 +35,11 @@ html_theme = 'furo'
 html_static_path = ['_static']
 html_title = 'ESP32 Template Documentation'
 
+# Custom CSS for dark mode fixes
+html_css_files = [
+    'custom.css',
+]
+
 # -- Sphinx-Needs Configuration ----------------------------------------------
 # https://sphinx-needs.readthedocs.io/
 
