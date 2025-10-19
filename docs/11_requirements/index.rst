@@ -8,6 +8,9 @@ This section contains system and component requirements following Sphinx-Needs m
    :caption: Requirements:
 
    system
+   web-server
+   config-manager
+   netif-tunnel
 
 Overview
 --------
@@ -19,14 +22,18 @@ Requirements define **what** the system should do. They are:
 * **Clear** - Unambiguous and specific
 * **Linked** - Connected to design and implementation
 
-Requirement Categories
-----------------------
+Requirement Hierarchy
+---------------------
 
-Requirements are categorized using the following prefixes:
+Requirements are organized in two levels:
 
-* ``REQ-SYS-*`` - System-level requirements
-* ``REQ-CFG-*`` - Configuration management requirements
-* ``REQ-WEB-*`` - Web interface requirements
-* ``REQ-NET-*`` - Network and connectivity requirements
+1. **System Requirements** (``REQ_SYS_*``) - High-level system capabilities
+2. **Component Requirements** - Detailed component-level specifications
+
+   * ``REQ_WEB_*`` - Web server and user interface
+   * ``REQ_CFG_*`` - Configuration management
+   * ``REQ_NETIF_TUNNEL_*`` - QEMU network tunnel driver
+
+Component requirements are **linked** to their parent system requirements using Sphinx-Needs ``:links:`` attribute.
 
 All requirements use Sphinx-Needs directives for automatic traceability and validation.
