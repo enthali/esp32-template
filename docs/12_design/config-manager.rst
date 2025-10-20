@@ -3,15 +3,6 @@ Configuration Manager Design Specification
 
 This document specifies the design for the Configuration Management System, covering architecture, data structures, API design, and implementation approach.
 
-Document Metadata
------------------
-
-:Version: 1.0
-:Date: 2025-07-24
-:Author: ESP32 Template Team
-:Requirements: REQ_CFG_1 through REQ_CFG_11
-
-
 Architecture Design
 -------------------
 
