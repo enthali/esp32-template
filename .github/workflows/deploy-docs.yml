@@ -38,14 +38,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install \
-            "sphinx>=8.0" \
-            "sphinx-needs>=6.0" \
-            "sphinx-rtd-theme>=3.0" \
-            "furo>=2025.0" \
-            "myst-parser>=4.0" \
-            "sphinxcontrib-plantuml>=0.31" \
-            "breathe>=4.35"
+          pip install -r docs/requirements.txt
 
       - name: Build Sphinx documentation
         run: |
