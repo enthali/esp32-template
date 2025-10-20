@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Configuration Manager Design Specification" href="config-manager.html"><link rel="prev" title="Design Specifications" href="index.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
         <title>High-Level Architecture Design Specification - ESP32 Template Documentation</title>
@@ -200,7 +200,32 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/system.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/web-server.html">Web Server Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/config-manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">High-Level Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html">Configuration Manager Design Specification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/impressum.html">Impressum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/datenschutz.html">Datenschutzerklärung</a></li>
+</ul>
+
 </div>
 </div>
 
@@ -259,7 +284,7 @@
 </section>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-c2591feb">
+<div class="need_container docutils container" id="SNCB-7d657ee9">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_LAYERS_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -324,7 +349,7 @@
 </section>
 <section id="component-design-specifications">
 <h2>Component Design Specifications<a class="headerlink" href="#component-design-specifications" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-d40ea37b">
+<div class="need_container docutils container" id="SNCB-f0889abf">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_CONFIG_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -358,7 +383,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-8d9d2243">
+<div class="need_container docutils container" id="SNCB-37bc8ca6">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_WEB_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -394,7 +419,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-562d2620">
+<div class="need_container docutils container" id="SNCB-cedf6c2d">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_CERT_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -428,7 +453,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-23e88752">
+<div class="need_container docutils container" id="SNCB-f7ce2249">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_NETIF_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -470,7 +495,7 @@
 </section>
 <section id="data-flow-architecture">
 <h2>Data Flow Architecture<a class="headerlink" href="#data-flow-architecture" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-d4fafc4a">
+<div class="need_container docutils container" id="SNCB-1a8e3003">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_COMM_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -511,7 +536,7 @@ Hardware
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-94853ca5">
+<div class="need_container docutils container" id="SNCB-b9902d79">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_CONFIG_FLOW_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -543,7 +568,7 @@ Factory:   Factory Reset → Defaults → NVS → Cache
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-575b936c">
+<div class="need_container docutils container" id="SNCB-c9088dab">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_NETWORK_FLOW_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -580,7 +605,7 @@ Factory:   Factory Reset → Defaults → NVS → Cache
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-206c293d">
+<div class="need_container docutils container" id="SNCB-67d095bb">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_WIFI_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -624,7 +649,7 @@ Factory:   Factory Reset → Defaults → NVS → Cache
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-ead6a668">
+<div class="need_container docutils container" id="SNCB-cca7384a">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_HTTP_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -666,7 +691,7 @@ Factory:   Factory Reset → Defaults → NVS → Cache
 </section>
 <section id="qemu-emulation-architecture">
 <h2>QEMU Emulation Architecture<a class="headerlink" href="#qemu-emulation-architecture" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-1c21fb61">
+<div class="need_container docutils container" id="SNCB-342b61a8">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_QEMU_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -714,7 +739,7 @@ Factory:   Factory Reset → Defaults → NVS → Cache
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-26fa0a7c">
+<div class="need_container docutils container" id="SNCB-556622f6">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_QEMU_BUILD_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -756,7 +781,7 @@ Factory:   Factory Reset → Defaults → NVS → Cache
 </section>
 <section id="threading-architecture">
 <h2>Threading Architecture<a class="headerlink" href="#threading-architecture" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-d29234d1">
+<div class="need_container docutils container" id="SNCB-1e46c2fe">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_TASKS_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -799,7 +824,7 @@ Core 1: WiFi/Network Stack (ESP-IDF managed)
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-50c0c7b2">
+<div class="need_container docutils container" id="SNCB-d7e5d8df">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_MEMORY_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -839,7 +864,7 @@ Core 1: WiFi/Network Stack (ESP-IDF managed)
 </section>
 <section id="build-system-integration">
 <h2>Build System Integration<a class="headerlink" href="#build-system-integration" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-107969a4">
+<div class="need_container docutils container" id="SNCB-5982a112">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_BUILD_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -882,7 +907,7 @@ Core 1: WiFi/Network Stack (ESP-IDF managed)
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-e07735a5">
+<div class="need_container docutils container" id="SNCB-43c6ee81">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_FLASH_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -923,7 +948,7 @@ factory     app   0x10000  ~3.8MB (firmware)
 </section>
 <section id="development-workflow-design">
 <h2>Development Workflow Design<a class="headerlink" href="#development-workflow-design" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-d31c99ec">
+<div class="need_container docutils container" id="SNCB-4388c9ef">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_CODESPACES_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -962,7 +987,7 @@ Build → Test in QEMU → Flash to Hardware
 </section>
 <section id="performance-targets">
 <h2>Performance Targets<a class="headerlink" href="#performance-targets" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-52e140ab">
+<div class="need_container docutils container" id="SNCB-1fb0f017">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_PERF_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -1048,8 +1073,26 @@ Build → Test in QEMU → Flash to Hardware
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="config-manager.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Configuration Manager Design Specification</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Design Specifications</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

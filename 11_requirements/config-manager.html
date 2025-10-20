@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Network Interface Tunnel Requirements" href="netif-tunnel.html"><link rel="prev" title="Web Server Requirements" href="web-server.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
         <title>Configuration Manager Requirements - ESP32 Template Documentation</title>
@@ -200,7 +200,32 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  
+  <ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="system.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-server.html">Web Server Requirements</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/high-level-architecture.html">High-Level Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/config-manager.html">Configuration Manager Design Specification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/impressum.html">Impressum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/datenschutz.html">Datenschutzerklärung</a></li>
+</ul>
+
 </div>
 </div>
 
@@ -246,7 +271,7 @@
 </section>
 <section id="static-configuration-management">
 <h2>Static Configuration Management<a class="headerlink" href="#static-configuration-management" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-cccbc35f">
+<div class="need_container docutils container" id="SNCB-6cfa6689">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -279,7 +304,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-aed3cf7e">
+<div class="need_container docutils container" id="SNCB-e560a8f1">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_2">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -315,7 +340,7 @@
 </section>
 <section id="runtime-configuration-management">
 <h2>Runtime Configuration Management<a class="headerlink" href="#runtime-configuration-management" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-e8b5f2bb">
+<div class="need_container docutils container" id="SNCB-b730664c">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_3">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -348,7 +373,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-deff3dbd">
+<div class="need_container docutils container" id="SNCB-5a8f56c7">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_4">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -384,7 +409,7 @@
 </section>
 <section id="configuration-api">
 <h2>Configuration API<a class="headerlink" href="#configuration-api" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-0583e9c0">
+<div class="need_container docutils container" id="SNCB-4e4f2761">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_5">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -417,7 +442,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-37585a1b">
+<div class="need_container docutils container" id="SNCB-d5a5c864">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_6">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -450,7 +475,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-664dd093">
+<div class="need_container docutils container" id="SNCB-6b0106ce">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_7">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -483,7 +508,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-2b58c220">
+<div class="need_container docutils container" id="SNCB-46b0966d">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_8">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -517,7 +542,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-4eb9fff6">
+<div class="need_container docutils container" id="SNCB-66cacb4c">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_9">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -554,7 +579,7 @@
 </section>
 <section id="configuration-error-handling">
 <h2>Configuration Error Handling<a class="headerlink" href="#configuration-error-handling" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-00729961">
+<div class="need_container docutils container" id="SNCB-01affc7b">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_10">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -587,7 +612,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-067a785a">
+<div class="need_container docutils container" id="SNCB-9c55d367">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_11">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -640,8 +665,26 @@
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="netif-tunnel.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Network Interface Tunnel Requirements</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="web-server.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Web Server Requirements</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

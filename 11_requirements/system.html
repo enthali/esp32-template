@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Web Server Requirements" href="web-server.html"><link rel="prev" title="Requirements Documentation" href="index.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
         <title>System Requirements - ESP32 Template Documentation</title>
@@ -200,7 +200,32 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  
+  <ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-server.html">Web Server Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/high-level-architecture.html">High-Level Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/config-manager.html">Configuration Manager Design Specification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/impressum.html">Impressum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/datenschutz.html">Datenschutzerklärung</a></li>
+</ul>
+
 </div>
 </div>
 
@@ -240,7 +265,7 @@
           <section id="system-requirements">
 <h1>System Requirements<a class="headerlink" href="#system-requirements" title="Link to this heading">¶</a></h1>
 <p>This document contains high-level system requirements for the ESP32 Template project.</p>
-<div class="need_container docutils container" id="SNCB-d588fd19">
+<div class="need_container docutils container" id="SNCB-fc1a9861">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_HW_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -273,7 +298,7 @@ ESP32 provides WiFi connectivity, sufficient processing power, and adequate flas
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-88fb8dff">
+<div class="need_container docutils container" id="SNCB-fcf21ef9">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_NET_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -306,7 +331,7 @@ Enables web interface access and network configuration flexibility.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-bf646709">
+<div class="need_container docutils container" id="SNCB-cfe0dcc2">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_WEB_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -340,7 +365,7 @@ User-friendly interface for system setup and operation without firmware recompil
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-4121fe3f">
+<div class="need_container docutils container" id="SNCB-253c6fc3">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_CFG_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -373,7 +398,7 @@ Maintains user settings and system configuration permanently.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-1416208a">
+<div class="need_container docutils container" id="SNCB-ffc8e58c">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_ARCH_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -406,7 +431,7 @@ Enables maintainability, testability, and reusability.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-3ea95661">
+<div class="need_container docutils container" id="SNCB-257e981f">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_REL_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -439,7 +464,7 @@ Ensures system reliability and user experience.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-f110b70a">
+<div class="need_container docutils container" id="SNCB-4a404501">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_PERF_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -473,7 +498,7 @@ Prevents memory leaks and ensures stable operation.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-be726bca">
+<div class="need_container docutils container" id="SNCB-6b4de795">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_SIM_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -515,8 +540,26 @@ Enables development and testing without physical hardware, improves reproducibil
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="web-server.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Web Server Requirements</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Requirements Documentation</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
