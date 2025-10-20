@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Configuration Manager Requirements" href="config-manager.html"><link rel="prev" title="System Requirements" href="system.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Configuration Manager Requirements" href="req_config_manager.html"><link rel="prev" title="System Requirements" href="req_system.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
         <title>Web Server Requirements - ESP32 Template Documentation</title>
@@ -202,15 +202,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="system.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="req_system.html">System Requirements</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Web Server Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="config-manager.html">Configuration Manager Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="req_config_manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="req_netif_tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../12_design/high-level-architecture.html">High-Level Architecture Design Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../12_design/config-manager.html">Configuration Manager Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_high_level_architecture.html">High-Level Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_manager.html">Configuration Manager Design Specification</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
@@ -245,7 +245,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/11_requirements/web-server.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/11_requirements/req_web_server.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -268,11 +268,11 @@
 <p>This document specifies component-level requirements for the web server functionality, enabling user interface, configuration, and WiFi setup capabilities.</p>
 <section id="component-overview">
 <h2>Component Overview<a class="headerlink" href="#component-overview" title="Link to this heading">¶</a></h2>
-<p>The web server component provides HTTP-based user interface and configuration capabilities. These requirements refine the high-level system requirement <a class="reference internal" href="system.html#REQ_SYS_WEB_1" title="REQ_SYS_WEB_1"><em class="xref need">Web-based Configuration (REQ_SYS_WEB_1)</em></a>.</p>
+<p>The web server component provides HTTP-based user interface and configuration capabilities. These requirements refine the high-level system requirement <a class="reference internal" href="req_system.html#REQ_SYS_WEB_1" title="REQ_SYS_WEB_1"><em class="xref need">Web-based Configuration (REQ_SYS_WEB_1)</em></a>.</p>
 </section>
 <section id="functional-requirements">
 <h2>Functional Requirements<a class="headerlink" href="#functional-requirements" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-27635128">
+<div class="need_container docutils container" id="SNCB-e08a1a79">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_WEB_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -285,7 +285,7 @@
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">web</span><span class="needs_spacer">, </span><span class="needs_data">ui</span><span class="needs_spacer">, </span><span class="needs_data">monitoring</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="system.html#REQ_SYS_WEB_1" title="REQ_WEB_1">REQ_SYS_WEB_1</a></span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="req_system.html#REQ_SYS_WEB_1" title="REQ_WEB_1">REQ_SYS_WEB_1</a></span></span></div>
 <div class="line">links incoming: <span class="links"><span><a class="reference internal" href="#REQ_WEB_NF_1" title="REQ_WEB_1">REQ_WEB_NF_1</a>, <a class="reference internal" href="#REQ_WEB_NF_2" title="REQ_WEB_1">REQ_WEB_NF_2</a></span></span></div>
 </span></div>
 </div>
@@ -305,7 +305,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-3f8632b3">
+<div class="need_container docutils container" id="SNCB-10da5002">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_WEB_2">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -318,8 +318,8 @@
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">web</span><span class="needs_spacer">, </span><span class="needs_data">ui</span><span class="needs_spacer">, </span><span class="needs_data">configuration</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="system.html#REQ_SYS_WEB_1" title="REQ_WEB_2">REQ_SYS_WEB_1</a>, <a class="reference internal" href="config-manager.html#REQ_CFG_3" title="REQ_WEB_2">REQ_CFG_3</a></span></span></div>
-<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="config-manager.html#REQ_CFG_7" title="REQ_WEB_2">REQ_CFG_7</a>, <a class="reference internal" href="#REQ_WEB_NF_1" title="REQ_WEB_2">REQ_WEB_NF_1</a>, <a class="reference internal" href="#REQ_WEB_NF_2" title="REQ_WEB_2">REQ_WEB_NF_2</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_UI_1" title="REQ_WEB_2">SPEC_CFG_UI_1</a></span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="req_system.html#REQ_SYS_WEB_1" title="REQ_WEB_2">REQ_SYS_WEB_1</a>, <a class="reference internal" href="req_config_manager.html#REQ_CFG_3" title="REQ_WEB_2">REQ_CFG_3</a></span></span></div>
+<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="req_config_manager.html#REQ_CFG_7" title="REQ_WEB_2">REQ_CFG_7</a>, <a class="reference internal" href="#REQ_WEB_NF_1" title="REQ_WEB_2">REQ_WEB_NF_1</a>, <a class="reference internal" href="#REQ_WEB_NF_2" title="REQ_WEB_2">REQ_WEB_NF_2</a>, <a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_UI_1" title="REQ_WEB_2">SPEC_CFG_UI_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -339,7 +339,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-6577c9cb">
+<div class="need_container docutils container" id="SNCB-5d4aac0a">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_WEB_3">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -352,7 +352,7 @@
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">web</span><span class="needs_spacer">, </span><span class="needs_data">wifi</span><span class="needs_spacer">, </span><span class="needs_data">network</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="system.html#REQ_SYS_NET_1" title="REQ_WEB_3">REQ_SYS_NET_1</a></span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="req_system.html#REQ_SYS_NET_1" title="REQ_WEB_3">REQ_SYS_NET_1</a></span></span></div>
 <div class="line">links incoming: <span class="links"><span><a class="reference internal" href="#REQ_WEB_NF_2" title="REQ_WEB_3">REQ_WEB_NF_2</a></span></span></div>
 </span></div>
 </div>
@@ -374,7 +374,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-52a88289">
+<div class="need_container docutils container" id="SNCB-fe1073ad">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_WEB_4">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -387,7 +387,7 @@
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">web</span><span class="needs_spacer">, </span><span class="needs_data">ui</span><span class="needs_spacer">, </span><span class="needs_data">navigation</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="system.html#REQ_SYS_WEB_1" title="REQ_WEB_4">REQ_SYS_WEB_1</a></span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="req_system.html#REQ_SYS_WEB_1" title="REQ_WEB_4">REQ_SYS_WEB_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -406,7 +406,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-5fa6eac9">
+<div class="need_container docutils container" id="SNCB-00268631">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_WEB_5">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -419,7 +419,7 @@
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">web</span><span class="needs_spacer">, </span><span class="needs_data">performance</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="system.html#REQ_SYS_WEB_1" title="REQ_WEB_5">REQ_SYS_WEB_1</a></span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="req_system.html#REQ_SYS_WEB_1" title="REQ_WEB_5">REQ_SYS_WEB_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -441,7 +441,7 @@
 </section>
 <section id="non-functional-requirements">
 <h2>Non-Functional Requirements<a class="headerlink" href="#non-functional-requirements" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-6d28b4f1">
+<div class="need_container docutils container" id="SNCB-b680b986">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_WEB_NF_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -472,7 +472,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-bdc6d123">
+<div class="need_container docutils container" id="SNCB-179fefac">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_WEB_NF_2">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -508,8 +508,8 @@
 <h2>Traceability<a class="headerlink" href="#traceability" title="Link to this heading">¶</a></h2>
 <p><strong>Parent Requirements:</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="system.html#REQ_SYS_WEB_1" title="REQ_SYS_WEB_1"><em class="xref need">Web-based Configuration (REQ_SYS_WEB_1)</em></a> - Web-based configuration interface (high-level)</p></li>
-<li><p><a class="reference internal" href="system.html#REQ_SYS_NET_1" title="REQ_SYS_NET_1"><em class="xref need">WiFi Connectivity (REQ_SYS_NET_1)</em></a> - WiFi connectivity (high-level)</p></li>
+<li><p><a class="reference internal" href="req_system.html#REQ_SYS_WEB_1" title="REQ_SYS_WEB_1"><em class="xref need">Web-based Configuration (REQ_SYS_WEB_1)</em></a> - Web-based configuration interface (high-level)</p></li>
+<li><p><a class="reference internal" href="req_system.html#REQ_SYS_NET_1" title="REQ_SYS_NET_1"><em class="xref need">WiFi Connectivity (REQ_SYS_NET_1)</em></a> - WiFi connectivity (high-level)</p></li>
 </ul>
 <p><strong>Related Requirements:</strong></p>
 <ul class="simple">
@@ -524,7 +524,7 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="config-manager.html">
+          <a class="next-page" href="req_config_manager.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
@@ -533,7 +533,7 @@
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="system.html">
+          <a class="prev-page" href="req_system.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">

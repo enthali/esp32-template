@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Design Specifications" href="../12_design/index.html"><link rel="prev" title="Configuration Manager Requirements" href="config-manager.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Design Specifications" href="../12_design/index.html"><link rel="prev" title="Configuration Manager Requirements" href="req_config_manager.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
         <title>Network Interface Tunnel Requirements - ESP32 Template Documentation</title>
@@ -202,15 +202,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="system.html">System Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web-server.html">Web Server Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="config-manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="req_system.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="req_web_server.html">Web Server Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="req_config_manager.html">Configuration Manager Requirements</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../12_design/high-level-architecture.html">High-Level Architecture Design Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../12_design/config-manager.html">Configuration Manager Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_high_level_architecture.html">High-Level Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_manager.html">Configuration Manager Design Specification</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
@@ -245,7 +245,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/11_requirements/netif-tunnel.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/11_requirements/req_netif_tunnel.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -268,11 +268,11 @@
 <p>This document specifies component-level requirements for the UART-based network tunnel driver, enabling QEMU emulation with external network connectivity.</p>
 <section id="component-overview">
 <h2>Component Overview<a class="headerlink" href="#component-overview" title="Link to this heading">¶</a></h2>
-<p>The network interface tunnel component provides a bridge between QEMU’s simulated UART and the host’s network stack, enabling network-dependent features to be tested in emulation. These requirements refine the high-level system requirement <a class="reference internal" href="system.html#REQ_SYS_SIM_1" title="REQ_SYS_SIM_1"><em class="xref need">Emulator Support (REQ_SYS_SIM_1)</em></a>.</p>
+<p>The network interface tunnel component provides a bridge between QEMU’s simulated UART and the host’s network stack, enabling network-dependent features to be tested in emulation. These requirements refine the high-level system requirement <a class="reference internal" href="req_system.html#REQ_SYS_SIM_1" title="REQ_SYS_SIM_1"><em class="xref need">Emulator Support (REQ_SYS_SIM_1)</em></a>.</p>
 </section>
 <section id="functional-requirements">
 <h2>Functional Requirements<a class="headerlink" href="#functional-requirements" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-81ccec4e">
+<div class="need_container docutils container" id="SNCB-5fbff7c9">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -285,7 +285,7 @@
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">emulation</span><span class="needs_spacer">, </span><span class="needs_data">network</span><span class="needs_spacer">, </span><span class="needs_data">qemu</span><span class="needs_spacer">, </span><span class="needs_data">uart</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="system.html#REQ_SYS_SIM_1" title="REQ_NETIF_TUNNEL_1">REQ_SYS_SIM_1</a></span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="req_system.html#REQ_SYS_SIM_1" title="REQ_NETIF_TUNNEL_1">REQ_SYS_SIM_1</a></span></span></div>
 <div class="line">links incoming: <span class="links"><span><a class="reference internal" href="#REQ_NETIF_TUNNEL_2" title="REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_2</a>, <a class="reference internal" href="#REQ_NETIF_TUNNEL_3" title="REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_3</a>, <a class="reference internal" href="#REQ_NETIF_TUNNEL_4" title="REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_4</a>, <a class="reference internal" href="#REQ_NETIF_TUNNEL_5" title="REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_5</a>, <a class="reference internal" href="#REQ_NETIF_TUNNEL_NF_1" title="REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_NF_1</a></span></span></div>
 </span></div>
 </div>
@@ -305,7 +305,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-5b8cbc7a">
+<div class="need_container docutils container" id="SNCB-e2a9eab4">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_2">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -338,7 +338,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-1b528081">
+<div class="need_container docutils container" id="SNCB-636703bc">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_3">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -372,7 +372,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-67764faf">
+<div class="need_container docutils container" id="SNCB-2f97675f">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_4">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -385,7 +385,7 @@
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">emulation</span><span class="needs_spacer">, </span><span class="needs_data">network</span><span class="needs_spacer">, </span><span class="needs_data">dhcp</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="#REQ_NETIF_TUNNEL_1" title="REQ_NETIF_TUNNEL_4">REQ_NETIF_TUNNEL_1</a>, <a class="reference internal" href="system.html#REQ_SYS_NET_1" title="REQ_NETIF_TUNNEL_4">REQ_SYS_NET_1</a></span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="#REQ_NETIF_TUNNEL_1" title="REQ_NETIF_TUNNEL_4">REQ_NETIF_TUNNEL_1</a>, <a class="reference internal" href="req_system.html#REQ_SYS_NET_1" title="REQ_NETIF_TUNNEL_4">REQ_SYS_NET_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -404,7 +404,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-aee8a7ab">
+<div class="need_container docutils container" id="SNCB-ff612c49">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_5">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -439,7 +439,7 @@
 </section>
 <section id="performance-requirements">
 <h2>Performance Requirements<a class="headerlink" href="#performance-requirements" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-11db1122">
+<div class="need_container docutils container" id="SNCB-100f9866">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_NF_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -470,7 +470,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-bded325e">
+<div class="need_container docutils container" id="SNCB-bb408206">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_NF_2">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -504,7 +504,7 @@
 </section>
 <section id="documentation-requirements">
 <h2>Documentation Requirements<a class="headerlink" href="#documentation-requirements" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-e4eec89d">
+<div class="need_container docutils container" id="SNCB-c85218ec">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_NETIF_TUNNEL_DOC_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -517,7 +517,7 @@
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">emulation</span><span class="needs_spacer">, </span><span class="needs_data">documentation</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="#REQ_NETIF_TUNNEL_3" title="REQ_NETIF_TUNNEL_DOC_1">REQ_NETIF_TUNNEL_3</a>, <a class="reference internal" href="system.html#REQ_SYS_SIM_1" title="REQ_NETIF_TUNNEL_DOC_1">REQ_SYS_SIM_1</a></span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="#REQ_NETIF_TUNNEL_3" title="REQ_NETIF_TUNNEL_DOC_1">REQ_NETIF_TUNNEL_3</a>, <a class="reference internal" href="req_system.html#REQ_SYS_SIM_1" title="REQ_NETIF_TUNNEL_DOC_1">REQ_SYS_SIM_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -541,8 +541,8 @@
 <h2>Traceability<a class="headerlink" href="#traceability" title="Link to this heading">¶</a></h2>
 <p><strong>Parent Requirements:</strong></p>
 <ul class="simple">
-<li><p><a class="reference internal" href="system.html#REQ_SYS_SIM_1" title="REQ_SYS_SIM_1"><em class="xref need">Emulator Support (REQ_SYS_SIM_1)</em></a> - QEMU emulation support (high-level)</p></li>
-<li><p><a class="reference internal" href="system.html#REQ_SYS_NET_1" title="REQ_SYS_NET_1"><em class="xref need">WiFi Connectivity (REQ_SYS_NET_1)</em></a> - WiFi connectivity (provides network stack)</p></li>
+<li><p><a class="reference internal" href="req_system.html#REQ_SYS_SIM_1" title="REQ_SYS_SIM_1"><em class="xref need">Emulator Support (REQ_SYS_SIM_1)</em></a> - QEMU emulation support (high-level)</p></li>
+<li><p><a class="reference internal" href="req_system.html#REQ_SYS_NET_1" title="REQ_SYS_NET_1"><em class="xref need">WiFi Connectivity (REQ_SYS_NET_1)</em></a> - WiFi connectivity (provides network stack)</p></li>
 </ul>
 <p><strong>Related Requirements:</strong></p>
 <ul class="simple">
@@ -566,7 +566,7 @@
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="config-manager.html">
+          <a class="prev-page" href="req_config_manager.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">

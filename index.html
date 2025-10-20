@@ -202,15 +202,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="11_requirements/system.html">System Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="11_requirements/web-server.html">Web Server Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="11_requirements/config-manager.html">Configuration Manager Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="11_requirements/netif-tunnel.html">Network Interface Tunnel Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_requirements/req_system.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_requirements/req_web_server.html">Web Server Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_requirements/req_config_manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_requirements/req_netif_tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="12_design/high-level-architecture.html">High-Level Architecture Design Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="12_design/config-manager.html">Configuration Manager Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_design/spec_high_level_architecture.html">High-Level Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_design/spec_config_manager.html">Configuration Manager Design Specification</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="21_api/index.html">API Reference</a></li>
@@ -314,71 +314,71 @@
 <section id="all-requirements-overview">
 <h1>All Requirements Overview<a class="headerlink" href="#all-requirements-overview" title="Link to this heading">¶</a></h1>
 <div class="line-block" id="needlist-index-0">
-<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_1">REQ_CFG_1: Centralized Configuration Header (approved) [config; architecture]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_2">REQ_CFG_2: Compile-Time Configuration Access (approved) [config; api]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_3">REQ_CFG_3: Runtime Configuration Structure (approved) [config; runtime]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_4">REQ_CFG_4: Persistent Configuration Storage (approved) [config; storage; nvs]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_5">REQ_CFG_5: Configuration Read API (approved) [config; api]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_6">REQ_CFG_6: Configuration Validation (approved) [config; validation]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_7">REQ_CFG_7: Configuration Web Interface (approved) [config; web; api]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_8">REQ_CFG_8: Configuration Save Operation (approved) [config; web; persistence]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_9">REQ_CFG_9: Configuration Reset/Reload (approved) [config; web; factory-reset]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_10">REQ_CFG_10: NVS Error Recovery (approved) [config; error-handling]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/config-manager.html#REQ_CFG_11">REQ_CFG_11: Configuration Logging (approved) [config; logging; debugging]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_1: QEMU UART Network Bridge (approved) [emulation; network; qemu; uart]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_2">REQ_NETIF_TUNNEL_2: Packet Encapsulation (approved) [emulation; protocol]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_3">REQ_NETIF_TUNNEL_3: Host-Side Bridge Script (approved) [emulation; tooling; host]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_4">REQ_NETIF_TUNNEL_4: DHCP Client Support (approved) [emulation; network; dhcp]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_5">REQ_NETIF_TUNNEL_5: Conditional Compilation (approved) [emulation; build]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_NF_1">REQ_NETIF_TUNNEL_NF_1: Tunnel Throughput (approved) [emulation; performance]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_NF_2">REQ_NETIF_TUNNEL_NF_2: Packet Loss Handling (approved) [emulation; reliability]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/netif-tunnel.html#REQ_NETIF_TUNNEL_DOC_1">REQ_NETIF_TUNNEL_DOC_1: Emulation Setup Documentation (approved) [emulation; documentation]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_HW_1">REQ_SYS_HW_1: ESP32 Hardware Platform (approved) [hardware; platform]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_NET_1">REQ_SYS_NET_1: WiFi Connectivity (approved) [network; wifi]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1: Web-based Configuration (approved) [web; configuration]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_CFG_1">REQ_SYS_CFG_1: Non-volatile Configuration Storage (approved) [storage; nvs; configuration]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_ARCH_1">REQ_SYS_ARCH_1: Component-based Architecture (approved) [architecture; modularity]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_REL_1">REQ_SYS_REL_1: Error Handling and Recovery (approved) [reliability; error-handling]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_PERF_1">REQ_SYS_PERF_1: Memory Management (approved) [performance; memory]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/system.html#REQ_SYS_SIM_1">REQ_SYS_SIM_1: Emulator Support (approved) [emulator; qemu; testing]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_1">REQ_WEB_1: Real-time Status Display (approved) [web; ui; monitoring]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_2">REQ_WEB_2: Configuration Interface (approved) [web; ui; configuration]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_3">REQ_WEB_3: WiFi Setup Interface (approved) [web; wifi; network]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_4">REQ_WEB_4: Web Interface Navigation (approved) [web; ui; navigation]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_5">REQ_WEB_5: HTTP Server Concurrency (approved) [web; performance]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_NF_1">REQ_WEB_NF_1: Web UI Responsiveness (approved) [web; performance; ux]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/web-server.html#REQ_WEB_NF_2">REQ_WEB_NF_2: Mobile-First Design (approved) [web; ui; mobile]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1: Layered Configuration Architecture (approved) [architecture; config]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1: Configuration Data Flow (approved) [architecture; dataflow]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1: NVS Storage Format (approved) [data-structure; storage]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1: Runtime Configuration Structure (approved) [data-structure; runtime]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1: Configuration Parameter Identifiers (approved) [api; parameter]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1: Configuration API Interface (approved) [api; interface]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1: Parameter Validation Rules (approved) [validation; api]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1: Configuration REST API (approved) [web; api; rest]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1: Real-time Configuration Updates (approved) [web; ui; lifecycle]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1: Web Settings Page (approved) [web; ui; html]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1: NVS Error Recovery Strategy (approved) [error-handling; nvs]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1: Configuration Logging (approved) [logging; debugging]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_LAYERS_1">SPEC_ARCH_LAYERS_1: ESP32 Template Layered Architecture (approved) [architecture; layering]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_CONFIG_1">SPEC_ARCH_CONFIG_1: Configuration Manager Component Design (approved) [component; config]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_WEB_1">SPEC_ARCH_WEB_1: Web Server Component Design (approved) [component; web; network]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_CERT_1">SPEC_ARCH_CERT_1: Certificate Handler Component Design (draft) [component; security]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_NETIF_1">SPEC_ARCH_NETIF_1: Network Tunnel Component Design (approved) [component; qemu; network]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_COMM_1">SPEC_ARCH_COMM_1: Component Communication Pattern (approved) [dataflow; communication]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_CONFIG_FLOW_1">SPEC_ARCH_CONFIG_FLOW_1: Configuration Data Flow (approved) [dataflow; config]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_WIFI_1">SPEC_ARCH_WIFI_1: WiFi Manager Design Details (approved) [network; wifi]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_HTTP_1">SPEC_ARCH_HTTP_1: HTTP Server Architecture Details (approved) [network; http; web]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_QEMU_1">SPEC_ARCH_QEMU_1: QEMU Hardware Abstraction (approved) [qemu; emulation]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_QEMU_BUILD_1">SPEC_ARCH_QEMU_BUILD_1: QEMU Component Selection (approved) [qemu; build]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_TASKS_1">SPEC_ARCH_TASKS_1: FreeRTOS Task Organization (approved) [threading; rtos]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_MEMORY_1">SPEC_ARCH_MEMORY_1: Memory Management Strategy (approved) [memory; performance]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_BUILD_1">SPEC_ARCH_BUILD_1: ESP-IDF CMake Integration (approved) [build; cmake]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_FLASH_1">SPEC_ARCH_FLASH_1: Flash Memory Configuration (approved) [flash; memory]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_CODESPACES_1">SPEC_ARCH_CODESPACES_1: GitHub Codespaces Integration (approved) [development; devcontainer]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1: Logging and Diagnostics Strategy (approved) [logging; diagnostics; debugging]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1: Error Recovery and Reset Strategy (approved) [error-handling; reliability; reset]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_PERF_1">SPEC_ARCH_PERF_1: System Performance Requirements (approved) [performance; requirements]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_1">REQ_CFG_1: Centralized Configuration Header (approved) [config; architecture]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_2">REQ_CFG_2: Compile-Time Configuration Access (approved) [config; api]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_3">REQ_CFG_3: Runtime Configuration Structure (approved) [config; runtime]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_4">REQ_CFG_4: Persistent Configuration Storage (approved) [config; storage; nvs]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_5">REQ_CFG_5: Configuration Read API (approved) [config; api]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_6">REQ_CFG_6: Configuration Validation (approved) [config; validation]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_7">REQ_CFG_7: Configuration Web Interface (approved) [config; web; api]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_8">REQ_CFG_8: Configuration Save Operation (approved) [config; web; persistence]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_9">REQ_CFG_9: Configuration Reset/Reload (approved) [config; web; factory-reset]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_10">REQ_CFG_10: NVS Error Recovery (approved) [config; error-handling]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_11">REQ_CFG_11: Configuration Logging (approved) [config; logging; debugging]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_1: QEMU UART Network Bridge (approved) [emulation; network; qemu; uart]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_2">REQ_NETIF_TUNNEL_2: Packet Encapsulation (approved) [emulation; protocol]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_3">REQ_NETIF_TUNNEL_3: Host-Side Bridge Script (approved) [emulation; tooling; host]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_4">REQ_NETIF_TUNNEL_4: DHCP Client Support (approved) [emulation; network; dhcp]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_5">REQ_NETIF_TUNNEL_5: Conditional Compilation (approved) [emulation; build]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_NF_1">REQ_NETIF_TUNNEL_NF_1: Tunnel Throughput (approved) [emulation; performance]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_NF_2">REQ_NETIF_TUNNEL_NF_2: Packet Loss Handling (approved) [emulation; reliability]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_DOC_1">REQ_NETIF_TUNNEL_DOC_1: Emulation Setup Documentation (approved) [emulation; documentation]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_HW_1">REQ_SYS_HW_1: ESP32 Hardware Platform (approved) [hardware; platform]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_NET_1">REQ_SYS_NET_1: WiFi Connectivity (approved) [network; wifi]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1: Web-based Configuration (approved) [web; configuration]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_CFG_1">REQ_SYS_CFG_1: Non-volatile Configuration Storage (approved) [storage; nvs; configuration]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_ARCH_1">REQ_SYS_ARCH_1: Component-based Architecture (approved) [architecture; modularity]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_REL_1">REQ_SYS_REL_1: Error Handling and Recovery (approved) [reliability; error-handling]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_PERF_1">REQ_SYS_PERF_1: Memory Management (approved) [performance; memory]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_SIM_1">REQ_SYS_SIM_1: Emulator Support (approved) [emulator; qemu; testing]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_1">REQ_WEB_1: Real-time Status Display (approved) [web; ui; monitoring]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_2">REQ_WEB_2: Configuration Interface (approved) [web; ui; configuration]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_3">REQ_WEB_3: WiFi Setup Interface (approved) [web; wifi; network]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_4">REQ_WEB_4: Web Interface Navigation (approved) [web; ui; navigation]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_5">REQ_WEB_5: HTTP Server Concurrency (approved) [web; performance]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_NF_1">REQ_WEB_NF_1: Web UI Responsiveness (approved) [web; performance; ux]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_NF_2">REQ_WEB_NF_2: Mobile-First Design (approved) [web; ui; mobile]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1: Layered Configuration Architecture (approved) [architecture; config]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1: Configuration Data Flow (approved) [architecture; dataflow]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1: NVS Storage Format (approved) [data-structure; storage]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1: Runtime Configuration Structure (approved) [data-structure; runtime]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1: Configuration Parameter Identifiers (approved) [api; parameter]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1: Configuration API Interface (approved) [api; interface]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1: Parameter Validation Rules (approved) [validation; api]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1: Configuration REST API (approved) [web; api; rest]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1: Real-time Configuration Updates (approved) [web; ui; lifecycle]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1: Web Settings Page (approved) [web; ui; html]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1: NVS Error Recovery Strategy (approved) [error-handling; nvs]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1: Configuration Logging (approved) [logging; debugging]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_LAYERS_1">SPEC_ARCH_LAYERS_1: ESP32 Template Layered Architecture (approved) [architecture; layering]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_CONFIG_1">SPEC_ARCH_CONFIG_1: Configuration Manager Component Design (approved) [component; config]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_WEB_1">SPEC_ARCH_WEB_1: Web Server Component Design (approved) [component; web; network]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_CERT_1">SPEC_ARCH_CERT_1: Certificate Handler Component Design (draft) [component; security]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_NETIF_1">SPEC_ARCH_NETIF_1: Network Tunnel Component Design (approved) [component; qemu; network]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_COMM_1">SPEC_ARCH_COMM_1: Component Communication Pattern (approved) [dataflow; communication]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_CONFIG_FLOW_1">SPEC_ARCH_CONFIG_FLOW_1: Configuration Data Flow (approved) [dataflow; config]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_WIFI_1">SPEC_ARCH_WIFI_1: WiFi Manager Design Details (approved) [network; wifi]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_HTTP_1">SPEC_ARCH_HTTP_1: HTTP Server Architecture Details (approved) [network; http; web]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_QEMU_1">SPEC_ARCH_QEMU_1: QEMU Hardware Abstraction (approved) [qemu; emulation]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_QEMU_BUILD_1">SPEC_ARCH_QEMU_BUILD_1: QEMU Component Selection (approved) [qemu; build]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_TASKS_1">SPEC_ARCH_TASKS_1: FreeRTOS Task Organization (approved) [threading; rtos]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_MEMORY_1">SPEC_ARCH_MEMORY_1: Memory Management Strategy (approved) [memory; performance]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_BUILD_1">SPEC_ARCH_BUILD_1: ESP-IDF CMake Integration (approved) [build; cmake]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_FLASH_1">SPEC_ARCH_FLASH_1: Flash Memory Configuration (approved) [flash; memory]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_CODESPACES_1">SPEC_ARCH_CODESPACES_1: GitHub Codespaces Integration (approved) [development; devcontainer]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1: Logging and Diagnostics Strategy (approved) [logging; diagnostics; debugging]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1: Error Recovery and Reset Strategy (approved) [error-handling; reliability; reset]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_PERF_1">SPEC_ARCH_PERF_1: System Performance Requirements (approved) [performance; requirements]</a></div>
 </div>
 <div class="toctree-wrapper compound">
 </div>
