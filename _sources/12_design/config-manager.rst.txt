@@ -118,32 +118,120 @@ Data Structure Design
    :status: approved
    :tags: data-structure, runtime
 
-   **Description:** Runtime configuration structure mirrors NVS layout but uses application-friendly types.
+   **Description:** Runtime configuration structure holds actively used parameters in RAM for fast access.
 
-   **Structure Definition:**
+   **Current Implementation (Template Scope):**
+
+   The template currently uses configuration for **WiFi credentials only**:
 
    .. code-block:: c
 
       typedef struct {
-          // Application uses native types for convenience
-          float distance_min_cm;        // Converted from mm storage
-          float distance_max_cm;        // Converted from mm storage
-          uint16_t measurement_interval_ms;
-          uint32_t sensor_timeout_ms;
-          float smoothing_alpha;        // Converted from fixed-point
+          // WiFi Credentials (Required for network connectivity)
+          char wifi_ssid[33];           // WiFi network name (IEEE 802.11 max 32 chars)
+          char wifi_password[65];       // WiFi password (WPA max 64 chars)
           
-          uint8_t led_count;
-          uint8_t led_brightness;
-          
-          // ... other component configurations ...
+          // Metadata
+          uint32_t config_version;      // Schema version for compatibility
+          uint32_t save_count;          // Number of saves (statistics)
           
       } system_config_t;
 
-   **Type Conversion:** NVS uses integers/fixed-point for efficiency; runtime uses floats for convenience.
+   **WiFi Module Configuration:**
+
+   Other WiFi parameters (AP channel, max connections, STA retries, timeouts) are configured in the WiFi module header file (`main/components/web_server/wifi_manager.h`):
+
+   .. code-block:: c
+
+      // In wifi_manager.h - compile-time defaults
+      #define WIFI_AP_CHANNEL           6
+      #define WIFI_AP_MAX_CONN          4
+      #define WIFI_STA_MAX_RETRY        5
+      #define WIFI_STA_TIMEOUT_MS       10000
+
+   **Storage Philosophy:**
+
+   - **NVS Storage** (Runtime configuration): Only user-configurable WiFi credentials (SSID, password)
+   - **Compile-Time Headers**: All hardware defaults and WiFi parameters defined in component headers
+   - **Rationale**: Minimizes NVS usage, keeps configuration truly minimal and focused
+
+   **Application-Specific Parameters:**
+
+   When forking the template for your project, define application parameters in your component headers, not in NVS:
+
+   .. code-block:: c
+
+      // In my_component/include/my_component.h (NOT in system_config_t)
+      #define SENSOR_RANGE_MIN_MM        50
+      #define SENSOR_RANGE_MAX_MM        400
+      #define LED_COUNT                  30
+      #define LED_BRIGHTNESS_DEFAULT     200
+      #define MEASUREMENT_INTERVAL_MS    100
+
+   If you need runtime-configurable application parameters (rare), extend `system_config_t` **only for those specific parameters**, not for every possible setting.
+
+   **Design Guidelines for Extensions:**
+
+   1. **Keep WiFi settings in NVS** - Required for user configuration
+   2. **Define hardware parameters in headers** - Reduces NVS bloat
+   3. **Only add to NVS if truly dynamic** - User needs to change it after deployment
+   4. **Use #define for constants** - Compile-time optimization
+   5. **Increment config_version** - Only if you add runtime-configurable parameters to struct
+
+   **Reset Requirement After Parameter Changes:**
+
+   ⚠️ **Important**: Configuration changes only take effect after system reset.
+
+   - Changes written to runtime config are visible immediately (for API feedback)
+   - Changes persisted to NVS via ``config_save_to_nvs()`` trigger automatic reset
+   - Reset ensures all components see new configuration on boot
+   - Dynamic reconfiguration is not supported (complexity not justified for IoT devices)
+
+   **Design Rationale:** Reset-after-save prevents inconsistent state where some components use old config while others use new. Simpler than hot-reloading configuration.
+
+   **Type Conversion Strategy:**
+
+   - **NVS Storage**: Use fixed-width integers (uint8_t, uint16_t, uint32_t)
+   - **Runtime Use**: Convert to application-friendly types as needed
+   - **Example**: Store channel as uint8_t, validate as 1-13 in setter
+
+   **Performance Characteristics:**
+
+   - Setter Validation: <1ms (length check, range validation)
+   - Full Validation: <5ms (all parameters checked)
+   - NVS Write: <50ms, then reset within 2 seconds
+   - Memory Overhead: Structure size < 128 bytes (typical)
 
 
 API Design
 ----------
+
+.. spec:: Configuration Parameter Identifiers
+   :id: SPEC_CFG_PARAM_1
+   :links: REQ_CFG_5
+   :status: approved
+   :tags: api, parameter
+
+   **Description:** Configuration parameters identified by enum for type-safe access.
+
+   **Parameter Enumeration:**
+
+   .. code-block:: c
+
+      typedef enum {
+          // WiFi Credentials
+          CONFIG_WIFI_SSID,
+          CONFIG_WIFI_PASSWORD,
+          
+          // Extension point for application parameters
+          // CONFIG_APP_PARAM_1,
+          // CONFIG_APP_PARAM_2,
+          
+          CONFIG_PARAM_COUNT  // Sentinel for bounds checking
+      } config_param_id_t;
+
+   **Design Rationale:** Enum-based parameter identification enables compile-time type checking and prevents parameter ID collisions when extending configuration.
+
 
 .. spec:: Configuration API Interface
    :id: SPEC_CFG_API_1
@@ -151,7 +239,7 @@ API Design
    :status: approved
    :tags: api, interface
 
-   **Description:** Public API provides thread-safe access to configuration with validation.
+   **Description:** Minimal, type-safe API for configuration management supporting uint16 and string types only.
 
    **Core API Functions:**
 
@@ -159,27 +247,58 @@ API Design
 
       // Lifecycle management
       esp_err_t config_init(void);
-      esp_err_t config_load_from_nvs(void);
-      esp_err_t config_save_to_nvs(void);
+      esp_err_t config_load_from_nvs(system_config_t* config);
+      esp_err_t config_save_to_nvs(const system_config_t* config);
       esp_err_t config_factory_reset(void);
 
-      // Individual getters (thread-safe, no blocking)
-      uint16_t config_get_measurement_interval_ms(void);
-      uint8_t config_get_led_count(void);
-      uint8_t config_get_led_brightness(void);
+      // Type-safe parameter setters (validation at write-time)
+      esp_err_t config_set_uint16(config_param_id_t param, uint16_t value);
+      esp_err_t config_set_string(config_param_id_t param, const char* value);
 
-      // Individual setters (with validation)
-      esp_err_t config_set_measurement_interval(uint16_t interval_ms);
-      esp_err_t config_set_led_count(uint8_t count);
-      esp_err_t config_set_led_brightness(uint8_t brightness);
+      // Type-safe parameter getters (read from runtime config)
+      esp_err_t config_get_uint16(config_param_id_t param, uint16_t* value);
+      esp_err_t config_get_string(config_param_id_t param, char* value, size_t max_len);
 
-      // Bulk operations
-      esp_err_t config_get_all(system_config_t* config);
-      esp_err_t config_set_all(const system_config_t* config);
-      bool config_validate_all(const system_config_t* config, 
-                               char* error_msg, size_t msg_len);
+      // Bulk validation (before NVS persistence)
+      esp_err_t config_validate(const system_config_t* config, 
+                                char* error_msg, size_t msg_len);
+
+   **Typical Usage Pattern:**
+
+   .. code-block:: c
+
+      // Application updates parameters with immediate validation
+      if (config_set_string(CONFIG_WIFI_SSID, user_input) != ESP_OK) {
+          ESP_LOGE(TAG, "SSID invalid");
+          return;
+      }
+      
+      if (config_set_string(CONFIG_WIFI_PASSWORD, password_input) != ESP_OK) {
+          ESP_LOGE(TAG, "Password invalid");
+          return;
+      }
+      
+      // Validate complete configuration before saving
+      char error_msg[128];
+      if (config_validate(&runtime_config, error_msg, sizeof(error_msg)) != ESP_OK) {
+          ESP_LOGE(TAG, "Configuration invalid: %s", error_msg);
+          return;
+      }
+      
+      // Save to NVS (system reset follows)
+      config_save_to_nvs(&runtime_config);
 
    **Thread Safety:** All functions protected by FreeRTOS mutex with configurable timeout.
+
+   **Important Note:** Parameter changes do not take effect until system restarts. Dynamic parameter application is not guaranteed. This is by design: validation at setter time prevents invalid states from propagating into NVS.
+
+   **Design Rationale:**
+
+   - **Type Safety**: Enum + typed setters prevent type confusion and buffer overflows
+   - **Validation at Gate**: String parameters length-checked immediately before storage
+   - **Simple & Predictable**: Two type-safe functions instead of per-parameter getter/setter explosion
+   - **Pragmatic for Embedded C**: Minimal abstraction, direct structure access with safety guardrails
+   - **Easy to Extend**: Add new parameters to enum and update validation rules only
 
 
 .. spec:: Parameter Validation Rules
@@ -188,20 +307,47 @@ API Design
    :status: approved
    :tags: validation, api
 
-   **Description:** All configuration parameters validated against defined ranges before acceptance.
+   **Description:** Parameters validated at two points: immediate setter validation and pre-save bulk validation.
 
-   **Validation Rules:**
+   **Validation Strategy:**
 
-   - distance_min: 5.0 to 100.0 cm
-   - distance_max: 20.0 to 400.0 cm, must be > distance_min
-   - measurement_interval: 50 to 1000 ms
-   - sensor_timeout: 100 to 5000 ms
-   - led_count: 1 to 60
-   - led_brightness: 10 to 255
+   1. **Setter-Time Validation** (Immediate):
 
-   **Error Handling:** Invalid values return ESP_ERR_INVALID_ARG with descriptive error message.
+      .. code-block:: c
 
-   **Validation Timing:** Performed before NVS write to prevent persisting invalid state.
+         config_set_string(CONFIG_WIFI_SSID, value)
+         // Validates: length 1-32 characters
+
+         config_set_string(CONFIG_WIFI_PASSWORD, value)
+         // Validates: length 0-63 characters (0 = open network)
+
+      Returns ESP_ERR_INVALID_ARG on validation failure, preventing invalid values in runtime config.
+
+   2. **Pre-Save Bulk Validation** (Before NVS):
+
+      .. code-block:: c
+
+         config_validate(&config, error_msg, sizeof(error_msg))
+         // Validates entire config for semantic consistency
+         // Example: check WiFi AP max connections is within device capabilities
+
+   **WiFi Parameter Constraints:**
+
+   - ``CONFIG_WIFI_SSID``: 1-32 characters (IEEE 802.11 max)
+   - ``CONFIG_WIFI_PASSWORD``: 0-63 characters (WPA2 max, 0 = open network)
+
+   **Design Rationale:**
+
+   - **Early Rejection**: Invalid strings rejected at setter, preventing buffer corruption
+   - **Simple Rules**: Type constraints only (length for strings)
+   - **WiFi Defaults**: Channel, max connections, retry, and timeout configured in `wifi_manager.h`
+   - **Extension Pattern**: When adding application parameters, define min/max in parameter table
+
+   **Error Handling:** 
+
+   - Setter validation: Return ``ESP_ERR_INVALID_ARG`` immediately
+   - Pre-save validation: Return error message describing what's invalid
+   - All errors logged with ``ESP_LOGE`` for debugging
 
 
 Web Interface Design
@@ -219,50 +365,125 @@ Web Interface Design
 
    .. code-block:: text
 
-      GET  /api/config           -> Current configuration (JSON)
-      POST /api/config           -> Update configuration (JSON)
-      POST /api/config/preview   -> Temporary configuration preview
-      POST /api/config/apply     -> Apply previewed configuration
-      POST /api/config/reset     -> Factory reset
-      GET  /api/config/export    -> Export configuration (JSON download)
-      POST /api/config/import    -> Import configuration (JSON upload)
+      GET  /api/config              -> Current configuration (JSON)
+      POST /api/config/param        -> Set single parameter
+      POST /api/config/validate     -> Validate current config before save
+      POST /api/config/apply        -> Apply & save to NVS (triggers reset)
+      POST /api/config/reset        -> Factory reset
 
-   **JSON Format:**
+   **Set Parameter Request:**
+
+   .. code-block:: json
+
+      POST /api/config/param
+      Content-Type: application/json
+      
+      {
+        "param": "CONFIG_WIFI_SSID",
+        "type": "string",
+        "value": "my-network"
+      }
+
+   **Response on Error:**
 
    .. code-block:: json
 
       {
+        "status": "error",
+        "code": "INVALID_ARG",
+        "message": "SSID too long (max 32 characters)"
+      }
+
+   **Get Current Configuration:**
+
+   .. code-block:: json
+
+      GET /api/config
+      
+      Response:
+      {
         "version": "1.0",
         "timestamp": "2025-07-24T12:34:56Z",
         "config": {
-          "measurement_interval_ms": 100,
-          "led_count": 30,
-          "led_brightness": 128
+          "wifi_ssid": "my-network",
+          "wifi_password": "***"
         }
       }
 
-   **Authentication:** Currently open; future versions may add basic auth or API tokens.
+   **Apply & Save:**
+
+   .. code-block:: json
+
+      POST /api/config/apply
+      
+      Response (before reset):
+      {
+        "status": "ok",
+        "message": "Configuration saved, system resetting..."
+      }
+      
+      Then: System reset within 2 seconds
+
+   **Design Rationale:**
+
+   - **Generic Parameter Endpoint**: Single /api/config/param handles all parameter types
+   - **Type Information**: Client specifies type ("string", "uint16") for clarity
+   - **Pre-Save Validation**: /api/config/validate allows testing without reset
+   - **Simple & Extensible**: Adding new parameters requires only enum update, no new endpoints
+
+   **Authentication:** Currently open (for development). Production deployments should add basic auth or API tokens.
 
 
-.. spec:: Real-time Configuration Preview
+.. spec:: Real-time Configuration Updates
    :id: SPEC_CFG_PREVIEW_1
    :links: REQ_CFG_8
    :status: approved
-   :tags: web, ui, preview
+   :tags: web, ui, lifecycle
 
-   **Description:** Web interface supports temporary configuration preview with auto-revert.
+   **Description:** Configuration changes validated immediately but only persisted after system reset.
 
-   **Preview Workflow:**
+   **Parameter Update Lifecycle:**
 
-   1. User adjusts sliders on /settings page
-   2. JavaScript POSTs to /api/config/preview
-   3. ESP32 applies changes temporarily (30-second timeout)
-   4. User sees real-time visual feedback (e.g., LED brightness)
-   5. User clicks "Apply" to persist, or timeout auto-reverts
+   .. code-block:: text
 
-   **Safety Feature:** Preview timeout prevents bricking device if user navigates away.
+      1. User updates parameter via web UI
+         ↓
+      2. POST /api/config/param with {param, type, value}
+         ↓
+      3. config_set_string/uint16() → Setter validates THIS parameter
+         ↓
+      4. If invalid → error response with details → STOP
+      5. If valid → stored in runtime config (RAM)
+         ↓
+      6. config_validate() → validate entire config for consistency
+         ↓
+      7. If invalid → error response with details → rollback runtime state → STOP
+      8. If valid → response OK "Changes staged, ready to apply"
+         ↓
+      9. User can update more parameters (go to step 1) or click "Apply & Save"
+         ↓
+     10. POST /api/config/apply
+         ↓
+     11. config_save_to_nvs() persists to NVS
+         ↓
+     12. System reset (to apply changes consistently)
 
-   **Implementation:** Separate preview_config buffer, swapped with active config on apply.
+   **Key Design Decisions:**
+
+   1. **Immediate Post-Save Validation**: Every parameter change validated against entire config immediately (step 6-8). User gets feedback about which parameter caused issues, preventing confusion about what went wrong.
+
+   2. **Staged Changes Before Apply**: Parameters can be updated multiple times (steps 1-9). Each update validates individually and against full config. User sees all issues immediately.
+
+   3. **Separate Apply Step**: Actual NVS persistence happens only on explicit "Apply & Save" (steps 10-12). Allows user to review all staged changes before committing.
+
+   4. **Reset After Save**: Ensures all components see new configuration on boot and prevents inconsistent state.
+
+   **Design Rationale:** 
+   
+   - **Validation Transparency**: User always knows if their changes are valid and why they failed
+   - **Multiple Parameter Updates**: Common workflow (change WiFi SSID + password together)
+   - **Safety**: Reset-after-save is pragmatic for embedded systems vs. complex hot-reloading
+   - **Simple Implementation**: Two-phase approach (stage → apply) without dynamic reconfiguration
 
 
 .. spec:: Web Settings Page
@@ -335,7 +556,7 @@ Error Handling Design
 
    .. code-block:: text
 
-      [CONFIG] Parameter changed: led_brightness 128 -> 255 (user: web)
+      [CONFIG] Parameter changed: wifi password -> ****** (user: web)
       [CONFIG] Configuration saved to NVS (save_count: 42)
       [CONFIG] Factory reset performed (reason: user request)
 
@@ -349,69 +570,13 @@ Error Handling Design
    **Performance:** Logging does not block configuration operations.
 
 
-Implementation Strategy
------------------------
-
-.. spec:: Phased Implementation Approach
-   :id: SPEC_CFG_IMPL_1
-   :links: REQ_CFG_1, REQ_CFG_2, REQ_CFG_3, REQ_CFG_4, REQ_CFG_5
-   :status: approved
-   :tags: implementation, strategy
-
-   **Description:** Configuration system implemented in phases to manage complexity.
-
-   **Phase 1: Core Configuration (Milestone 1)**
-
-   - Implement config.h centralized header (REQ_CFG_1, REQ_CFG_2)
-   - Define system_config_t structure (REQ_CFG_3)
-   - Implement NVS storage layout (REQ_CFG_4)
-   - Create basic getter/setter API (REQ_CFG_5)
-
-   **Phase 2: Web Interface (Milestone 2)**
-
-   - Implement REST API endpoints (REQ_CFG_7)
-   - Create /settings HTML page (REQ_CFG_8)
-   - Add preview functionality (REQ_CFG_9)
-
-   **Phase 3: Advanced Features (Milestone 3)**
-
-   - Add parameter validation (REQ_CFG_6)
-   - Implement error recovery (REQ_CFG_10)
-   - Add comprehensive logging (REQ_CFG_11)
-
-   **Testing Strategy:** Each phase includes unit tests and integration tests before proceeding.
-
-
 Traceability
 ------------
 
-**Requirements Coverage:**
+All traceability is automatically generated by Sphinx-Needs based on the `:links:` attributes in each specification.
 
-This design specification implements the following requirements:
+.. needtable::
+   :filter: is_ongoing and type == "spec" and "cfg" in id.lower()
 
-- :need:`REQ_CFG_1` - Centralized configuration
-- :need:`REQ_CFG_2` - Compile-time access
-- :need:`REQ_CFG_3` - Runtime configuration structure
-- :need:`REQ_CFG_4` - Persistent NVS storage
-- :need:`REQ_CFG_5` - Configuration read API
-- :need:`REQ_CFG_6` - Parameter validation
-- :need:`REQ_CFG_7` - Web interface API
-- :need:`REQ_CFG_8` - Configuration save operation
-- :need:`REQ_CFG_9` - Reset/reload functionality
-- :need:`REQ_CFG_10` - NVS error recovery
-- :need:`REQ_CFG_11` - Configuration logging
-
-**Design Specifications:**
-
-- SPEC_CFG_ARCH_1: Architecture design
-- SPEC_CFG_FLOW_1: Data flow design
-- SPEC_CFG_STORAGE_1: NVS storage format
-- SPEC_CFG_RUNTIME_1: Runtime data structure
-- SPEC_CFG_API_1: Public API interface
-- SPEC_CFG_VALIDATION_1: Validation rules
-- SPEC_CFG_WEB_API_1: REST API design
-- SPEC_CFG_PREVIEW_1: Preview functionality
-- SPEC_CFG_UI_1: Web UI design
-- SPEC_CFG_ERROR_1: Error recovery
-- SPEC_CFG_LOGGING_1: Logging design
-- SPEC_CFG_IMPL_1: Implementation strategy
+.. needflow:: spec
+   :filter: is_ongoing and type == "spec" and "cfg" in id.lower()

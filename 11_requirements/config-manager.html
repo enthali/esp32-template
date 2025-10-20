@@ -219,6 +219,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/known-issues.html">Known Issues and Limitations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
@@ -271,7 +272,7 @@
 </section>
 <section id="static-configuration-management">
 <h2>Static Configuration Management<a class="headerlink" href="#static-configuration-management" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-6cfa6689">
+<div class="need_container docutils container" id="SNCB-411d53f0">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -285,7 +286,7 @@
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="system.html#REQ_SYS_CFG_1" title="REQ_CFG_1">REQ_SYS_CFG_1</a></span></span></div>
-<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="#REQ_CFG_2" title="REQ_CFG_1">REQ_CFG_2</a>, <a class="reference internal" href="#REQ_CFG_3" title="REQ_CFG_1">REQ_CFG_3</a>, <a class="reference internal" href="#REQ_CFG_9" title="REQ_CFG_1">REQ_CFG_9</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ARCH_1" title="REQ_CFG_1">SPEC_CFG_ARCH_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1" title="REQ_CFG_1">SPEC_CFG_IMPL_1</a></span></span></div>
+<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="#REQ_CFG_2" title="REQ_CFG_1">REQ_CFG_2</a>, <a class="reference internal" href="#REQ_CFG_3" title="REQ_CFG_1">REQ_CFG_3</a>, <a class="reference internal" href="#REQ_CFG_9" title="REQ_CFG_1">REQ_CFG_9</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ARCH_1" title="REQ_CFG_1">SPEC_CFG_ARCH_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -304,7 +305,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-e560a8f1">
+<div class="need_container docutils container" id="SNCB-5432661f">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_2">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -318,7 +319,7 @@
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="#REQ_CFG_1" title="REQ_CFG_2">REQ_CFG_1</a></span></span></div>
-<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ARCH_1" title="REQ_CFG_2">SPEC_CFG_ARCH_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1" title="REQ_CFG_2">SPEC_CFG_IMPL_1</a></span></span></div>
+<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ARCH_1" title="REQ_CFG_2">SPEC_CFG_ARCH_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -340,7 +341,7 @@
 </section>
 <section id="runtime-configuration-management">
 <h2>Runtime Configuration Management<a class="headerlink" href="#runtime-configuration-management" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-b730664c">
+<div class="need_container docutils container" id="SNCB-5903dbff">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_3">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -354,7 +355,7 @@
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="#REQ_CFG_1" title="REQ_CFG_3">REQ_CFG_1</a>, <a class="reference internal" href="system.html#REQ_SYS_CFG_1" title="REQ_CFG_3">REQ_SYS_CFG_1</a></span></span></div>
-<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="#REQ_CFG_4" title="REQ_CFG_3">REQ_CFG_4</a>, <a class="reference internal" href="#REQ_CFG_6" title="REQ_CFG_3">REQ_CFG_6</a>, <a class="reference internal" href="web-server.html#REQ_WEB_2" title="REQ_CFG_3">REQ_WEB_2</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1" title="REQ_CFG_3">SPEC_CFG_FLOW_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_STORAGE_1" title="REQ_CFG_3">SPEC_CFG_STORAGE_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_RUNTIME_1" title="REQ_CFG_3">SPEC_CFG_RUNTIME_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1" title="REQ_CFG_3">SPEC_CFG_IMPL_1</a></span></span></div>
+<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="#REQ_CFG_4" title="REQ_CFG_3">REQ_CFG_4</a>, <a class="reference internal" href="#REQ_CFG_6" title="REQ_CFG_3">REQ_CFG_6</a>, <a class="reference internal" href="web-server.html#REQ_WEB_2" title="REQ_CFG_3">REQ_WEB_2</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1" title="REQ_CFG_3">SPEC_CFG_FLOW_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_STORAGE_1" title="REQ_CFG_3">SPEC_CFG_STORAGE_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_RUNTIME_1" title="REQ_CFG_3">SPEC_CFG_RUNTIME_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -373,7 +374,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-5a8f56c7">
+<div class="need_container docutils container" id="SNCB-ed0066b3">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_4">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -387,7 +388,7 @@
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="#REQ_CFG_3" title="REQ_CFG_4">REQ_CFG_3</a>, <a class="reference internal" href="system.html#REQ_SYS_CFG_1" title="REQ_CFG_4">REQ_SYS_CFG_1</a></span></span></div>
-<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="#REQ_CFG_5" title="REQ_CFG_4">REQ_CFG_5</a>, <a class="reference internal" href="#REQ_CFG_8" title="REQ_CFG_4">REQ_CFG_8</a>, <a class="reference internal" href="#REQ_CFG_10" title="REQ_CFG_4">REQ_CFG_10</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1" title="REQ_CFG_4">SPEC_CFG_FLOW_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_STORAGE_1" title="REQ_CFG_4">SPEC_CFG_STORAGE_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1" title="REQ_CFG_4">SPEC_CFG_IMPL_1</a></span></span></div>
+<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="#REQ_CFG_5" title="REQ_CFG_4">REQ_CFG_5</a>, <a class="reference internal" href="#REQ_CFG_8" title="REQ_CFG_4">REQ_CFG_8</a>, <a class="reference internal" href="#REQ_CFG_10" title="REQ_CFG_4">REQ_CFG_10</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1" title="REQ_CFG_4">SPEC_CFG_FLOW_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_STORAGE_1" title="REQ_CFG_4">SPEC_CFG_STORAGE_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -409,7 +410,7 @@
 </section>
 <section id="configuration-api">
 <h2>Configuration API<a class="headerlink" href="#configuration-api" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-4e4f2761">
+<div class="need_container docutils container" id="SNCB-6e3d568f">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_5">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -423,7 +424,7 @@
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="#REQ_CFG_4" title="REQ_CFG_5">REQ_CFG_4</a></span></span></div>
-<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="#REQ_CFG_7" title="REQ_CFG_5">REQ_CFG_7</a>, <a class="reference internal" href="#REQ_CFG_11" title="REQ_CFG_5">REQ_CFG_11</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1" title="REQ_CFG_5">SPEC_CFG_FLOW_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_API_1" title="REQ_CFG_5">SPEC_CFG_API_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1" title="REQ_CFG_5">SPEC_CFG_IMPL_1</a></span></span></div>
+<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="#REQ_CFG_7" title="REQ_CFG_5">REQ_CFG_7</a>, <a class="reference internal" href="#REQ_CFG_11" title="REQ_CFG_5">REQ_CFG_11</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1" title="REQ_CFG_5">SPEC_CFG_FLOW_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_PARAM_1" title="REQ_CFG_5">SPEC_CFG_PARAM_1</a>, <a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_API_1" title="REQ_CFG_5">SPEC_CFG_API_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -442,7 +443,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-d5a5c864">
+<div class="need_container docutils container" id="SNCB-043492d0">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_6">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -475,7 +476,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-6b0106ce">
+<div class="need_container docutils container" id="SNCB-7d4e7d6f">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_7">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -508,7 +509,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-46b0966d">
+<div class="need_container docutils container" id="SNCB-176d8f83">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_8">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -542,7 +543,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-66cacb4c">
+<div class="need_container docutils container" id="SNCB-4799d309">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_9">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -579,7 +580,7 @@
 </section>
 <section id="configuration-error-handling">
 <h2>Configuration Error Handling<a class="headerlink" href="#configuration-error-handling" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-01affc7b">
+<div class="need_container docutils container" id="SNCB-f571b8a2">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_10">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -612,7 +613,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-9c55d367">
+<div class="need_container docutils container" id="SNCB-f63f2c33">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_CFG_11">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">

@@ -219,6 +219,7 @@
 <li class="toctree-l2"><a class="reference internal" href="90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="90_guides/debugging.html">Debugging Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/known-issues.html">Known Issues and Limitations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="31_traceability/index.html">Traceability</a></li>
@@ -351,14 +352,14 @@
 <div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1: Configuration Data Flow (approved) [architecture; dataflow]</a></div>
 <div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1: NVS Storage Format (approved) [data-structure; storage]</a></div>
 <div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1: Runtime Configuration Structure (approved) [data-structure; runtime]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1: Configuration Parameter Identifiers (approved) [api; parameter]</a></div>
 <div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1: Configuration API Interface (approved) [api; interface]</a></div>
 <div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1: Parameter Validation Rules (approved) [validation; api]</a></div>
 <div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1: Configuration REST API (approved) [web; api; rest]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1: Real-time Configuration Preview (approved) [web; ui; preview]</a></div>
+<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1: Real-time Configuration Updates (approved) [web; ui; lifecycle]</a></div>
 <div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1: Web Settings Page (approved) [web; ui; html]</a></div>
 <div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1: NVS Error Recovery Strategy (approved) [error-handling; nvs]</a></div>
 <div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1: Configuration Logging (approved) [logging; debugging]</a></div>
-<div class="line"><a class="reference external" href="12_design/config-manager.html#SPEC_CFG_IMPL_1">SPEC_CFG_IMPL_1: Phased Implementation Approach (approved) [implementation; strategy]</a></div>
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_LAYERS_1">SPEC_ARCH_LAYERS_1: ESP32 Template Layered Architecture (approved) [architecture; layering]</a></div>
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_CONFIG_1">SPEC_ARCH_CONFIG_1: Configuration Manager Component Design (approved) [component; config]</a></div>
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_WEB_1">SPEC_ARCH_WEB_1: Web Server Component Design (approved) [component; web; network]</a></div>
@@ -366,7 +367,6 @@
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_NETIF_1">SPEC_ARCH_NETIF_1: Network Tunnel Component Design (approved) [component; qemu; network]</a></div>
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_COMM_1">SPEC_ARCH_COMM_1: Component Communication Pattern (approved) [dataflow; communication]</a></div>
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_CONFIG_FLOW_1">SPEC_ARCH_CONFIG_FLOW_1: Configuration Data Flow (approved) [dataflow; config]</a></div>
-<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_NETWORK_FLOW_1">SPEC_ARCH_NETWORK_FLOW_1: Network Data Flow (approved) [dataflow; network]</a></div>
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_WIFI_1">SPEC_ARCH_WIFI_1: WiFi Manager Design Details (approved) [network; wifi]</a></div>
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_HTTP_1">SPEC_ARCH_HTTP_1: HTTP Server Architecture Details (approved) [network; http; web]</a></div>
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_QEMU_1">SPEC_ARCH_QEMU_1: QEMU Hardware Abstraction (approved) [qemu; emulation]</a></div>
@@ -376,20 +376,12 @@
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_BUILD_1">SPEC_ARCH_BUILD_1: ESP-IDF CMake Integration (approved) [build; cmake]</a></div>
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_FLASH_1">SPEC_ARCH_FLASH_1: Flash Memory Configuration (approved) [flash; memory]</a></div>
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_CODESPACES_1">SPEC_ARCH_CODESPACES_1: GitHub Codespaces Integration (approved) [development; devcontainer]</a></div>
+<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1: Logging and Diagnostics Strategy (approved) [logging; diagnostics; debugging]</a></div>
+<div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1: Error Recovery and Reset Strategy (approved) [error-handling; reliability; reset]</a></div>
 <div class="line"><a class="reference external" href="12_design/high-level-architecture.html#SPEC_ARCH_PERF_1">SPEC_ARCH_PERF_1: System Performance Requirements (approved) [performance; requirements]</a></div>
 </div>
-</section>
-<section id="navigation">
-<h1>Navigation<a class="headerlink" href="#navigation" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
 </section>
 
         </article>
@@ -447,8 +439,6 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#all-requirements-overview">All Requirements Overview</a></li>
-<li><a class="reference internal" href="#navigation">Navigation</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
           </div>

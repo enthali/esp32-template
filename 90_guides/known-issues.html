@@ -3,10 +3,10 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="QEMU Emulator Guide" href="qemu-emulator.html"><link rel="prev" title="Development Guide" href="index.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Traceability" href="../31_traceability/index.html"><link rel="prev" title="QEMU Network Internals" href="qemu-network-internals.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
-        <title>Development Container Setup - ESP32 Template Documentation</title>
+        <title>Known Issues and Limitations - ESP32 Template Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
@@ -215,11 +215,11 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devcontainer.html">Development Container Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="qemu-emulator.html">QEMU Emulator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="debugging.html">Debugging Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="qemu-network-internals.html">QEMU Network Internals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="known-issues.html">Known Issues and Limitations</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Known Issues and Limitations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
@@ -245,7 +245,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/90_guides/devcontainer.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/90_guides/known-issues.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -263,133 +263,119 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="development-container-setup">
-<h1>Development Container Setup<a class="headerlink" href="#development-container-setup" title="Link to this heading">¶</a></h1>
-<p>This template uses containerized development with VS Code Dev Containers and GitHub Codespaces for consistent ESP-IDF development environment.</p>
-<section id="development-options">
-<h2>Development Options<a class="headerlink" href="#development-options" title="Link to this heading">¶</a></h2>
-<section id="recommended-github-codespaces-cloud">
-<h3>Recommended: GitHub Codespaces (Cloud)<a class="headerlink" href="#recommended-github-codespaces-cloud" title="Link to this heading">¶</a></h3>
-<p>✅ No local setup required - works entirely in browser</p>
-<p>✅ Pre-configured ESP-IDF v5.4.1 environment ready instantly</p>
-<p>✅ USB device access through browser serial interface</p>
-<p>✅ Perfect for trying the template before committing to hardware</p>
-</section>
-<section id="alternative-local-dev-container">
-<h3>Alternative: Local Dev Container<a class="headerlink" href="#alternative-local-dev-container" title="Link to this heading">¶</a></h3>
-<ul class="simple">
-<li><p>Uses Docker container with ESP-IDF v5.4.1 pre-installed</p></li>
-<li><p>Requires Docker Desktop and VS Code with Dev Containers extension</p></li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This template focuses on Codespaces workflow. Local dev container support is provided but not officially supported.</p>
-</div>
-</section>
-</section>
-<section id="using-the-dev-container">
-<h2>Using the Dev Container<a class="headerlink" href="#using-the-dev-container" title="Link to this heading">¶</a></h2>
-<section id="in-github-codespaces">
-<h3>In GitHub Codespaces<a class="headerlink" href="#in-github-codespaces" title="Link to this heading">¶</a></h3>
+          <section id="known-issues-and-limitations">
+<h1>Known Issues and Limitations<a class="headerlink" href="#known-issues-and-limitations" title="Link to this heading">¶</a></h1>
+<p>This document tracks known issues, limitations, and areas requiring improvement in the ESP32 Template.</p>
+<section id="component-initialization-order">
+<h2>Component Initialization Order<a class="headerlink" href="#component-initialization-order" title="Link to this heading">¶</a></h2>
+<p><strong>Issue:</strong> Component initialization sequence has implicit dependencies that are not formally documented.</p>
+<p><strong>Current Behavior:</strong></p>
+<p>The initialization order in <code class="docutils literal notranslate"><span class="pre">main.c</span></code> follows this sequence:</p>
 <ol class="arabic simple">
-<li><p>Go to your GitHub repository</p></li>
-<li><p>Click “<strong>Code</strong>” → “<strong>Codespaces</strong>” → “<strong>Create codespace</strong>”</p></li>
-<li><p>Container will automatically build with ESP-IDF ready</p></li>
-<li><p>Extensions (ESP-IDF, ESP-IDF Web) will be pre-installed</p></li>
+<li><p>NVS Flash initialization</p></li>
+<li><p>Configuration Manager</p></li>
+<li><p>Web Server (includes WiFi Manager)</p></li>
+<li><p>QEMU Network Tunnel (if emulator build)</p></li>
 </ol>
-</section>
-<section id="local-development-with-docker">
-<h3>Local Development with Docker<a class="headerlink" href="#local-development-with-docker" title="Link to this heading">¶</a></h3>
+<p><strong>Problem:</strong></p>
+<ul class="simple">
+<li><p>Web server depends on NVS being initialized (for WiFi credentials)</p></li>
+<li><p>Configuration manager depends on NVS</p></li>
+<li><p>Network tunnel depends on lwIP stack being initialized</p></li>
+<li><p>Dependencies are implicit in code, not enforced by build system</p></li>
+</ul>
+<p><strong>Impact:</strong></p>
+<ul class="simple">
+<li><p>Easy to break initialization order when modifying <code class="docutils literal notranslate"><span class="pre">main.c</span></code></p></li>
+<li><p>New developers may not understand dependencies</p></li>
+<li><p>Refactoring requires careful analysis</p></li>
+</ul>
+<p><strong>Potential Solutions:</strong></p>
 <ol class="arabic simple">
-<li><p>Ensure Docker Desktop is running</p></li>
-<li><p>Open the project in VS Code</p></li>
-<li><p>VS Code will prompt: “Reopen in Container” → Click <strong>Yes</strong></p></li>
-<li><p>Container builds automatically with ESP-IDF environment</p></li>
+<li><p><strong>Explicit Dependency Graph</strong>: Document component dependencies in architecture design</p></li>
+<li><p><strong>CMake Dependency Checking</strong>: Use <code class="docutils literal notranslate"><span class="pre">idf_component_register(REQUIRES</span> <span class="pre">...)</span></code> more strictly</p></li>
+<li><p><strong>Runtime Validation</strong>: Add assert checks for prerequisite initialization</p></li>
+<li><p><strong>Init Manager Pattern</strong>: Create initialization manager that enforces order</p></li>
 </ol>
+<p><strong>Status:</strong> Open - needs architecture discussion</p>
+<p><strong>Workaround:</strong> Follow existing <code class="docutils literal notranslate"><span class="pre">main.c</span></code> initialization sequence carefully</p>
 </section>
-</section>
-<section id="container-features">
-<h2>Container Features<a class="headerlink" href="#container-features" title="Link to this heading">¶</a></h2>
+<section id="https-in-qemu-emulation">
+<h2>HTTPS in QEMU Emulation<a class="headerlink" href="#https-in-qemu-emulation" title="Link to this heading">¶</a></h2>
+<p><strong>Issue:</strong> HTTPS server does not work correctly in QEMU emulation.</p>
+<p><strong>Current Behavior:</strong></p>
 <ul class="simple">
-<li><p><strong>ESP-IDF v5.4.1</strong>: Latest stable version pre-configured</p></li>
-<li><p><strong>Pre-configured VS Code</strong>: ESP-IDF extension settings ready</p></li>
-<li><p><strong>Web Serial Support</strong>: ESP-IDF Web extension for Codespaces flashing/monitoring</p></li>
-<li><p><strong>Port forwarding</strong>: HTTP server (80, 443) and development ports</p></li>
-<li><p><strong>Privileged mode</strong>: USB device access for flashing (local Docker only)</p></li>
+<li><p>HTTP works fine in QEMU via UART tunnel</p></li>
+<li><p>HTTPS connections fail or hang</p></li>
+<li><p>Certificate handler component builds successfully</p></li>
 </ul>
-</section>
-<section id="build-commands-in-container">
-<h2>Build Commands in Container<a class="headerlink" href="#build-commands-in-container" title="Link to this heading">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Standard ESP-IDF commands work directly</span>
-idf.py<span class="w"> </span>build
-idf.py<span class="w"> </span>flash<span class="w"> </span>monitor
-idf.py<span class="w"> </span>menuconfig
-
-<span class="c1"># Container has ESP-IDF environment pre-loaded</span>
-<span class="c1"># No need to run export.sh or install.sh</span>
-</pre></div>
-</div>
-</section>
-<section id="hardware-flashing">
-<h2>Hardware Flashing<a class="headerlink" href="#hardware-flashing" title="Link to this heading">¶</a></h2>
+<p><strong>Root Cause:</strong> Not yet fully diagnosed. Potential issues:</p>
 <ul class="simple">
-<li><p><strong>Local Docker</strong>: Hardware connected to host is accessible in container</p></li>
-<li><p><strong>Codespaces</strong>: Use ESP-IDF Web extension for WebSerial/WebUSB flashing</p></li>
-<li><p><strong>Mixed workflow</strong>: Build in container, flash on host if needed</p></li>
+<li><p>QEMU UART tunnel may not handle SSL/TLS traffic correctly</p></li>
+<li><p>Certificate validation issues in emulated environment</p></li>
+<li><p>mbedTLS configuration incompatibility</p></li>
 </ul>
-<section id="windows-usb-device-setup-local-dev-container-only">
-<h3>Windows USB Device Setup (Local Dev Container Only)<a class="headerlink" href="#windows-usb-device-setup-local-dev-container-only" title="Link to this heading">¶</a></h3>
-<p>For Windows users running the dev container locally (not needed for Codespaces):</p>
-<p><strong>Quick Setup</strong>: Run <code class="docutils literal notranslate"><span class="pre">tools/attach-esp32.ps1</span></code> as Administrator - script automatically finds and attaches your ESP32.</p>
-<p><strong>Manual Setup</strong> (if script doesn’t work):</p>
+<p><strong>Impact:</strong></p>
+<ul class="simple">
+<li><p>HTTPS testing requires real hardware</p></li>
+<li><p>Cannot fully test secure web interface in emulator</p></li>
+</ul>
+<p><strong>Status:</strong> Open - WIP</p>
+<p><strong>Workaround:</strong> Use HTTP for QEMU testing, test HTTPS on real ESP32 hardware</p>
+</section>
+<section id="dns-captive-portal">
+<h2>DNS Captive Portal<a class="headerlink" href="#dns-captive-portal" title="Link to this heading">¶</a></h2>
+<p><strong>Issue:</strong> DNS server for captive portal detection does not work reliably.</p>
+<p><strong>Current Behavior:</strong></p>
+<ul class="simple">
+<li><p>DNS server component exists but captive portal redirect is unreliable</p></li>
+<li><p>Some devices don’t trigger captive portal popup</p></li>
+<li><p>Manual navigation to <code class="docutils literal notranslate"><span class="pre">http://192.168.4.1</span></code> required in AP mode</p></li>
+</ul>
+<p><strong>Root Cause:</strong></p>
+<ul class="simple">
+<li><p>Platform-specific captive portal detection varies (iOS vs Android vs Windows)</p></li>
+<li><p>DNS redirect logic may not handle all query types correctly</p></li>
+</ul>
+<p><strong>Impact:</strong></p>
+<ul class="simple">
+<li><p>Reduced user experience in AP mode configuration</p></li>
+<li><p>Users must manually discover device IP address</p></li>
+</ul>
+<p><strong>Status:</strong> Open - low priority</p>
+<p><strong>Workaround:</strong> Document explicit IP address access in user documentation</p>
+</section>
+<section id="flash-memory-for-https">
+<h2>Flash Memory for HTTPS<a class="headerlink" href="#flash-memory-for-https" title="Link to this heading">¶</a></h2>
+<p><strong>Issue:</strong> 2MB flash modules may have insufficient space for full HTTPS implementation.</p>
+<p><strong>Current Status:</strong> ✅ Resolved</p>
+<p><strong>Solution:</strong> Template now configured for 4MB flash with Single App Large partition table, providing ~41% free space after base system.</p>
+<p><strong>Recommendation:</strong> Use ESP32 modules with 4MB flash (most common variant).</p>
+</section>
+<section id="build-system-complexity">
+<h2>Build System Complexity<a class="headerlink" href="#build-system-complexity" title="Link to this heading">¶</a></h2>
+<p><strong>Issue:</strong> CMake build system with conditional QEMU/hardware component selection adds complexity.</p>
+<p><strong>Trade-off:</strong></p>
+<ul class="simple">
+<li><p>✅ Clean separation of simulator vs hardware code</p></li>
+<li><p>✅ No <code class="docutils literal notranslate"><span class="pre">#ifdef</span></code> pollution in application code</p></li>
+<li><p>❌ More complex build system</p></li>
+<li><p>❌ Steeper learning curve for ESP-IDF beginners</p></li>
+</ul>
+<p><strong>Status:</strong> Accepted trade-off - benefits outweigh complexity</p>
+<p><strong>Documentation:</strong> See <a class="reference internal" href="qemu-emulator.html"><span class="doc">QEMU Emulator Guide</span></a> and <a class="reference internal" href="qemu-network-internals.html"><span class="doc">QEMU Network Internals</span></a> for details</p>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">¶</a></h2>
+<p>If you encounter additional issues or have solutions to existing ones:</p>
 <ol class="arabic simple">
-<li><p>Install usbipd-win: <code class="docutils literal notranslate"><span class="pre">winget</span> <span class="pre">install</span> <span class="pre">usbipd</span></code></p></li>
-<li><p>Find device: <code class="docutils literal notranslate"><span class="pre">usbipd</span> <span class="pre">list</span></code> (look for USB-SERIAL CH340)</p></li>
-<li><p>Bind device: <code class="docutils literal notranslate"><span class="pre">usbipd</span> <span class="pre">bind</span> <span class="pre">--busid</span> <span class="pre">&lt;BUSID&gt;</span></code></p></li>
-<li><p>Attach to container: <code class="docutils literal notranslate"><span class="pre">usbipd</span> <span class="pre">attach</span> <span class="pre">--wsl</span> <span class="pre">--busid</span> <span class="pre">&lt;BUSID&gt;</span></code></p></li>
+<li><p>Check if issue already documented here</p></li>
+<li><p>Report via GitHub Issues</p></li>
+<li><p>Provide detailed reproduction steps</p></li>
+<li><p>Include ESP-IDF version, hardware variant, build configuration</p></li>
 </ol>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>GitHub Codespaces handles USB through browser serial interface - no manual setup needed.</p>
-</div>
-</section>
-</section>
-<section id="benefits">
-<h2>Benefits<a class="headerlink" href="#benefits" title="Link to this heading">¶</a></h2>
-<p>✅ <strong>Consistent environments</strong> across Windows, macOS, Linux, Codespaces</p>
-<p>✅ <strong>No ESP-IDF setup</strong> required for new team members</p>
-<p>✅ <strong>Isolated dependencies</strong> - container changes don’t affect host system</p>
-<p>✅ <strong>Easy onboarding</strong> - clone repo, open in VS Code, start coding</p>
-<p>✅ <strong>Your existing setup unchanged</strong> - host workflow still works</p>
-</section>
-<section id="container-configuration">
-<h2>Container Configuration<a class="headerlink" href="#container-configuration" title="Link to this heading">¶</a></h2>
-<p>The dev container is configured in <code class="docutils literal notranslate"><span class="pre">.devcontainer/devcontainer.json</span></code>:</p>
-<ul class="simple">
-<li><p>Base image: <code class="docutils literal notranslate"><span class="pre">espressif/idf:v5.4.1</span></code></p></li>
-<li><p>VS Code extensions automatically installed</p></li>
-<li><p>Port forwarding for web development</p></li>
-<li><p>Git configuration inherited from host</p></li>
-</ul>
-</section>
-<section id="troubleshooting">
-<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">¶</a></h2>
-<p><strong>Issue</strong>: Container fails to build</p>
-<ul class="simple">
-<li><p><strong>Solution</strong>: Check Docker Desktop is running and has sufficient resources (4GB+ RAM recommended)</p></li>
-</ul>
-<p><strong>Issue</strong>: ESP32 device not visible in container</p>
-<ul class="simple">
-<li><p><strong>Solution</strong>: For local Docker, ensure USB device is attached using usbipd (Windows) or passed through (Linux/macOS)</p></li>
-</ul>
-<p><strong>Issue</strong>: Extensions not installed</p>
-<ul class="simple">
-<li><p><strong>Solution</strong>: Reload window (Ctrl+Shift+P → “Developer: Reload Window”) or manually install from marketplace</p></li>
-</ul>
-<p><strong>Issue</strong>: Slow build times</p>
-<ul class="simple">
-<li><p><strong>Solution</strong>: Dev container caches ESP-IDF, but first build always takes longer. Subsequent builds are faster.</p></li>
-</ul>
+<hr class="docutils" />
+<p><em>Last Updated: October 2025</em></p>
 </section>
 </section>
 
@@ -398,23 +384,23 @@ idf.py<span class="w"> </span>menuconfig
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="qemu-emulator.html">
+          <a class="next-page" href="../31_traceability/index.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">QEMU Emulator Guide</div>
+                <div class="title">Traceability</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="index.html">
+          <a class="prev-page" href="qemu-network-internals.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Development Guide</div>
+                <div class="title">QEMU Network Internals</div>
                 
               </div>
             </a>
@@ -448,26 +434,13 @@ idf.py<span class="w"> </span>menuconfig
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Development Container Setup</a><ul>
-<li><a class="reference internal" href="#development-options">Development Options</a><ul>
-<li><a class="reference internal" href="#recommended-github-codespaces-cloud">Recommended: GitHub Codespaces (Cloud)</a></li>
-<li><a class="reference internal" href="#alternative-local-dev-container">Alternative: Local Dev Container</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#using-the-dev-container">Using the Dev Container</a><ul>
-<li><a class="reference internal" href="#in-github-codespaces">In GitHub Codespaces</a></li>
-<li><a class="reference internal" href="#local-development-with-docker">Local Development with Docker</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#container-features">Container Features</a></li>
-<li><a class="reference internal" href="#build-commands-in-container">Build Commands in Container</a></li>
-<li><a class="reference internal" href="#hardware-flashing">Hardware Flashing</a><ul>
-<li><a class="reference internal" href="#windows-usb-device-setup-local-dev-container-only">Windows USB Device Setup (Local Dev Container Only)</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#benefits">Benefits</a></li>
-<li><a class="reference internal" href="#container-configuration">Container Configuration</a></li>
-<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li><a class="reference internal" href="#">Known Issues and Limitations</a><ul>
+<li><a class="reference internal" href="#component-initialization-order">Component Initialization Order</a></li>
+<li><a class="reference internal" href="#https-in-qemu-emulation">HTTPS in QEMU Emulation</a></li>
+<li><a class="reference internal" href="#dns-captive-portal">DNS Captive Portal</a></li>
+<li><a class="reference internal" href="#flash-memory-for-https">Flash Memory for HTTPS</a></li>
+<li><a class="reference internal" href="#build-system-complexity">Build System Complexity</a></li>
+<li><a class="reference internal" href="#contributing">Contributing</a></li>
 </ul>
 </li>
 </ul>

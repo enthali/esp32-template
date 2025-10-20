@@ -219,6 +219,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/known-issues.html">Known Issues and Limitations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
@@ -284,7 +285,7 @@
 </section>
 <section id="architecture-design">
 <h2>Architecture Design<a class="headerlink" href="#architecture-design" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-2d41d0ca">
+<div class="need_container docutils container" id="SNCB-9628d2a9">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_ARCH_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -327,7 +328,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-7346fab0">
+<div class="need_container docutils container" id="SNCB-9a0d314b">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_FLOW_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -367,7 +368,7 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </section>
 <section id="data-structure-design">
 <h2>Data Structure Design<a class="headerlink" href="#data-structure-design" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-5407f3cd">
+<div class="need_container docutils container" id="SNCB-0944ff3b">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_STORAGE_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -415,7 +416,7 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-bdd4eb57">
+<div class="need_container docutils container" id="SNCB-d5b6c349">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_RUNTIME_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -432,25 +433,77 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </div>
 </td>
 </tr>
-<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Runtime configuration structure mirrors NVS layout but uses application-friendly types.</p>
-<p><strong>Structure Definition:</strong></p>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Runtime configuration structure holds actively used parameters in RAM for fast access.</p>
+<p><strong>Current Implementation (Template Scope):</strong></p>
+<p>The template currently uses configuration for <strong>WiFi credentials only</strong>:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// Application uses native types for convenience</span>
-<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">distance_min_cm</span><span class="p">;</span><span class="w">        </span><span class="c1">// Converted from mm storage</span>
-<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">distance_max_cm</span><span class="p">;</span><span class="w">        </span><span class="c1">// Converted from mm storage</span>
-<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">measurement_interval_ms</span><span class="p">;</span>
-<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sensor_timeout_ms</span><span class="p">;</span>
-<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">smoothing_alpha</span><span class="p">;</span><span class="w">        </span><span class="c1">// Converted from fixed-point</span>
+<span class="w">    </span><span class="c1">// WiFi Credentials (Required for network connectivity)</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">wifi_ssid</span><span class="p">[</span><span class="mi">33</span><span class="p">];</span><span class="w">           </span><span class="c1">// WiFi network name (IEEE 802.11 max 32 chars)</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">wifi_password</span><span class="p">[</span><span class="mi">65</span><span class="p">];</span><span class="w">       </span><span class="c1">// WiFi password (WPA max 64 chars)</span>
 
-<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">led_count</span><span class="p">;</span>
-<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">led_brightness</span><span class="p">;</span>
-
-<span class="w">    </span><span class="c1">// ... other component configurations ...</span>
+<span class="w">    </span><span class="c1">// Metadata</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">config_version</span><span class="p">;</span><span class="w">      </span><span class="c1">// Schema version for compatibility</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">save_count</span><span class="p">;</span><span class="w">          </span><span class="c1">// Number of saves (statistics)</span>
 
 <span class="p">}</span><span class="w"> </span><span class="n">system_config_t</span><span class="p">;</span>
 </pre></div>
 </div>
-<p><strong>Type Conversion:</strong> NVS uses integers/fixed-point for efficiency; runtime uses floats for convenience.</p>
+<p><strong>WiFi Module Configuration:</strong></p>
+<p>Other WiFi parameters (AP channel, max connections, STA retries, timeouts) are configured in the WiFi module header file (<cite>main/components/web_server/wifi_manager.h</cite>):</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// In wifi_manager.h - compile-time defaults</span>
+<span class="cp">#define WIFI_AP_CHANNEL           6</span>
+<span class="cp">#define WIFI_AP_MAX_CONN          4</span>
+<span class="cp">#define WIFI_STA_MAX_RETRY        5</span>
+<span class="cp">#define WIFI_STA_TIMEOUT_MS       10000</span>
+</pre></div>
+</div>
+<p><strong>Storage Philosophy:</strong></p>
+<ul class="simple">
+<li><p><strong>NVS Storage</strong> (Runtime configuration): Only user-configurable WiFi credentials (SSID, password)</p></li>
+<li><p><strong>Compile-Time Headers</strong>: All hardware defaults and WiFi parameters defined in component headers</p></li>
+<li><p><strong>Rationale</strong>: Minimizes NVS usage, keeps configuration truly minimal and focused</p></li>
+</ul>
+<p><strong>Application-Specific Parameters:</strong></p>
+<p>When forking the template for your project, define application parameters in your component headers, not in NVS:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// In my_component/include/my_component.h (NOT in system_config_t)</span>
+<span class="cp">#define SENSOR_RANGE_MIN_MM        50</span>
+<span class="cp">#define SENSOR_RANGE_MAX_MM        400</span>
+<span class="cp">#define LED_COUNT                  30</span>
+<span class="cp">#define LED_BRIGHTNESS_DEFAULT     200</span>
+<span class="cp">#define MEASUREMENT_INTERVAL_MS    100</span>
+</pre></div>
+</div>
+<p>If you need runtime-configurable application parameters (rare), extend <cite>system_config_t</cite> <strong>only for those specific parameters</strong>, not for every possible setting.</p>
+<p><strong>Design Guidelines for Extensions:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Keep WiFi settings in NVS</strong> - Required for user configuration</p></li>
+<li><p><strong>Define hardware parameters in headers</strong> - Reduces NVS bloat</p></li>
+<li><p><strong>Only add to NVS if truly dynamic</strong> - User needs to change it after deployment</p></li>
+<li><p><strong>Use #define for constants</strong> - Compile-time optimization</p></li>
+<li><p><strong>Increment config_version</strong> - Only if you add runtime-configurable parameters to struct</p></li>
+</ol>
+<p><strong>Reset Requirement After Parameter Changes:</strong></p>
+<p>⚠️ <strong>Important</strong>: Configuration changes only take effect after system reset.</p>
+<ul class="simple">
+<li><p>Changes written to runtime config are visible immediately (for API feedback)</p></li>
+<li><p>Changes persisted to NVS via <code class="docutils literal notranslate"><span class="pre">config_save_to_nvs()</span></code> trigger automatic reset</p></li>
+<li><p>Reset ensures all components see new configuration on boot</p></li>
+<li><p>Dynamic reconfiguration is not supported (complexity not justified for IoT devices)</p></li>
+</ul>
+<p><strong>Design Rationale:</strong> Reset-after-save prevents inconsistent state where some components use old config while others use new. Simpler than hot-reloading configuration.</p>
+<p><strong>Type Conversion Strategy:</strong></p>
+<ul class="simple">
+<li><p><strong>NVS Storage</strong>: Use fixed-width integers (uint8_t, uint16_t, uint32_t)</p></li>
+<li><p><strong>Runtime Use</strong>: Convert to application-friendly types as needed</p></li>
+<li><p><strong>Example</strong>: Store channel as uint8_t, validate as 1-13 in setter</p></li>
+</ul>
+<p><strong>Performance Characteristics:</strong></p>
+<ul class="simple">
+<li><p>Setter Validation: &lt;1ms (length check, range validation)</p></li>
+<li><p>Full Validation: &lt;5ms (all parameters checked)</p></li>
+<li><p>NVS Write: &lt;50ms, then reset within 2 seconds</p></li>
+<li><p>Memory Overhead: Structure size &lt; 128 bytes (typical)</p></li>
+</ul>
 </td>
 </tr>
 </tbody>
@@ -459,7 +512,45 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </section>
 <section id="api-design">
 <h2>API Design<a class="headerlink" href="#api-design" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-af188906">
+<div class="need_container docutils container" id="SNCB-a53a2c38">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_PARAM_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Configuration Parameter Identifiers</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_PARAM_1" title="SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">api</span><span class="needs_spacer">, </span><span class="needs_data">parameter</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_5" title="SPEC_CFG_PARAM_1">REQ_CFG_5</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Configuration parameters identified by enum for type-safe access.</p>
+<p><strong>Parameter Enumeration:</strong></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// WiFi Credentials</span>
+<span class="w">    </span><span class="n">CONFIG_WIFI_SSID</span><span class="p">,</span>
+<span class="w">    </span><span class="n">CONFIG_WIFI_PASSWORD</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">// Extension point for application parameters</span>
+<span class="w">    </span><span class="c1">// CONFIG_APP_PARAM_1,</span>
+<span class="w">    </span><span class="c1">// CONFIG_APP_PARAM_2,</span>
+
+<span class="w">    </span><span class="n">CONFIG_PARAM_COUNT</span><span class="w">  </span><span class="c1">// Sentinel for bounds checking</span>
+<span class="p">}</span><span class="w"> </span><span class="n">config_param_id_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><strong>Design Rationale:</strong> Enum-based parameter identification enables compile-time type checking and prevents parameter ID collisions when extending configuration.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="need_container docutils container" id="SNCB-0c1c82f2">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_API_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -476,38 +567,66 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </div>
 </td>
 </tr>
-<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Public API provides thread-safe access to configuration with validation.</p>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Minimal, type-safe API for configuration management supporting uint16 and string types only.</p>
 <p><strong>Core API Functions:</strong></p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Lifecycle management</span>
 <span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_init</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
-<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_load_from_nvs</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
-<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_save_to_nvs</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_load_from_nvs</span><span class="p">(</span><span class="n">system_config_t</span><span class="o">*</span><span class="w"> </span><span class="n">config</span><span class="p">);</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_save_to_nvs</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">system_config_t</span><span class="o">*</span><span class="w"> </span><span class="n">config</span><span class="p">);</span>
 <span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_factory_reset</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
 
-<span class="c1">// Individual getters (thread-safe, no blocking)</span>
-<span class="kt">uint16_t</span><span class="w"> </span><span class="nf">config_get_measurement_interval_ms</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
-<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">config_get_led_count</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
-<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">config_get_led_brightness</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="c1">// Type-safe parameter setters (validation at write-time)</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_set_uint16</span><span class="p">(</span><span class="n">config_param_id_t</span><span class="w"> </span><span class="n">param</span><span class="p">,</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">value</span><span class="p">);</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_set_string</span><span class="p">(</span><span class="n">config_param_id_t</span><span class="w"> </span><span class="n">param</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">value</span><span class="p">);</span>
 
-<span class="c1">// Individual setters (with validation)</span>
-<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_set_measurement_interval</span><span class="p">(</span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">interval_ms</span><span class="p">);</span>
-<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_set_led_count</span><span class="p">(</span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
-<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_set_led_brightness</span><span class="p">(</span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">brightness</span><span class="p">);</span>
+<span class="c1">// Type-safe parameter getters (read from runtime config)</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_get_uint16</span><span class="p">(</span><span class="n">config_param_id_t</span><span class="w"> </span><span class="n">param</span><span class="p">,</span><span class="w"> </span><span class="kt">uint16_t</span><span class="o">*</span><span class="w"> </span><span class="n">value</span><span class="p">);</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_get_string</span><span class="p">(</span><span class="n">config_param_id_t</span><span class="w"> </span><span class="n">param</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">max_len</span><span class="p">);</span>
 
-<span class="c1">// Bulk operations</span>
-<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_get_all</span><span class="p">(</span><span class="n">system_config_t</span><span class="o">*</span><span class="w"> </span><span class="n">config</span><span class="p">);</span>
-<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_set_all</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">system_config_t</span><span class="o">*</span><span class="w"> </span><span class="n">config</span><span class="p">);</span>
-<span class="kt">bool</span><span class="w"> </span><span class="nf">config_validate_all</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">system_config_t</span><span class="o">*</span><span class="w"> </span><span class="n">config</span><span class="p">,</span>
-<span class="w">                         </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">error_msg</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">msg_len</span><span class="p">);</span>
+<span class="c1">// Bulk validation (before NVS persistence)</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="nf">config_validate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">system_config_t</span><span class="o">*</span><span class="w"> </span><span class="n">config</span><span class="p">,</span>
+<span class="w">                          </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">error_msg</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">msg_len</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><strong>Typical Usage Pattern:</strong></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Application updates parameters with immediate validation</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">config_set_string</span><span class="p">(</span><span class="n">CONFIG_WIFI_SSID</span><span class="p">,</span><span class="w"> </span><span class="n">user_input</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">ESP_OK</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">ESP_LOGE</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;SSID invalid&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">config_set_string</span><span class="p">(</span><span class="n">CONFIG_WIFI_PASSWORD</span><span class="p">,</span><span class="w"> </span><span class="n">password_input</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">ESP_OK</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">ESP_LOGE</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Password invalid&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Validate complete configuration before saving</span>
+<span class="kt">char</span><span class="w"> </span><span class="n">error_msg</span><span class="p">[</span><span class="mi">128</span><span class="p">];</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">config_validate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">runtime_config</span><span class="p">,</span><span class="w"> </span><span class="n">error_msg</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">error_msg</span><span class="p">))</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">ESP_OK</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">ESP_LOGE</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Configuration invalid: %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">error_msg</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Save to NVS (system reset follows)</span>
+<span class="n">config_save_to_nvs</span><span class="p">(</span><span class="o">&amp;</span><span class="n">runtime_config</span><span class="p">);</span>
 </pre></div>
 </div>
 <p><strong>Thread Safety:</strong> All functions protected by FreeRTOS mutex with configurable timeout.</p>
+<p><strong>Important Note:</strong> Parameter changes do not take effect until system restarts. Dynamic parameter application is not guaranteed. This is by design: validation at setter time prevents invalid states from propagating into NVS.</p>
+<p><strong>Design Rationale:</strong></p>
+<ul class="simple">
+<li><p><strong>Type Safety</strong>: Enum + typed setters prevent type confusion and buffer overflows</p></li>
+<li><p><strong>Validation at Gate</strong>: String parameters length-checked immediately before storage</p></li>
+<li><p><strong>Simple &amp; Predictable</strong>: Two type-safe functions instead of per-parameter getter/setter explosion</p></li>
+<li><p><strong>Pragmatic for Embedded C</strong>: Minimal abstraction, direct structure access with safety guardrails</p></li>
+<li><p><strong>Easy to Extend</strong>: Add new parameters to enum and update validation rules only</p></li>
+</ul>
 </td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-7d749401">
+<div class="need_container docutils container" id="SNCB-416cb7d4">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_VALIDATION_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -524,18 +643,45 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </div>
 </td>
 </tr>
-<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> All configuration parameters validated against defined ranges before acceptance.</p>
-<p><strong>Validation Rules:</strong></p>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Parameters validated at two points: immediate setter validation and pre-save bulk validation.</p>
+<p><strong>Validation Strategy:</strong></p>
+<ol class="arabic">
+<li><p><strong>Setter-Time Validation</strong> (Immediate):</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">config_set_string</span><span class="p">(</span><span class="n">CONFIG_WIFI_SSID</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">)</span>
+<span class="c1">// Validates: length 1-32 characters</span>
+
+<span class="n">config_set_string</span><span class="p">(</span><span class="n">CONFIG_WIFI_PASSWORD</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">)</span>
+<span class="c1">// Validates: length 0-63 characters (0 = open network)</span>
+</pre></div>
+</div>
+<p>Returns ESP_ERR_INVALID_ARG on validation failure, preventing invalid values in runtime config.</p>
+</li>
+<li><p><strong>Pre-Save Bulk Validation</strong> (Before NVS):</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">config_validate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="p">,</span><span class="w"> </span><span class="n">error_msg</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">error_msg</span><span class="p">))</span>
+<span class="c1">// Validates entire config for semantic consistency</span>
+<span class="c1">// Example: check WiFi AP max connections is within device capabilities</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p><strong>WiFi Parameter Constraints:</strong></p>
 <ul class="simple">
-<li><p>distance_min: 5.0 to 100.0 cm</p></li>
-<li><p>distance_max: 20.0 to 400.0 cm, must be &gt; distance_min</p></li>
-<li><p>measurement_interval: 50 to 1000 ms</p></li>
-<li><p>sensor_timeout: 100 to 5000 ms</p></li>
-<li><p>led_count: 1 to 60</p></li>
-<li><p>led_brightness: 10 to 255</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_WIFI_SSID</span></code>: 1-32 characters (IEEE 802.11 max)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_WIFI_PASSWORD</span></code>: 0-63 characters (WPA2 max, 0 = open network)</p></li>
 </ul>
-<p><strong>Error Handling:</strong> Invalid values return ESP_ERR_INVALID_ARG with descriptive error message.</p>
-<p><strong>Validation Timing:</strong> Performed before NVS write to prevent persisting invalid state.</p>
+<p><strong>Design Rationale:</strong></p>
+<ul class="simple">
+<li><p><strong>Early Rejection</strong>: Invalid strings rejected at setter, preventing buffer corruption</p></li>
+<li><p><strong>Simple Rules</strong>: Type constraints only (length for strings)</p></li>
+<li><p><strong>WiFi Defaults</strong>: Channel, max connections, retry, and timeout configured in <cite>wifi_manager.h</cite></p></li>
+<li><p><strong>Extension Pattern</strong>: When adding application parameters, define min/max in parameter table</p></li>
+</ul>
+<p><strong>Error Handling:</strong></p>
+<ul class="simple">
+<li><p>Setter validation: Return <code class="docutils literal notranslate"><span class="pre">ESP_ERR_INVALID_ARG</span></code> immediately</p></li>
+<li><p>Pre-save validation: Return error message describing what’s invalid</p></li>
+<li><p>All errors logged with <code class="docutils literal notranslate"><span class="pre">ESP_LOGE</span></code> for debugging</p></li>
+</ul>
 </td>
 </tr>
 </tbody>
@@ -544,7 +690,7 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </section>
 <section id="web-interface-design">
 <h2>Web Interface Design<a class="headerlink" href="#web-interface-design" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-dc937827">
+<div class="need_container docutils container" id="SNCB-f93bb634">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_WEB_API_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -563,67 +709,133 @@ Factory:  config_factory_reset() → Defaults → NVS → Runtime Cache
 </tr>
 <tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> RESTful HTTP API for configuration management via web interface.</p>
 <p><strong>API Endpoints:</strong></p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>GET  /api/config           -&gt; Current configuration (JSON)
-POST /api/config           -&gt; Update configuration (JSON)
-POST /api/config/preview   -&gt; Temporary configuration preview
-POST /api/config/apply     -&gt; Apply previewed configuration
-POST /api/config/reset     -&gt; Factory reset
-GET  /api/config/export    -&gt; Export configuration (JSON download)
-POST /api/config/import    -&gt; Import configuration (JSON upload)
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>GET  /api/config              -&gt; Current configuration (JSON)
+POST /api/config/param        -&gt; Set single parameter
+POST /api/config/validate     -&gt; Validate current config before save
+POST /api/config/apply        -&gt; Apply &amp; save to NVS (triggers reset)
+POST /api/config/reset        -&gt; Factory reset
 </pre></div>
 </div>
-<p><strong>JSON Format:</strong></p>
+<p><strong>Set Parameter Request:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="err">POST</span><span class="w"> </span><span class="err">/api/co</span><span class="kc">nf</span><span class="err">ig/param</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="err">applica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">/jso</span><span class="kc">n</span>
+
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;param&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CONFIG_WIFI_SSID&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-network&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response on Error:</strong></p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INVALID_ARG&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SSID too long (max 32 characters)&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Get Current Configuration:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="err">GET</span><span class="w"> </span><span class="err">/api/co</span><span class="kc">nf</span><span class="err">ig</span>
+
+<span class="err">Respo</span><span class="kc">nse</span><span class="p">:</span>
+<span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-07-24T12:34:56Z&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;measurement_interval_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;led_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;led_brightness&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128</span>
+<span class="w">    </span><span class="nt">&quot;wifi_ssid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-network&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;wifi_password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;***&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><strong>Authentication:</strong> Currently open; future versions may add basic auth or API tokens.</p>
+<p><strong>Apply &amp; Save:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="err">POST</span><span class="w"> </span><span class="err">/api/co</span><span class="kc">nf</span><span class="err">ig/apply</span>
+
+<span class="err">Respo</span><span class="kc">nse</span><span class="w"> </span><span class="err">(be</span><span class="kc">f</span><span class="err">ore</span><span class="w"> </span><span class="err">rese</span><span class="kc">t</span><span class="err">)</span><span class="p">:</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Configuration saved, system resetting...&quot;</span>
+<span class="p">}</span>
+
+<span class="err">The</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="err">Sys</span><span class="kc">te</span><span class="err">m</span><span class="w"> </span><span class="err">rese</span><span class="kc">t</span><span class="w"> </span><span class="err">wi</span><span class="kc">t</span><span class="err">hi</span><span class="kc">n</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="err">seco</span><span class="kc">n</span><span class="err">ds</span>
+</pre></div>
+</div>
+<p><strong>Design Rationale:</strong></p>
+<ul class="simple">
+<li><p><strong>Generic Parameter Endpoint</strong>: Single /api/config/param handles all parameter types</p></li>
+<li><p><strong>Type Information</strong>: Client specifies type (“string”, “uint16”) for clarity</p></li>
+<li><p><strong>Pre-Save Validation</strong>: /api/config/validate allows testing without reset</p></li>
+<li><p><strong>Simple &amp; Extensible</strong>: Adding new parameters requires only enum update, no new endpoints</p></li>
+</ul>
+<p><strong>Authentication:</strong> Currently open (for development). Production deployments should add basic auth or API tokens.</p>
 </td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-13449d60">
+<div class="need_container docutils container" id="SNCB-f97bdb71">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_PREVIEW_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
-<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Real-time Configuration Preview</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_PREVIEW_1" title="SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Real-time Configuration Updates</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_PREVIEW_1" title="SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
 </div>
 </td>
 </tr>
 <tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
 <div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
-<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">web</span><span class="needs_spacer">, </span><span class="needs_data">ui</span><span class="needs_spacer">, </span><span class="needs_data">preview</span></span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">web</span><span class="needs_spacer">, </span><span class="needs_data">ui</span><span class="needs_spacer">, </span><span class="needs_data">lifecycle</span></span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_8" title="SPEC_CFG_PREVIEW_1">REQ_CFG_8</a></span></span></div>
 </span></div>
 </div>
 </td>
 </tr>
-<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Web interface supports temporary configuration preview with auto-revert.</p>
-<p><strong>Preview Workflow:</strong></p>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Configuration changes validated immediately but only persisted after system reset.</p>
+<p><strong>Parameter Update Lifecycle:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> 1. User updates parameter via web UI
+    ↓
+ 2. POST /api/config/param with {param, type, value}
+    ↓
+ 3. config_set_string/uint16() → Setter validates THIS parameter
+    ↓
+ 4. If invalid → error response with details → STOP
+ 5. If valid → stored in runtime config (RAM)
+    ↓
+ 6. config_validate() → validate entire config for consistency
+    ↓
+ 7. If invalid → error response with details → rollback runtime state → STOP
+ 8. If valid → response OK &quot;Changes staged, ready to apply&quot;
+    ↓
+ 9. User can update more parameters (go to step 1) or click &quot;Apply &amp; Save&quot;
+    ↓
+10. POST /api/config/apply
+    ↓
+11. config_save_to_nvs() persists to NVS
+    ↓
+12. System reset (to apply changes consistently)
+</pre></div>
+</div>
+<p><strong>Key Design Decisions:</strong></p>
 <ol class="arabic simple">
-<li><p>User adjusts sliders on /settings page</p></li>
-<li><p>JavaScript POSTs to /api/config/preview</p></li>
-<li><p>ESP32 applies changes temporarily (30-second timeout)</p></li>
-<li><p>User sees real-time visual feedback (e.g., LED brightness)</p></li>
-<li><p>User clicks “Apply” to persist, or timeout auto-reverts</p></li>
+<li><p><strong>Immediate Post-Save Validation</strong>: Every parameter change validated against entire config immediately (step 6-8). User gets feedback about which parameter caused issues, preventing confusion about what went wrong.</p></li>
+<li><p><strong>Staged Changes Before Apply</strong>: Parameters can be updated multiple times (steps 1-9). Each update validates individually and against full config. User sees all issues immediately.</p></li>
+<li><p><strong>Separate Apply Step</strong>: Actual NVS persistence happens only on explicit “Apply &amp; Save” (steps 10-12). Allows user to review all staged changes before committing.</p></li>
+<li><p><strong>Reset After Save</strong>: Ensures all components see new configuration on boot and prevents inconsistent state.</p></li>
 </ol>
-<p><strong>Safety Feature:</strong> Preview timeout prevents bricking device if user navigates away.</p>
-<p><strong>Implementation:</strong> Separate preview_config buffer, swapped with active config on apply.</p>
+<p><strong>Design Rationale:</strong></p>
+<ul class="simple">
+<li><p><strong>Validation Transparency</strong>: User always knows if their changes are valid and why they failed</p></li>
+<li><p><strong>Multiple Parameter Updates</strong>: Common workflow (change WiFi SSID + password together)</p></li>
+<li><p><strong>Safety</strong>: Reset-after-save is pragmatic for embedded systems vs. complex hot-reloading</p></li>
+<li><p><strong>Simple Implementation</strong>: Two-phase approach (stage → apply) without dynamic reconfiguration</p></li>
+</ul>
 </td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-2dcd64c9">
+<div class="need_container docutils container" id="SNCB-5de49642">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_UI_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -672,7 +884,7 @@ POST /api/config/import    -&gt; Import configuration (JSON upload)
 </section>
 <section id="error-handling-design">
 <h2>Error Handling Design<a class="headerlink" href="#error-handling-design" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-146ce466">
+<div class="need_container docutils container" id="SNCB-fcdb5696">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_ERROR_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -705,7 +917,7 @@ POST /api/config/import    -&gt; Import configuration (JSON upload)
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-45d56140">
+<div class="need_container docutils container" id="SNCB-3810ca61">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_LOGGING_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -724,7 +936,7 @@ POST /api/config/import    -&gt; Import configuration (JSON upload)
 </tr>
 <tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> All configuration changes logged for debugging and audit trail.</p>
 <p><strong>Logging Format:</strong></p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[CONFIG] Parameter changed: led_brightness 128 -&gt; 255 (user: web)
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[CONFIG] Parameter changed: wifi password -&gt; ****** (user: web)
 [CONFIG] Configuration saved to NVS (save_count: 42)
 [CONFIG] Factory reset performed (reason: user request)
 </pre></div>
@@ -743,84 +955,16 @@ POST /api/config/import    -&gt; Import configuration (JSON upload)
 </table>
 </div>
 </section>
-<section id="implementation-strategy">
-<h2>Implementation Strategy<a class="headerlink" href="#implementation-strategy" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-bb5bf49a">
-<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_CFG_IMPL_1">
-<tbody>
-<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
-<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Phased Implementation Approach</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_CFG_IMPL_1" title="SPEC_CFG_IMPL_1">SPEC_CFG_IMPL_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
-</div>
-</td>
-</tr>
-<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
-<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
-<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">implementation</span><span class="needs_spacer">, </span><span class="needs_data">strategy</span></span></span></div>
-</span></span></div>
-<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_1" title="SPEC_CFG_IMPL_1">REQ_CFG_1</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_2" title="SPEC_CFG_IMPL_1">REQ_CFG_2</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_3" title="SPEC_CFG_IMPL_1">REQ_CFG_3</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_4" title="SPEC_CFG_IMPL_1">REQ_CFG_4</a>, <a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_5" title="SPEC_CFG_IMPL_1">REQ_CFG_5</a></span></span></div>
-</span></div>
-</div>
-</td>
-</tr>
-<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Configuration system implemented in phases to manage complexity.</p>
-<p><strong>Phase 1: Core Configuration (Milestone 1)</strong></p>
-<ul class="simple">
-<li><p>Implement config.h centralized header (REQ_CFG_1, REQ_CFG_2)</p></li>
-<li><p>Define system_config_t structure (REQ_CFG_3)</p></li>
-<li><p>Implement NVS storage layout (REQ_CFG_4)</p></li>
-<li><p>Create basic getter/setter API (REQ_CFG_5)</p></li>
-</ul>
-<p><strong>Phase 2: Web Interface (Milestone 2)</strong></p>
-<ul class="simple">
-<li><p>Implement REST API endpoints (REQ_CFG_7)</p></li>
-<li><p>Create /settings HTML page (REQ_CFG_8)</p></li>
-<li><p>Add preview functionality (REQ_CFG_9)</p></li>
-</ul>
-<p><strong>Phase 3: Advanced Features (Milestone 3)</strong></p>
-<ul class="simple">
-<li><p>Add parameter validation (REQ_CFG_6)</p></li>
-<li><p>Implement error recovery (REQ_CFG_10)</p></li>
-<li><p>Add comprehensive logging (REQ_CFG_11)</p></li>
-</ul>
-<p><strong>Testing Strategy:</strong> Each phase includes unit tests and integration tests before proceeding.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
 <section id="traceability">
 <h2>Traceability<a class="headerlink" href="#traceability" title="Link to this heading">¶</a></h2>
-<p><strong>Requirements Coverage:</strong></p>
-<p>This design specification implements the following requirements:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_1" title="REQ_CFG_1"><em class="xref need">Centralized Configuration H... (REQ_CFG_1)</em></a> - Centralized configuration</p></li>
-<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_2" title="REQ_CFG_2"><em class="xref need">Compile-Time Configuration ... (REQ_CFG_2)</em></a> - Compile-time access</p></li>
-<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_3" title="REQ_CFG_3"><em class="xref need">Runtime Configuration Struc... (REQ_CFG_3)</em></a> - Runtime configuration structure</p></li>
-<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_4" title="REQ_CFG_4"><em class="xref need">Persistent Configuration St... (REQ_CFG_4)</em></a> - Persistent NVS storage</p></li>
-<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_5" title="REQ_CFG_5"><em class="xref need">Configuration Read API (REQ_CFG_5)</em></a> - Configuration read API</p></li>
-<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_6" title="REQ_CFG_6"><em class="xref need">Configuration Validation (REQ_CFG_6)</em></a> - Parameter validation</p></li>
-<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_7" title="REQ_CFG_7"><em class="xref need">Configuration Web Interface (REQ_CFG_7)</em></a> - Web interface API</p></li>
-<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_8" title="REQ_CFG_8"><em class="xref need">Configuration Save Operation (REQ_CFG_8)</em></a> - Configuration save operation</p></li>
-<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_9" title="REQ_CFG_9"><em class="xref need">Configuration Reset/Reload (REQ_CFG_9)</em></a> - Reset/reload functionality</p></li>
-<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_10" title="REQ_CFG_10"><em class="xref need">NVS Error Recovery (REQ_CFG_10)</em></a> - NVS error recovery</p></li>
-<li><p><a class="reference internal" href="../11_requirements/config-manager.html#REQ_CFG_11" title="REQ_CFG_11"><em class="xref need">Configuration Logging (REQ_CFG_11)</em></a> - Configuration logging</p></li>
-</ul>
-<p><strong>Design Specifications:</strong></p>
-<ul class="simple">
-<li><p>SPEC_CFG_ARCH_1: Architecture design</p></li>
-<li><p>SPEC_CFG_FLOW_1: Data flow design</p></li>
-<li><p>SPEC_CFG_STORAGE_1: NVS storage format</p></li>
-<li><p>SPEC_CFG_RUNTIME_1: Runtime data structure</p></li>
-<li><p>SPEC_CFG_API_1: Public API interface</p></li>
-<li><p>SPEC_CFG_VALIDATION_1: Validation rules</p></li>
-<li><p>SPEC_CFG_WEB_API_1: REST API design</p></li>
-<li><p>SPEC_CFG_PREVIEW_1: Preview functionality</p></li>
-<li><p>SPEC_CFG_UI_1: Web UI design</p></li>
-<li><p>SPEC_CFG_ERROR_1: Error recovery</p></li>
-<li><p>SPEC_CFG_LOGGING_1: Logging design</p></li>
-<li><p>SPEC_CFG_IMPL_1: Implementation strategy</p></li>
-</ul>
+<p>All traceability is automatically generated by Sphinx-Needs based on the <cite>:links:</cite> attributes in each specification.</p>
+<p class="needs_filter_warning" id="needtable-12_design/config-manager-0">No needs passed the filters</p>
+<figure class="align-center" id="needflow-12_design/config-manager-0">
+<p class="needs_filter_warning">No needs passed the filters</p>
+<figcaption>
+<p><span class="caption-text">spec</span><a class="headerlink" href="#needflow-12_design/config-manager-0" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
 </section>
 </section>
 
@@ -886,7 +1030,6 @@ POST /api/config/import    -&gt; Import configuration (JSON upload)
 <li><a class="reference internal" href="#api-design">API Design</a></li>
 <li><a class="reference internal" href="#web-interface-design">Web Interface Design</a></li>
 <li><a class="reference internal" href="#error-handling-design">Error Handling Design</a></li>
-<li><a class="reference internal" href="#implementation-strategy">Implementation Strategy</a></li>
 <li><a class="reference internal" href="#traceability">Traceability</a></li>
 </ul>
 </li>

@@ -219,6 +219,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/known-issues.html">Known Issues and Limitations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
@@ -284,7 +285,7 @@
 </section>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-7d657ee9">
+<div class="need_container docutils container" id="SNCB-4492d595">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_LAYERS_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -349,7 +350,7 @@
 </section>
 <section id="component-design-specifications">
 <h2>Component Design Specifications<a class="headerlink" href="#component-design-specifications" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-f0889abf">
+<div class="need_container docutils container" id="SNCB-b8c35320">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_CONFIG_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -383,7 +384,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-37bc8ca6">
+<div class="need_container docutils container" id="SNCB-dca41dba">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_WEB_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -419,7 +420,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-cedf6c2d">
+<div class="need_container docutils container" id="SNCB-eb2835fe">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_CERT_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -453,7 +454,7 @@
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-f7ce2249">
+<div class="need_container docutils container" id="SNCB-8c7e4740">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_NETIF_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -495,7 +496,7 @@
 </section>
 <section id="data-flow-architecture">
 <h2>Data Flow Architecture<a class="headerlink" href="#data-flow-architecture" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-1a8e3003">
+<div class="need_container docutils container" id="SNCB-012664c4">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_COMM_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -536,7 +537,7 @@ Hardware
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-b9902d79">
+<div class="need_container docutils container" id="SNCB-39417520">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_CONFIG_FLOW_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -568,44 +569,7 @@ Factory:   Factory Reset → Defaults → NVS → Cache
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-c9088dab">
-<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_NETWORK_FLOW_1">
-<tbody>
-<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
-<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Network Data Flow</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_ARCH_NETWORK_FLOW_1" title="SPEC_ARCH_NETWORK_FLOW_1">SPEC_ARCH_NETWORK_FLOW_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
-</div>
-</td>
-</tr>
-<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
-<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
-<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">dataflow</span><span class="needs_spacer">, </span><span class="needs_data">network</span></span></span></div>
-</span></span></div>
-<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_WEB_1" title="SPEC_ARCH_NETWORK_FLOW_1">REQ_SYS_WEB_1</a></span></span></div>
-</span></div>
-</div>
-</td>
-</tr>
-<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Network traffic flows through WiFi manager and HTTP server.</p>
-<p><strong>WiFi Flow:</strong></p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Boot → Load Credentials → STA Attempt → Success: Connected
-                                      ↓ Failure (timeout)
-                                     AP Mode → Captive Portal
-</pre></div>
-</div>
-<p><strong>HTTP Request Flow:</strong></p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Browser → WiFi → lwIP Stack → HTTP Server → Handler → Response
-</pre></div>
-</div>
-<p><strong>DNS Redirect Flow</strong> (Captive Portal):</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>DNS Query → DNS Server → Redirect to Device IP (192.168.4.1)
-</pre></div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="need_container docutils container" id="SNCB-67d095bb">
+<div class="need_container docutils container" id="SNCB-00101996">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_WIFI_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -622,7 +586,7 @@ Factory:   Factory Reset → Defaults → NVS → Cache
 </div>
 </td>
 </tr>
-<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> WiFi management with automatic reconnection and AP fallback.</p>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> WiFi management with automatic reconnection and AP fallback, including recovery strategy after network loss.</p>
 <p><strong>WiFi Operation Modes:</strong></p>
 <ol class="arabic simple">
 <li><p><strong>Station (STA) Mode</strong>: Connect to existing WiFi network</p></li>
@@ -635,8 +599,19 @@ Factory:   Factory Reset → Defaults → NVS → Cache
                                 STA Connected
                                      ↓ (failure after timeout)
                                 AP Mode + Captive Portal
+                                (retries STA every 5 min)
+                                     ↓ (5 min timeout reached)
+                                    Reset &amp; Boot
 </pre></div>
 </div>
+<p><strong>AP Mode Failsafe Recovery:</strong></p>
+<ul class="simple">
+<li><p><strong>Purpose</strong>: Handle scenarios where network is unavailable after power loss</p></li>
+<li><p><strong>AP Entry</strong>: System enters AP mode with captive portal when STA connection fails</p></li>
+<li><p><strong>Retry Strategy</strong>: Attempts to reconnect to configured network every 5 minutes</p></li>
+<li><p><strong>Recovery Timeout</strong>: After 5 minutes in AP mode without successful STA connection, system performs reset</p></li>
+<li><p><strong>Rationale</strong>: Prevents indefinite AP mode if network hardware has failed or credentials are invalid; ensures system attempts network recovery periodically</p></li>
+</ul>
 <p><strong>Credential Management:</strong></p>
 <ul class="simple">
 <li><p>WiFi SSID/password stored in NVS</p></li>
@@ -649,7 +624,7 @@ Factory:   Factory Reset → Defaults → NVS → Cache
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-cca7384a">
+<div class="need_container docutils container" id="SNCB-a8aa24a4">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_HTTP_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -691,7 +666,7 @@ Factory:   Factory Reset → Defaults → NVS → Cache
 </section>
 <section id="qemu-emulation-architecture">
 <h2>QEMU Emulation Architecture<a class="headerlink" href="#qemu-emulation-architecture" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-342b61a8">
+<div class="need_container docutils container" id="SNCB-a5f2fb98">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_QEMU_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -739,7 +714,7 @@ Factory:   Factory Reset → Defaults → NVS → Cache
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-556622f6">
+<div class="need_container docutils container" id="SNCB-717fb66e">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_QEMU_BUILD_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -781,7 +756,7 @@ Factory:   Factory Reset → Defaults → NVS → Cache
 </section>
 <section id="threading-architecture">
 <h2>Threading Architecture<a class="headerlink" href="#threading-architecture" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-1e46c2fe">
+<div class="need_container docutils container" id="SNCB-6b93d327">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_TASKS_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -824,7 +799,7 @@ Core 1: WiFi/Network Stack (ESP-IDF managed)
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-d7e5d8df">
+<div class="need_container docutils container" id="SNCB-7ee5a033">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_MEMORY_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -864,7 +839,7 @@ Core 1: WiFi/Network Stack (ESP-IDF managed)
 </section>
 <section id="build-system-integration">
 <h2>Build System Integration<a class="headerlink" href="#build-system-integration" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-5982a112">
+<div class="need_container docutils container" id="SNCB-e8367a69">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_BUILD_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -907,7 +882,7 @@ Core 1: WiFi/Network Stack (ESP-IDF managed)
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-43c6ee81">
+<div class="need_container docutils container" id="SNCB-586467fe">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_FLASH_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -948,7 +923,7 @@ factory     app   0x10000  ~3.8MB (firmware)
 </section>
 <section id="development-workflow-design">
 <h2>Development Workflow Design<a class="headerlink" href="#development-workflow-design" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-4388c9ef">
+<div class="need_container docutils container" id="SNCB-69e5b127">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_CODESPACES_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -985,9 +960,135 @@ Build → Test in QEMU → Flash to Hardware
 </table>
 </div>
 </section>
+<section id="logging-and-diagnostics">
+<h2>Logging and Diagnostics<a class="headerlink" href="#logging-and-diagnostics" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-c42ed13a">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_LOGGING_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Logging and Diagnostics Strategy</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_ARCH_LOGGING_1" title="SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">logging</span><span class="needs_spacer">, </span><span class="needs_data">diagnostics</span><span class="needs_spacer">, </span><span class="needs_data">debugging</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_REL_1" title="SPEC_ARCH_LOGGING_1">REQ_SYS_REL_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Consistent logging strategy using ESP-IDF logging framework for diagnostics and debugging.</p>
+<p><strong>Log Levels:</strong></p>
+<ul class="simple">
+<li><p><strong>ESP_LOGI</strong>: Normal operational events (initialization, state transitions)</p></li>
+<li><p><strong>ESP_LOGW</strong>: Recoverable issues (degraded mode, fallback actions)</p></li>
+<li><p><strong>ESP_LOGE</strong>: Error conditions requiring attention (failed operations)</p></li>
+<li><p><strong>ESP_LOGD</strong>: Debug information (disabled in production builds)</p></li>
+</ul>
+<p><strong>Logging Guidelines:</strong></p>
+<ul class="simple">
+<li><p><strong>Component TAGs</strong>: Each file defines <code class="docutils literal notranslate"><span class="pre">static</span> <span class="pre">const</span> <span class="pre">char*</span> <span class="pre">TAG</span></code> with component name</p></li>
+<li><p><strong>Error Context</strong>: Always include <code class="docutils literal notranslate"><span class="pre">esp_err_to_name()</span></code> for ESP-IDF error codes</p></li>
+<li><p><strong>Initialization</strong>: Log start and completion of major initialization steps</p></li>
+<li><p><strong>State Changes</strong>: Log WiFi mode changes, connection events, system transitions</p></li>
+<li><p><strong>User Actions</strong>: Log web API requests and configuration changes</p></li>
+</ul>
+<p><strong>Build Configuration:</strong></p>
+<ul class="simple">
+<li><p><strong>Production</strong>: INFO level (boot sequence, errors, warnings)</p></li>
+<li><p><strong>Development</strong>: DEBUG level (detailed operational data)</p></li>
+<li><p><strong>Configure via menuconfig</strong>: Component config → Log output → Default log verbosity</p></li>
+</ul>
+<p><strong>Performance Consideration:</strong></p>
+<p>Logging is synchronous and blocks the calling task. Avoid logging in time-critical paths (ISRs, high-frequency tasks).</p>
+<p><strong>Example Usage:</strong></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;wifi_manager&quot;</span><span class="p">;</span>
+
+<span class="n">ESP_LOGI</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Initializing WiFi manager&quot;</span><span class="p">);</span>
+<span class="n">esp_err_t</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">esp_wifi_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cfg</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">ESP_OK</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">ESP_LOGE</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;WiFi init failed: %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">esp_err_to_name</span><span class="p">(</span><span class="n">ret</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="error-recovery-strategy">
+<h2>Error Recovery Strategy<a class="headerlink" href="#error-recovery-strategy" title="Link to this heading">¶</a></h2>
+<div class="need_container docutils container" id="SNCB-03d0db71">
+<table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_ERROR_RECOVERY_1">
+<tbody>
+<tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Design Specification</span></span>: </span><strong><span><span class="needs_title"><span class="needs_data">Error Recovery and Reset Strategy</span></span></span></strong><span> <span class="needs-id"><a class="reference internal" href="#SPEC_ARCH_ERROR_RECOVERY_1" title="SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1</a></span>  <span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span> </span></div>
+</div>
+</td>
+</tr>
+<tr class="need meta row-even"><td class="need meta"><div class="needs_meta line-block">
+<div class="line"><span><span><div class="line"><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">approved</span></span></div>
+<div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">error-handling</span><span class="needs_spacer">, </span><span class="needs_data">reliability</span><span class="needs_spacer">, </span><span class="needs_data">reset</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="../11_requirements/system.html#REQ_SYS_REL_1" title="SPEC_ARCH_ERROR_RECOVERY_1">REQ_SYS_REL_1</a></span></span></div>
+</span></div>
+</div>
+</td>
+</tr>
+<tr class="need content row-odd"><td class="need content" colspan="1"><p><strong>Description:</strong> Reset-first error recovery strategy for IoT device reliability.</p>
+<p><strong>Recovery Philosophy:</strong></p>
+<p>System uses <strong>reset as primary recovery mechanism</strong> for system-level failures, leveraging fast boot time (~3 seconds) and NVS persistence.</p>
+<p><strong>Error Classification:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Protocol-Level Errors</strong> → Handle gracefully</p>
+<ul class="simple">
+<li><p>TCP packet loss: Let lwIP retry</p></li>
+<li><p>HTTP timeouts: Return error to client</p></li>
+<li><p>Transient WiFi drops: Reconnection logic handles</p></li>
+<li><p>Configuration validation failures: Reject and log</p></li>
+</ul>
+</li>
+<li><p><strong>System-Level Errors</strong> → Reset device</p>
+<ul class="simple">
+<li><p>WiFi total failure after retries</p></li>
+<li><p>NVS corruption detection</p></li>
+<li><p>Critical component initialization failure</p></li>
+<li><p>Unrecoverable state machine deadlock</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>Watchdog Protection:</strong></p>
+<ul class="simple">
+<li><p>Task watchdog enabled (CONFIG_ESP_TASK_WDT)</p></li>
+<li><p>Prevents infinite loops and deadlocks</p></li>
+<li><p>Automatic reset on watchdog timeout</p></li>
+</ul>
+<p><strong>Design Rationale:</strong></p>
+<ul class="simple">
+<li><p>✅ Simpler code with fewer state machines</p></li>
+<li><p>✅ Fast boot time makes reset acceptable</p></li>
+<li><p>✅ NVS survives reset (configuration preserved)</p></li>
+<li><p>✅ Reduced attack surface (less recovery code = fewer bugs)</p></li>
+<li><p>✅ Deterministic recovery path</p></li>
+</ul>
+<p><strong>Trade-offs:</strong></p>
+<ul class="simple">
+<li><p>May lose transient runtime state (acceptable for stateless IoT device)</p></li>
+<li><p>Debugging requires log analysis (logging captures failure context)</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 <section id="performance-targets">
 <h2>Performance Targets<a class="headerlink" href="#performance-targets" title="Link to this heading">¶</a></h2>
-<div class="need_container docutils container" id="SNCB-1fb0f017">
+<div class="need_container docutils container" id="SNCB-d54dd2d5">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_spec docutils align-default" id="SPEC_ARCH_PERF_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -1045,13 +1146,14 @@ Build → Test in QEMU → Flash to Hardware
 <li><p>SPEC_ARCH_NETIF_1: Network tunnel design</p></li>
 <li><p>SPEC_ARCH_COMM_1: Communication patterns</p></li>
 <li><p>SPEC_ARCH_CONFIG_FLOW_1: Configuration data flow</p></li>
-<li><p>SPEC_ARCH_NETWORK_FLOW_1: Network data flow</p></li>
 <li><p>SPEC_ARCH_WIFI_1: WiFi manager details</p></li>
 <li><p>SPEC_ARCH_HTTP_1: HTTP server details</p></li>
 <li><p>SPEC_ARCH_QEMU_1: QEMU abstraction</p></li>
 <li><p>SPEC_ARCH_QEMU_BUILD_1: Build system integration</p></li>
 <li><p>SPEC_ARCH_TASKS_1: Task organization</p></li>
 <li><p>SPEC_ARCH_MEMORY_1: Memory management</p></li>
+<li><p>SPEC_ARCH_LOGGING_1: Logging and diagnostics strategy</p></li>
+<li><p>SPEC_ARCH_ERROR_RECOVERY_1: Error recovery and reset strategy</p></li>
 <li><p>SPEC_ARCH_BUILD_1: CMake integration</p></li>
 <li><p>SPEC_ARCH_FLASH_1: Flash configuration</p></li>
 <li><p>SPEC_ARCH_CODESPACES_1: Development workflow</p></li>
@@ -1132,6 +1234,8 @@ Build → Test in QEMU → Flash to Hardware
 <li><a class="reference internal" href="#threading-architecture">Threading Architecture</a></li>
 <li><a class="reference internal" href="#build-system-integration">Build System Integration</a></li>
 <li><a class="reference internal" href="#development-workflow-design">Development Workflow Design</a></li>
+<li><a class="reference internal" href="#logging-and-diagnostics">Logging and Diagnostics</a></li>
+<li><a class="reference internal" href="#error-recovery-strategy">Error Recovery Strategy</a></li>
 <li><a class="reference internal" href="#performance-targets">Performance Targets</a></li>
 <li><a class="reference internal" href="#traceability">Traceability</a></li>
 </ul>

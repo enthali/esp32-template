@@ -55,9 +55,6 @@ All Requirements Overview
    :show_status:
    :show_tags:
 
-Navigation
-==========
-
 .. toctree::
    :maxdepth: 1
    :hidden:
@@ -69,9 +66,3 @@ Navigation
    31_traceability/index
    legal/impressum
    legal/datenschutz
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`

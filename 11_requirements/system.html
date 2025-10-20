@@ -219,6 +219,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/known-issues.html">Known Issues and Limitations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
@@ -265,7 +266,7 @@
           <section id="system-requirements">
 <h1>System Requirements<a class="headerlink" href="#system-requirements" title="Link to this heading">¶</a></h1>
 <p>This document contains high-level system requirements for the ESP32 Template project.</p>
-<div class="need_container docutils container" id="SNCB-fc1a9861">
+<div class="need_container docutils container" id="SNCB-cd771b46">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_HW_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -298,7 +299,7 @@ ESP32 provides WiFi connectivity, sufficient processing power, and adequate flas
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-fcf21ef9">
+<div class="need_container docutils container" id="SNCB-09f7f967">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_NET_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -331,7 +332,7 @@ Enables web interface access and network configuration flexibility.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-cfe0dcc2">
+<div class="need_container docutils container" id="SNCB-fcda0e50">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_WEB_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -345,7 +346,7 @@ Enables web interface access and network configuration flexibility.</p>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">links outgoing: <span class="links"><span><a class="reference internal" href="#REQ_SYS_NET_1" title="REQ_SYS_WEB_1">REQ_SYS_NET_1</a></span></span></div>
-<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="web-server.html#REQ_WEB_1" title="REQ_SYS_WEB_1">REQ_WEB_1</a>, <a class="reference internal" href="web-server.html#REQ_WEB_2" title="REQ_SYS_WEB_1">REQ_WEB_2</a>, <a class="reference internal" href="web-server.html#REQ_WEB_4" title="REQ_SYS_WEB_1">REQ_WEB_4</a>, <a class="reference internal" href="web-server.html#REQ_WEB_5" title="REQ_SYS_WEB_1">REQ_WEB_5</a>, <a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_WEB_1" title="REQ_SYS_WEB_1">SPEC_ARCH_WEB_1</a>, <a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_CERT_1" title="REQ_SYS_WEB_1">SPEC_ARCH_CERT_1</a>, <a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_NETWORK_FLOW_1" title="REQ_SYS_WEB_1">SPEC_ARCH_NETWORK_FLOW_1</a>, <a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_WIFI_1" title="REQ_SYS_WEB_1">SPEC_ARCH_WIFI_1</a>, <a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_HTTP_1" title="REQ_SYS_WEB_1">SPEC_ARCH_HTTP_1</a></span></span></div>
+<div class="line">links incoming: <span class="links"><span><a class="reference internal" href="web-server.html#REQ_WEB_1" title="REQ_SYS_WEB_1">REQ_WEB_1</a>, <a class="reference internal" href="web-server.html#REQ_WEB_2" title="REQ_SYS_WEB_1">REQ_WEB_2</a>, <a class="reference internal" href="web-server.html#REQ_WEB_4" title="REQ_SYS_WEB_1">REQ_WEB_4</a>, <a class="reference internal" href="web-server.html#REQ_WEB_5" title="REQ_SYS_WEB_1">REQ_WEB_5</a>, <a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_WEB_1" title="REQ_SYS_WEB_1">SPEC_ARCH_WEB_1</a>, <a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_CERT_1" title="REQ_SYS_WEB_1">SPEC_ARCH_CERT_1</a>, <a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_WIFI_1" title="REQ_SYS_WEB_1">SPEC_ARCH_WIFI_1</a>, <a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_HTTP_1" title="REQ_SYS_WEB_1">SPEC_ARCH_HTTP_1</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -365,7 +366,7 @@ User-friendly interface for system setup and operation without firmware recompil
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-253c6fc3">
+<div class="need_container docutils container" id="SNCB-03af1440">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_CFG_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -398,7 +399,7 @@ Maintains user settings and system configuration permanently.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-ffc8e58c">
+<div class="need_container docutils container" id="SNCB-ee059594">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_ARCH_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -431,7 +432,7 @@ Enables maintainability, testability, and reusability.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-257e981f">
+<div class="need_container docutils container" id="SNCB-0eade18e">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_REL_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -444,7 +445,8 @@ Enables maintainability, testability, and reusability.</p>
 <div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">reliability</span><span class="needs_spacer">, </span><span class="needs_data">error-handling</span></span></span></div>
 <div class="line"><span class="needs_priority"><span class="needs_label">priority: </span><span class="needs_data">mandatory</span></span></div>
 </span></span></div>
-<div class="line"><span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_LOGGING_1" title="REQ_SYS_REL_1">SPEC_ARCH_LOGGING_1</a>, <a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_ERROR_RECOVERY_1" title="REQ_SYS_REL_1">SPEC_ARCH_ERROR_RECOVERY_1</a></span></span></div>
+</span></div>
 </div>
 </td>
 </tr>
@@ -464,7 +466,7 @@ Ensures system reliability and user experience.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-4a404501">
+<div class="need_container docutils container" id="SNCB-1231e9e8">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_PERF_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">
@@ -498,7 +500,7 @@ Prevents memory leaks and ensures stable operation.</p>
 </tbody>
 </table>
 </div>
-<div class="need_container docutils container" id="SNCB-6b4de795">
+<div class="need_container docutils container" id="SNCB-57caf280">
 <table class="need needs_grid_simple needs_layout_clean needs_style_none needs_type_req docutils align-default" id="REQ_SYS_SIM_1">
 <tbody>
 <tr class="need head row-odd"><td class="need head"><div class="needs_head line-block">

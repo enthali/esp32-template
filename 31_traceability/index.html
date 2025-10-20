@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Impressum" href="../legal/impressum.html"><link rel="prev" title="QEMU Network Internals" href="../90_guides/qemu-network-internals.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Impressum" href="../legal/impressum.html"><link rel="prev" title="Known Issues and Limitations" href="../90_guides/known-issues.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
         <title>Traceability - ESP32 Template Documentation</title>
@@ -219,6 +219,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/known-issues.html">Known Issues and Limitations</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Traceability</a></li>
@@ -823,13 +824,19 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_CONFIG_FLOW_1">SPEC_ARCH_CONFIG_FLOW_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_FLASH_1">SPEC_ARCH_FLASH_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_HTTP_1">SPEC_ARCH_HTTP_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_FLASH_1">SPEC_ARCH_FLASH_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_HTTP_1">SPEC_ARCH_HTTP_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_LAYERS_1">SPEC_ARCH_LAYERS_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_MEMORY_1">SPEC_ARCH_MEMORY_1</a></p></td>
@@ -838,60 +845,57 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_NETIF_1">SPEC_ARCH_NETIF_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_NETWORK_FLOW_1">SPEC_ARCH_NETWORK_FLOW_1</a></p></td>
-</tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_PERF_1">SPEC_ARCH_PERF_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_QEMU_1">SPEC_ARCH_QEMU_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_QEMU_BUILD_1">SPEC_ARCH_QEMU_BUILD_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_TASKS_1">SPEC_ARCH_TASKS_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_WEB_1">SPEC_ARCH_WEB_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_WIFI_1">SPEC_ARCH_WIFI_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1</a></p></td>
-</tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1">SPEC_CFG_IMPL_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1</a></p></td>
 </tr>
 </tbody>
@@ -1033,13 +1037,19 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_CONFIG_FLOW_1">SPEC_ARCH_CONFIG_FLOW_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_FLASH_1">SPEC_ARCH_FLASH_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_HTTP_1">SPEC_ARCH_HTTP_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_FLASH_1">SPEC_ARCH_FLASH_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_HTTP_1">SPEC_ARCH_HTTP_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_LAYERS_1">SPEC_ARCH_LAYERS_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_MEMORY_1">SPEC_ARCH_MEMORY_1</a></p></td>
@@ -1048,60 +1058,57 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_NETIF_1">SPEC_ARCH_NETIF_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_NETWORK_FLOW_1">SPEC_ARCH_NETWORK_FLOW_1</a></p></td>
-</tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_PERF_1">SPEC_ARCH_PERF_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_QEMU_1">SPEC_ARCH_QEMU_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_QEMU_BUILD_1">SPEC_ARCH_QEMU_BUILD_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_TASKS_1">SPEC_ARCH_TASKS_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_WEB_1">SPEC_ARCH_WEB_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_WIFI_1">SPEC_ARCH_WIFI_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1</a></p></td>
-</tr>
 <tr class="need row-even"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1">SPEC_CFG_IMPL_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1</a></p></td>
 </tr>
 </tbody>
@@ -1288,16 +1295,24 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <td class="needs_title"><p>Configuration Data Flow</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1</a></p></td>
+<td class="needs_title"><p>Error Recovery and Reset Strategy</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_FLASH_1">SPEC_ARCH_FLASH_1</a></p></td>
 <td class="needs_title"><p>Flash Memory Configuration</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_HTTP_1">SPEC_ARCH_HTTP_1</a></p></td>
 <td class="needs_title"><p>HTTP Server Architecture Details</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_LAYERS_1">SPEC_ARCH_LAYERS_1</a></p></td>
 <td class="needs_title"><p>ESP32 Template Layered Architecture</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1</a></p></td>
+<td class="needs_title"><p>Logging and Diagnostics Strategy</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_MEMORY_1">SPEC_ARCH_MEMORY_1</a></p></td>
@@ -1308,78 +1323,74 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <td class="needs_title"><p>Network Tunnel Component Design</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_NETWORK_FLOW_1">SPEC_ARCH_NETWORK_FLOW_1</a></p></td>
-<td class="needs_title"><p>Network Data Flow</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_PERF_1">SPEC_ARCH_PERF_1</a></p></td>
 <td class="needs_title"><p>System Performance Requirements</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_QEMU_1">SPEC_ARCH_QEMU_1</a></p></td>
 <td class="needs_title"><p>QEMU Hardware Abstraction</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_QEMU_BUILD_1">SPEC_ARCH_QEMU_BUILD_1</a></p></td>
 <td class="needs_title"><p>QEMU Component Selection</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_TASKS_1">SPEC_ARCH_TASKS_1</a></p></td>
 <td class="needs_title"><p>FreeRTOS Task Organization</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_WEB_1">SPEC_ARCH_WEB_1</a></p></td>
 <td class="needs_title"><p>Web Server Component Design</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/high-level-architecture.html#SPEC_ARCH_WIFI_1">SPEC_ARCH_WIFI_1</a></p></td>
 <td class="needs_title"><p>WiFi Manager Design Details</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1</a></p></td>
 <td class="needs_title"><p>Configuration API Interface</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1</a></p></td>
 <td class="needs_title"><p>Layered Configuration Architecture</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1</a></p></td>
 <td class="needs_title"><p>NVS Error Recovery Strategy</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1</a></p></td>
 <td class="needs_title"><p>Configuration Data Flow</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1">SPEC_CFG_IMPL_1</a></p></td>
-<td class="needs_title"><p>Phased Implementation Approach</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1</a></p></td>
 <td class="needs_title"><p>Configuration Logging</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></p></td>
-<td class="needs_title"><p>Real-time Configuration Preview</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1</a></p></td>
+<td class="needs_title"><p>Configuration Parameter Identifiers</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></p></td>
+<td class="needs_title"><p>Real-time Configuration Updates</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1</a></p></td>
 <td class="needs_title"><p>Runtime Configuration Structure</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1</a></p></td>
 <td class="needs_title"><p>NVS Storage Format</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1</a></p></td>
 <td class="needs_title"><p>Web Settings Page</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1</a></p></td>
 <td class="needs_title"><p>Parameter Validation Rules</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/config-manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1</a></p></td>
 <td class="needs_title"><p>Configuration REST API</p></td>
 </tr>
@@ -1429,14 +1440,14 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1: Configuration Data Flow (approved) [architecture; dataflow]</a></div>
 <div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1: NVS Storage Format (approved) [data-structure; storage]</a></div>
 <div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1: Runtime Configuration Structure (approved) [data-structure; runtime]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1: Configuration Parameter Identifiers (approved) [api; parameter]</a></div>
 <div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1: Configuration API Interface (approved) [api; interface]</a></div>
 <div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1: Parameter Validation Rules (approved) [validation; api]</a></div>
 <div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1: Configuration REST API (approved) [web; api; rest]</a></div>
-<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1: Real-time Configuration Preview (approved) [web; ui; preview]</a></div>
+<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1: Real-time Configuration Updates (approved) [web; ui; lifecycle]</a></div>
 <div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1: Web Settings Page (approved) [web; ui; html]</a></div>
 <div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1: NVS Error Recovery Strategy (approved) [error-handling; nvs]</a></div>
 <div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1: Configuration Logging (approved) [logging; debugging]</a></div>
-<div class="line"><a class="reference external" href="../12_design/config-manager.html#SPEC_CFG_IMPL_1">SPEC_CFG_IMPL_1: Phased Implementation Approach (approved) [implementation; strategy]</a></div>
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_LAYERS_1">SPEC_ARCH_LAYERS_1: ESP32 Template Layered Architecture (approved) [architecture; layering]</a></div>
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_CONFIG_1">SPEC_ARCH_CONFIG_1: Configuration Manager Component Design (approved) [component; config]</a></div>
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_WEB_1">SPEC_ARCH_WEB_1: Web Server Component Design (approved) [component; web; network]</a></div>
@@ -1444,7 +1455,6 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_NETIF_1">SPEC_ARCH_NETIF_1: Network Tunnel Component Design (approved) [component; qemu; network]</a></div>
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_COMM_1">SPEC_ARCH_COMM_1: Component Communication Pattern (approved) [dataflow; communication]</a></div>
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_CONFIG_FLOW_1">SPEC_ARCH_CONFIG_FLOW_1: Configuration Data Flow (approved) [dataflow; config]</a></div>
-<div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_NETWORK_FLOW_1">SPEC_ARCH_NETWORK_FLOW_1: Network Data Flow (approved) [dataflow; network]</a></div>
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_WIFI_1">SPEC_ARCH_WIFI_1: WiFi Manager Design Details (approved) [network; wifi]</a></div>
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_HTTP_1">SPEC_ARCH_HTTP_1: HTTP Server Architecture Details (approved) [network; http; web]</a></div>
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_QEMU_1">SPEC_ARCH_QEMU_1: QEMU Hardware Abstraction (approved) [qemu; emulation]</a></div>
@@ -1454,6 +1464,8 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_BUILD_1">SPEC_ARCH_BUILD_1: ESP-IDF CMake Integration (approved) [build; cmake]</a></div>
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_FLASH_1">SPEC_ARCH_FLASH_1: Flash Memory Configuration (approved) [flash; memory]</a></div>
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_CODESPACES_1">SPEC_ARCH_CODESPACES_1: GitHub Codespaces Integration (approved) [development; devcontainer]</a></div>
+<div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1: Logging and Diagnostics Strategy (approved) [logging; diagnostics; debugging]</a></div>
+<div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1: Error Recovery and Reset Strategy (approved) [error-handling; reliability; reset]</a></div>
 <div class="line"><a class="reference external" href="../12_design/high-level-architecture.html#SPEC_ARCH_PERF_1">SPEC_ARCH_PERF_1: System Performance Requirements (approved) [performance; requirements]</a></div>
 </div>
 </section>
@@ -1474,14 +1486,14 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="../90_guides/qemu-network-internals.html">
+          <a class="prev-page" href="../90_guides/known-issues.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">QEMU Network Internals</div>
+                <div class="title">Known Issues and Limitations</div>
                 
               </div>
             </a>
