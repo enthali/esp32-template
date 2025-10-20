@@ -15,10 +15,10 @@ This template provides a complete development environment for ESP32 projects wit
 - 🐛 **GDB Debugging** - Full debugging in QEMU with VS Code integration
 - 🌐 **Example Components** - Web server with captive portal, configuration management
 - ⚙️ **Configuration Management** - NVS storage pattern examples
-- 📝 **Documentation** - MkDocs with GitHub Pages deployment
+- 📝 **Documentation** - Sphinx documentation with GitHub Pages deployment
 - 🤖 **GitHub Copilot Ready** - AI-assisted development instructions included
 - ✅ **Quality Gates** - Pre-commit hooks for linting and validation
-- 📚 **OpenFastTrack** - Requirements and design documentation structure
+- 📚 **Requirements Engineering** - Structured requirements and design documentation
 
 ## 🎯 Quick Start
 
@@ -66,8 +66,8 @@ esp32-template/
 │       ├── web_server/       # HTTP server with captive portal
 │       ├── cert_handler/     # HTTPS certificate handling (WIP)
 │       └── netif_uart_tunnel/# QEMU network bridge
-├── docs/                     # MkDocs documentation
-│   ├── requirements/         # OpenFastTrack requirements
+├── docs/                     # Sphinx documentation
+│   ├── requirements/         # Requirements documentation
 │   ├── design/              # System design documents
 │   └── development/         # Development guides
 ├── tools/                    # Development tools
@@ -153,15 +153,16 @@ See [Debugging Guide](docs/development/debugging.md) for details.
 Full documentation is available at [GitHub Pages](https://enthali.github.io/esp32-template/) or build locally:
 
 ```bash
-# Install MkDocs (if not in Codespaces)
-pip install mkdocs mkdocs-material
+# Install Sphinx (if not in Codespaces)
+pip install sphinx sphinx-rtd-theme
 
-# Serve documentation locally
-mkdocs serve
-# Browse to http://localhost:8000
+# Build documentation
+cd docs
+make html
+# View at _build/html/index.html
 
-# Build static site
-mkdocs build --strict
+# Or serve with live reload
+sphinx-autobuild . _build/html
 ```
 
 ## 🤖 GitHub Copilot Integration
@@ -171,7 +172,7 @@ This template includes comprehensive GitHub Copilot instructions in `.github/cop
 - ESP32-specific coding standards
 - Component architecture patterns
 - Memory optimization guidelines
-- OpenFastTrack requirements methodology
+- Requirements engineering methodology
 - Build and testing workflows
 
 Just ask Copilot for help and it will use these project-specific guidelines!
@@ -191,7 +192,7 @@ pre-commit install
 Checks include:
 
 - Markdown linting
-- MkDocs build validation
+- Sphinx build validation
 - Link verification
 - Trailing whitespace removal
 
@@ -225,14 +226,13 @@ HTTP server with captive portal:
 
 ## 📖 Requirements Engineering
 
-This template uses **OpenFastTrack** methodology:
+This template provides structured requirements and design documentation:
 
 - **Requirements** in `docs/requirements/` - What to build
 - **Design** in `docs/design/` - How to build it
-- **Architecture** in `docs/architecture/` - System structure
-- **Traceability** - Bidirectional links between requirements, design, and code
+- **Traceability** - Links between requirements, design, and implementation
 
-See [Requirements Documentation](docs/requirements/README.md) for the guide.
+See [Requirements Documentation](docs/requirements/README.md) for more information.
 
 ## 🚧 Known Limitations
 
@@ -251,7 +251,7 @@ ESP32 embedded development template featuring:
 - **ESP-IDF v5.4.1** - Espressif IoT Development Framework
 - **FreeRTOS** - Real-time operating system
 - **QEMU** - Full system emulation with networking
-- **OpenFastTrack** - Requirements engineering methodology
+- **Sphinx** - Documentation generation
 - **GitHub Codespaces** - Cloud-based development
 - **GitHub Copilot** - AI-assisted development
 

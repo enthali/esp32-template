@@ -10,7 +10,7 @@ Starting an ESP32 project from scratch can be overwhelming. This template provid
 - ✅ **No hardware required** - Test with QEMU emulation before buying hardware
 - ✅ **Professional structure** - Component-based architecture following ESP-IDF best practices
 - ✅ **Quality gates** - Pre-commit hooks ensure code quality from day one
-- ✅ **Documentation ready** - MkDocs with GitHub Pages deployment included
+- ✅ **Documentation ready** - Sphinx with GitHub Pages deployment included
 - ✅ **AI-assisted development** - GitHub Copilot instructions for ESP32-specific guidance
 
 ## 🎯 Perfect For
@@ -64,7 +64,7 @@ idf.py -p /dev/ttyUSB0 flash monitor
 
 ### Documentation
 
-- **Requirements** - OpenFastTrack requirements engineering structure
+- **Requirements** - Requirements engineering structure
 - **Design** - System architecture and component design
 - **Development Guides** - QEMU, debugging, and environment setup
 - **API Documentation** - Structure ready for API doc generation
@@ -76,7 +76,6 @@ idf.py -p /dev/ttyUSB0 flash monitor
 1. **CMakeLists.txt** - Change project name from `esp32-template`
 2. **README.md** - Update title and description
 3. **docs/index.md** - Update documentation homepage
-4. **mkdocs.yml** - Update site name and description
 
 ### Add Your Application Logic
 
@@ -173,7 +172,7 @@ See [Debugging Guide](development/debugging.md) for details.
 
 ### For Architects
 
-- **[Requirements](requirements/README.md)** - OpenFastTrack methodology
+- **[Requirements](requirements/README.md)** - Requirements methodology
 - **[Design](design/README.md)** - System design documentation
 - **[Architecture](architecture/README.md)** - Component architecture
 
@@ -190,7 +189,7 @@ This template includes comprehensive instructions for GitHub Copilot in `.github
 - ESP32-specific coding standards (memory management, error handling)
 - Component architecture patterns
 - QEMU and Codespaces workflows
-- OpenFastTrack requirements methodology
+- Requirements engineering methodology
 - Build and testing procedures
 
 Just ask Copilot for help and it will follow these guidelines!
@@ -205,7 +204,7 @@ pre-commit run --all-files
 
 # Checks include:
 # - Markdown linting
-# - MkDocs build validation  
+# - Sphinx build validation  
 # - Link verification
 # - File encoding
 ```
@@ -237,7 +236,7 @@ CI/CD automatically runs these checks on pull requests.
 | **Pre-commit Hooks** | ✅ Ready | Automated quality checks |
 | **GitHub Pages** | ✅ Ready | Documentation deployment |
 | **Copilot Instructions** | ✅ Ready | AI-assisted development |
-| **OpenFastTrack Docs** | ✅ Ready | Requirements engineering |
+| **Requirements Docs** | ✅ Ready | Requirements engineering |
 | **HTTPS Support** | 🚧 WIP | Certificate handling in progress |
 
 ## 🎯 Next Steps
