@@ -33,7 +33,7 @@ jobs:
       - name: Cache APT packages
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: doxygen graphviz
+          packages: doxygen graphviz libgraphviz-dev
           version: 1.0
 
       - name: Install Python dependencies

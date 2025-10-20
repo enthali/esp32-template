@@ -114,6 +114,14 @@ needs_build_json_per_id = True
 # Use Graphviz for needflow diagrams instead of PlantUML
 needs_flow_engine = "graphviz"
 
+# Configure needflow to use SVG instead of PNG (better quality, smaller size)
+needs_flow_configs = {
+    'needflow': {
+        'engine': 'dot',
+        'format': 'svg',
+    }
+}
+
 # -- MyST Parser Configuration -----------------------------------------------
 # https://myst-parser.readthedocs.io/
 
