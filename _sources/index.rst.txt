@@ -3,54 +3,22 @@ ESP32 Template Documentation
 
 Welcome to the ESP32 Template project documentation. This template provides a complete development environment for ESP32 IoT projects with GitHub Codespaces, QEMU emulation, and professional requirements engineering methodology.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Requirements Engineering:
+What is This Template?
+----------------------
 
-   11_requirements/index
-   12_design/index
+This is a **template repository** designed to be forked for new ESP32 projects. It combines:
 
-.. toctree::
-   :maxdepth: 2
-   :caption: API Reference:
-
-   21_api/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Development Guides:
-
-   90_guides/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Traceability:
-
-   31_traceability/index
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Legal:
-
-   legal/impressum
-   legal/datenschutz
-
-About This Template
--------------------
-
-This is a **template repository** designed to be:
-
-* **Forked for new projects** - Starting point for ESP32 applications
 * **Zero-setup development** - GitHub Codespaces with ESP-IDF pre-configured
 * **Hardware optional** - QEMU emulation for testing without physical devices
 * **Production-ready structure** - Component-based architecture following ESP-IDF best practices
 * **Professional documentation** - Sphinx-Needs for requirements traceability
+* **Example components** - Reference implementations for common IoT patterns
 
 Key Features
-------------
+~~~~~~~~~~~~
 
-* **Component-based architecture** - Modular components in ``main/components/``
-* **Example components provided**:
+* **Component-based architecture** - Modular structure in ``main/components/``
+* **Example implementations**:
   
   * ``config_manager`` - NVS configuration storage patterns
   * ``web_server`` - HTTP server with captive portal
@@ -59,24 +27,26 @@ Key Features
 
 * **Real-time OS** - FreeRTOS for task management
 * **Memory optimized** - 4MB flash configuration
+* **Professional requirements engineering** - Sphinx-Needs for traceability
 
-Documentation Structure
------------------------
+Quick Start
+-----------
 
-This documentation uses Sphinx with Sphinx-Needs extension for professional requirements engineering:
+1. **Fork this repository** - Use it as a template for your project
+2. **Customize** ``main/main.c`` - Add your application logic
+3. **Create components** - Add new components to ``main/components/``
+4. **Build and test** - Use QEMU for testing without hardware
 
-* **Requirements** - System and component requirements with traceability
-* **Design** - Architecture and design specifications
-* **API Reference** - Auto-generated from C code (Doxygen)
-* **Traceability** - Automatic coverage and dependency tracking
+Documentation Roadmap
+---------------------
 
-For user guides, tutorials, and development documentation, see the `User Documentation <../mkdocs/index.html>`_ (MkDocs).
+🔵 **Requirements & Design** - Start here for system specifications and architecture decisions
 
-Indices and tables
-==================
+🟢 **API Reference** - Component interfaces and function documentation
 
-* :ref:`genindex`
-* :ref:`search`
+🟡 **Development Guides** - Tutorials for QEMU emulation, debugging, and development workflows
+
+🟣 **Traceability** - Automatic coverage matrices and requirement-to-implementation mapping
 
 All Requirements Overview
 =========================
@@ -84,3 +54,9 @@ All Requirements Overview
 .. needlist::
    :show_status:
    :show_tags:
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
