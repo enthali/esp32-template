@@ -228,42 +228,13 @@ Data Flow Architecture
    **Data Integrity**: All updates validated before NVS write
 
 
-.. spec:: Network Data Flow
-   :id: SPEC_ARCH_NETWORK_FLOW_1
-   :links: REQ_SYS_WEB_1
-   :status: approved
-   :tags: dataflow, network
-
-   **Description:** Network traffic flows through WiFi manager and HTTP server.
-
-   **WiFi Flow:**
-
-   .. code-block:: text
-
-      Boot → Load Credentials → STA Attempt → Success: Connected
-                                            ↓ Failure (timeout)
-                                           AP Mode → Captive Portal
-
-   **HTTP Request Flow:**
-
-   .. code-block:: text
-
-      Browser → WiFi → lwIP Stack → HTTP Server → Handler → Response
-
-   **DNS Redirect Flow** (Captive Portal):
-
-   .. code-block:: text
-
-      DNS Query → DNS Server → Redirect to Device IP (192.168.4.1)
-
-
 .. spec:: WiFi Manager Design Details
    :id: SPEC_ARCH_WIFI_1
    :links: REQ_SYS_WEB_1
    :status: approved
    :tags: network, wifi
 
-   **Description:** WiFi management with automatic reconnection and AP fallback.
+   **Description:** WiFi management with automatic reconnection and AP fallback, including recovery strategy after network loss.
 
    **WiFi Operation Modes:**
 
@@ -280,6 +251,17 @@ Data Flow Architecture
                                       STA Connected
                                            ↓ (failure after timeout)
                                       AP Mode + Captive Portal
+                                      (retries STA every 5 min)
+                                           ↓ (5 min timeout reached)
+                                          Reset & Boot
+
+   **AP Mode Failsafe Recovery:**
+
+   - **Purpose**: Handle scenarios where network is unavailable after power loss
+   - **AP Entry**: System enters AP mode with captive portal when STA connection fails
+   - **Retry Strategy**: Attempts to reconnect to configured network every 5 minutes
+   - **Recovery Timeout**: After 5 minutes in AP mode without successful STA connection, system performs reset
+   - **Rationale**: Prevents indefinite AP mode if network hardware has failed or credentials are invalid; ensures system attempts network recovery periodically
 
    **Credential Management:**
 
@@ -532,6 +514,107 @@ Development Workflow Design
    **Benefits**: Consistent environment, no local setup, works in browser
 
 
+Logging and Diagnostics
+-----------------------
+
+.. spec:: Logging and Diagnostics Strategy
+   :id: SPEC_ARCH_LOGGING_1
+   :links: REQ_SYS_REL_1
+   :status: approved
+   :tags: logging, diagnostics, debugging
+
+   **Description:** Consistent logging strategy using ESP-IDF logging framework for diagnostics and debugging.
+
+   **Log Levels:**
+
+   - **ESP_LOGI**: Normal operational events (initialization, state transitions)
+   - **ESP_LOGW**: Recoverable issues (degraded mode, fallback actions)
+   - **ESP_LOGE**: Error conditions requiring attention (failed operations)
+   - **ESP_LOGD**: Debug information (disabled in production builds)
+
+   **Logging Guidelines:**
+
+   - **Component TAGs**: Each file defines ``static const char* TAG`` with component name
+   - **Error Context**: Always include ``esp_err_to_name()`` for ESP-IDF error codes
+   - **Initialization**: Log start and completion of major initialization steps
+   - **State Changes**: Log WiFi mode changes, connection events, system transitions
+   - **User Actions**: Log web API requests and configuration changes
+   
+   **Build Configuration:**
+
+   - **Production**: INFO level (boot sequence, errors, warnings)
+   - **Development**: DEBUG level (detailed operational data)
+   - **Configure via menuconfig**: Component config → Log output → Default log verbosity
+
+   **Performance Consideration:** 
+   
+   Logging is synchronous and blocks the calling task. Avoid logging in time-critical paths (ISRs, high-frequency tasks).
+
+   **Example Usage:**
+
+   .. code-block:: c
+
+      static const char* TAG = "wifi_manager";
+      
+      ESP_LOGI(TAG, "Initializing WiFi manager");
+      esp_err_t ret = esp_wifi_init(&cfg);
+      if (ret != ESP_OK) {
+          ESP_LOGE(TAG, "WiFi init failed: %s", esp_err_to_name(ret));
+          return ret;
+      }
+
+
+Error Recovery Strategy
+------------------------
+
+.. spec:: Error Recovery and Reset Strategy
+   :id: SPEC_ARCH_ERROR_RECOVERY_1
+   :links: REQ_SYS_REL_1
+   :status: approved
+   :tags: error-handling, reliability, reset
+
+   **Description:** Reset-first error recovery strategy for IoT device reliability.
+
+   **Recovery Philosophy:**
+   
+   System uses **reset as primary recovery mechanism** for system-level failures, leveraging fast boot time (~3 seconds) and NVS persistence.
+
+   **Error Classification:**
+
+   1. **Protocol-Level Errors** → Handle gracefully
+      
+      - TCP packet loss: Let lwIP retry
+      - HTTP timeouts: Return error to client
+      - Transient WiFi drops: Reconnection logic handles
+      - Configuration validation failures: Reject and log
+
+   2. **System-Level Errors** → Reset device
+      
+      - WiFi total failure after retries
+      - NVS corruption detection
+      - Critical component initialization failure
+      - Unrecoverable state machine deadlock
+
+   **Watchdog Protection:**
+
+   - Task watchdog enabled (CONFIG_ESP_TASK_WDT)
+   - Prevents infinite loops and deadlocks
+   - Automatic reset on watchdog timeout
+
+   **Design Rationale:**
+
+   - ✅ Simpler code with fewer state machines
+   - ✅ Fast boot time makes reset acceptable
+   - ✅ NVS survives reset (configuration preserved)
+   - ✅ Reduced attack surface (less recovery code = fewer bugs)
+   - ✅ Deterministic recovery path
+
+   **Trade-offs:**
+
+   - May lose transient runtime state (acceptable for stateless IoT device)
+   - Debugging requires log analysis (logging captures failure context)
+
+
 Performance Targets
 -------------------
 
@@ -580,13 +663,14 @@ This high-level architecture design implements the following system requirements
 - SPEC_ARCH_NETIF_1: Network tunnel design
 - SPEC_ARCH_COMM_1: Communication patterns
 - SPEC_ARCH_CONFIG_FLOW_1: Configuration data flow
-- SPEC_ARCH_NETWORK_FLOW_1: Network data flow
 - SPEC_ARCH_WIFI_1: WiFi manager details
 - SPEC_ARCH_HTTP_1: HTTP server details
 - SPEC_ARCH_QEMU_1: QEMU abstraction
 - SPEC_ARCH_QEMU_BUILD_1: Build system integration
 - SPEC_ARCH_TASKS_1: Task organization
 - SPEC_ARCH_MEMORY_1: Memory management
+- SPEC_ARCH_LOGGING_1: Logging and diagnostics strategy
+- SPEC_ARCH_ERROR_RECOVERY_1: Error recovery and reset strategy
 - SPEC_ARCH_BUILD_1: CMake integration
 - SPEC_ARCH_FLASH_1: Flash configuration
 - SPEC_ARCH_CODESPACES_1: Development workflow
