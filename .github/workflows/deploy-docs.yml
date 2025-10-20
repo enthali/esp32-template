@@ -27,8 +27,15 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+          cache: 'pip'
 
-      - name: Install dependencies
+      - name: Cache APT packages
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: doxygen graphviz
+          version: 1.0
+
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install \
@@ -39,11 +46,6 @@ jobs:
             "myst-parser>=4.0" \
             "sphinxcontrib-plantuml>=0.31" \
             "breathe>=4.35"
-
-      - name: Install system dependencies (Doxygen, GraphViz)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y doxygen graphviz
 
       - name: Build Sphinx documentation
         run: |
