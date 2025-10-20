@@ -55,6 +55,21 @@ All Requirements Overview
    :show_status:
    :show_tags:
 
+Navigation
+==========
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   11_requirements/index
+   12_design/index
+   21_api/index
+   90_guides/index
+   31_traceability/index
+   legal/impressum
+   legal/datenschutz
+
 Indices and tables
 ==================
 
