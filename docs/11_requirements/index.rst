@@ -7,10 +7,10 @@ This section contains system and component requirements following Sphinx-Needs m
    :maxdepth: 2
    :caption: Requirements:
 
-   system
-   web-server
-   config-manager
-   netif-tunnel
+   req_system
+   req_web_server
+   req_config_manager
+   req_netif_tunnel
 
 Overview
 --------

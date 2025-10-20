@@ -80,7 +80,7 @@ Component Design Specifications
 
    **API Pattern**: Getter/setter functions with validation
 
-   **See Also**: :doc:`config-manager` for detailed design
+   **See Also**: :doc:`spec_config_manager` for detailed design
 
 
 .. spec:: Web Server Component Design
@@ -107,7 +107,7 @@ Component Design Specifications
 
    **Status**: ✅ HTTP working, 🚧 HTTPS in progress
 
-   **See Also**: Web server requirements in :doc:`../11_requirements/web-server`
+   **See Also**: Web server requirements in :doc:`../11_requirements/req_web_server`
 
 
 .. spec:: Certificate Handler Component Design

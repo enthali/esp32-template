@@ -7,8 +7,8 @@ This section contains detailed design specifications for system components follo
    :maxdepth: 2
    :caption: Design Documents:
 
-   high-level-architecture
-   config-manager
+   spec_high_level_architecture
+   spec_config_manager
 
 Overview
 --------
