@@ -364,7 +364,7 @@ Web Interface Design
 
    **Set Parameter Request:**
 
-   .. code-block:: json
+   .. code-block:: http
 
       POST /api/config/param
       Content-Type: application/json
@@ -387,7 +387,7 @@ Web Interface Design
 
    **Get Current Configuration:**
 
-   .. code-block:: json
+   .. code-block:: http
 
       GET /api/config
       
@@ -403,7 +403,7 @@ Web Interface Design
 
    **Apply & Save:**
 
-   .. code-block:: json
+   .. code-block:: http
 
       POST /api/config/apply
       
