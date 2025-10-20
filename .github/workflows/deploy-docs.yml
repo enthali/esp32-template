@@ -28,6 +28,7 @@ jobs:
         with:
           python-version: '3.x'
           cache: 'pip'
+          cache-dependency-path: 'docs/requirements.txt'
 
       - name: Cache APT packages
         uses: awalsh128/cache-apt-pkgs-action@latest
