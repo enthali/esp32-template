@@ -8,6 +8,24 @@
 			"DOCKER_TAG": "v5.4.1"
 		}
 	},
+
+ // ⬇️ NEU: Desktop-Lite einschalten
+  "features": {
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      // optional: Auflösung oder Passwort setzen
+      // "password": "vscode",
+      // "webPort": 6080,
+      // "vncPort": 5901,
+      // "screenResolution": "1280x800"
+    }
+  },
+
+  // ⬇️ NEU: noVNC-Port forwarden
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": { "label": "noVNC (Desktop)" }
+  },
+
 	"customizations": {
 		"vscode": {
 			"settings": {
