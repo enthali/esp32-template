@@ -149,6 +149,29 @@ python3 tools/http_proxy.py
 
 See [Debugging Guide](docs/development/debugging.md) for details.
 
+### GUI Development Environment
+
+This template includes a full desktop environment for GUI applications and tools:
+
+1. **Automatic Setup**: VNC is configured automatically when the container starts
+2. **NoVNC Access**: Open GUI applications in your browser via port 6080
+3. **Manual VNC Start**: Run `./tools/start-vnc.sh` if needed
+
+```bash
+# Start VNC server manually
+./tools/start-vnc.sh
+
+# Set display for GUI applications
+export DISPLAY=:1
+
+# Test GUI applications
+xterm &
+xclock &
+xeyes &
+```
+
+**Access GUI**: In Codespaces, check the **PORTS** tab for port 6080 to open the desktop in your browser.
+
 ## 📚 Documentation
 
 Full documentation is available at [GitHub Pages](https://enthali.github.io/esp32-template/) or build locally:

@@ -26,6 +26,9 @@
     "6080": { "label": "noVNC (Desktop)" }
   },
 
+	// Configure VNC and GUI after container creation
+	"postCreateCommand": "bash .devcontainer/setup-vnc.sh",
+
 	"customizations": {
 		"vscode": {
 			"settings": {
