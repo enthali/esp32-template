@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "QEMU ESP32 Debug",
+            "name": "QEMU ESP32 Debug (with Graphics)",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/esp32-template.elf",

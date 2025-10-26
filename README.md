@@ -131,10 +131,35 @@ mkdir -p main/components/my_component
 
 ### Run in QEMU
 
-```bash
-# Start QEMU with network bridge
-./tools/run-qemu-network.sh
+**With VS Code Tasks** (Recommended):
 
+```bash
+# Method 1: Debug Mode (waits for debugger)
+# Use VS Code Task: "Start QEMU Debug Server"
+# Then start debugger with F5
+
+# Method 2: Run Mode (starts immediately)  
+# Use VS Code Task: "Run QEMU (No Debug)"
+```
+
+**Manual Commands:**
+
+```bash
+# Debug mode (waits for GDB connection)
+./tools/run-qemu-graphics.sh
+
+# Run mode (starts immediately)
+./tools/run-qemu-graphics-run.sh
+
+# Legacy mode (network only, no graphics)
+./tools/run-qemu-network.sh
+```
+
+**Graphics Output**: All QEMU modes include GUI output visible in NoVNC (port 6080). The ESP32 console, boot sequence, and any graphics will be displayed in the QEMU window within your browser.
+
+**Network Access**: Use HTTP proxy for web interface:
+
+```bash
 # In another terminal, access web interface via HTTP proxy
 python3 tools/http_proxy.py
 # Then browse to http://localhost:8888

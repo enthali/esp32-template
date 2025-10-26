@@ -4,7 +4,7 @@
         {
             "label": "Start QEMU Debug Server",
             "type": "shell",
-            "command": "${workspaceFolder}/tools/run-qemu-network.sh",
+            "command": "${workspaceFolder}/tools/run-qemu-graphics.sh",
             "isBackground": true,
             "problemMatcher": {
                 "pattern": {
@@ -18,6 +18,19 @@
                     "endsPattern": ".*QEMU is ready and waiting for GDB connection.*"
                 }
             },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false
+            }
+        },
+        {
+            "label": "Run QEMU (No Debug)",
+            "type": "shell",
+            "command": "${workspaceFolder}/tools/run-qemu-graphics-run.sh",
+            "isBackground": true,
             "presentation": {
                 "echo": true,
                 "reveal": "always",
