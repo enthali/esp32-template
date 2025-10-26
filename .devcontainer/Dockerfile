@@ -24,6 +24,12 @@ RUN groupadd --gid $USER_GID $CONTAINER_USER \
 USER root
 RUN apt-get update \
   && apt-get install -y --no-install-recommends python3-venv python3-pip nodejs npm doxygen graphviz \
+  # install XFCE4 desktop environment for GUI support
+  && apt-get install -y --no-install-recommends xfce4 xfce4-goodies \
+  # set German keyboard layout as default (can be changed later)
+  && echo 'XKBLAYOUT="de"' >> /etc/default/keyboard \
+  && echo 'XKBVARIANT=""' >> /etc/default/keyboard \
+  && echo 'XKBOPTIONS=""' >> /etc/default/keyboard \
   # create a system venv for documentation tools
   && python3 -m venv /opt/venv \
   && /opt/venv/bin/python -m pip install --upgrade pip setuptools wheel \

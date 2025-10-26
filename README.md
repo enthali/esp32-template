@@ -197,6 +197,19 @@ xeyes &
 
 **Access GUI**: In Codespaces, check the **PORTS** tab for port 6080 to open the desktop in your browser.
 
+**Keyboard Layout**: The default keyboard layout is German (DE). To change it:
+
+```bash
+# Switch to US layout
+setxkbmap us
+
+# Switch to German layout  
+setxkbmap de
+
+# Interactive keyboard switcher
+./tools/switch-keyboard.sh
+```
+
 ## 📚 Documentation
 
 Full documentation is available at [GitHub Pages](https://enthali.github.io/esp32-template/) or build locally:
