@@ -44,6 +44,7 @@
 		"espressif.esp-idf-web",
 		"ms-vscode.cpptools",
 		"ms-vscode.cpptools-extension-pack",
+		"ms-python.python",
 		"DavidAnson.vscode-markdownlint",
 		"github.copilot",
 		"github.copilot-chat",
