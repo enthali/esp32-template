@@ -152,6 +152,28 @@ This document contains high-level system requirements for the ESP32 Template pro
    * AC-4: Emulator build runnable under QEMU with console output
    * AC-5: Documentation provides build/run verification steps
 
+.. req:: Emulator Network Connectivity
+   :id: REQ_SYS_SIM_2
+   :status: approved
+   :priority: optional
+   :tags: emulator, qemu, network, development
+   :links: REQ_SYS_SIM_1, REQ_SYS_NET_1
+
+   **Description:**
+   The system SHOULD provide network connectivity when running in QEMU emulation to enable testing of network-dependent features.
+
+   **Rationale:**
+   Enables development and testing of web interfaces, WiFi configuration, and network protocols without physical ESP32 hardware.
+
+   **Acceptance Criteria:**
+
+   * AC-1: UART-based network tunnel bridges QEMU to host network stack
+   * AC-2: Web interface accessible from host machine during emulation
+   * AC-3: DHCP client obtains IP address in emulation mode
+   * AC-4: Network features testable without hardware WiFi module
+   * AC-5: Documentation describes emulation network setup and limitations
+
+
 
 Traceability
 ------------
