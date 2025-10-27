@@ -1,42 +1,48 @@
 /**
  * @file config_manager.h
- * @brief Configuration Management API for ESP32 Distance Sensor Project
+ * @brief Generic Configuration Management API
  * 
- * This module provides runtime configuration management with persistent NVS storage,
- * parameter validation, and thread-safe access. It implements the dynamic configuration
- * system requirements for the ESP32 Distance Sensor project.
- * 
- * FEATURES:
- * - Runtime configuration structure matching compile-time defaults
- * - NVS persistence with power-loss protection
- * - Parameter validation with range checking
+ * This module provides a metadata-driven configuration system with:
+ * - Type-specific parameter tables (uint16 and string)
+ * - Persistent NVS storage with individual parameter access
+ * - Metadata-driven validation (no hardcoded parameter logic)
  * - Thread-safe access with mutex protection
  * - Automatic fallback to factory defaults
- * - Configuration versioning and change tracking
+ * 
+ * ARCHITECTURE:
+ * The config manager is completely generic and has NO knowledge of application
+ * parameters (WiFi, LED, sensors, etc.). All parameter definitions live in
+ * the application's config.h file.
  * 
  * THREAD SAFETY:
  * All functions are thread-safe and can be called from multiple tasks simultaneously.
  * Internal mutex protection ensures data consistency.
  * 
+ * MEMORY EFFICIENCY:
+ * Dual-table design (uint16 + string) saves ~73% RAM vs union approach:
+ * - Union: 20 params × 65 bytes = 1300 bytes
+ * - Dual-table: (15 × 2) + (5 × 65) = 355 bytes
+ * 
  * ERROR HANDLING:
  * All functions return esp_err_t codes for proper error handling integration
  * with ESP-IDF error handling patterns.
  * 
- * @author ESP32 Distance Project Team
+ * @author ESP32 Template Project
  * @date 2025
- * @version 1.0
+ * @version 2.0
  * 
  * Requirements Traceability:
- * - REQ-CFG-3: Configuration Data Structure
- * - REQ-CFG-4: Non-Volatile Storage (NVS)
- * - REQ-CFG-5: Configuration API
- * - REQ-CFG-6: Parameter Validation
+ * - REQ_CFG_3: Configuration Data Structure
+ * - REQ_CFG_4: Non-Volatile Storage (NVS)
+ * - REQ_CFG_5: Configuration API
+ * - REQ_CFG_6: Parameter Validation
  */
 
 #pragma once
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include "esp_err.h"
 
 #ifdef __cplusplus
@@ -44,240 +50,156 @@ extern "C" {
 #endif
 
 // =============================================================================
-// CONFIGURATION DATA STRUCTURE (REQ-CFG-3)
+// PARAMETER TYPE DEFINITIONS (REQ_CFG_3)
 // =============================================================================
 
 /**
- * @brief Current configuration version
- * @note Used for compatibility checking and migration
- */
-#define CONFIG_VERSION 1
-
-/**
- * @brief Maximum length for WiFi SSID (including null terminator)
- * @note Based on IEEE 802.11 standard (32 chars + null)
- */
-#define CONFIG_WIFI_SSID_MAX_LEN 33
-
-/**
- * @brief Maximum length for WiFi password (including null terminator)
- * @note Based on WPA standard (64 chars + null)
- */
-#define CONFIG_WIFI_PASSWORD_MAX_LEN 65
-
-/**
- * @brief Runtime configuration structure
+ * @brief Maximum string length (excluding null terminator)
  * 
- * Contains all user-configurable parameters with metadata for versioning
- * and change tracking. Optimized for NVS storage efficiency using appropriate
- * data types aligned with ESP32 memory requirements.
+ * Balances memory efficiency with typical use cases:
+ * - WiFi SSID: max 32 chars (IEEE 802.11)
+ * - WiFi password: max 63 chars (WPA2)
+ * - Device names, URLs: typically < 64 chars
+ */
+#define CONFIG_STRING_MAX_LEN 64
+
+/**
+ * @brief UINT16 parameter metadata
  * 
- * @requirement REQ-CFG-3 AC-1-6
+ * Defines constraints for a numeric parameter.
+ * Stored in Flash ROM (const), zero RAM cost.
  */
 typedef struct {
-    // Configuration metadata
-    uint32_t config_version;         ///< Configuration version (current: 1)
-    uint32_t save_count;             ///< Number of times configuration has been saved
-    
-    // Distance sensor settings (runtime configurable)
-    uint16_t distance_min_mm;        ///< Minimum distance for LED mapping in mm (50-1000 = 5.0-100.0cm)
-    uint16_t distance_max_mm;        ///< Maximum distance for LED mapping in mm (200-4000 = 20.0-400.0cm)
-    uint16_t measurement_interval_ms; ///< Measurement interval in ms (50-1000)
-    uint32_t sensor_timeout_ms;      ///< Sensor timeout in ms (10-50)
-    int16_t temperature_c_x10;       ///< Ambient temperature in tenths of Celsius (-200 to 600 = -20.0 to 60.0°C)
-    uint16_t smoothing_factor;       ///< EMA smoothing factor (100-1000, where 1000=1.0, 300=0.3)
-    
-    // LED settings (runtime configurable)
-    uint8_t led_count;               ///< Number of LEDs in strip (1-60)
-    uint8_t led_brightness;          ///< LED brightness level (10-255)
-    
-    // WiFi settings (runtime configurable)
-    char wifi_ssid[CONFIG_WIFI_SSID_MAX_LEN];        ///< WiFi network name
-    char wifi_password[CONFIG_WIFI_PASSWORD_MAX_LEN]; ///< WiFi network password
-    uint8_t wifi_ap_channel;         ///< WiFi AP channel (1-13)
-    uint8_t wifi_ap_max_conn;        ///< Maximum AP connections (1-10)
-    uint8_t wifi_sta_max_retry;      ///< STA connection retry attempts (1-10)
-    uint32_t wifi_sta_timeout_ms;    ///< STA connection timeout in ms (1000-30000)
-} system_config_t;
+    uint16_t min;          ///< Minimum allowed value (inclusive)
+    uint16_t max;          ///< Maximum allowed value (inclusive)
+    uint16_t default_val;  ///< Factory default value
+} config_uint16_param_t;
+
+/**
+ * @brief STRING parameter metadata
+ * 
+ * Defines constraints for a string parameter.
+ * Stored in Flash ROM (const), zero RAM cost.
+ * Default value pointer references Flash ROM string.
+ */
+typedef struct {
+    uint8_t min_len;           ///< Minimum string length (0 = empty string allowed)
+    uint8_t max_len;           ///< Maximum string length (max CONFIG_STRING_MAX_LEN)
+    const char* default_val;   ///< Pointer to default string in Flash ROM
+} config_string_param_t;
 
 // =============================================================================
-// CONFIGURATION API (REQ-CFG-5)
+// CONFIGURATION API (REQ_CFG_5)
 // =============================================================================
 
 /**
  * @brief Initialize configuration management subsystem
  * 
- * Initializes the configuration manager, creates necessary mutex protection,
- * and loads configuration from NVS. If NVS read fails, automatically performs
- * factory reset and saves default configuration.
+ * Initializes the configuration manager, creates mutex protection,
+ * opens NVS namespace "config", and loads all parameters from NVS into
+ * runtime caches. If NVS is empty or corrupted, loads default values
+ * from parameter tables and persists them.
  * 
  * Must be called once during system startup before any other config functions.
  * 
  * @return ESP_OK on success
  * @return ESP_ERR_NO_MEM if memory allocation fails
- * @return Other ESP error codes for initialization failures
+ * @return ESP_ERR_NVS_* on NVS initialization failure
  * 
- * @requirement REQ-CFG-5 AC-1
+ * @requirement REQ_CFG_5 AC-1
  */
 esp_err_t config_init(void);
 
 /**
- * @brief Load configuration from NVS
+ * @brief Reset all parameters to factory defaults
  * 
- * Reads current configuration from NVS storage into provided structure.
- * If NVS read fails or validation fails, automatically calls config_factory_reset()
- * to restore defaults and persist them.
- * 
- * @param[out] config Pointer to configuration structure to populate
- * @return ESP_OK on success
- * @return ESP_ERR_INVALID_ARG if config is NULL
- * @return ESP_ERR_NOT_FOUND if no configuration exists in NVS (triggers factory reset)
- * @return Other ESP error codes for NVS or validation failures
- * 
- * @requirement REQ-CFG-5 AC-2, AC-3
- */
-esp_err_t config_load(system_config_t* config);
-
-/**
- * @brief Save configuration to NVS
- * 
- * Validates configuration parameters using config_validate_range() and saves
- * to NVS if validation passes. Updates save_count and performs atomic write
- * operation for power-loss protection.
- * 
- * @param[in] config Pointer to configuration structure to save
- * @return ESP_OK on success
- * @return ESP_ERR_INVALID_ARG if config is NULL or validation fails
- * @return Other ESP error codes for NVS write failures
- * 
- * @requirement REQ-CFG-5 AC-4
- */
-esp_err_t config_save(const system_config_t* config);
-
-/**
- * @brief Validate configuration parameter ranges
- * 
- * Validates all parameters in configuration structure against defined ranges
- * and inter-parameter relationships. Logs specific error messages for invalid
- * parameters.
- * 
- * @param[in] config Pointer to configuration structure to validate
- * @return ESP_OK if all parameters are valid
- * @return ESP_ERR_INVALID_ARG if config is NULL
- * @return ESP_ERR_INVALID_SIZE if any parameter is out of range
- * 
- * @requirement REQ-CFG-5 AC-5, REQ-CFG-6 AC-1-6
- */
-esp_err_t config_validate_range(const system_config_t* config);
-
-/**
- * @brief Reset configuration to factory defaults
- * 
- * Restores compile-time defaults from config.h and persists them to NVS
- * using config_save(). Completes the error recovery sequence atomically.
+ * Loads default values from CONFIG_UINT16_PARAMS and CONFIG_STRING_PARAMS
+ * metadata tables (defined in config.h), erases all NVS entries in "config"
+ * namespace, and persists defaults to NVS.
  * 
  * @return ESP_OK on success
- * @return Other ESP error codes for save operation failures
+ * @return ESP_ERR_NVS_* on NVS operation failure
  * 
- * @requirement REQ-CFG-5 AC-6, AC-9
+ * @requirement REQ_CFG_5 AC-6, AC-9
  */
 esp_err_t config_factory_reset(void);
 
-/**
- * @brief Check if parameter value is within valid range
- * @param[in] param_name Name of parameter for logging
- * @param[in] value Value to validate
- * @param[in] min_val Minimum valid value
- * @param[in] max_val Maximum valid value
- * @return true if value is within range, false otherwise
- * 
- * @requirement REQ-CFG-6 AC-1-2
- */
-/**
- * @brief Validate integer parameter is within specified range
- * 
- * @param param_name Parameter name for logging
- * @param value Value to validate
- * @param min_val Minimum allowed value (inclusive)
- * @param max_val Maximum allowed value (inclusive)
- * @return true if valid, false if out of range
- */
-bool config_is_valid_int_range(const char* param_name, int32_t value, int32_t min_val, int32_t max_val);
-
-/**
- * @brief Get current configuration (thread-safe)
- * 
- * Returns a copy of the current configuration structure with mutex protection.
- * This function is safe to call from multiple tasks simultaneously.
- * 
- * @param[out] config Pointer to configuration structure to populate
- * @return ESP_OK on success
- * @return ESP_ERR_INVALID_ARG if config is NULL
- * @return ESP_ERR_INVALID_STATE if config manager not initialized
- */
-esp_err_t config_get_current(system_config_t* config);
-
-/**
- * @brief Update current configuration (thread-safe)
- * 
- * Updates the current configuration with validation and mutex protection.
- * Does not automatically save to NVS - call config_save() separately if
- * persistence is required.
- * 
- * @param[in] config Pointer to new configuration structure
- * @return ESP_OK on success
- * @return ESP_ERR_INVALID_ARG if config is NULL or validation fails
- * @return ESP_ERR_INVALID_STATE if config manager not initialized
- */
-esp_err_t config_set_current(const system_config_t* config);
-
-/**
- * @brief Perform NVS health check and diagnostics (REQ-CFG-11)
- * 
- * Checks NVS partition health, available space, and configuration integrity.
- * Can be used for system monitoring and preventive maintenance.
- * 
- * @param[out] free_entries Number of free NVS entries (optional, can be NULL)
- * @param[out] total_entries Total number of NVS entries (optional, can be NULL)
- * @return ESP_OK if NVS is healthy
- * @return ESP_ERR_NVS_CORRUPT if corruption is detected
- * @return Other ESP error codes for NVS issues
- */
-esp_err_t config_nvs_health_check(size_t* free_entries, size_t* total_entries);
-
 // =============================================================================
-// PARAMETER VALIDATION CONSTANTS (REQ-CFG-6)
+// UINT16 PARAMETER ACCESS (REQ_CFG_5)
 // =============================================================================
 
-// Distance sensor parameter ranges
-#define CONFIG_DISTANCE_MIN_MM_MIN          50     // 5.0cm in mm
-#define CONFIG_DISTANCE_MIN_MM_MAX          1000   // 100.0cm in mm
-#define CONFIG_DISTANCE_MAX_MM_MIN          200    // 20.0cm in mm
-#define CONFIG_DISTANCE_MAX_MM_MAX          4000   // 400.0cm in mm
-#define CONFIG_MEASUREMENT_INTERVAL_MS_MIN  50
-#define CONFIG_MEASUREMENT_INTERVAL_MS_MAX  1000
-#define CONFIG_SENSOR_TIMEOUT_MS_MIN        10
-#define CONFIG_SENSOR_TIMEOUT_MS_MAX        50
-#define CONFIG_TEMPERATURE_C_X10_MIN        -200   // -20.0°C in tenths
-#define CONFIG_TEMPERATURE_C_X10_MAX        600    // 60.0°C in tenths
-#define CONFIG_SMOOTHING_FACTOR_MIN         100    // 0.1 * 1000
-#define CONFIG_SMOOTHING_FACTOR_MAX         1000   // 1.0 * 1000
+/**
+ * @brief Get uint16 parameter value
+ * 
+ * Reads parameter from runtime cache (RAM) without NVS access.
+ * Fast operation (<10 CPU cycles). Thread-safe with mutex protection.
+ * 
+ * @param[in] id Parameter identifier from config_uint16_id_t enum (defined in config.h)
+ * @param[out] value Pointer to store parameter value
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if id out of range or value is NULL
+ * @return ESP_ERR_INVALID_STATE if config manager not initialized
+ * 
+ * @requirement REQ_CFG_5 AC-2
+ */
+esp_err_t config_get_uint16(uint32_t id, uint16_t* value);
 
-// LED parameter ranges
-#define CONFIG_LED_COUNT_MIN                1
-#define CONFIG_LED_COUNT_MAX                100
-#define CONFIG_LED_BRIGHTNESS_MIN           10
-#define CONFIG_LED_BRIGHTNESS_MAX           255
+/**
+ * @brief Set uint16 parameter value
+ * 
+ * Validates parameter using metadata table (min, max constraints from config.h),
+ * updates runtime cache, and persists to NVS with key "u<id>".
+ * Thread-safe with mutex protection.
+ * 
+ * @param[in] id Parameter identifier from config_uint16_id_t enum (defined in config.h)
+ * @param[in] value New parameter value
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if id out of range or value violates constraints
+ * @return ESP_ERR_INVALID_STATE if config manager not initialized
+ * @return ESP_ERR_NVS_* on NVS write failure
+ * 
+ * @requirement REQ_CFG_5 AC-4, REQ_CFG_6 AC-1
+ */
+esp_err_t config_set_uint16(uint32_t id, uint16_t value);
 
-// WiFi parameter ranges
-#define CONFIG_WIFI_AP_CHANNEL_MIN          1
-#define CONFIG_WIFI_AP_CHANNEL_MAX          13
-#define CONFIG_WIFI_AP_MAX_CONN_MIN         1
-#define CONFIG_WIFI_AP_MAX_CONN_MAX         10
-#define CONFIG_WIFI_STA_MAX_RETRY_MIN       1
-#define CONFIG_WIFI_STA_MAX_RETRY_MAX       10
-#define CONFIG_WIFI_STA_TIMEOUT_MS_MIN      1000
-#define CONFIG_WIFI_STA_TIMEOUT_MS_MAX      30000
+// =============================================================================
+// STRING PARAMETER ACCESS (REQ_CFG_5)
+// =============================================================================
+
+/**
+ * @brief Get string parameter value
+ * 
+ * Copies string from runtime cache to user buffer.
+ * Thread-safe with mutex protection.
+ * 
+ * @param[in] id Parameter identifier from config_string_id_t enum (defined in config.h)
+ * @param[out] buffer Buffer to store string (must be at least buf_len bytes)
+ * @param[in] buf_len Maximum buffer size (including null terminator)
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if id out of range, buffer is NULL, or buf_len too small
+ * @return ESP_ERR_INVALID_STATE if config manager not initialized
+ * 
+ * @requirement REQ_CFG_5 AC-2
+ */
+esp_err_t config_get_string(uint32_t id, char* buffer, size_t buf_len);
+
+/**
+ * @brief Set string parameter value
+ * 
+ * Validates string length using metadata table (min_len, max_len from config.h),
+ * copies to runtime cache, and persists to NVS with key "s<id>".
+ * Thread-safe with mutex protection.
+ * 
+ * @param[in] id Parameter identifier from config_string_id_t enum (defined in config.h)
+ * @param[in] value Null-terminated string value (must not be NULL)
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if id out of range, value is NULL, or length violates constraints
+ * @return ESP_ERR_INVALID_STATE if config manager not initialized
+ * @return ESP_ERR_NVS_* on NVS write failure
+ * 
+ * @requirement REQ_CFG_5 AC-4, REQ_CFG_6 AC-2
+ */
+esp_err_t config_set_string(uint32_t id, const char* value);
 
 #ifdef __cplusplus
 }

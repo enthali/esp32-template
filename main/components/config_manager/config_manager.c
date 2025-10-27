@@ -1,16 +1,28 @@
 /**
  * @file config_manager.c
- * @brief Configuration Management Implementation for ESP32 Distance Sensor Project
+ * @brief Generic Configuration Management Implementation
  * 
- * Implementation of runtime configuration management with NVS persistence,
- * parameter validation, and thread-safe access.
+ * Metadata-driven configuration system with type-specific parameter tables.
+ * Completely generic - no hardcoded knowledge of application parameters.
  * 
- * @author ESP32 Distance Project Team
+ * ARCHITECTURE:
+ * - Imports parameter tables from config.h (application-specific)
+ * - Maintains separate runtime caches for uint16 and string parameters
+ * - Uses NVS with type-prefixed keys ("u0", "s0") for storage
+ * - Metadata-driven validation (no switch statements on parameter IDs)
+ * 
+ * @author ESP32 Template Project
  * @date 2025
- * @version 1.0
+ * @version 2.0
+ * 
+ * Requirements Traceability:
+ * - REQ_CFG_4: NVS persistent storage
+ * - REQ_CFG_5: Configuration API implementation
+ * - REQ_CFG_6: Parameter validation
  */
 
 #include "config_manager.h"
+#include "../../config.h"  // Import application parameter tables
 #include "esp_log.h"
 #include "esp_err.h"
 #include "nvs_flash.h"
@@ -18,507 +30,468 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include <string.h>
+#include <stdio.h>
 
-static const char *TAG = "config_manager";
+static const char *TAG = "config";
 
 // =============================================================================
 // PRIVATE VARIABLES
 // =============================================================================
 
-/**
- * @brief NVS namespace for configuration storage
- */
-#define NVS_NAMESPACE "esp32_config"
+/** @brief NVS namespace for configuration storage */
+#define NVS_NAMESPACE "config"
 
-/**
- * @brief NVS key for configuration blob
- */
-#define NVS_CONFIG_KEY "config"
-
-/**
- * @brief Mutex for thread-safe access to configuration
- */
+/** @brief Mutex for thread-safe access to configuration */
 static SemaphoreHandle_t config_mutex = NULL;
 
-/**
- * @brief Current runtime configuration
- */
-static system_config_t current_config;
-
-/**
- * @brief Initialization flag
- */
+/** @brief Initialization flag */
 static bool config_initialized = false;
 
+/** @brief Runtime cache for uint16 parameters */
+static uint16_t cache_uint16[CONFIG_UINT16_COUNT];
+
+/** @brief Runtime cache for string parameters (max 65 bytes including null) */
+static char cache_strings[CONFIG_STRING_COUNT][CONFIG_STRING_MAX_LEN + 1];
+
 // =============================================================================
-// PRIVATE FUNCTION DECLARATIONS
+// PRIVATE HELPER FUNCTIONS
 // =============================================================================
 
 /**
- * @brief Initialize configuration structure with factory defaults
- * @param[out] config Configuration structure to initialize
+ * @brief Generate NVS key for uint16 parameter
+ * @param id Parameter ID
+ * @param key_buf Buffer to store key (min 4 bytes)
  */
-static void config_init_defaults(system_config_t* config);
+static inline void generate_uint16_key(uint32_t id, char* key_buf) {
+    snprintf(key_buf, 4, "u%u", id);
+}
 
 /**
- * @brief Validate inter-parameter relationships
- * @param[in] config Configuration to validate
- * @return ESP_OK if relationships are valid, ESP_ERR_INVALID_SIZE otherwise
+ * @brief Generate NVS key for string parameter
+ * @param id Parameter ID
+ * @param key_buf Buffer to store key (min 4 bytes)
  */
-static esp_err_t config_validate_relationships(const system_config_t* config);
+static inline void generate_string_key(uint32_t id, char* key_buf) {
+    snprintf(key_buf, 4, "s%u", id);
+}
+
+/**
+ * @brief Validate uint16 parameter value against metadata constraints
+ * @param id Parameter ID
+ * @param value Value to validate
+ * @return ESP_OK if valid, ESP_ERR_INVALID_ARG if out of range
+ */
+static esp_err_t validate_uint16(uint32_t id, uint16_t value) {
+    if (id >= CONFIG_UINT16_COUNT) {
+        ESP_LOGE(TAG, "Invalid uint16 parameter ID: %u", id);
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    const config_uint16_param_t* param = &CONFIG_UINT16_PARAMS[id];
+    
+    if (value < param->min || value > param->max) {
+        ESP_LOGE(TAG, "Parameter u%u out of range: %u (min=%u, max=%u)",
+                 id, value, param->min, param->max);
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    return ESP_OK;
+}
+
+/**
+ * @brief Validate string parameter value against metadata constraints
+ * @param id Parameter ID
+ * @param value String value to validate (must not be NULL)
+ * @return ESP_OK if valid, ESP_ERR_INVALID_ARG if length out of range
+ */
+static esp_err_t validate_string(uint32_t id, const char* value) {
+    if (id >= CONFIG_STRING_COUNT) {
+        ESP_LOGE(TAG, "Invalid string parameter ID: %u", id);
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    if (value == NULL) {
+        ESP_LOGE(TAG, "String parameter s%u: NULL value not allowed", id);
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    const config_string_param_t* param = &CONFIG_STRING_PARAMS[id];
+    size_t len = strlen(value);
+    
+    if (len < param->min_len || len > param->max_len) {
+        ESP_LOGE(TAG, "String parameter s%u length invalid: %u (min=%u, max=%u)",
+                 id, len, param->min_len, param->max_len);
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    return ESP_OK;
+}
+
+/**
+ * @brief Load uint16 parameter from NVS or use default
+ * @param handle NVS handle
+ * @param id Parameter ID
+ * @return ESP_OK on success
+ */
+static esp_err_t load_uint16_param(nvs_handle_t handle, uint32_t id) {
+    char key[4];
+    generate_uint16_key(id, key);
+    
+    uint16_t value;
+    esp_err_t err = nvs_get_u16(handle, key, &value);
+    
+    if (err == ESP_ERR_NVS_NOT_FOUND) {
+        // Use default value
+        value = CONFIG_UINT16_PARAMS[id].default_val;
+        ESP_LOGD(TAG, "Parameter %s not found in NVS, using default: %u", key, value);
+    } else if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to read %s from NVS: %s", key, esp_err_to_name(err));
+        return err;
+    }
+    
+    // Validate and store in cache
+    err = validate_uint16(id, value);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "Invalid value for %s in NVS, using default", key);
+        value = CONFIG_UINT16_PARAMS[id].default_val;
+    }
+    
+    cache_uint16[id] = value;
+    return ESP_OK;
+}
+
+/**
+ * @brief Load string parameter from NVS or use default
+ * @param handle NVS handle
+ * @param id Parameter ID
+ * @return ESP_OK on success
+ */
+static esp_err_t load_string_param(nvs_handle_t handle, uint32_t id) {
+    char key[4];
+    generate_string_key(id, key);
+    
+    size_t required_size = CONFIG_STRING_MAX_LEN + 1;
+    esp_err_t err = nvs_get_str(handle, key, cache_strings[id], &required_size);
+    
+    if (err == ESP_ERR_NVS_NOT_FOUND) {
+        // Use default value
+        const char* default_val = CONFIG_STRING_PARAMS[id].default_val;
+        strncpy(cache_strings[id], default_val, CONFIG_STRING_MAX_LEN);
+        cache_strings[id][CONFIG_STRING_MAX_LEN] = '\0';
+        ESP_LOGD(TAG, "Parameter %s not found in NVS, using default: \"%s\"", key, default_val);
+    } else if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to read %s from NVS: %s", key, esp_err_to_name(err));
+        return err;
+    }
+    
+    // Validate
+    err = validate_string(id, cache_strings[id]);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "Invalid value for %s in NVS, using default", key);
+        const char* default_val = CONFIG_STRING_PARAMS[id].default_val;
+        strncpy(cache_strings[id], default_val, CONFIG_STRING_MAX_LEN);
+        cache_strings[id][CONFIG_STRING_MAX_LEN] = '\0';
+    }
+    
+    return ESP_OK;
+}
 
 // =============================================================================
 // PUBLIC API IMPLEMENTATION
 // =============================================================================
 
-esp_err_t config_init(void)
-{
+esp_err_t config_init(void) {
     if (config_initialized) {
-        ESP_LOGW(TAG, "Configuration manager already initialized");
+        ESP_LOGW(TAG, "Config manager already initialized");
         return ESP_OK;
     }
-
-    ESP_LOGI(TAG, "Initializing configuration management subsystem");
-
-    // Create mutex for thread safety
+    
+    // Create mutex
     config_mutex = xSemaphoreCreateMutex();
     if (config_mutex == NULL) {
-        ESP_LOGE(TAG, "Failed to create configuration mutex");
+        ESP_LOGE(TAG, "Failed to create config mutex");
         return ESP_ERR_NO_MEM;
     }
-
-    // Initialize NVS if not already done
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_LOGW(TAG, "NVS requires format, erasing and reinitializing");
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ret = nvs_flash_init();
-    }
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to initialize NVS: %s", esp_err_to_name(ret));
+    
+    // Open NVS namespace
+    nvs_handle_t nvs_handle;
+    esp_err_t err = nvs_open(NVS_NAMESPACE, NVS_READWRITE, &nvs_handle);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to open NVS namespace: %s", esp_err_to_name(err));
         vSemaphoreDelete(config_mutex);
         config_mutex = NULL;
-        return ret;
-    }
-
-    // Load configuration from NVS (will fall back to defaults if not found)
-    ret = config_load(&current_config);
-    if (ret != ESP_OK) {
-        ESP_LOGW(TAG, "Failed to load initial configuration, using factory defaults: %s", esp_err_to_name(ret));
-        // Don't fail initialization - use factory defaults instead
-        config_init_defaults(&current_config);
-        
-        // Try to save the factory defaults to establish a good NVS state
-        esp_err_t save_ret = config_save(&current_config);
-        if (save_ret != ESP_OK) {
-            ESP_LOGW(TAG, "Failed to save factory defaults to NVS: %s", esp_err_to_name(save_ret));
-            // Continue anyway - we have valid defaults in memory
-        }
-    }
-
-    config_initialized = true;
-    ESP_LOGI(TAG, "Configuration management initialized successfully");
-    ESP_LOGI(TAG, "Configuration version: %lu, save count: %lu", 
-             current_config.config_version, current_config.save_count);
-
-    return ESP_OK;
-}
-
-esp_err_t config_load(system_config_t* config)
-{
-    if (config == NULL) {
-        ESP_LOGE(TAG, "Configuration pointer is NULL");
-        return ESP_ERR_INVALID_ARG;
-    }
-
-    // Take mutex for thread safety
-    if (config_mutex != NULL && xSemaphoreTake(config_mutex, pdMS_TO_TICKS(1000)) != pdTRUE) {
-        ESP_LOGE(TAG, "Failed to acquire configuration mutex");
-        return ESP_ERR_TIMEOUT;
-    }
-
-    ESP_LOGD(TAG, "Loading configuration from NVS");
-
-    nvs_handle_t nvs_handle;
-    esp_err_t ret = nvs_open(NVS_NAMESPACE, NVS_READONLY, &nvs_handle);
-    if (ret != ESP_OK) {
-        ESP_LOGW(TAG, "Failed to open NVS namespace: %s", esp_err_to_name(ret));
-        goto factory_reset;
-    }
-
-    // Get required size for configuration blob
-    size_t required_size = sizeof(system_config_t);
-    ret = nvs_get_blob(nvs_handle, NVS_CONFIG_KEY, config, &required_size);
-    nvs_close(nvs_handle);
-
-    if (ret == ESP_ERR_NVS_NOT_FOUND) {
-        ESP_LOGW(TAG, "No configuration found in NVS, using factory defaults");
-        goto factory_reset;
-    } else if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to read configuration from NVS: %s", esp_err_to_name(ret));
-        goto factory_reset;
-    }
-
-    // Validate loaded configuration
-    ret = config_validate_range(config);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Loaded configuration failed validation");
-        goto factory_reset;
-    }
-
-    // Check configuration version compatibility
-    if (config->config_version != CONFIG_VERSION) {
-        ESP_LOGW(TAG, "Configuration version mismatch (loaded: %lu, current: %d)", 
-                 config->config_version, CONFIG_VERSION);
-        goto factory_reset;
-    }
-
-    if (config_mutex != NULL) {
-        xSemaphoreGive(config_mutex);
-    }
-
-    ESP_LOGI(TAG, "Configuration loaded successfully from NVS");
-    return ESP_OK;
-
-factory_reset:
-    if (config_mutex != NULL) {
-        xSemaphoreGive(config_mutex);
+        return err;
     }
     
-    ESP_LOGW(TAG, "Performing factory reset due to load failure");
-    ret = config_factory_reset();
-    if (ret == ESP_OK) {
-        // Reload the factory defaults
-        return config_load(config);
+    // Load all uint16 parameters
+    for (uint32_t i = 0; i < CONFIG_UINT16_COUNT; i++) {
+        err = load_uint16_param(nvs_handle, i);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to load uint16 parameter %u", i);
+            // Continue loading other parameters
+        }
     }
-    return ret;
+    
+    // Load all string parameters
+    for (uint32_t i = 0; i < CONFIG_STRING_COUNT; i++) {
+        err = load_string_param(nvs_handle, i);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to load string parameter %u", i);
+            // Continue loading other parameters
+        }
+    }
+    
+    nvs_close(nvs_handle);
+    
+    config_initialized = true;
+    ESP_LOGI(TAG, "Config manager initialized (%u uint16, %u string parameters)",
+             CONFIG_UINT16_COUNT, CONFIG_STRING_COUNT);
+    
+    return ESP_OK;
 }
 
-esp_err_t config_save(const system_config_t* config)
-{
-    if (config == NULL) {
-        ESP_LOGE(TAG, "Configuration pointer is NULL");
-        return ESP_ERR_INVALID_ARG;
+esp_err_t config_factory_reset(void) {
+    if (!config_initialized) {
+        ESP_LOGE(TAG, "Config manager not initialized");
+        return ESP_ERR_INVALID_STATE;
     }
-
-    // Validate configuration before saving
-    esp_err_t ret = config_validate_range(config);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Configuration validation failed, not saving");
-        return ret;
-    }
-
-    // Take mutex for thread safety
-    if (config_mutex != NULL && xSemaphoreTake(config_mutex, pdMS_TO_TICKS(1000)) != pdTRUE) {
-        ESP_LOGE(TAG, "Failed to acquire configuration mutex");
+    
+    // Acquire mutex
+    if (xSemaphoreTake(config_mutex, pdMS_TO_TICKS(1000)) != pdTRUE) {
+        ESP_LOGE(TAG, "Failed to acquire config mutex");
         return ESP_ERR_TIMEOUT;
     }
-
-    ESP_LOGD(TAG, "Saving configuration to NVS");
-
+    
+    // Open NVS namespace
     nvs_handle_t nvs_handle;
-    ret = nvs_open(NVS_NAMESPACE, NVS_READWRITE, &nvs_handle);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to open NVS namespace for write: %s", esp_err_to_name(ret));
-        if (config_mutex != NULL) {
-            xSemaphoreGive(config_mutex);
-        }
-        return ret;
-    }
-
-    // Create a copy with updated save count
-    system_config_t config_to_save = *config;
-    config_to_save.save_count++;
-
-    // Write configuration blob atomically
-    ret = nvs_set_blob(nvs_handle, NVS_CONFIG_KEY, &config_to_save, sizeof(system_config_t));
-    if (ret == ESP_OK) {
-        ret = nvs_commit(nvs_handle);
-    }
-
-    nvs_close(nvs_handle);
-
-    if (ret == ESP_OK) {
-        // Update current configuration
-        current_config = config_to_save;
-        ESP_LOGI(TAG, "Configuration saved successfully (save count: %lu)", config_to_save.save_count);
-    } else {
-        ESP_LOGE(TAG, "Failed to save configuration to NVS: %s", esp_err_to_name(ret));
-    }
-
-    if (config_mutex != NULL) {
+    esp_err_t err = nvs_open(NVS_NAMESPACE, NVS_READWRITE, &nvs_handle);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to open NVS namespace: %s", esp_err_to_name(err));
         xSemaphoreGive(config_mutex);
+        return err;
     }
-
-    return ret;
-}
-
-esp_err_t config_validate_range(const system_config_t* config)
-{
-    if (config == NULL) {
-        ESP_LOGE(TAG, "Configuration pointer is NULL");
-        return ESP_ERR_INVALID_ARG;
+    
+    // Erase all entries
+    err = nvs_erase_all(nvs_handle);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to erase NVS: %s", esp_err_to_name(err));
+        nvs_close(nvs_handle);
+        xSemaphoreGive(config_mutex);
+        return err;
     }
-
-    ESP_LOGD(TAG, "Validating configuration parameters");
-
-    // Distance sensor parameters
-    if (!config_is_valid_int_range("distance_min_mm", config->distance_min_mm, 
-                               CONFIG_DISTANCE_MIN_MM_MIN, CONFIG_DISTANCE_MIN_MM_MAX)) {
-        return ESP_ERR_INVALID_SIZE;
+    
+    // Load defaults into cache and persist
+    char key[4];
+    
+    // Uint16 defaults
+    for (uint32_t i = 0; i < CONFIG_UINT16_COUNT; i++) {
+        uint16_t default_val = CONFIG_UINT16_PARAMS[i].default_val;
+        cache_uint16[i] = default_val;
+        
+        generate_uint16_key(i, key);
+        err = nvs_set_u16(nvs_handle, key, default_val);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to write default for %s: %s", key, esp_err_to_name(err));
+        }
     }
-
-    if (!config_is_valid_int_range("distance_max_mm", config->distance_max_mm,
-                               CONFIG_DISTANCE_MAX_MM_MIN, CONFIG_DISTANCE_MAX_MM_MAX)) {
-        return ESP_ERR_INVALID_SIZE;
+    
+    // String defaults
+    for (uint32_t i = 0; i < CONFIG_STRING_COUNT; i++) {
+        const char* default_val = CONFIG_STRING_PARAMS[i].default_val;
+        strncpy(cache_strings[i], default_val, CONFIG_STRING_MAX_LEN);
+        cache_strings[i][CONFIG_STRING_MAX_LEN] = '\0';
+        
+        generate_string_key(i, key);
+        err = nvs_set_str(nvs_handle, key, default_val);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to write default for %s: %s", key, esp_err_to_name(err));
+        }
     }
-
-    if (!config_is_valid_int_range("measurement_interval_ms", (int32_t)config->measurement_interval_ms,
-                               CONFIG_MEASUREMENT_INTERVAL_MS_MIN, CONFIG_MEASUREMENT_INTERVAL_MS_MAX)) {
-        return ESP_ERR_INVALID_SIZE;
-    }
-
-    if (!config_is_valid_int_range("sensor_timeout_ms", (int32_t)config->sensor_timeout_ms,
-                               CONFIG_SENSOR_TIMEOUT_MS_MIN, CONFIG_SENSOR_TIMEOUT_MS_MAX)) {
-        return ESP_ERR_INVALID_SIZE;
-    }
-
-    if (!config_is_valid_int_range("temperature_c_x10", config->temperature_c_x10,
-                               CONFIG_TEMPERATURE_C_X10_MIN, CONFIG_TEMPERATURE_C_X10_MAX)) {
-        return ESP_ERR_INVALID_SIZE;
-    }
-
-    if (!config_is_valid_int_range("smoothing_factor", config->smoothing_factor,
-                               CONFIG_SMOOTHING_FACTOR_MIN, CONFIG_SMOOTHING_FACTOR_MAX)) {
-        return ESP_ERR_INVALID_SIZE;
-    }
-
-    // LED parameters
-    if (!config_is_valid_int_range("led_count", (int32_t)config->led_count,
-                               CONFIG_LED_COUNT_MIN, CONFIG_LED_COUNT_MAX)) {
-        return ESP_ERR_INVALID_SIZE;
-    }
-
-    if (!config_is_valid_int_range("led_brightness", (int32_t)config->led_brightness,
-                               CONFIG_LED_BRIGHTNESS_MIN, CONFIG_LED_BRIGHTNESS_MAX)) {
-        return ESP_ERR_INVALID_SIZE;
-    }
-
-    // WiFi parameters
-    if (!config_is_valid_int_range("wifi_ap_channel", (int32_t)config->wifi_ap_channel,
-                               CONFIG_WIFI_AP_CHANNEL_MIN, CONFIG_WIFI_AP_CHANNEL_MAX)) {
-        return ESP_ERR_INVALID_SIZE;
-    }
-
-    if (!config_is_valid_int_range("wifi_ap_max_conn", (int32_t)config->wifi_ap_max_conn,
-                               CONFIG_WIFI_AP_MAX_CONN_MIN, CONFIG_WIFI_AP_MAX_CONN_MAX)) {
-        return ESP_ERR_INVALID_SIZE;
-    }
-
-    if (!config_is_valid_int_range("wifi_sta_max_retry", (int32_t)config->wifi_sta_max_retry,
-                               CONFIG_WIFI_STA_MAX_RETRY_MIN, CONFIG_WIFI_STA_MAX_RETRY_MAX)) {
-        return ESP_ERR_INVALID_SIZE;
-    }
-
-    if (!config_is_valid_int_range("wifi_sta_timeout_ms", (int32_t)config->wifi_sta_timeout_ms,
-                               CONFIG_WIFI_STA_TIMEOUT_MS_MIN, CONFIG_WIFI_STA_TIMEOUT_MS_MAX)) {
-        return ESP_ERR_INVALID_SIZE;
-    }
-
-    // Validate inter-parameter relationships
-    return config_validate_relationships(config);
-}
-
-esp_err_t config_factory_reset(void)
-{
-    ESP_LOGI(TAG, "Performing factory reset to default configuration");
-
-    system_config_t default_config;
-    config_init_defaults(&default_config);
-
-    // Save defaults to NVS
-    esp_err_t ret = config_save(&default_config);
-    if (ret == ESP_OK) {
+    
+    // Commit changes
+    err = nvs_commit(nvs_handle);
+    nvs_close(nvs_handle);
+    xSemaphoreGive(config_mutex);
+    
+    if (err == ESP_OK) {
         ESP_LOGI(TAG, "Factory reset completed successfully");
     } else {
-        ESP_LOGE(TAG, "Factory reset failed: %s", esp_err_to_name(ret));
+        ESP_LOGE(TAG, "Factory reset commit failed: %s", esp_err_to_name(err));
     }
-
-    return ret;
-}
-
-bool config_is_valid_int_range(const char* param_name, int32_t value, int32_t min_val, int32_t max_val)
-{
-    if (value < min_val || value > max_val) {
-        ESP_LOGE(TAG, "Parameter %s value %ld is out of range [%ld, %ld]", 
-                 param_name, (long)value, (long)min_val, (long)max_val);
-        return false;
-    }
-    return true;
-}
-
-esp_err_t config_get_current(system_config_t* config)
-{
-    if (config == NULL) {
-        ESP_LOGE(TAG, "Configuration pointer is NULL");
-        return ESP_ERR_INVALID_ARG;
-    }
-
-    if (!config_initialized) {
-        ESP_LOGE(TAG, "Configuration manager not initialized");
-        return ESP_ERR_INVALID_STATE;
-    }
-
-    // Take mutex for thread safety
-    if (xSemaphoreTake(config_mutex, pdMS_TO_TICKS(1000)) != pdTRUE) {
-        ESP_LOGE(TAG, "Failed to acquire configuration mutex");
-        return ESP_ERR_TIMEOUT;
-    }
-
-    *config = current_config;
-
-    xSemaphoreGive(config_mutex);
-    return ESP_OK;
-}
-
-esp_err_t config_set_current(const system_config_t* config)
-{
-    if (config == NULL) {
-        ESP_LOGE(TAG, "Configuration pointer is NULL");
-        return ESP_ERR_INVALID_ARG;
-    }
-
-    if (!config_initialized) {
-        ESP_LOGE(TAG, "Configuration manager not initialized");
-        return ESP_ERR_INVALID_STATE;
-    }
-
-    // Validate configuration
-    esp_err_t ret = config_validate_range(config);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Configuration validation failed");
-        return ret;
-    }
-
-    // Take mutex for thread safety
-    if (xSemaphoreTake(config_mutex, pdMS_TO_TICKS(1000)) != pdTRUE) {
-        ESP_LOGE(TAG, "Failed to acquire configuration mutex");
-        return ESP_ERR_TIMEOUT;
-    }
-
-    current_config = *config;
-
-    xSemaphoreGive(config_mutex);
-    ESP_LOGD(TAG, "Current configuration updated");
-    return ESP_OK;
-}
-
-// =============================================================================
-// PRIVATE FUNCTION IMPLEMENTATIONS
-// =============================================================================
-
-static void config_init_defaults(system_config_t* config)
-{
-    memset(config, 0, sizeof(system_config_t));
-
-    // Configuration metadata
-    config->config_version = CONFIG_VERSION;
-    config->save_count = 0;
-
-    // Template: Distance sensor defaults (example values - customize for your hardware)
-    config->distance_min_mm = 100;      // 10 cm minimum
-    config->distance_max_mm = 4000;     // 4 m maximum  
-    config->measurement_interval_ms = 100;
-    config->sensor_timeout_ms = 30000;
-    config->temperature_c_x10 = 200;    // 20.0°C
-    config->smoothing_factor = 300;     // 0.3 alpha
-
-    // Template: LED defaults (example values - customize for your hardware)
-    config->led_count = 30;
-    config->led_brightness = 128;
-
-    // WiFi defaults (empty SSID/password initially for AP mode)
-    memset(config->wifi_ssid, 0, CONFIG_WIFI_SSID_MAX_LEN);
-    memset(config->wifi_password, 0, CONFIG_WIFI_PASSWORD_MAX_LEN);
-    config->wifi_ap_channel = 1;
-    config->wifi_ap_max_conn = 4;
-    config->wifi_sta_max_retry = 5;
-    config->wifi_sta_timeout_ms = 10000;
-
-    ESP_LOGD(TAG, "Initialized configuration with template defaults");
-}
-
-static esp_err_t config_validate_relationships(const system_config_t* config)
-{
-    // Validate that distance_max_mm > distance_min_mm
-    if (config->distance_max_mm <= config->distance_min_mm) {
-        ESP_LOGE(TAG, "distance_max_mm (%u) must be greater than distance_min_mm (%u)",
-                 config->distance_max_mm, config->distance_min_mm);
-        return ESP_ERR_INVALID_SIZE;
-    }
-
-    // Validate that sensor_timeout_ms < measurement_interval_ms
-    if (config->sensor_timeout_ms >= config->measurement_interval_ms) {
-        ESP_LOGE(TAG, "sensor_timeout_ms (%lu) must be less than measurement_interval_ms (%u)",
-                 config->sensor_timeout_ms, config->measurement_interval_ms);
-        return ESP_ERR_INVALID_SIZE;
-    }
-
-    return ESP_OK;
-}
-
-esp_err_t config_nvs_health_check(size_t* free_entries, size_t* total_entries)
-{
-    ESP_LOGD(TAG, "Performing NVS health check");
-
-    nvs_handle_t nvs_handle;
-    esp_err_t ret = nvs_open(NVS_NAMESPACE, NVS_READONLY, &nvs_handle);
-    if (ret != ESP_OK) {
-        ESP_LOGW(TAG, "Failed to open NVS namespace for health check: %s", esp_err_to_name(ret));
-        return ret;
-    }
-
-    // Get NVS statistics
-    nvs_stats_t nvs_stats;
-    ret = nvs_get_stats(NULL, &nvs_stats);
-    if (ret == ESP_OK) {
-        if (free_entries) *free_entries = nvs_stats.free_entries;
-        if (total_entries) *total_entries = nvs_stats.total_entries;
-        
-        ESP_LOGI(TAG, "NVS Health: %zu/%zu entries used, %zu KB available space",
-                 nvs_stats.used_entries, nvs_stats.total_entries,
-                 (nvs_stats.free_entries * 32) / 1024); // Rough estimate
-        
-        // Check for low space condition
-        if (nvs_stats.free_entries < 10) {
-            ESP_LOGW(TAG, "NVS space is running low (%zu free entries)", nvs_stats.free_entries);
-        }
-    } else {
-        ESP_LOGW(TAG, "Failed to get NVS statistics: %s", esp_err_to_name(ret));
-    }
-
-    // Try to read our configuration to verify integrity
-    size_t required_size = sizeof(system_config_t);
-    system_config_t test_config;
-    esp_err_t read_ret = nvs_get_blob(nvs_handle, NVS_CONFIG_KEY, &test_config, &required_size);
     
-    nvs_close(nvs_handle);
+    return err;
+}
 
-    if (read_ret == ESP_OK) {
-        // Verify the configuration is valid
-        esp_err_t validate_ret = config_validate_range(&test_config);
-        if (validate_ret != ESP_OK) {
-            ESP_LOGE(TAG, "NVS configuration is corrupted (validation failed)");
-            return ESP_ERR_INVALID_STATE;
-        }
-        ESP_LOGD(TAG, "NVS configuration integrity verified");
-    } else if (read_ret == ESP_ERR_NVS_NOT_FOUND) {
-        ESP_LOGD(TAG, "No configuration found in NVS (first boot)");
-    } else {
-        ESP_LOGE(TAG, "Failed to read configuration for health check: %s", esp_err_to_name(read_ret));
-        return read_ret;
+esp_err_t config_get_uint16(uint32_t id, uint16_t* value) {
+    if (!config_initialized) {
+        ESP_LOGE(TAG, "Config manager not initialized");
+        return ESP_ERR_INVALID_STATE;
     }
-
-    ESP_LOGI(TAG, "NVS health check completed successfully");
+    
+    if (id >= CONFIG_UINT16_COUNT) {
+        ESP_LOGE(TAG, "Invalid uint16 parameter ID: %u", id);
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    if (value == NULL) {
+        ESP_LOGE(TAG, "NULL value pointer");
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    // Acquire mutex
+    if (xSemaphoreTake(config_mutex, pdMS_TO_TICKS(100)) != pdTRUE) {
+        ESP_LOGE(TAG, "Failed to acquire config mutex");
+        return ESP_ERR_TIMEOUT;
+    }
+    
+    *value = cache_uint16[id];
+    xSemaphoreGive(config_mutex);
+    
     return ESP_OK;
+}
+
+esp_err_t config_set_uint16(uint32_t id, uint16_t value) {
+    if (!config_initialized) {
+        ESP_LOGE(TAG, "Config manager not initialized");
+        return ESP_ERR_INVALID_STATE;
+    }
+    
+    // Validate first (before acquiring mutex)
+    esp_err_t err = validate_uint16(id, value);
+    if (err != ESP_OK) {
+        return err;
+    }
+    
+    // Acquire mutex
+    if (xSemaphoreTake(config_mutex, pdMS_TO_TICKS(1000)) != pdTRUE) {
+        ESP_LOGE(TAG, "Failed to acquire config mutex");
+        return ESP_ERR_TIMEOUT;
+    }
+    
+    // Open NVS
+    nvs_handle_t nvs_handle;
+    err = nvs_open(NVS_NAMESPACE, NVS_READWRITE, &nvs_handle);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to open NVS: %s", esp_err_to_name(err));
+        xSemaphoreGive(config_mutex);
+        return err;
+    }
+    
+    // Write to NVS
+    char key[4];
+    generate_uint16_key(id, key);
+    err = nvs_set_u16(nvs_handle, key, value);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to write %s to NVS: %s", key, esp_err_to_name(err));
+        nvs_close(nvs_handle);
+        xSemaphoreGive(config_mutex);
+        return err;
+    }
+    
+    // Commit
+    err = nvs_commit(nvs_handle);
+    nvs_close(nvs_handle);
+    
+    if (err == ESP_OK) {
+        // Update cache only after successful NVS write
+        cache_uint16[id] = value;
+        ESP_LOGD(TAG, "Set %s = %u", key, value);
+    } else {
+        ESP_LOGE(TAG, "Failed to commit %s to NVS: %s", key, esp_err_to_name(err));
+    }
+    
+    xSemaphoreGive(config_mutex);
+    return err;
+}
+
+esp_err_t config_get_string(uint32_t id, char* buffer, size_t buf_len) {
+    if (!config_initialized) {
+        ESP_LOGE(TAG, "Config manager not initialized");
+        return ESP_ERR_INVALID_STATE;
+    }
+    
+    if (id >= CONFIG_STRING_COUNT) {
+        ESP_LOGE(TAG, "Invalid string parameter ID: %u", id);
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    if (buffer == NULL || buf_len == 0) {
+        ESP_LOGE(TAG, "Invalid buffer");
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    // Acquire mutex
+    if (xSemaphoreTake(config_mutex, pdMS_TO_TICKS(100)) != pdTRUE) {
+        ESP_LOGE(TAG, "Failed to acquire config mutex");
+        return ESP_ERR_TIMEOUT;
+    }
+    
+    // Check buffer size
+    size_t required_len = strlen(cache_strings[id]) + 1;
+    if (buf_len < required_len) {
+        ESP_LOGE(TAG, "Buffer too small: need %u, have %u", required_len, buf_len);
+        xSemaphoreGive(config_mutex);
+        return ESP_ERR_INVALID_SIZE;
+    }
+    
+    strncpy(buffer, cache_strings[id], buf_len);
+    buffer[buf_len - 1] = '\0';  // Ensure null termination
+    
+    xSemaphoreGive(config_mutex);
+    return ESP_OK;
+}
+
+esp_err_t config_set_string(uint32_t id, const char* value) {
+    if (!config_initialized) {
+        ESP_LOGE(TAG, "Config manager not initialized");
+        return ESP_ERR_INVALID_STATE;
+    }
+    
+    // Validate first (before acquiring mutex)
+    esp_err_t err = validate_string(id, value);
+    if (err != ESP_OK) {
+        return err;
+    }
+    
+    // Acquire mutex
+    if (xSemaphoreTake(config_mutex, pdMS_TO_TICKS(1000)) != pdTRUE) {
+        ESP_LOGE(TAG, "Failed to acquire config mutex");
+        return ESP_ERR_TIMEOUT;
+    }
+    
+    // Open NVS
+    nvs_handle_t nvs_handle;
+    err = nvs_open(NVS_NAMESPACE, NVS_READWRITE, &nvs_handle);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to open NVS: %s", esp_err_to_name(err));
+        xSemaphoreGive(config_mutex);
+        return err;
+    }
+    
+    // Write to NVS
+    char key[4];
+    generate_string_key(id, key);
+    err = nvs_set_str(nvs_handle, key, value);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to write %s to NVS: %s", key, esp_err_to_name(err));
+        nvs_close(nvs_handle);
+        xSemaphoreGive(config_mutex);
+        return err;
+    }
+    
+    // Commit
+    err = nvs_commit(nvs_handle);
+    nvs_close(nvs_handle);
+    
+    if (err == ESP_OK) {
+        // Update cache only after successful NVS write
+        strncpy(cache_strings[id], value, CONFIG_STRING_MAX_LEN);
+        cache_strings[id][CONFIG_STRING_MAX_LEN] = '\0';
+        ESP_LOGD(TAG, "Set %s = \"%s\"", key, value);
+    } else {
+        ESP_LOGE(TAG, "Failed to commit %s to NVS: %s", key, esp_err_to_name(err));
+    }
+    
+    xSemaphoreGive(config_mutex);
+    return err;
 }

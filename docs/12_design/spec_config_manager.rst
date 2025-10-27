@@ -66,279 +66,624 @@ Architecture Design
 Data Structure Design
 ---------------------
 
-.. spec:: NVS Storage Format
-   :id: SPEC_CFG_STORAGE_1
-   :links: REQ_CFG_3, REQ_CFG_4
+.. spec:: Metadata-Driven Parameter System
+   :id: SPEC_CFG_METADATA_1
+   :links: REQ_CFG_3, REQ_CFG_4, REQ_CFG_5
    :status: approved
-   :tags: data-structure, storage
+   :tags: data-structure, architecture, metadata
 
-   **Description:** Configuration stored in NVS as packed 64-byte structure with metadata and checksums.
+   **Description:** Configuration system uses metadata tables to define parameters generically without hardcoded parameter logic in the config manager.
 
-   **Storage Layout:**
+   **Core Design Principle:** The config manager **knows nothing about WiFi, LEDs, sensors, or any application domain**. It only knows how to store and validate **uint16** and **string** types using metadata provided by the application.
+
+   **Architecture Overview:**
+
+   .. code-block:: text
+
+      ┌─────────────────────────────────────────────────────────┐
+      │  Application Layer (main.c, components)                 │
+      │  - Defines parameters: CONFIG_WIFI_SSID, CONFIG_LED_CNT │
+      │  - Calls: config_set(), config_get()                    │
+      └────────────────────┬────────────────────────────────────┘
+                           │
+      ┌────────────────────▼────────────────────────────────────┐
+      │  config.h (Application-Specific)                        │
+      │  - Parameter enums (CONFIG_WIFI_SSID = 0, ...)         │
+      │  - Metadata table: type, min, max, default              │
+      └────────────────────┬────────────────────────────────────┘
+                           │
+      ┌────────────────────▼────────────────────────────────────┐
+      │  config_manager.c (Generic)                             │
+      │  - Reads metadata table                                 │
+      │  - Validates based on type + min/max                    │
+      │  - Stores in NVS using enum-value-as-key                │
+      └─────────────────────────────────────────────────────────┘
+
+   **Key Concept:** Adding a new parameter requires **zero changes to config_manager.c**, only:
+   
+   1. Add enum entry in config.h
+   2. Add one line to metadata table in config.h
+
+   **Design Rationale:** Separation of concerns - application defines WHAT to configure, config manager defines HOW to persist/validate.
+
+
+.. spec:: Dual-Table Parameter System
+   :id: SPEC_CFG_TYPES_1
+   :links: REQ_CFG_3
+   :status: approved
+   :tags: data-structure, types, architecture
+
+   **Description:** Configuration system uses **two separate parameter tables** for uint16 and string types to optimize memory usage.
+
+   **Design Rationale:**
+
+   **Problem with Union Approach:** A union containing both uint16 (2 bytes) and string (65 bytes) would waste 63 bytes for every numeric parameter due to union size alignment.
+
+   **Solution:** Separate enums, separate tables, separate runtime caches.
+
+   **Type System Architecture:**
 
    .. code-block:: c
 
+      // ===== UINT16 Parameters (in config_manager.h) =====
+      
       typedef struct {
-          // Metadata (16 bytes)
-          uint32_t magic_number;        // 0xCFG12345 - corruption detection
-          uint32_t config_version;      // Schema version for migration
-          uint32_t crc32_checksum;      // Data integrity verification  
-          uint32_t save_count;          // Change tracking
+          uint16_t min;          // Minimum allowed value
+          uint16_t max;          // Maximum allowed value
+          uint16_t default_val;  // Factory default
+      } config_uint16_param_t;
+
+      // ===== STRING Parameters (in config_manager.h) =====
+      
+      #define CONFIG_STRING_MAX_LEN 64  // Max string length (excluding null)
+      
+      typedef struct {
+          uint8_t min_len;           // Minimum string length
+          uint8_t max_len;           // Maximum string length (max 64)
+          const char* default_val;   // Pointer to default string in Flash ROM
+      } config_string_param_t;
+
+   **User-Defined Parameter Tables (in config.h):**
+
+   .. code-block:: c
+
+      // ===== UINT16 Parameter Enumeration =====
+      typedef enum {
+          CONFIG_LED_COUNT,        // 0
+          CONFIG_LED_BRIGHTNESS,   // 1
+          CONFIG_SENSOR_TIMEOUT,   // 2
+          // ... user adds more here ...
+          CONFIG_UINT16_COUNT      // Auto-counter
+      } config_uint16_id_t;
+
+      // ===== UINT16 Parameter Data Table =====
+      static const config_uint16_param_t CONFIG_UINT16_PARAMS[CONFIG_UINT16_COUNT] = {
+          [CONFIG_LED_COUNT]      = { .min=1,   .max=100,  .default_val=40 },
+          [CONFIG_LED_BRIGHTNESS] = { .min=10,  .max=255,  .default_val=128 },
+          [CONFIG_SENSOR_TIMEOUT] = { .min=10,  .max=1000, .default_val=100 },
+      };
+
+      // ===== STRING Parameter Enumeration =====
+      typedef enum {
+          CONFIG_WIFI_SSID,        // 0
+          CONFIG_WIFI_PASSWORD,    // 1
+          CONFIG_DEVICE_NAME,      // 2
+          // ... user adds more here ...
+          CONFIG_STRING_COUNT      // Auto-counter
+      } config_string_id_t;
+
+      // ===== STRING Parameter Data Table =====
+      static const config_string_param_t CONFIG_STRING_PARAMS[CONFIG_STRING_COUNT] = {
+          [CONFIG_WIFI_SSID]     = { .min_len=1, .max_len=32, .default_val="ESP32-AP" },
+          [CONFIG_WIFI_PASSWORD] = { .min_len=0, .max_len=63, .default_val="" },
+          [CONFIG_DEVICE_NAME]   = { .min_len=1, .max_len=32, .default_val="ESP32-Device" },
+      };
+
+   **Memory Efficiency:**
+
+   .. code-block:: text
+
+      Single Union Approach:
+      ────────────────────────────────────────────────────
+      union { uint16_t u16; char str[65]; }  // 65 bytes each!
+      20 parameters × 65 bytes = 1300 bytes RAM
+      
+      Dual-Table Approach:
+      ────────────────────────────────────────────────────
+      uint16_t cache_uint16[15];     // 15 × 2   =  30 bytes
+      char cache_strings[5][65];     // 5 × 65   = 325 bytes
+                                     ──────────────────────
+      Total:                                      355 bytes
+      
+      **Savings: 73% less RAM!**
+
+   **Type Selection Rationale:**
+
+   - **uint16**: Covers most numeric use cases (LED count, intervals, channel numbers, brightness, timeouts)
+   - **string**: Required for WiFi SSID/password, device names, URLs
+   - **No floats**: Embedded systems use fixed-point (e.g., temperature * 10 stored as uint16)
+   - **No bool**: Use uint16 with 0/1 validation (min=0, max=1)
+   - **No int32**: uint16 sufficient for IoT parameters (0-65535 range), saves NVS space
+
+   **Template Example Parameters:**
+
+   The ESP32 template includes example parameters for demonstration purposes:
+
+   - **CONFIG_LED_COUNT**: LED strip length (not used in minimal template, but demonstrates numeric parameter pattern)
+   - **CONFIG_LED_BRIGHTNESS**: LED brightness level (example for validation ranges)
+   - **CONFIG_WIFI_SSID**: WiFi network name (actual functionality)
+   - **CONFIG_WIFI_PASSWORD**: WiFi password (actual functionality)
+
+   Users should keep LED examples in their fork as reference patterns for adding application-specific parameters.
+
+   **Extensibility:** 
+   
+   Adding new parameter types (uint8, int16, uint32) requires:
+   
+   1. Define new struct type (e.g., config_uint8_param_t)
+   2. Add new enum (e.g., config_uint8_id_t)
+   3. Add API functions (e.g., config_get_uint8(), config_set_uint8())
+   4. Add runtime cache array in config_manager.c
+   5. Update NVS key prefix (e.g., "b" for byte/uint8)
+
+
+.. spec:: Parameter Metadata Structure
+   :id: SPEC_CFG_METADATA_TABLE_1
+   :links: REQ_CFG_3, REQ_CFG_6
+   :status: approved
+   :tags: data-structure, metadata, validation
+
+   **Description:** Parameters organized in two separate metadata tables (uint16 and string), defined by application in config.h.
+
+   **File Organization:**
+
+   .. code-block:: text
+
+      config_manager.h (Generic Framework):
+      ├── config_uint16_param_t struct definition
+      ├── config_string_param_t struct definition
+      └── Generic API declarations
+      
+      config.h (Application-Specific):
+      ├── config_uint16_id_t enum
+      ├── CONFIG_UINT16_PARAMS[] table
+      ├── config_string_id_t enum
+      └── CONFIG_STRING_PARAMS[] table
+      
+      config_manager.c (Generic Implementation):
+      ├── #include "config_manager.h"
+      ├── #include "config.h"  ← imports user tables
+      ├── Runtime caches (sized by user enums)
+      └── Generic get/set implementations
+
+   **Design Benefits:**
+
+   - **Separation of Concerns**: Framework (config_manager.h/.c) vs Application (config.h)
+   - **Zero Code Changes**: Adding parameters requires only config.h edits
+   - **Compile-Time Safety**: Designated initializers catch enum-index mismatches
+   - **Flash Storage**: const tables stored in ROM, zero RAM cost
+   - **Type Safety**: Separate enums prevent mixing uint16/string parameter IDs
+
+   **Example Application Definition (config.h):**
+
+   .. code-block:: c
+
+      #include "config_manager.h"  // Import struct definitions
+
+      // ===== UINT16 Parameters =====
+      typedef enum {
+          CONFIG_LED_COUNT,        // Example: LED strip configuration
+          CONFIG_LED_BRIGHTNESS,   // Example: LED brightness control
+          CONFIG_UINT16_COUNT
+      } config_uint16_id_t;
+
+      static const config_uint16_param_t CONFIG_UINT16_PARAMS[CONFIG_UINT16_COUNT] = {
+          [CONFIG_LED_COUNT] = {
+              .min = 1,
+              .max = 100,
+              .default_val = 40
+          },
+          [CONFIG_LED_BRIGHTNESS] = {
+              .min = 10,
+              .max = 255,
+              .default_val = 128
+          },
+      };
+
+      // ===== STRING Parameters =====
+      typedef enum {
+          CONFIG_WIFI_SSID,
+          CONFIG_WIFI_PASSWORD,
+          CONFIG_STRING_COUNT
+      } config_string_id_t;
+
+      static const config_string_param_t CONFIG_STRING_PARAMS[CONFIG_STRING_COUNT] = {
+          [CONFIG_WIFI_SSID] = {
+              .min_len = 1,
+              .max_len = 32,  // IEEE 802.11 max SSID length
+              .default_val = "ESP32-AP"  // Pointer to const string in Flash
+          },
+          [CONFIG_WIFI_PASSWORD] = {
+              .min_len = 0,   // 0 = open network allowed
+              .max_len = 63,  // WPA2 max password length
+              .default_val = ""
+          },
+      };
+
+   **Template Scope:**
+
+   The ESP32 template includes:
+
+   - **Functional Parameters**: CONFIG_WIFI_SSID, CONFIG_WIFI_PASSWORD (used by WiFi manager)
+   - **Example Parameters**: CONFIG_LED_COUNT, CONFIG_LED_BRIGHTNESS (demonstrate patterns, not connected to hardware)
+
+   **Design Rationale for Examples:**
+
+   LED parameters are intentionally included as **reference implementations** even though the minimal template has no LED hardware. They demonstrate:
+
+   - Numeric parameter validation patterns
+   - Range constraint examples (min=1, max=100)
+   - Typical IoT device parameters
+
+   Users forking the template can:
+
+   1. Keep LED examples as-is (no harm, minimal RAM cost)
+   2. Replace with their own parameters (sensors, motors, etc.)
+   3. Extend with additional parameters following the same pattern
+
+
+.. spec:: NVS Storage Format
+   :id: SPEC_CFG_STORAGE_1
+   :links: REQ_CFG_4
+   :status: approved
+   :tags: storage, nvs
+
+   **Description:** Configuration parameters stored individually in NVS using type-prefixed enum value as key.
+
+   **Storage Strategy:**
+
+   .. code-block:: c
+
+      // UINT16 parameters use prefix "u"
+      CONFIG_LED_COUNT = 0      → NVS key "u0" → nvs_set_u16(handle, "u0", 40)
+      CONFIG_LED_BRIGHTNESS = 1 → NVS key "u1" → nvs_set_u16(handle, "u1", 128)
+      
+      // STRING parameters use prefix "s"
+      CONFIG_WIFI_SSID = 0      → NVS key "s0" → nvs_set_str(handle, "s0", "ESP32-AP")
+      CONFIG_WIFI_PASSWORD = 1  → NVS key "s1" → nvs_set_str(handle, "s1", "secret")
+
+   **Key Generation:**
+
+   .. code-block:: c
+
+      // For uint16 parameters
+      esp_err_t config_set_uint16(config_uint16_id_t id, uint16_t value) {
+          // Generate NVS key: "u" + enum value
+          char key[4];
+          snprintf(key, sizeof(key), "u%d", id);
           
-          // Component configurations (~48 bytes)
-          // ... component-specific fields ...
+          // Lookup metadata for validation
+          const config_uint16_param_t* param = &CONFIG_UINT16_PARAMS[id];
           
-          // Reserved for expansion
-          uint8_t reserved[N];          // Future-proofing
+          // Validate range
+          if (value < param->min || value > param->max) {
+              ESP_LOGE(TAG, "Value out of range");
+              return ESP_ERR_INVALID_ARG;
+          }
           
-      } __attribute__((packed)) config_nvs_storage_t;
+          // Store in NVS
+          return nvs_set_u16(nvs_handle, key, value);
+      }
+
+      // For string parameters
+      esp_err_t config_set_string(config_string_id_t id, const char* value) {
+          char key[4];
+          snprintf(key, sizeof(key), "s%d", id);  // "s" prefix for strings
+          
+          // Validate length
+          const config_string_param_t* param = &CONFIG_STRING_PARAMS[id];
+          size_t len = strlen(value);
+          if (len < param->min_len || len > param->max_len) {
+              ESP_LOGE(TAG, "String length invalid");
+              return ESP_ERR_INVALID_ARG;
+          }
+          
+          // Store in NVS
+          return nvs_set_str(nvs_handle, key, value);
+      }
 
    **Storage Optimization:**
 
-   - Fixed Size: 64-byte structure for efficient NVS operations
-   - Alignment: Packed structure to minimize flash usage
-   - Reserved Fields: Expansion capability without breaking compatibility
-   - Checksum: CRC32 for corruption detection and recovery
+   - **No Metadata in NVS**: Only parameter values stored, metadata stays in Flash ROM
+   - **Compact Keys**: 2-3 character keys ("u0", "s1", "u42") minimize NVS overhead
+   - **Type-Specific Storage**: Uses correct NVS function (nvs_set_u16 vs nvs_set_str)
+   - **Independent Parameters**: Each parameter stored separately for partial updates
+   - **Type Prefix**: "u" and "s" prefixes prevent key collisions between parameter types
 
-   **Migration Strategy:** Version field enables schema migration when structure changes.
+   **NVS Namespace:** All configuration parameters stored in namespace "config" for isolation from other NVS users.
+
+   **Migration Strategy:** 
+   
+   Enum value IS part of the storage key, so:
+   
+   - ✅ **Reordering enums breaks compatibility** - Users must bump config version and handle migration
+   - ✅ **Appending is safe** - Add new parameters at end (before _COUNT sentinel)
+   - ✅ **Separate uint16/string enums** - Can reorder independently (different key prefixes)
+   
+   **Key Capacity:** Max 999 parameters per type (keys "u0" to "u999", "s0" to "s999")
 
 
 .. spec:: Runtime Configuration Structure
    :id: SPEC_CFG_RUNTIME_1
    :links: REQ_CFG_3
-   :status: approved
+   :status: deprecated
    :tags: data-structure, runtime
 
-   **Description:** Runtime configuration structure holds actively used parameters in RAM for fast access.
+   **Description:** **DEPRECATED** - This specification is replaced by SPEC_CFG_METADATA_1 (metadata-driven parameter system).
 
-   **Current Implementation (Template Scope):**
+   **Old Approach:** Monolithic system_config_t structure with all parameters hardcoded.
 
-   The template currently uses configuration for **WiFi credentials only**:
-
-   .. code-block:: c
-
-      typedef struct {
-          // WiFi Credentials (Required for network connectivity)
-          char wifi_ssid[33];           // WiFi network name (IEEE 802.11 max 32 chars)
-          char wifi_password[65];       // WiFi password (WPA max 64 chars)
-          
-          // Metadata
-          uint32_t config_version;      // Schema version for compatibility
-          uint32_t save_count;          // Number of saves (statistics)
-          
-      } system_config_t;
-
-   **WiFi Module Configuration:**
-
-   Other WiFi parameters (AP channel, max connections, STA retries, timeouts) are configured in the WiFi module header file (`main/components/web_server/wifi_manager.h`):
+   **New Approach:** Runtime cache implemented as array of config_value_t, indexed by enum:
 
    .. code-block:: c
 
-      // In wifi_manager.h - compile-time defaults
-      #define WIFI_AP_CHANNEL           6
-      #define WIFI_AP_MAX_CONN          4
-      #define WIFI_STA_MAX_RETRY        5
-      #define WIFI_STA_TIMEOUT_MS       10000
+      // Runtime cache (in config_manager.c, private)
+      static config_value_t runtime_cache[CONFIG_PARAM_COUNT];
+      
+      // Access via config_get()/config_set() API
+      config_get(CONFIG_WIFI_SSID, &value);  // → runtime_cache[2]
+      config_get(CONFIG_LED_COUNT, &value);  // → runtime_cache[0]
 
-   **Storage Philosophy:**
-
-   - **NVS Storage** (Runtime configuration): Only user-configurable WiFi credentials (SSID, password)
-   - **Compile-Time Headers**: All hardware defaults and WiFi parameters defined in component headers
-   - **Rationale**: Minimizes NVS usage, keeps configuration truly minimal and focused
-
-   **Application-Specific Parameters:**
-
-   When forking the template for your project, define application parameters in your component headers, not in NVS:
-
-   .. code-block:: c
-
-      // In my_component/include/my_component.h (NOT in system_config_t)
-      #define SENSOR_RANGE_MIN_MM        50
-      #define SENSOR_RANGE_MAX_MM        400
-      #define LED_COUNT                  30
-      #define LED_BRIGHTNESS_DEFAULT     200
-      #define MEASUREMENT_INTERVAL_MS    100
-
-   If you need runtime-configurable application parameters (rare), extend `system_config_t` **only for those specific parameters**, not for every possible setting.
-
-   **Design Guidelines for Extensions:**
-
-   1. **Keep WiFi settings in NVS** - Required for user configuration
-   2. **Define hardware parameters in headers** - Reduces NVS bloat
-   3. **Only add to NVS if truly dynamic** - User needs to change it after deployment
-   4. **Use #define for constants** - Compile-time optimization
-   5. **Increment config_version** - Only if you add runtime-configurable parameters to struct
-
-   **Reset Requirement After Parameter Changes:**
-
-   ⚠️ **Important**: Configuration changes only take effect after system reset.
-
-   - Changes written to runtime config are visible immediately (for API feedback)
-   - Changes persisted to NVS via ``config_save_to_nvs()`` trigger automatic reset
-   - Reset ensures all components see new configuration on boot
-   - Dynamic reconfiguration is not supported (complexity not justified for IoT devices)
-
-   **Design Rationale:** Reset-after-save prevents inconsistent state where some components use old config while others use new. Simpler than hot-reloading configuration.
-
-   **Type Conversion Strategy:**
-
-   - **NVS Storage**: Use fixed-width integers (uint8_t, uint16_t, uint32_t)
-   - **Runtime Use**: Convert to application-friendly types as needed
-   - **Example**: Store channel as uint8_t, validate as 1-13 in setter
-
-   **Performance Characteristics:**
-
-   - Setter Validation: <1ms (length check, range validation)
-   - Full Validation: <5ms (all parameters checked)
-   - NVS Write: <50ms, then reset within 2 seconds
-   - Memory Overhead: Structure size < 128 bytes (typical)
+   **Migration Notes:** Application code should use config_get/set() instead of direct structure access.
 
 
 API Design
 ----------
 
-.. spec:: Configuration Parameter Identifiers
-   :id: SPEC_CFG_PARAM_1
-   :links: REQ_CFG_5
-   :status: approved
-   :tags: api, parameter
-
-   **Description:** Configuration parameters identified by enum for type-safe access.
-
-   **Parameter Enumeration:**
-
-   .. code-block:: c
-
-      typedef enum {
-          // WiFi Credentials
-          CONFIG_WIFI_SSID,
-          CONFIG_WIFI_PASSWORD,
-          
-          // Extension point for application parameters
-          // CONFIG_APP_PARAM_1,
-          // CONFIG_APP_PARAM_2,
-          
-          CONFIG_PARAM_COUNT  // Sentinel for bounds checking
-      } config_param_id_t;
-
-   **Design Rationale:** Enum-based parameter identification enables compile-time type checking and prevents parameter ID collisions when extending configuration.
-
-
-.. spec:: Configuration API Interface
+.. spec:: Type-Specific Configuration API
    :id: SPEC_CFG_API_1
-   :links: REQ_CFG_5, REQ_CFG_6
+   :links: REQ_CFG_5
    :status: approved
    :tags: api, interface
 
-   **Description:** Minimal, type-safe API for configuration management supporting uint16 and string types only.
+   **Description:** Type-specific API with separate functions for uint16 and string parameters.
 
    **Core API Functions:**
 
    .. code-block:: c
 
-      // Lifecycle management
+      // ====== Lifecycle Management ======
+      
+      /**
+       * @brief Initialize configuration manager
+       * 
+       * Opens NVS namespace "config", loads all uint16 and string parameters
+       * from NVS into runtime caches. If NVS is empty or corrupted, loads
+       * default values from parameter tables and persists them.
+       * 
+       * @return ESP_OK on success
+       * @return ESP_ERR_NVS_* on NVS initialization failure
+       * @return ESP_ERR_NO_MEM if memory allocation fails
+       */
       esp_err_t config_init(void);
-      esp_err_t config_load_from_nvs(system_config_t* config);
-      esp_err_t config_save_to_nvs(const system_config_t* config);
+
+      /**
+       * @brief Reset all parameters to factory defaults
+       * 
+       * Loads default values from CONFIG_UINT16_PARAMS and CONFIG_STRING_PARAMS
+       * tables, erases all NVS entries in "config" namespace, and persists
+       * defaults to NVS.
+       * 
+       * @return ESP_OK on success
+       * @return ESP_ERR_NVS_* on NVS operation failure
+       */
       esp_err_t config_factory_reset(void);
 
-      // Type-safe parameter setters (validation at write-time)
-      esp_err_t config_set_uint16(config_param_id_t param, uint16_t value);
-      esp_err_t config_set_string(config_param_id_t param, const char* value);
+      // ====== UINT16 Parameter Access ======
+      
+      /**
+       * @brief Get uint16 parameter value
+       * 
+       * Reads parameter from runtime cache (RAM) without NVS access.
+       * Fast operation (<10 CPU cycles).
+       * 
+       * @param id Parameter identifier from config_uint16_id_t enum
+       * @param value Pointer to store parameter value
+       * @return ESP_OK on success
+       * @return ESP_ERR_INVALID_ARG if id out of range or value is NULL
+       */
+      esp_err_t config_get_uint16(config_uint16_id_t id, uint16_t* value);
 
-      // Type-safe parameter getters (read from runtime config)
-      esp_err_t config_get_uint16(config_param_id_t param, uint16_t* value);
-      esp_err_t config_get_string(config_param_id_t param, char* value, size_t max_len);
+      /**
+       * @brief Set uint16 parameter value
+       * 
+       * Validates parameter using metadata table (min, max constraints),
+       * updates runtime cache, and persists to NVS.
+       * 
+       * @param id Parameter identifier from config_uint16_id_t enum
+       * @param value New parameter value
+       * @return ESP_OK on success
+       * @return ESP_ERR_INVALID_ARG if value out of range
+       * @return ESP_ERR_NVS_* on NVS write failure
+       */
+      esp_err_t config_set_uint16(config_uint16_id_t id, uint16_t value);
 
-      // Bulk validation (before NVS persistence)
-      esp_err_t config_validate(const system_config_t* config, 
-                                char* error_msg, size_t msg_len);
+      // ====== STRING Parameter Access ======
+      
+      /**
+       * @brief Get string parameter value
+       * 
+       * Copies string from runtime cache to user buffer.
+       * 
+       * @param id Parameter identifier from config_string_id_t enum
+       * @param buffer Buffer to store string (must be at least buf_len bytes)
+       * @param buf_len Maximum buffer size (including null terminator)
+       * @return ESP_OK on success
+       * @return ESP_ERR_INVALID_ARG if id out of range or buffer is NULL
+       * @return ESP_ERR_INVALID_SIZE if buffer too small
+       */
+      esp_err_t config_get_string(config_string_id_t id, char* buffer, size_t buf_len);
+
+      /**
+       * @brief Set string parameter value
+       * 
+       * Validates string length using metadata table (min_len, max_len),
+       * copies to runtime cache, and persists to NVS.
+       * 
+       * @param id Parameter identifier from config_string_id_t enum
+       * @param value Null-terminated string value
+       * @return ESP_OK on success
+       * @return ESP_ERR_INVALID_ARG if value is NULL or length out of range
+       * @return ESP_ERR_NVS_* on NVS write failure
+       */
+      esp_err_t config_set_string(config_string_id_t id, const char* value);
 
    **Typical Usage Pattern:**
 
    .. code-block:: c
 
-      // Application updates parameters with immediate validation
-      if (config_set_string(CONFIG_WIFI_SSID, user_input) != ESP_OK) {
-          ESP_LOGE(TAG, "SSID invalid");
-          return;
+      // ===== Application Code (web_server.c) =====
+      
+      // Set WiFi SSID from user input
+      if (config_set_string(CONFIG_WIFI_SSID, user_ssid) != ESP_OK) {
+          ESP_LOGE(TAG, "SSID validation failed");
+          return HTTP_400_BAD_REQUEST;
       }
       
-      if (config_set_string(CONFIG_WIFI_PASSWORD, password_input) != ESP_OK) {
-          ESP_LOGE(TAG, "Password invalid");
-          return;
+      // Set WiFi password
+      if (config_set_string(CONFIG_WIFI_PASSWORD, user_password) != ESP_OK) {
+          ESP_LOGE(TAG, "Password validation failed");
+          return HTTP_400_BAD_REQUEST;
       }
       
-      // Validate complete configuration before saving
-      char error_msg[128];
-      if (config_validate(&runtime_config, error_msg, sizeof(error_msg)) != ESP_OK) {
-          ESP_LOGE(TAG, "Configuration invalid: %s", error_msg);
-          return;
+      // Set LED count from slider (example parameter)
+      if (config_set_uint16(CONFIG_LED_COUNT, led_count_slider) != ESP_OK) {
+          ESP_LOGE(TAG, "LED count out of range");
+          return HTTP_400_BAD_REQUEST;
       }
       
-      // Save to NVS (system reset follows)
-      config_save_to_nvs(&runtime_config);
+      // Read current LED brightness
+      uint16_t brightness;
+      config_get_uint16(CONFIG_LED_BRIGHTNESS, &brightness);
+      
+      ESP_LOGI(TAG, "Configuration updated successfully");
 
-   **Thread Safety:** All functions protected by FreeRTOS mutex with configurable timeout.
+   **API Design Principles:**
 
-   **Important Note:** Parameter changes do not take effect until system restarts. Dynamic parameter application is not guaranteed. This is by design: validation at setter time prevents invalid states from propagating into NVS.
+   1. **Type-Specific Functions**: Separate get/set for uint16 and string parameters
+   2. **Compile-Time Type Safety**: Separate enums prevent mixing parameter types
+   3. **Immediate Validation**: Parameters validated at set-time, no invalid values reach NVS
+   4. **No Domain Knowledge**: Config manager never mentions WiFi, LED, or any application concept
+   5. **Fast Reads**: Reads from RAM cache, no NVS access
+   6. **Atomic Writes**: Each config_set() immediately persists to NVS
 
-   **Design Rationale:**
+   **Thread Safety:** All functions protected by FreeRTOS mutex (configurable timeout).
 
-   - **Type Safety**: Enum + typed setters prevent type confusion and buffer overflows
-   - **Validation at Gate**: String parameters length-checked immediately before storage
-   - **Simple & Predictable**: Two type-safe functions instead of per-parameter getter/setter explosion
-   - **Pragmatic for Embedded C**: Minimal abstraction, direct structure access with safety guardrails
-   - **Easy to Extend**: Add new parameters to enum and update validation rules only
+   **Error Logging:** All validation failures logged with ESP_LOGE, including parameter ID and constraint values.
 
 
-.. spec:: Parameter Validation Rules
+.. spec:: Metadata-Driven Parameter Validation
    :id: SPEC_CFG_VALIDATION_1
    :links: REQ_CFG_6
    :status: approved
    :tags: validation, api
 
-   **Description:** Parameters validated at two points: immediate setter validation and pre-save bulk validation.
+   **Description:** Parameters validated using metadata table constraints, no hardcoded validation logic.
 
-   **Validation Strategy:**
+   **Validation Implementation:**
 
-   1. **Setter-Time Validation** (Immediate):
+   .. code-block:: c
 
-      .. code-block:: c
+      // UINT16 validation
+      esp_err_t config_validate_uint16(config_uint16_id_t id, uint16_t value) {
+          // Bounds check
+          if (id >= CONFIG_UINT16_COUNT) {
+              ESP_LOGE(TAG, "Invalid uint16 parameter ID: %d", id);
+              return ESP_ERR_INVALID_ARG;
+          }
+          
+          // Lookup metadata
+          const config_uint16_param_t* param = &CONFIG_UINT16_PARAMS[id];
+          
+          // Range validation
+          if (value < param->min || value > param->max) {
+              ESP_LOGE(TAG, "Parameter %d out of range: %u (min=%u, max=%u)",
+                       id, value, param->min, param->max);
+              return ESP_ERR_INVALID_ARG;
+          }
+          
+          return ESP_OK;
+      }
 
-         config_set_string(CONFIG_WIFI_SSID, value)
-         // Validates: length 1-32 characters
+      // STRING validation
+      esp_err_t config_validate_string(config_string_id_t id, const char* value) {
+          // Bounds check
+          if (id >= CONFIG_STRING_COUNT) {
+              ESP_LOGE(TAG, "Invalid string parameter ID: %d", id);
+              return ESP_ERR_INVALID_ARG;
+          }
+          
+          // NULL check
+          if (value == NULL) {
+              ESP_LOGE(TAG, "String parameter %d: NULL value not allowed", id);
+              return ESP_ERR_INVALID_ARG;
+          }
+          
+          // Lookup metadata
+          const config_string_param_t* param = &CONFIG_STRING_PARAMS[id];
+          
+          // Length validation
+          size_t len = strlen(value);
+          if (len < param->min_len || len > param->max_len) {
+              ESP_LOGE(TAG, "String parameter %d length invalid: %u (min=%u, max=%u)",
+                       id, len, param->min_len, param->max_len);
+              return ESP_ERR_INVALID_ARG;
+          }
+          
+          return ESP_OK;
+      }
 
-         config_set_string(CONFIG_WIFI_PASSWORD, value)
-         // Validates: length 0-63 characters (0 = open network)
+   **Validation Rules:**
 
-      Returns ESP_ERR_INVALID_ARG on validation failure, preventing invalid values in runtime config.
+   - **uint16 parameters**: Value must be within [min, max] inclusive
+   - **string parameters**: strlen(value) must be within [min_len, max_len] inclusive
+   - **Empty strings**: Allowed only if min_len == 0 (e.g., WiFi password for open networks)
+   - **NULL strings**: Never allowed, validation returns ESP_ERR_INVALID_ARG
 
-   2. **Pre-Save Bulk Validation** (Before NVS):
+   **Validation Timing:**
 
-      .. code-block:: c
+   - Called automatically by config_set_uint16() / config_set_string() before NVS write
+   - Called during config_init() for all cached parameters (integrity check)
+   - Called by config_factory_reset() for default values (sanity check)
 
-         config_validate(&config, error_msg, sizeof(error_msg))
-         // Validates entire config for semantic consistency
-         // Example: check WiFi AP max connections is within device capabilities
+   **Error Handling:**
 
-   **WiFi Parameter Constraints:**
+   - Invalid parameters rejected immediately with ESP_ERR_INVALID_ARG
+   - Detailed error logged with parameter ID, value, and constraints
+   - Runtime cache NOT updated if validation fails
+   - NVS NOT written if validation fails
 
-   - ``CONFIG_WIFI_SSID``: 1-32 characters (IEEE 802.11 max)
-   - ``CONFIG_WIFI_PASSWORD``: 0-63 characters (WPA2 max, 0 = open network)
+   **Example Validation Scenarios:**
 
-   **Design Rationale:**
+   .. code-block:: c
 
-   - **Early Rejection**: Invalid strings rejected at setter, preventing buffer corruption
-   - **Simple Rules**: Type constraints only (length for strings)
-   - **WiFi Defaults**: Channel, max connections, retry, and timeout configured in `wifi_manager.h`
-   - **Extension Pattern**: When adding application parameters, define min/max in parameter table
+      // LED Count: min=1, max=100
+      config_set_uint16(CONFIG_LED_COUNT, 0);    // ❌ FAIL: below min
+      config_set_uint16(CONFIG_LED_COUNT, 50);   // ✅ PASS: within range
+      config_set_uint16(CONFIG_LED_COUNT, 200);  // ❌ FAIL: above max
 
-   **Error Handling:** 
+      // WiFi SSID: min_len=1, max_len=32
+      config_set_string(CONFIG_WIFI_SSID, "");           // ❌ FAIL: too short
+      config_set_string(CONFIG_WIFI_SSID, "MyNetwork");  // ✅ PASS: valid length
+      config_set_string(CONFIG_WIFI_SSID, "Very_Long_SSID_Name_Exceeding_Limit_XYZ");  // ❌ FAIL: too long
 
-   - Setter validation: Return ``ESP_ERR_INVALID_ARG`` immediately
-   - Pre-save validation: Return error message describing what's invalid
-   - All errors logged with ``ESP_LOGE`` for debugging
+      // WiFi Password: min_len=0, max_len=63
+      config_set_string(CONFIG_WIFI_PASSWORD, "");       // ✅ PASS: open network
+      config_set_string(CONFIG_WIFI_PASSWORD, "secret"); // ✅ PASS: normal password
+
+   **Design Rationale:** 
+   
+   Metadata-driven validation requires zero code changes when adding new parameters. Application developer only edits config.h metadata tables. Config manager implementation (config_manager.c) never needs modification for new parameter types.
 
 
 Web Interface Design
