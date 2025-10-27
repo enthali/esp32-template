@@ -35,4 +35,6 @@ echo "Keyboard layout: German (DE) - can be changed with 'setxkbmap [layout]'"
 echo "VNC should start automatically via desktop-lite feature"
 echo "Access via noVNC: http://localhost:6080/vnc.html"
 
-date > .on-create-ran
+# Write timestamp to workspace root
+cd /workspaces/esp32-template
+echo "on-create.sh executed at $(date)" > .on-create-ran

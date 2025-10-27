@@ -1,8 +1,8 @@
-#!bash
+#!/bin/bash
 # on-attach.sh
 
-# VNC Startup Script for ESP32 Template
-# This script ensures necessary permissions for VNC operation in the development container
-sudo chmod 1777 /tmp
+# This script runs every time you attach to the container
 
-date > .on-attach-ran
+# Write timestamp to workspace root
+cd /workspaces/esp32-template
+echo "on-attach.sh executed at $(date)" > .on-attach-ran
