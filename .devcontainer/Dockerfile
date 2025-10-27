@@ -26,8 +26,6 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends python3-venv python3-pip nodejs npm doxygen graphviz \
   # install XFCE4 desktop environment for GUI support
   && apt-get install -y --no-install-recommends xfce4 xfce4-goodies \
-  # fix /tmp permissions for VNC server (permanent fix for container)
-  && chmod 1777 /tmp \
   # set German keyboard layout as default (can be changed later)
   && echo 'XKBLAYOUT="de"' >> /etc/default/keyboard \
   && echo 'XKBVARIANT=""' >> /etc/default/keyboard \
