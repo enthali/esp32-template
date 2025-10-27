@@ -34,3 +34,5 @@ echo "VNC configuration completed successfully!"
 echo "Keyboard layout: German (DE) - can be changed with 'setxkbmap [layout]'"
 echo "VNC should start automatically via desktop-lite feature"
 echo "Access via noVNC: http://localhost:6080/vnc.html"
+
+date > .on-create-ran
