@@ -10,8 +10,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 TUN_SCRIPT="${PROJECT_DIR}/tools/serial_tun_bridge.py"
 PROXY_SCRIPT="${PROJECT_DIR}/tools/http_proxy.py"
-TUN_LOG="${PROJECT_DIR}/temp/tun_errors.log"
-PROXY_LOG="${PROJECT_DIR}/temp/proxy_errors.log"
+TUN_LOG="/tmp/tun_errors.log"
+PROXY_LOG="/tmp/proxy_errors.log"
 
 # Colors
 GREEN='\033[0;32m'

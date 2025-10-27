@@ -22,10 +22,11 @@
 // Template components
 #include "config_manager.h"
 #include "web_server.h"
+#include "wifi_manager.h"
 
 #ifdef CONFIG_IDF_TARGET_ESP32
     // QEMU network support (only for emulator)
-    #include "netif_uart_tunnel_sim.h"
+    // Note: wifi_manager_sim.c handles netif_uart_tunnel initialization
 #endif
 
 static const char *TAG = "main";
@@ -59,26 +60,19 @@ void app_main(void)
     ESP_LOGI(TAG, "Initializing configuration manager...");
     ESP_ERROR_CHECK(config_init());
     
-    // Initialize and configure web server (includes WiFi/network initialization)
+#ifdef CONFIG_IDF_TARGET_ESP32
+    // QEMU Build: Use simulator WiFi manager with UART tunnel
+    // The WiFi manager simulator will initialize the web server internally
+    ESP_LOGI(TAG, "Initializing WiFi manager (QEMU/simulator mode)...");
+    ESP_ERROR_CHECK(wifi_manager_init());
+    ESP_ERROR_CHECK(wifi_manager_start());
+#else
+    // Real Hardware: Initialize web server with WiFi manager
     ESP_LOGI(TAG, "Initializing web server...");
     web_server_config_t web_config = WEB_SERVER_DEFAULT_CONFIG();
     ESP_ERROR_CHECK(web_server_init(&web_config));
-    
-#ifdef CONFIG_IDF_TARGET_ESP32
-    // Initialize QEMU network tunnel AFTER lwIP is initialized by WiFi manager
-    ESP_LOGI(TAG, "Initializing QEMU network tunnel...");
-    netif_uart_tunnel_config_t tunnel_config = {
-        .hostname = "esp32-template",
-        .ip_addr = {192, 168, 100, 2},
-        .netmask = {255, 255, 255, 0},
-        .gateway = {192, 168, 100, 1}
-    };
-    ESP_ERROR_CHECK(netif_uart_tunnel_init(&tunnel_config));
-#endif
-    
-    // Start web server
-    ESP_LOGI(TAG, "Starting web server...");
     ESP_ERROR_CHECK(web_server_start());
+#endif
     
     ESP_LOGI(TAG, "Template initialized successfully");
     ESP_LOGI(TAG, "");
