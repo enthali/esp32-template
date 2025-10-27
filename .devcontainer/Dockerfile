@@ -55,6 +55,13 @@ USER ${CONTAINER_USER}
 ENV USER=${CONTAINER_USER}
 WORKDIR /home/${CONTAINER_USER}
 
+# Create VNC-specific temp directory and set TMPDIR
+RUN mkdir -p /home/${CONTAINER_USER}/vnc-tmp \
+  && chmod 755 /home/${CONTAINER_USER}/vnc-tmp
+
+# Set TMPDIR environment variable for VNC to avoid /tmp permission issues
+ENV TMPDIR=/home/${CONTAINER_USER}/vnc-tmp
+
 RUN echo "source /opt/esp/idf/export.sh > /dev/null 2>&1" >> ~/.bashrc
 
 ENTRYPOINT [ "/opt/esp/entrypoint.sh" ]
