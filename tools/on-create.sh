@@ -1,4 +1,5 @@
 #!/bin/bash
+# on-create.sh 
 # VNC Setup Script for ESP32 Template
 # This script configures VNC for GUI access in the development container
 

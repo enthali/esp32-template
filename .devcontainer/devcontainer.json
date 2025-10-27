@@ -26,9 +26,9 @@
     "6080": { "label": "noVNC (Desktop)" }
   },
 
-	// Configure VNC and GUI after container creation
-	"postCreateCommand": "bash .devcontainer/setup-vnc.sh",
-	"postStartCommand": "bash .devcontainer/on-start.sh",
+	// execute on container creation and start used for setup of graphical environment and network tuneling
+	"postCreateCommand": "bash .tools/on-create.sh",
+	"postStartCommand": "bash .tools/on-start.sh",
 
 	"customizations": {
 		"vscode": {
