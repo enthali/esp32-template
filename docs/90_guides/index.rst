@@ -8,6 +8,7 @@ This guide covers all aspects of developing with the ESP32 Template, from settin
    :caption: Development Topics:
 
    devcontainer
+   gui-development
    qemu-emulator
    debugging
    qemu-network-internals
