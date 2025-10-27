@@ -31,5 +31,6 @@ chmod +x ~/.vnc/xstartup
 
 echo "VNC configuration completed successfully!"
 echo "Keyboard layout: German (DE) - can be changed with 'setxkbmap [layout]'"
-echo "To start VNC server: vncserver :1 -geometry 1024x768 -depth 24"
-echo "To access GUI: Use NoVNC on port 6080 or set DISPLAY=:1"
+echo "Note: /tmp permissions need to be fixed before VNC can start"
+echo "Run: sudo chmod 1777 /tmp"
+echo "Then: tigervncserver :1 -geometry 1024x768 -depth 24 -localhost no -SecurityTypes None --I-KNOW-THIS-IS-INSECURE"
