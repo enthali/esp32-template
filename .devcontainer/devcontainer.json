@@ -28,9 +28,6 @@
 
 	// Configure VNC and GUI after container creation
 	"postCreateCommand": "bash .devcontainer/setup-vnc.sh",
-	
-	// Fix VNC permissions on every container start
-	"postStartCommand": "sudo chmod 1777 /tmp",
 
 	"customizations": {
 		"vscode": {

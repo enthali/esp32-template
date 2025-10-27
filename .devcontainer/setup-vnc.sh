@@ -4,10 +4,6 @@
 
 echo "Setting up VNC configuration..."
 
-# Fix /tmp permissions for VNC server
-echo "Fixing /tmp permissions..."
-sudo chmod 1777 /tmp
-
 # Create VNC directory
 mkdir -p ~/.vnc
 
