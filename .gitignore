@@ -40,7 +40,9 @@ ENV/
 
 # Logs
 *.log
-on-*ran
+
+# Devcontainer lifecycle marker files
+.on-*-ran
 
 # Temporary files
 *.tmp
