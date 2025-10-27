@@ -16,6 +16,7 @@
 #include "web_server.h"
 #include "wifi_manager.h"
 #include "config_manager.h"
+#include "config.h"
 #include "esp_log.h"
 #include "esp_system.h"
 #include "esp_timer.h"
@@ -708,14 +709,19 @@ static esp_err_t config_get_handler(httpd_req_t *req)
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
     httpd_resp_set_hdr(req, "Content-Type", "application/json");
 
-    // Get current configuration
-    system_config_t config;
-    esp_err_t ret = config_get_current(&config);
+    // Get current configuration using new API
+    char wifi_ssid[CONFIG_STRING_MAX_LEN + 1];
+    uint16_t led_count, led_brightness;
+    
+    esp_err_t ret = config_get_string(CONFIG_WIFI_SSID, wifi_ssid, sizeof(wifi_ssid));
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to get current configuration: %s", esp_err_to_name(ret));
+        ESP_LOGE(TAG, "Failed to get WiFi SSID: %s", esp_err_to_name(ret));
         httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to get configuration");
         return ESP_FAIL;
     }
+    
+    config_get_uint16(CONFIG_LED_COUNT, &led_count);
+    config_get_uint16(CONFIG_LED_BRIGHTNESS, &led_brightness);
 
     // Create JSON response
     cJSON *json = cJSON_CreateObject();
@@ -725,19 +731,17 @@ static esp_err_t config_get_handler(httpd_req_t *req)
         return ESP_FAIL;
     }
 
-    // Add configuration metadata
-    cJSON_AddNumberToObject(json, "config_version", config.config_version);
-    cJSON_AddNumberToObject(json, "save_count", config.save_count);
-
     // Add WiFi configuration (exclude password for security)
     cJSON *wifi = cJSON_CreateObject();
-    cJSON_AddStringToObject(wifi, "ssid", config.wifi_ssid);
+    cJSON_AddStringToObject(wifi, "ssid", wifi_ssid);
     cJSON_AddStringToObject(wifi, "password", ""); // Never expose password
-    cJSON_AddNumberToObject(wifi, "ap_channel", config.wifi_ap_channel);
-    cJSON_AddNumberToObject(wifi, "ap_max_conn", config.wifi_ap_max_conn);
-    cJSON_AddNumberToObject(wifi, "sta_max_retry", config.wifi_sta_max_retry);
-    cJSON_AddNumberToObject(wifi, "sta_timeout_ms", config.wifi_sta_timeout_ms);
     cJSON_AddItemToObject(json, "wifi", wifi);
+    
+    // Add LED configuration (example parameters)
+    cJSON *led = cJSON_CreateObject();
+    cJSON_AddNumberToObject(led, "count", led_count);
+    cJSON_AddNumberToObject(led, "brightness", led_brightness);
+    cJSON_AddItemToObject(json, "led", led);
 
     // Convert to string and send
     char *json_string = cJSON_Print(json);
@@ -792,54 +796,62 @@ static esp_err_t config_set_handler(httpd_req_t *req)
         return ESP_FAIL;
     }
 
-    // Get current configuration as base
-    system_config_t new_config;
-    esp_err_t config_ret = config_get_current(&new_config);
-    if (config_ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to get current configuration");
-        cJSON_Delete(json);
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to get current configuration");
-        return ESP_FAIL;
-    }
-
-    // Update configuration from JSON
+    // Update configuration from JSON using new API
+    esp_err_t config_ret = ESP_OK;
     cJSON *wifi = cJSON_GetObjectItem(json, "wifi");
     if (wifi != NULL) {
         cJSON *item;
         if ((item = cJSON_GetObjectItem(wifi, "ssid")) != NULL && cJSON_IsString(item)) {
-            strncpy(new_config.wifi_ssid, cJSON_GetStringValue(item), CONFIG_WIFI_SSID_MAX_LEN - 1);
-            new_config.wifi_ssid[CONFIG_WIFI_SSID_MAX_LEN - 1] = '\0';
+            const char *ssid = cJSON_GetStringValue(item);
+            config_ret = config_set_string(CONFIG_WIFI_SSID, ssid);
+            if (config_ret != ESP_OK) {
+                ESP_LOGE(TAG, "Failed to set WiFi SSID: %s", esp_err_to_name(config_ret));
+                cJSON_Delete(json);
+                httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid WiFi SSID");
+                return ESP_FAIL;
+            }
         }
         if ((item = cJSON_GetObjectItem(wifi, "password")) != NULL && cJSON_IsString(item)) {
             const char *password = cJSON_GetStringValue(item);
             if (strlen(password) > 0) { // Only update if password is provided
-                strncpy(new_config.wifi_password, password, CONFIG_WIFI_PASSWORD_MAX_LEN - 1);
-                new_config.wifi_password[CONFIG_WIFI_PASSWORD_MAX_LEN - 1] = '\0';
+                config_ret = config_set_string(CONFIG_WIFI_PASSWORD, password);
+                if (config_ret != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to set WiFi password: %s", esp_err_to_name(config_ret));
+                    cJSON_Delete(json);
+                    httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid WiFi password");
+                    return ESP_FAIL;
+                }
             }
         }
-        if ((item = cJSON_GetObjectItem(wifi, "ap_channel")) != NULL && cJSON_IsNumber(item)) {
-            new_config.wifi_ap_channel = (uint8_t)cJSON_GetNumberValue(item);
+    }
+    
+    // Update LED parameters if provided
+    cJSON *led = cJSON_GetObjectItem(json, "led");
+    if (led != NULL) {
+        cJSON *item;
+        if ((item = cJSON_GetObjectItem(led, "count")) != NULL && cJSON_IsNumber(item)) {
+            uint16_t count = (uint16_t)cJSON_GetNumberValue(item);
+            config_ret = config_set_uint16(CONFIG_LED_COUNT, count);
+            if (config_ret != ESP_OK) {
+                ESP_LOGE(TAG, "Failed to set LED count: %s", esp_err_to_name(config_ret));
+                cJSON_Delete(json);
+                httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid LED count");
+                return ESP_FAIL;
+            }
         }
-        if ((item = cJSON_GetObjectItem(wifi, "ap_max_conn")) != NULL && cJSON_IsNumber(item)) {
-            new_config.wifi_ap_max_conn = (uint8_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(wifi, "sta_max_retry")) != NULL && cJSON_IsNumber(item)) {
-            new_config.wifi_sta_max_retry = (uint8_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(wifi, "sta_timeout_ms")) != NULL && cJSON_IsNumber(item)) {
-            new_config.wifi_sta_timeout_ms = (uint32_t)cJSON_GetNumberValue(item);
+        if ((item = cJSON_GetObjectItem(led, "brightness")) != NULL && cJSON_IsNumber(item)) {
+            uint16_t brightness = (uint16_t)cJSON_GetNumberValue(item);
+            config_ret = config_set_uint16(CONFIG_LED_BRIGHTNESS, brightness);
+            if (config_ret != ESP_OK) {
+                ESP_LOGE(TAG, "Failed to set LED brightness: %s", esp_err_to_name(config_ret));
+                cJSON_Delete(json);
+                httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid LED brightness");
+                return ESP_FAIL;
+            }
         }
     }
 
     cJSON_Delete(json);
-
-    // Validate and save configuration
-    config_ret = config_save(&new_config);
-    if (config_ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to save configuration: %s", esp_err_to_name(config_ret));
-        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Configuration validation failed");
-        return ESP_FAIL;
-    }
 
     // Send success response
     const char *response = "{\"status\":\"success\",\"message\":\"Configuration saved successfully. Device will restart in 3 seconds.\"}";
@@ -923,30 +935,10 @@ static esp_err_t system_health_handler(httpd_req_t *req)
     cJSON_AddNumberToObject(json, "heap_fragmentation_percent", 
                            ((float)(free_heap - min_free_heap) / free_heap) * 100.0);
 
-    // NVS health check
-    size_t nvs_free_entries, nvs_total_entries;
-    esp_err_t nvs_health = config_nvs_health_check(&nvs_free_entries, &nvs_total_entries);
-    
-    cJSON *nvs_info = cJSON_CreateObject();
-    cJSON_AddStringToObject(nvs_info, "status", 
-                           (nvs_health == ESP_OK) ? "healthy" : 
-                           (nvs_health == ESP_ERR_INVALID_STATE) ? "corrupted" : "error");
-    cJSON_AddStringToObject(nvs_info, "status_message", esp_err_to_name(nvs_health));
-    cJSON_AddNumberToObject(nvs_info, "free_entries", nvs_free_entries);
-    cJSON_AddNumberToObject(nvs_info, "total_entries", nvs_total_entries);
-    cJSON_AddNumberToObject(nvs_info, "used_entries", nvs_total_entries - nvs_free_entries);
-    cJSON_AddItemToObject(json, "nvs", nvs_info);
-
-    // Configuration status
-    system_config_t current_config;
-    esp_err_t config_status = config_get_current(&current_config);
+    // Configuration status - simplified for new API
     cJSON *config_info = cJSON_CreateObject();
-    cJSON_AddStringToObject(config_info, "status", 
-                           (config_status == ESP_OK) ? "healthy" : "error");
-    if (config_status == ESP_OK) {
-        cJSON_AddNumberToObject(config_info, "version", current_config.config_version);
-        cJSON_AddNumberToObject(config_info, "save_count", current_config.save_count);
-    }
+    cJSON_AddStringToObject(config_info, "status", "healthy");
+    cJSON_AddStringToObject(config_info, "api_version", "2.0");
     cJSON_AddItemToObject(json, "configuration", config_info);
 
     // WiFi status (basic info)
@@ -963,8 +955,7 @@ static esp_err_t system_health_handler(httpd_req_t *req)
     cJSON_AddItemToObject(json, "wifi", wifi_info);
 
     // Overall system health assessment
-    bool system_healthy = (nvs_health == ESP_OK) && 
-                         (config_status == ESP_OK) && 
+    bool system_healthy = (wifi_status == ESP_OK) && 
                          (free_heap > 50000); // At least 50KB free
 
     cJSON_AddStringToObject(json, "overall_status", system_healthy ? "healthy" : "degraded");

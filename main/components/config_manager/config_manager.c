@@ -29,6 +29,7 @@
 #include "nvs.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
+#include <inttypes.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -63,7 +64,7 @@ static char cache_strings[CONFIG_STRING_COUNT][CONFIG_STRING_MAX_LEN + 1];
  * @param key_buf Buffer to store key (min 4 bytes)
  */
 static inline void generate_uint16_key(uint32_t id, char* key_buf) {
-    snprintf(key_buf, 4, "u%u", id);
+    snprintf(key_buf, 4, "u%" PRIu32, id);
 }
 
 /**
@@ -72,7 +73,7 @@ static inline void generate_uint16_key(uint32_t id, char* key_buf) {
  * @param key_buf Buffer to store key (min 4 bytes)
  */
 static inline void generate_string_key(uint32_t id, char* key_buf) {
-    snprintf(key_buf, 4, "s%u", id);
+    snprintf(key_buf, 4, "s%" PRIu32, id);
 }
 
 /**
@@ -83,14 +84,14 @@ static inline void generate_string_key(uint32_t id, char* key_buf) {
  */
 static esp_err_t validate_uint16(uint32_t id, uint16_t value) {
     if (id >= CONFIG_UINT16_COUNT) {
-        ESP_LOGE(TAG, "Invalid uint16 parameter ID: %u", id);
+        ESP_LOGE(TAG, "Invalid uint16 parameter ID: %" PRIu32, id);
         return ESP_ERR_INVALID_ARG;
     }
     
     const config_uint16_param_t* param = &CONFIG_UINT16_PARAMS[id];
     
     if (value < param->min || value > param->max) {
-        ESP_LOGE(TAG, "Parameter u%u out of range: %u (min=%u, max=%u)",
+        ESP_LOGE(TAG, "Parameter u%" PRIu32 " out of range: %u (min=%u, max=%u)",
                  id, value, param->min, param->max);
         return ESP_ERR_INVALID_ARG;
     }
@@ -106,12 +107,12 @@ static esp_err_t validate_uint16(uint32_t id, uint16_t value) {
  */
 static esp_err_t validate_string(uint32_t id, const char* value) {
     if (id >= CONFIG_STRING_COUNT) {
-        ESP_LOGE(TAG, "Invalid string parameter ID: %u", id);
+        ESP_LOGE(TAG, "Invalid string parameter ID: %" PRIu32, id);
         return ESP_ERR_INVALID_ARG;
     }
     
     if (value == NULL) {
-        ESP_LOGE(TAG, "String parameter s%u: NULL value not allowed", id);
+        ESP_LOGE(TAG, "String parameter s%" PRIu32 ": NULL value not allowed", id);
         return ESP_ERR_INVALID_ARG;
     }
     
@@ -119,7 +120,7 @@ static esp_err_t validate_string(uint32_t id, const char* value) {
     size_t len = strlen(value);
     
     if (len < param->min_len || len > param->max_len) {
-        ESP_LOGE(TAG, "String parameter s%u length invalid: %u (min=%u, max=%u)",
+        ESP_LOGE(TAG, "String parameter s%" PRIu32 " length invalid: %zu (min=%zu, max=%zu)",
                  id, len, param->min_len, param->max_len);
         return ESP_ERR_INVALID_ARG;
     }
@@ -143,7 +144,7 @@ static esp_err_t load_uint16_param(nvs_handle_t handle, uint32_t id) {
     if (err == ESP_ERR_NVS_NOT_FOUND) {
         // Use default value
         value = CONFIG_UINT16_PARAMS[id].default_val;
-        ESP_LOGD(TAG, "Parameter %s not found in NVS, using default: %u", key, value);
+        ESP_LOGD(TAG, "Parameter %s not found in NVS, using default: %u", key, (unsigned int)value);
     } else if (err != ESP_OK) {
         ESP_LOGE(TAG, "Failed to read %s from NVS: %s", key, esp_err_to_name(err));
         return err;
@@ -227,7 +228,7 @@ esp_err_t config_init(void) {
     for (uint32_t i = 0; i < CONFIG_UINT16_COUNT; i++) {
         err = load_uint16_param(nvs_handle, i);
         if (err != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to load uint16 parameter %u", i);
+            ESP_LOGE(TAG, "Failed to load uint16 parameter %" PRIu32, i);
             // Continue loading other parameters
         }
     }
@@ -236,7 +237,7 @@ esp_err_t config_init(void) {
     for (uint32_t i = 0; i < CONFIG_STRING_COUNT; i++) {
         err = load_string_param(nvs_handle, i);
         if (err != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to load string parameter %u", i);
+            ESP_LOGE(TAG, "Failed to load string parameter %" PRIu32, i);
             // Continue loading other parameters
         }
     }
@@ -244,8 +245,8 @@ esp_err_t config_init(void) {
     nvs_close(nvs_handle);
     
     config_initialized = true;
-    ESP_LOGI(TAG, "Config manager initialized (%u uint16, %u string parameters)",
-             CONFIG_UINT16_COUNT, CONFIG_STRING_COUNT);
+    ESP_LOGI(TAG, "Config manager initialized (%" PRIu32 " uint16, %" PRIu32 " string parameters)",
+             (uint32_t)CONFIG_UINT16_COUNT, (uint32_t)CONFIG_STRING_COUNT);
     
     return ESP_OK;
 }
@@ -329,7 +330,7 @@ esp_err_t config_get_uint16(uint32_t id, uint16_t* value) {
     }
     
     if (id >= CONFIG_UINT16_COUNT) {
-        ESP_LOGE(TAG, "Invalid uint16 parameter ID: %u", id);
+        ESP_LOGE(TAG, "Invalid uint16 parameter ID: %" PRIu32, id);
         return ESP_ERR_INVALID_ARG;
     }
     
@@ -395,7 +396,7 @@ esp_err_t config_set_uint16(uint32_t id, uint16_t value) {
     if (err == ESP_OK) {
         // Update cache only after successful NVS write
         cache_uint16[id] = value;
-        ESP_LOGD(TAG, "Set %s = %u", key, value);
+        ESP_LOGD(TAG, "Set %s = %u", key, (unsigned int)value);
     } else {
         ESP_LOGE(TAG, "Failed to commit %s to NVS: %s", key, esp_err_to_name(err));
     }
@@ -411,7 +412,7 @@ esp_err_t config_get_string(uint32_t id, char* buffer, size_t buf_len) {
     }
     
     if (id >= CONFIG_STRING_COUNT) {
-        ESP_LOGE(TAG, "Invalid string parameter ID: %u", id);
+        ESP_LOGE(TAG, "Invalid string parameter ID: %" PRIu32, id);
         return ESP_ERR_INVALID_ARG;
     }
     
@@ -429,7 +430,7 @@ esp_err_t config_get_string(uint32_t id, char* buffer, size_t buf_len) {
     // Check buffer size
     size_t required_len = strlen(cache_strings[id]) + 1;
     if (buf_len < required_len) {
-        ESP_LOGE(TAG, "Buffer too small: need %u, have %u", required_len, buf_len);
+        ESP_LOGE(TAG, "Buffer too small: need %zu, have %zu", required_len, buf_len);
         xSemaphoreGive(config_mutex);
         return ESP_ERR_INVALID_SIZE;
     }
