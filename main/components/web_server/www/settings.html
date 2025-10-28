@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32 Distance Sensor - Settings</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <title>ESP32 Template - Settings</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/css/style.css?v=2">
     <style>
         .settings-form {
             max-width: 800px;
@@ -181,7 +182,7 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="nav-brand">Distance Sensor</div>
+        <div class="nav-brand">ESP32 Template</div>
         <div class="nav-links">
             <a href="/index.html" class="nav-btn">Dashboard</a>
             <a href="/wifi-setup.html" class="nav-btn">WiFi</a>
@@ -193,60 +194,19 @@
         <h2>System Configuration</h2>
         
         <form id="settings-form" class="settings-form">
-            <!-- Distance Sensor Configuration -->
+            <!-- Application Configuration -->
             <div class="config-section">
-                <h3>🔍 Distance Sensor</h3>
+                <h3>⚙️ Application Settings</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="distance-min">Minimum Distance (cm)</label>
-                        <input type="number" id="distance-min" name="distance-min" min="5" max="100" step="0.1" required>
-                        <div class="help-text">Distance mapped to the first LED (5.0 - 100.0 cm)</div>
+                        <label for="app-name">Application Name</label>
+                        <input type="text" id="app-name" name="app-name" maxlength="32" placeholder="My ESP32 App" required>
+                        <div class="help-text">Custom name for your application</div>
                     </div>
                     <div class="form-group">
-                        <label for="distance-max">Maximum Distance (cm)</label>
-                        <input type="number" id="distance-max" name="distance-max" min="20" max="400" step="0.1" required>
-                        <div class="help-text">Distance mapped to the last LED (20.0 - 400.0 cm)</div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="measurement-interval">Measurement Interval (ms)</label>
-                        <input type="number" id="measurement-interval" name="measurement-interval" min="50" max="1000" required>
-                        <div class="help-text">How often to measure distance (50 - 1000 ms)</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="sensor-timeout">Sensor Timeout (ms)</label>
-                        <input type="number" id="sensor-timeout" name="sensor-timeout" min="10" max="50" required>
-                        <div class="help-text">Maximum time to wait for echo (10 - 50 ms)</div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="temperature">Temperature (°C)</label>
-                        <input type="number" id="temperature" name="temperature" min="-20" max="60" step="0.1" required>
-                        <div class="help-text">Ambient temperature for sound speed calculation (-20 - 60°C)</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="smoothing-alpha">Smoothing Factor</label>
-                        <input type="number" id="smoothing-alpha" name="smoothing-alpha" min="0.1" max="1.0" step="0.01" required>
-                        <div class="help-text">Exponential moving average factor (0.1 = more smoothing/stable, 1.0 = less smoothing/responsive)</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- LED Configuration -->
-            <div class="config-section">
-                <h3>💡 LED Strip</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="led-count">LED Count</label>
-                        <input type="number" id="led-count" name="led-count" min="1" max="100" required>
-                        <div class="help-text">Number of LEDs in the strip (1 - 100/div>
-                    </div>
-                    <div class="form-group">
-                        <label for="led-brightness">LED Brightness</label>
-                        <input type="number" id="led-brightness" name="led-brightness" min="10" max="255" required>
-                        <div class="help-text">LED brightness level (10 - 255, 255 = maximum)</div>
+                        <label for="update-interval">Update Interval (ms)</label>
+                        <input type="number" id="update-interval" name="update-interval" min="100" max="10000" step="100" value="1000" required>
+                        <div class="help-text">Data refresh interval (100 - 10000 ms)</div>
                     </div>
                 </div>
             </div>
@@ -303,16 +263,16 @@
     
     <footer class="footer">
         <div class="footer-content">
-            <p>&copy; 2025 ESP32 Distance Sensor Project</p>
+            <p>&copy; 2025 ESP32 Template Project</p>
             <p>
-                <a href="https://github.com/enthali/esp32-distance" target="_blank" rel="noopener">
+                <a href="https://github.com/enthali/esp32-template" target="_blank" rel="noopener">
                     View on GitHub
                 </a>
             </p>
         </div>
     </footer>
     
-    <script src="/js/app.js"></script>
+    <script src="/js/app.js?v=2"></script>
     <script>
         // Load configuration on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -422,61 +382,23 @@
         }
         
         function populateForm(config) {
-            // Helper function to ensure float values are displayed with period decimal separator
-            function formatFloatForDisplay(value) {
-                // First ensure we have a proper number, then format to reasonable precision and ensure period separator
-                const num = parseFloat(value);
-                if (isNaN(num)) return '0';
-                // Use Number.prototype.toLocaleString with explicit 'en-US' locale to force period separator
-                return num.toLocaleString('en-US', { 
-                    minimumFractionDigits: 1, 
-                    maximumFractionDigits: 2,
-                    useGrouping: false 
-                });
-            }
-            
-            // Distance sensor settings
-            document.getElementById('distance-min').value = formatFloatForDisplay(config.distance_sensor.min_distance_cm);
-            document.getElementById('distance-max').value = formatFloatForDisplay(config.distance_sensor.max_distance_cm);
-            document.getElementById('measurement-interval').value = config.distance_sensor.measurement_interval_ms;
-            document.getElementById('sensor-timeout').value = config.distance_sensor.sensor_timeout_ms;
-            document.getElementById('temperature').value = formatFloatForDisplay(config.distance_sensor.temperature_c);
-            document.getElementById('smoothing-alpha').value = formatFloatForDisplay(config.distance_sensor.smoothing_alpha);
-            
-            // LED settings
-            document.getElementById('led-count').value = config.led.count;
-            document.getElementById('led-brightness').value = config.led.brightness;
+            // Application settings
+            document.getElementById('app-name').value = config.app_name || 'ESP32 Template';
+            document.getElementById('update-interval').value = config.update_interval_ms || 1000;
             
             // WiFi settings
-            document.getElementById('wifi-ssid').value = config.wifi.ssid;
+            document.getElementById('wifi-ssid').value = config.wifi.ssid || '';
             document.getElementById('wifi-password').value = ''; // Never populate password for security
-            document.getElementById('ap-channel').value = config.wifi.ap_channel;
-            document.getElementById('ap-max-conn').value = config.wifi.ap_max_conn;
-            document.getElementById('sta-max-retry').value = config.wifi.sta_max_retry;
-            document.getElementById('sta-timeout').value = config.wifi.sta_timeout_ms;
+            document.getElementById('ap-channel').value = config.wifi.ap_channel || 1;
+            document.getElementById('ap-max-conn').value = config.wifi.ap_max_conn || 4;
+            document.getElementById('sta-max-retry').value = config.wifi.sta_max_retry || 5;
+            document.getElementById('sta-timeout').value = config.wifi.sta_timeout_ms || 10000;
         }
         
         function getFormData() {
-            // Helper function to parse float values with locale-safe decimal separator handling
-            function parseFloatSafe(value) {
-                // Replace comma with period for consistent decimal parsing
-                const normalizedValue = value.toString().replace(',', '.');
-                return parseFloat(normalizedValue);
-            }
-            
             return {
-                distance_sensor: {
-                    min_distance_cm: parseFloatSafe(document.getElementById('distance-min').value),
-                    max_distance_cm: parseFloatSafe(document.getElementById('distance-max').value),
-                    measurement_interval_ms: parseInt(document.getElementById('measurement-interval').value),
-                    sensor_timeout_ms: parseInt(document.getElementById('sensor-timeout').value),
-                    temperature_c: parseFloatSafe(document.getElementById('temperature').value),
-                    smoothing_alpha: parseFloatSafe(document.getElementById('smoothing-alpha').value)
-                },
-                led: {
-                    count: parseInt(document.getElementById('led-count').value),
-                    brightness: parseInt(document.getElementById('led-brightness').value)
-                },
+                app_name: document.getElementById('app-name').value,
+                update_interval_ms: parseInt(document.getElementById('update-interval').value),
                 wifi: {
                     ssid: document.getElementById('wifi-ssid').value,
                     password: document.getElementById('wifi-password').value,
@@ -489,38 +411,17 @@
         }
         
         function setupFormValidation() {
-            // Add real-time validation for inter-parameter relationships
-            const distanceMin = document.getElementById('distance-min');
-            const distanceMax = document.getElementById('distance-max');
-            const measurementInterval = document.getElementById('measurement-interval');
-            const sensorTimeout = document.getElementById('sensor-timeout');
+            // Add any custom validation logic here if needed
+            const updateInterval = document.getElementById('update-interval');
             
-            function validateDistanceRange() {
-                const min = parseFloat(distanceMin.value);
-                const max = parseFloat(distanceMax.value);
-                
-                if (min >= max) {
-                    distanceMax.setCustomValidity('Maximum distance must be greater than minimum distance');
+            updateInterval.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                if (value < 100 || value > 10000) {
+                    this.setCustomValidity('Update interval must be between 100 and 10000 ms');
                 } else {
-                    distanceMax.setCustomValidity('');
+                    this.setCustomValidity('');
                 }
-            }
-            
-            function validateTimeouts() {
-                const interval = parseInt(measurementInterval.value);
-                const timeout = parseInt(sensorTimeout.value);
-                
-                if (timeout >= interval) {
-                    sensorTimeout.setCustomValidity('Sensor timeout must be less than measurement interval');
-                } else {
-                    sensorTimeout.setCustomValidity('');
-                }
-            }
-            
-            distanceMin.addEventListener('input', validateDistanceRange);
-            distanceMax.addEventListener('input', validateDistanceRange);
-            measurementInterval.addEventListener('input', validateTimeouts);
-            sensorTimeout.addEventListener('input', validateTimeouts);
+            });
         }
         
         function setLoading(loading) {
