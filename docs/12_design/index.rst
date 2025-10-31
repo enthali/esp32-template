@@ -8,7 +8,8 @@ This section contains detailed design specifications for system components follo
    :caption: Design Documents:
 
    spec_high_level_architecture
-   spec_config_manager
+   spec_config_manager_json
+   spec_web_server
 
 Overview
 --------
@@ -35,7 +36,8 @@ Design specifications are organized by scope:
 
 2. **Component-Specific Designs** - Detailed component specifications
 
-   * ``SPEC_CFG_*`` - Configuration Manager implementation details
+   * ``SPEC_CFG_JSON_*`` - Configuration Manager (JSON-based system)
+   * ``SPEC_WEB_*`` - Web Server HTTP interface and REST API
    * Additional component designs to be added as needed
 
 Each design specification uses Sphinx-Needs ``:spec:`` directive and links to parent requirements using ``:links:`` attribute.

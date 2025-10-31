@@ -174,6 +174,62 @@ This document contains high-level system requirements for the ESP32 Template pro
    * AC-5: Documentation describes emulation network setup and limitations
 
 
+Future Enhancements
+-------------------
+
+.. req:: HTTPS Support
+   :id: REQ_SYS_SEC_1
+   :status: open
+   :priority: optional
+   :tags: security, https, future
+
+   **Description:**
+   The system MAY support HTTPS for encrypted web interface communication.
+
+   **Rationale:**
+   Encrypted communication protects sensitive data (WiFi passwords, configuration) from network eavesdropping. However, embedded certificate management is complex.
+
+   **Known Challenges:**
+
+   * ESP32 flash constraints for certificate storage
+   * Self-signed certificates trigger browser warnings
+   * OTA updates complicate certificate lifecycle
+   * QEMU emulation does not support HTTPS testing
+   * Previous implementation attempts encountered stability issues
+
+   **Acceptance Criteria (if implemented):**
+
+   * AC-1: Web server supports both HTTP and HTTPS ports
+   * AC-2: Self-signed certificate generated at build time or first boot
+   * AC-3: Certificate embedded in flash or stored in NVS
+   * AC-4: Browser security warnings documented for users
+   * AC-5: Certificate renewal process defined for production deployments
+
+   **Note:** This requirement is intentionally marked "open" due to complexity. For many embedded use cases, physical access security and network isolation provide sufficient protection. Production deployments requiring HTTPS should evaluate alternatives (VPN, mTLS, secure network).
+
+
+.. req:: System Time and NTP Support
+   :id: REQ_SYS_TIME_1
+   :status: open
+   :priority: optional
+   :tags: time, ntp, future
+
+   **Description:**
+   The system MAY support network time synchronization via NTP for accurate timestamps.
+
+   **Rationale:**
+   Accurate system time enables timestamped logs, scheduled tasks, and time-based security features. Many IoT applications require synchronized time.
+
+   **Acceptance Criteria (if implemented):**
+
+   * AC-1: NTP client synchronizes with configurable NTP server
+   * AC-2: Timezone configuration via web interface
+   * AC-3: System time persists across reboots (RTC or NVS)
+   * AC-4: Time synchronization status visible in web interface
+   * AC-5: Fallback behavior defined if NTP unavailable
+
+   **Note:** This requirement is marked "open" as template focuses on core functionality. Time synchronization can be added when application requires timestamped events or scheduling.
+
 
 Traceability
 ------------

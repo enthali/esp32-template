@@ -33,7 +33,7 @@ Functional Requirements
 
 .. req:: Configuration Interface
    :id: REQ_WEB_2
-   :links: REQ_SYS_WEB_1, REQ_CFG_3
+   :links: REQ_SYS_WEB_1, REQ_CFG_JSON_7
    :status: approved
    :priority: mandatory
    :tags: web, ui, configuration
@@ -70,6 +70,48 @@ Functional Requirements
    - AC-4: WiFi credentials SHALL be saved to NVS and validated on next boot
    - AC-5: WiFi setup page SHALL provide feedback on save success/failure
    - AC-6: Device SHALL switch to STA mode after successful WiFi configuration on next boot
+
+
+.. req:: Configuration REST API
+   :id: REQ_WEB_CONF_1
+   :links: REQ_SYS_WEB_1, REQ_SYS_CFG_1
+   :status: approved
+   :priority: mandatory
+   :tags: web, api, config
+
+   **Description:** The web server SHALL provide REST API endpoints for device configuration management.
+
+   **Rationale:** Web interface needs standardized API to read and modify device configuration values stored in NVS.
+
+   **Acceptance Criteria:**
+
+   - AC-1: GET /api/config SHALL return all current configuration values as JSON
+   - AC-2: POST /api/config SHALL accept configuration updates as JSON payload
+   - AC-3: POST /api/config/reset SHALL trigger factory reset of configuration
+   - AC-4: API SHALL integrate with configuration manager component
+   - AC-5: API SHALL return appropriate HTTP status codes (200 OK, 400 Bad Request, 500 Internal Server Error)
+   - AC-6: Configuration changes SHALL be persisted to NVS immediately
+   - AC-7: Device SHALL restart after configuration changes for consistency
+
+
+.. req:: Schema-Driven Configuration Form
+   :id: REQ_WEB_SCHEMA_1
+   :links: REQ_WEB_CONF_1, REQ_SYS_WEB_1
+   :status: approved
+   :priority: optional
+   :tags: web, ui, config
+
+   **Description:** The web interface SHOULD dynamically generate configuration forms from schema definition.
+
+   **Rationale:** Dynamic generation eliminates manual HTML maintenance and ensures UI stays in sync with configuration structure.
+
+   **Acceptance Criteria:**
+
+   - AC-1: Web server SHALL serve configuration schema as static file (e.g., /config_schema.json)
+   - AC-2: Browser JavaScript SHALL fetch schema and generate form fields dynamically
+   - AC-3: Form fields SHALL match parameter types from schema (text, password, number, checkbox)
+   - AC-4: Browser SHALL validate inputs based on schema constraints before submission
+   - AC-5: Invalid inputs SHALL display clear error messages to user
 
 
 .. req:: Web Interface Navigation
