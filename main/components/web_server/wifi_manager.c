@@ -49,7 +49,6 @@
 
 #include "wifi_manager.h"
 #include "web_server.h"
-#include "config.h"
 #include "esp_log.h"
 #include "esp_wifi.h"
 #include "esp_netif.h"

@@ -16,7 +16,6 @@
 #include "web_server.h"
 #include "wifi_manager.h"
 #include "config_manager.h"
-#include "config.h"
 #include "esp_log.h"
 #include "esp_system.h"
 #include "esp_timer.h"
@@ -81,6 +80,8 @@ extern const uint8_t style_css_start[] asm("_binary_style_css_start");
 extern const uint8_t style_css_end[] asm("_binary_style_css_end");
 extern const uint8_t app_js_start[] asm("_binary_app_js_start");
 extern const uint8_t app_js_end[] asm("_binary_app_js_end");
+extern const uint8_t config_schema_json_start[] asm("_binary_config_schema_json_start");
+extern const uint8_t config_schema_json_end[] asm("_binary_config_schema_json_end");
 
 // Helper functions for static file serving
 static const char *get_mime_type(const char *filename);
@@ -431,6 +432,12 @@ static esp_err_t get_embedded_file(const char *filename, const uint8_t **data, s
         *size = app_js_end - app_js_start;
         ESP_LOGI(TAG, "Found app.js, size: %zu", *size);
     }
+    else if (strcmp(clean_filename, "/config_schema.json") == 0)
+    {
+        *data = config_schema_json_start;
+        *size = config_schema_json_end - config_schema_json_start;
+        ESP_LOGI(TAG, "Found config_schema.json, size: %zu", *size);
+    }
     else
     {
         ESP_LOGW(TAG, "File not found in embedded files: %s", filename);
@@ -678,6 +685,14 @@ esp_err_t web_server_init(const web_server_config_t *config)
     ret = httpd_register_uri_handler(server, &favicon_ico_uri);
     ESP_LOGI(TAG, "Registered handler for '/favicon.ico' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
+    httpd_uri_t config_schema_uri = {
+        .uri = "/config_schema.json",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &config_schema_uri);
+    ESP_LOGI(TAG, "Registered handler for '/config_schema.json' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
     ESP_LOGI(TAG, "Web server initialized successfully");
     return ESP_OK;
 }
@@ -765,21 +780,7 @@ static esp_err_t config_get_handler(httpd_req_t *req)
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
     httpd_resp_set_hdr(req, "Content-Type", "application/json");
 
-    // Get current configuration using new API
-    char wifi_ssid[CONFIG_STRING_MAX_LEN + 1];
-    uint16_t led_count, led_brightness;
-    
-    esp_err_t ret = config_get_string(CONFIG_WIFI_SSID, wifi_ssid, sizeof(wifi_ssid));
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to get WiFi SSID: %s", esp_err_to_name(ret));
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to get configuration");
-        return ESP_FAIL;
-    }
-    
-    config_get_uint16(CONFIG_LED_COUNT, &led_count);
-    config_get_uint16(CONFIG_LED_BRIGHTNESS, &led_brightness);
-
-    // Create JSON response
+    // Create JSON response - flat structure matching schema keys
     cJSON *json = cJSON_CreateObject();
     if (json == NULL) {
         ESP_LOGE(TAG, "Failed to create JSON object");
@@ -787,17 +788,45 @@ static esp_err_t config_get_handler(httpd_req_t *req)
         return ESP_FAIL;
     }
 
-    // Add WiFi configuration (exclude password for security)
-    cJSON *wifi = cJSON_CreateObject();
-    cJSON_AddStringToObject(wifi, "ssid", wifi_ssid);
-    cJSON_AddStringToObject(wifi, "password", ""); // Never expose password
-    cJSON_AddItemToObject(json, "wifi", wifi);
+    // Read all configuration values from NVS
+    // WiFi SSID
+    char wifi_ssid[64];
+    esp_err_t ret = config_get_string("wifi_ssid", wifi_ssid, sizeof(wifi_ssid));
+    if (ret == ESP_OK) {
+        cJSON_AddStringToObject(json, "wifi_ssid", wifi_ssid);
+    } else {
+        cJSON_AddStringToObject(json, "wifi_ssid", "");
+    }
     
-    // Add LED configuration (example parameters)
-    cJSON *led = cJSON_CreateObject();
-    cJSON_AddNumberToObject(led, "count", led_count);
-    cJSON_AddNumberToObject(led, "brightness", led_brightness);
-    cJSON_AddItemToObject(json, "led", led);
+    // WiFi Password - never expose, always return empty
+    cJSON_AddStringToObject(json, "wifi_pass", "");
+    
+    // LED Count
+    int16_t led_count = 0;
+    ret = config_get_int16("led_count", &led_count);
+    if (ret == ESP_OK) {
+        cJSON_AddNumberToObject(json, "led_count", led_count);
+    } else {
+        cJSON_AddNumberToObject(json, "led_count", 0);
+    }
+    
+    // LED Brightness
+    int16_t led_bright = 0;
+    ret = config_get_int16("led_bright", &led_bright);
+    if (ret == ESP_OK) {
+        cJSON_AddNumberToObject(json, "led_bright", led_bright);
+    } else {
+        cJSON_AddNumberToObject(json, "led_bright", 0);
+    }
+    
+    // Device Name
+    char device_name[32];
+    ret = config_get_string("device_name", device_name, sizeof(device_name));
+    if (ret == ESP_OK) {
+        cJSON_AddStringToObject(json, "device_name", device_name);
+    } else {
+        cJSON_AddStringToObject(json, "device_name", "ESP32-Template");
+    }
 
     // Convert to string and send
     char *json_string = cJSON_Print(json);
@@ -823,7 +852,19 @@ static esp_err_t config_get_handler(httpd_req_t *req)
  */
 static esp_err_t config_set_handler(httpd_req_t *req)
 {
-    ESP_LOGD(TAG, "Handling POST /api/config");
+    ESP_LOGI(TAG, "=== POST /api/config called ===");
+    ESP_LOGI(TAG, "Content-Length: %d", req->content_len);
+    ESP_LOGI(TAG, "Method: %d", req->method);
+    
+    // Log all headers for debugging
+    size_t buf_len = httpd_req_get_hdr_value_len(req, "Content-Type") + 1;
+    if (buf_len > 1) {
+        char *buf = malloc(buf_len);
+        if (httpd_req_get_hdr_value_str(req, "Content-Type", buf, buf_len) == ESP_OK) {
+            ESP_LOGI(TAG, "Content-Type: %s", buf);
+        }
+        free(buf);
+    }
 
     // Set CORS headers
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -831,8 +872,11 @@ static esp_err_t config_set_handler(httpd_req_t *req)
 
     // Read request body
     char content[1024];
+    ESP_LOGI(TAG, "Attempting to read %d bytes...", req->content_len);
     int ret = httpd_req_recv(req, content, sizeof(content) - 1);
+    ESP_LOGI(TAG, "httpd_req_recv returned: %d", ret);
     if (ret <= 0) {
+        ESP_LOGE(TAG, "Failed to receive body: ret=%d, TIMEOUT=%d", ret, HTTPD_SOCK_ERR_TIMEOUT);
         if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
             httpd_resp_send_408(req);
         } else {
@@ -842,7 +886,7 @@ static esp_err_t config_set_handler(httpd_req_t *req)
     }
     content[ret] = '\0';
 
-    ESP_LOGD(TAG, "Received configuration JSON: %s", content);
+    ESP_LOGI(TAG, "Received configuration JSON (%d bytes): %s", ret, content);
 
     // Parse JSON
     cJSON *json = cJSON_Parse(content);
@@ -852,80 +896,90 @@ static esp_err_t config_set_handler(httpd_req_t *req)
         return ESP_FAIL;
     }
 
-    // Update configuration from JSON using new API
+    // Update configuration from flat JSON structure matching schema
+    // PERFORMANCE: Use _no_commit variants and commit once at the end
+    // This is critical for QEMU where NVS flash writes are slow
     esp_err_t config_ret = ESP_OK;
-    cJSON *wifi = cJSON_GetObjectItem(json, "wifi");
-    if (wifi != NULL) {
-        cJSON *item;
-        if ((item = cJSON_GetObjectItem(wifi, "ssid")) != NULL && cJSON_IsString(item)) {
-            const char *ssid = cJSON_GetStringValue(item);
-            config_ret = config_set_string(CONFIG_WIFI_SSID, ssid);
-            if (config_ret != ESP_OK) {
-                ESP_LOGE(TAG, "Failed to set WiFi SSID: %s", esp_err_to_name(config_ret));
-                cJSON_Delete(json);
-                httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid WiFi SSID");
-                return ESP_FAIL;
-            }
+    cJSON *item = NULL;
+    
+    // WiFi SSID
+    if ((item = cJSON_GetObjectItem(json, "wifi_ssid")) != NULL && cJSON_IsString(item)) {
+        const char *ssid = cJSON_GetStringValue(item);
+        config_ret = config_set_string_no_commit("wifi_ssid", ssid);
+        if (config_ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to set wifi_ssid: %s", esp_err_to_name(config_ret));
         }
-        if ((item = cJSON_GetObjectItem(wifi, "password")) != NULL && cJSON_IsString(item)) {
-            const char *password = cJSON_GetStringValue(item);
-            if (strlen(password) > 0) { // Only update if password is provided
-                config_ret = config_set_string(CONFIG_WIFI_PASSWORD, password);
-                if (config_ret != ESP_OK) {
-                    ESP_LOGE(TAG, "Failed to set WiFi password: %s", esp_err_to_name(config_ret));
-                    cJSON_Delete(json);
-                    httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid WiFi password");
-                    return ESP_FAIL;
-                }
+    }
+    
+    // WiFi Password
+    if ((item = cJSON_GetObjectItem(json, "wifi_pass")) != NULL && cJSON_IsString(item)) {
+        const char *password = cJSON_GetStringValue(item);
+        if (strlen(password) > 0) { // Only update if password is provided
+            config_ret = config_set_string_no_commit("wifi_pass", password);
+            if (config_ret != ESP_OK) {
+                ESP_LOGE(TAG, "Failed to set wifi_pass: %s", esp_err_to_name(config_ret));
             }
         }
     }
     
-    // Update LED parameters if provided
-    cJSON *led = cJSON_GetObjectItem(json, "led");
-    if (led != NULL) {
-        cJSON *item;
-        if ((item = cJSON_GetObjectItem(led, "count")) != NULL && cJSON_IsNumber(item)) {
-            uint16_t count = (uint16_t)cJSON_GetNumberValue(item);
-            config_ret = config_set_uint16(CONFIG_LED_COUNT, count);
-            if (config_ret != ESP_OK) {
-                ESP_LOGE(TAG, "Failed to set LED count: %s", esp_err_to_name(config_ret));
-                cJSON_Delete(json);
-                httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid LED count");
-                return ESP_FAIL;
-            }
+    // LED Count
+    if ((item = cJSON_GetObjectItem(json, "led_count")) != NULL && cJSON_IsNumber(item)) {
+        int16_t count = (int16_t)cJSON_GetNumberValue(item);
+        config_ret = config_set_int16_no_commit("led_count", count);
+        if (config_ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to set led_count: %s", esp_err_to_name(config_ret));
         }
-        if ((item = cJSON_GetObjectItem(led, "brightness")) != NULL && cJSON_IsNumber(item)) {
-            uint16_t brightness = (uint16_t)cJSON_GetNumberValue(item);
-            config_ret = config_set_uint16(CONFIG_LED_BRIGHTNESS, brightness);
-            if (config_ret != ESP_OK) {
-                ESP_LOGE(TAG, "Failed to set LED brightness: %s", esp_err_to_name(config_ret));
-                cJSON_Delete(json);
-                httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid LED brightness");
-                return ESP_FAIL;
-            }
+    }
+    
+    // LED Brightness
+    if ((item = cJSON_GetObjectItem(json, "led_bright")) != NULL && cJSON_IsNumber(item)) {
+        int16_t brightness = (int16_t)cJSON_GetNumberValue(item);
+        config_ret = config_set_int16_no_commit("led_bright", brightness);
+        if (config_ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to set led_bright: %s", esp_err_to_name(config_ret));
+        }
+    }
+    
+    // Device Name
+    if ((item = cJSON_GetObjectItem(json, "device_name")) != NULL && cJSON_IsString(item)) {
+        const char *name = cJSON_GetStringValue(item);
+        config_ret = config_set_string_no_commit("device_name", name);
+        if (config_ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to set device_name: %s", esp_err_to_name(config_ret));
         }
     }
 
     cJSON_Delete(json);
-
-    // Send success response
-    const char *response = "{\"status\":\"success\",\"message\":\"Configuration saved successfully. Device will restart in 3 seconds.\"}";
-    httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
-
-    ESP_LOGI(TAG, "Configuration updated and saved successfully. Scheduling device restart...");
     
-    // Schedule restart using a timer to avoid blocking the HTTP response
-    if (restart_timer == NULL) {
-        esp_timer_create_args_t timer_args = {
-            .callback = restart_timer_callback,
-            .name = "restart_timer"
-        };
-        esp_timer_create(&timer_args, &restart_timer);
+    // CRITICAL: Commit all changes at once (much faster than individual commits)
+    ESP_LOGI(TAG, "Committing configuration changes to NVS...");
+    config_ret = config_commit();
+    if (config_ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to commit config changes: %s", esp_err_to_name(config_ret));
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to save configuration");
+        return ESP_FAIL;
     }
+    ESP_LOGI(TAG, "Configuration changes committed successfully");
+
+    // Send success response BEFORE scheduling restart
+    const char *response = "{\"status\":\"success\",\"message\":\"Configuration saved. Device will restart in 3 seconds.\"}";
+    httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
     
-    // Start the restart timer (3 seconds delay)
-    esp_timer_start_once(restart_timer, 3000000); // 3 seconds in microseconds
+    // CRITICAL: Force TCP/IP stack to flush the response before restarting
+    // Give the HTTP server time to send the response buffer
+    vTaskDelay(pdMS_TO_TICKS(500)); // Wait 500ms for response to be sent
+
+    ESP_LOGI(TAG, "Configuration updated and saved successfully. Scheduling device restart in 3 seconds...");
+    
+    // Schedule restart after 3 seconds (total: 3.5s from request)
+    // This ensures browser receives response before device restarts
+    const esp_timer_create_args_t restart_timer_args = {
+        .callback = &restart_timer_callback,
+        .name = "restart_timer"
+    };
+    esp_timer_handle_t restart_timer;
+    ESP_ERROR_CHECK(esp_timer_create(&restart_timer_args, &restart_timer));
+    ESP_ERROR_CHECK(esp_timer_start_once(restart_timer, 3000000)); // 3 seconds in microseconds
     
     return ESP_OK;
 }

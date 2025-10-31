@@ -105,6 +105,119 @@ class ProxyHandler(http.server.SimpleHTTPRequestHandler):
                     pass
                 return
     
+    def do_POST(self):
+        """Handle POST requests (for configuration API) - Direct TCP forwarding"""
+        import socket
+        
+        # Read POST body from client
+        content_length = int(self.headers.get('Content-Length', 0))
+        post_data = self.rfile.read(content_length) if content_length > 0 else b''
+        
+        retry_count = 0
+        backoff = INITIAL_BACKOFF
+        
+        while retry_count <= MAX_RETRIES:
+            try:
+                # Create raw HTTP request manually for ESP32
+                request_line = f"POST {self.path} HTTP/1.0\r\n"
+                headers = f"Host: 192.168.100.2\r\n"
+                headers += f"Content-Type: {self.headers.get('Content-Type', 'application/json')}\r\n"
+                headers += f"Content-Length: {len(post_data)}\r\n"
+                headers += f"Connection: close\r\n"
+                headers += "\r\n"
+                
+                http_request = request_line.encode('utf-8') + headers.encode('utf-8') + post_data
+                
+                # Connect directly to ESP32
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(10)
+                sock.connect(('192.168.100.2', 80))
+                sock.sendall(http_request)
+                
+                # Read response
+                response_data = b''
+                while True:
+                    chunk = sock.recv(4096)
+                    if not chunk:
+                        break
+                    response_data += chunk
+                sock.close()
+                
+                # Parse response
+                response_str = response_data.decode('utf-8', errors='ignore')
+                header_end = response_str.find('\r\n\r\n')
+                if header_end == -1:
+                    raise Exception("Invalid HTTP response")
+                
+                response_headers = response_str[:header_end]
+                response_body = response_str[header_end+4:]
+                
+                # Extract status code
+                status_line = response_headers.split('\r\n')[0]
+                status_code = int(status_line.split()[1])
+                
+                # Forward response to client
+                self.send_response(status_code)
+                for line in response_headers.split('\r\n')[1:]:
+                    if ':' in line:
+                        key, value = line.split(':', 1)
+                        self.send_header(key.strip(), value.strip())
+                self.end_headers()
+                self.wfile.write(response_body.encode('utf-8'))
+                
+                if not QUIET_MODE:
+                    log_info(f"✓ POST {self.path} -> {status_code}")
+                return
+                    
+            except (socket.timeout, ConnectionRefusedError, OSError) as e:
+                if retry_count < MAX_RETRIES:
+                    if not QUIET_MODE:
+                        log_info(f"Retry {retry_count+1}/{MAX_RETRIES} for POST {self.path} (waiting {backoff:.1f}s)...")
+                    time.sleep(backoff)
+                    backoff *= 2
+                    retry_count += 1
+                else:
+                    error_msg = f"Proxy error after {MAX_RETRIES} retries: {e}"
+                    log_error(error_msg)
+                    try:
+                        self.send_error(502, f"ESP32 unreachable: {e}")
+                    except (BrokenPipeError, ConnectionResetError):
+                        pass
+                    return
+                    
+            except Exception as e:
+                error_msg = f"Unexpected proxy error on POST: {e}"
+                log_error(error_msg)
+                try:
+                    self.send_error(502, f"Proxy Error: {e}")
+                except (BrokenPipeError, ConnectionResetError):
+                    pass
+                return
+    
+    def do_OPTIONS(self):
+        """Handle OPTIONS requests (CORS preflight)"""
+        target_url = ESP32_URL + self.path
+        
+        try:
+            req = urllib.request.Request(target_url, method='OPTIONS')
+            with urllib.request.urlopen(req, timeout=5) as response:
+                self.send_response(response.status)
+                for header, value in response.headers.items():
+                    self.send_header(header, value)
+                self.end_headers()
+                
+                if not QUIET_MODE:
+                    log_info(f"✓ OPTIONS {self.path} -> {response.status}")
+        except Exception as e:
+            # Fallback: Send basic CORS headers
+            self.send_response(200)
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+            self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+            self.end_headers()
+            if not QUIET_MODE:
+                log_info(f"✓ OPTIONS {self.path} -> 200 (fallback)")
+    
     def log_message(self, format, *args):
         """Override to respect quiet mode"""
         if not QUIET_MODE:
