@@ -43,6 +43,8 @@ RUN apt-get update \
     "breathe>=4.35" \
   # install markdownlint-cli for markdown validation
   && npm install -g markdownlint-cli \
+  # install code-server for browser-based VS Code access (local dev only)
+  && curl -fsSL https://code-server.dev/install.sh | sh \
   # make the venv binaries available system-wide via /etc/profile.d
   && echo 'export PATH="/opt/venv/bin:$PATH"' > /etc/profile.d/venv-sphinx.sh \
   && chmod +x /etc/profile.d/venv-sphinx.sh \
