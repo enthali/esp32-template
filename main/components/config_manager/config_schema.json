@@ -10,7 +10,7 @@
     },
     {
       "id": "ap",
-      "label": "📡 Access Point",
+      "label": "📡 Access Point Settings",
       "description": "Fallback AP configuration",
       "order": 2
     },

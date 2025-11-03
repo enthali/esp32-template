@@ -788,6 +788,7 @@ static esp_err_t config_schema_handler(httpd_req_t *req)
 
     // Get embedded schema from config manager
     char *schema_json = NULL;
+    size_t schema_size = 0;
     esp_err_t ret = config_get_schema_json(&schema_json);
     
     if (ret != ESP_OK) {
@@ -802,10 +803,15 @@ static esp_err_t config_schema_handler(httpd_req_t *req)
         return ESP_FAIL;
     }
 
-    // Send schema (no need to free - it's embedded)
-    httpd_resp_send(req, schema_json, HTTPD_RESP_USE_STRLEN);
+    // Calculate exact size (embedded binary is not null-terminated)
+    extern const uint8_t config_schema_json_start[] asm("_binary_config_schema_json_start");
+    extern const uint8_t config_schema_json_end[] asm("_binary_config_schema_json_end");
+    schema_size = config_schema_json_end - config_schema_json_start;
 
-    ESP_LOGD(TAG, "Schema sent successfully");
+    // Send schema with explicit length (embedded binary is NOT null-terminated)
+    httpd_resp_send(req, schema_json, schema_size);
+
+    ESP_LOGD(TAG, "Schema sent successfully (%zu bytes)", schema_size);
     return ESP_OK;
 }
 
@@ -917,11 +923,6 @@ static esp_err_t config_set_handler(httpd_req_t *req)
         ESP_LOGI(TAG, "Response sent successfully (%zu bytes)", response_len);
     }
     
-    ESP_LOGI(TAG, "Configuration updated and saved successfully (restart disabled for debugging)");
-    
-    // DISABLED FOR DEBUGGING: Device restart
-    // Uncomment the following code to re-enable automatic restart after config save:
-    /*
     // CRITICAL: Force TCP/IP stack to flush the response before restarting
     // Give the HTTP server time to send the response buffer
     vTaskDelay(pdMS_TO_TICKS(500)); // Wait 500ms for response to be sent
@@ -937,7 +938,6 @@ static esp_err_t config_set_handler(httpd_req_t *req)
     esp_timer_handle_t restart_timer;
     ESP_ERROR_CHECK(esp_timer_create(&restart_timer_args, &restart_timer));
     ESP_ERROR_CHECK(esp_timer_start_once(restart_timer, 3000000)); // 3 seconds in microseconds
-    */
     
     return ESP_OK;
 }
