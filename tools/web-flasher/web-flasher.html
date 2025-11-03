@@ -68,7 +68,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>🚀 ESP32 Template Web Flasher</h1>
+        <h1>🚀 ESP32 Web Flasher</h1>
+        <p id="project-info" style="color: #666; margin-top: -10px; font-size: 14px;">Loading project info...</p>
         
         <div class="info">
             <strong>ℹ️ Browser-Based Flashing</strong>
@@ -142,6 +143,12 @@
                     log(`Builds: ${data.builds.length}`);
                     log(`Parts: ${data.builds[0].parts.length}`);
                     
+                    // Update project info in header
+                    const projectInfo = document.getElementById('project-info');
+                    if (projectInfo) {
+                        projectInfo.textContent = `Project: ${data.name} v${data.version}`;
+                    }
+                    
                     // Test if binary files are accessible
                     data.builds[0].parts.forEach((part, idx) => {
                         const url = new URL(part.path, manifestUrl).href;
@@ -153,6 +160,11 @@
                 })
                 .catch(error => {
                     log(`❌ Manifest error: ${error.message}`);
+                    const projectInfo = document.getElementById('project-info');
+                    if (projectInfo) {
+                        projectInfo.textContent = 'Could not load project info';
+                        projectInfo.style.color = '#d32f2f';
+                    }
                 });
 
             // Listen for errors
