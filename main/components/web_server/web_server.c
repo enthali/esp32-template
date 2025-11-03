@@ -962,14 +962,33 @@ static esp_err_t config_set_handler(httpd_req_t *req)
     ESP_LOGI(TAG, "Configuration changes committed successfully");
 
     // Send success response BEFORE scheduling restart
-    const char *response = "{\"status\":\"success\",\"message\":\"Configuration saved. Device will restart in 3 seconds.\"}";
-    httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
+    // Content-Type already set earlier in handler
+    const char *response = "{\"status\":\"success\",\"message\":\"Configuration saved successfully.\"}";
+    size_t response_len = strlen(response);
     
+    // Explicitly set Content-Length and Connection headers for proper HTTP/1.0 compatibility
+    char content_length_str[32];
+    snprintf(content_length_str, sizeof(content_length_str), "%zu", response_len);
+    httpd_resp_set_hdr(req, "Content-Length", content_length_str);
+    httpd_resp_set_hdr(req, "Connection", "close");
+    
+    esp_err_t send_result = httpd_resp_send(req, response, response_len);
+    if (send_result != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to send response: %s", esp_err_to_name(send_result));
+    } else {
+        ESP_LOGI(TAG, "Response sent successfully (%zu bytes)", response_len);
+    }
+    
+    ESP_LOGI(TAG, "Configuration updated and saved successfully (restart disabled for debugging)");
+    
+    // DISABLED FOR DEBUGGING: Device restart
+    // Uncomment the following code to re-enable automatic restart after config save:
+    /*
     // CRITICAL: Force TCP/IP stack to flush the response before restarting
     // Give the HTTP server time to send the response buffer
     vTaskDelay(pdMS_TO_TICKS(500)); // Wait 500ms for response to be sent
 
-    ESP_LOGI(TAG, "Configuration updated and saved successfully. Scheduling device restart in 3 seconds...");
+    ESP_LOGI(TAG, "Scheduling device restart in 3 seconds...");
     
     // Schedule restart after 3 seconds (total: 3.5s from request)
     // This ensures browser receives response before device restarts
@@ -980,6 +999,7 @@ static esp_err_t config_set_handler(httpd_req_t *req)
     esp_timer_handle_t restart_timer;
     ESP_ERROR_CHECK(esp_timer_create(&restart_timer_args, &restart_timer));
     ESP_ERROR_CHECK(esp_timer_start_once(restart_timer, 3000000)); // 3 seconds in microseconds
+    */
     
     return ESP_OK;
 }

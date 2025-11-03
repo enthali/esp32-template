@@ -470,15 +470,23 @@
                 
                 const result = await response.json();
                 
-                // Show success message with restart notification
-                showNotification('✅ ' + result.message + ' Page will reload automatically.', 'success');
+                // Show success message
+                showNotification('✅ ' + result.message, 'success');
                 
+                // Re-enable form after successful save (no restart in debug mode)
+                setLoading(false);
+                saveInProgress = false;
+                
+                // DISABLED FOR DEBUGGING: Auto-reload after device restart
+                // Uncomment the following code to re-enable:
+                /*
                 // Wait 5 seconds for device to restart and come back online
                 // Device restarts after 3.5s, needs ~1.5s to boot
                 setTimeout(() => {
                     console.log('Reloading page after device restart...');
                     window.location.reload();
                 }, 5000);
+                */
                 
             } catch (error) {
                 console.error('Failed to save configuration:', error);
