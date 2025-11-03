@@ -42,7 +42,27 @@ idf.py build
 
 ### Hardware Development
 
-To flash a physical ESP32 device:
+#### Option 1: Web Flasher (Recommended) 🚀
+
+Flash your ESP32 directly from your browser - no drivers or CLI tools needed!
+
+```bash
+# Build the project
+idf.py build
+
+# Start web flasher
+./tools/web-flasher/start-web-flasher.sh
+
+# Then:
+# 1. Forward port 8000 in VS Code
+# 2. Open forwarded URL in Chrome/Edge/Opera
+# 3. Connect ESP32 via USB to your computer
+# 4. Click "Connect and Flash ESP32"
+```
+
+📖 See [Web Flasher Guide](tools/web-flasher/README.md) for detailed instructions.
+
+#### Option 2: Command Line
 
 ```bash
 # Build the project
