@@ -259,8 +259,8 @@
         
         async function loadSchema() {
             try {
-                console.log('Loading schema from /config_schema.json...');
-                const response = await fetch('/config_schema.json');
+                console.log('Loading schema from /api/config/schema...');
+                const response = await fetch('/api/config/schema');
                 console.log('Schema response status:', response.status);
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -517,66 +517,86 @@
             showNotification('Form reset to default values. Click Save to apply.', 'info');
         }
         
-        function populateFormFromValues(config) {
-            if (!configSchema || !configSchema.parameters) {
+        function populateFormFromValues(configArray) {
+            if (!Array.isArray(configArray)) {
+                console.error('Config is not an array:', configArray);
                 return;
             }
             
-            configSchema.parameters.forEach(param => {
-                const input = document.getElementById(param.key);
-                if (!input) return;
+            // Process structured JSON array: [{key, type, value}, ...]
+            configArray.forEach(entry => {
+                if (!entry.key || !entry.type) {
+                    console.warn('Skipping invalid entry:', entry);
+                    return;
+                }
                 
-                const value = config[param.key];
-                if (value === undefined || value === null) {
-                    // Use default from schema
-                    if (param.type === 'boolean') {
-                        input.checked = param.default || false;
-                    } else {
-                        input.value = param.default || '';
-                    }
+                const input = document.getElementById(entry.key);
+                if (!input) {
+                    console.warn('Input not found for key:', entry.key);
+                    return;
+                }
+                
+                const value = entry.value;
+                
+                // Update form field based on type
+                if (entry.type === 'boolean') {
+                    input.checked = value === true;
+                } else if (entry.key.includes('pass')) {
+                    // Never populate password fields for security (already masked by server)
+                    input.value = '';
+                } else if (entry.type === 'integer') {
+                    input.value = value || 0;
+                } else if (entry.type === 'string') {
+                    input.value = value || '';
                 } else {
-                    // Use value from config
-                    if (param.type === 'boolean') {
-                        input.checked = value;
-                    } else if (param.key.includes('pass')) {
-                        // Never populate password fields for security
-                        input.value = '';
-                    } else {
-                        input.value = value;
-                    }
+                    input.value = value || '';
                 }
             });
         }
         
         function getFormDataFromSchema() {
             if (!configSchema || !configSchema.parameters) {
-                return {};
+                return [];
             }
             
-            const config = {};
+            // Build structured JSON array: [{key, type, value}, ...]
+            const configArray = [];
+            
             configSchema.parameters.forEach(param => {
                 const input = document.getElementById(param.key);
-                if (!input) return;
+                if (!input) {
+                    console.warn('Input not found for key:', param.key);
+                    return;
+                }
+                
+                let value;
                 
                 if (param.type === 'boolean') {
-                    config[param.key] = input.checked;
+                    value = input.checked;
                 } else if (param.type === 'integer') {
-                    const val = parseInt(input.value);
-                    if (!isNaN(val)) {
-                        config[param.key] = val;
+                    value = parseInt(input.value);
+                    if (isNaN(value)) {
+                        console.warn('Invalid integer for', param.key, '- using default:', param.default);
+                        value = param.default || 0;
                     }
                 } else {
                     // String type
-                    const val = input.value.trim();
-                    // Only include non-empty passwords
-                    if (param.key.includes('pass') && val === '') {
-                        return; // Skip empty passwords
+                    value = input.value.trim();
+                    // Skip empty passwords (don't send to server)
+                    if (param.key.includes('pass') && value === '') {
+                        return;
                     }
-                    config[param.key] = val;
                 }
+                
+                // Add to structured array
+                configArray.push({
+                    key: param.key,
+                    type: param.type,
+                    value: value
+                });
             });
             
-            return config;
+            return configArray;
         }
         
         function setLoading(loading) {

@@ -28,6 +28,12 @@
 #include "esp_err.h"
 #include "nvs_flash.h"
 #include "nvs.h"
+#include "cJSON.h"
+#include <string.h>
+
+// Embedded schema from EMBED_FILES in CMakeLists.txt
+extern const char config_schema_json_start[] asm("_binary_config_schema_json_start");
+extern const char config_schema_json_end[] asm("_binary_config_schema_json_end");
 #include <string.h>
 
 static const char *TAG = "config";
@@ -380,9 +386,9 @@ esp_err_t config_get_bool(const char* key, bool* value) {
     return ESP_OK;
 }
 
-esp_err_t config_set_bool(const char* key, bool value) {
+esp_err_t config_set_bool_no_commit(const char* key, bool value) {
     if (key == NULL) {
-        ESP_LOGE(TAG, "config_set_bool: key is NULL");
+        ESP_LOGE(TAG, "config_set_bool_no_commit: key is NULL");
         return ESP_ERR_INVALID_ARG;
     }
     
@@ -394,7 +400,7 @@ esp_err_t config_set_bool(const char* key, bool value) {
     // Store bool as uint8
     uint8_t u8_value = value ? 1 : 0;
     
-    // Write to NVS
+    // Write to NVS without commit
     ret = nvs_set_u8(config_nvs_handle, key, u8_value);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to write bool key '%s': %s", 
@@ -402,14 +408,288 @@ esp_err_t config_set_bool(const char* key, bool value) {
         return ret;
     }
     
-    // Commit immediately for persistence
-    ret = nvs_commit(config_nvs_handle);
+    ESP_LOGD(TAG, "Set bool '%s' = %s (no commit)", key, value ? "true" : "false");
+    return ESP_OK;
+}
+
+esp_err_t config_set_bool(const char* key, bool value) {
+    esp_err_t ret = config_set_bool_no_commit(key, value);
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to commit bool key '%s': %s", 
-                 key, esp_err_to_name(ret));
         return ret;
     }
     
-    ESP_LOGD(TAG, "Set bool '%s' = %s", key, value ? "true" : "false");
+    // Commit immediately for persistence
+    return config_commit();
+}
+
+// =============================================================================
+// BULK JSON CONFIGURATION API (REQ_CFG_JSON_12, REQ_CFG_JSON_13)
+// =============================================================================
+
+esp_err_t config_get_schema_json(char **schema_json) {
+    if (schema_json == NULL) {
+        ESP_LOGE(TAG, "config_get_schema_json: schema_json is NULL");
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    // Calculate schema size
+    size_t schema_size = config_schema_json_end - config_schema_json_start;
+    
+    if (schema_size == 0) {
+        ESP_LOGE(TAG, "Embedded schema is empty or not found");
+        return ESP_ERR_NOT_FOUND;
+    }
+    
+    // Return pointer to embedded schema (no allocation needed)
+    *schema_json = (char*)config_schema_json_start;
+    
+    ESP_LOGD(TAG, "Returned embedded schema (%zu bytes)", schema_size);
+    return ESP_OK;
+}
+
+esp_err_t config_get_all_as_json(char **config_json) {
+    if (config_json == NULL) {
+        ESP_LOGE(TAG, "config_get_all_as_json: config_json is NULL");
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    // Parse embedded schema
+    char *schema_str = NULL;
+    esp_err_t ret = config_get_schema_json(&schema_str);
+    if (ret != ESP_OK) {
+        return ret;
+    }
+    
+    cJSON *schema = cJSON_Parse(schema_str);
+    if (schema == NULL) {
+        ESP_LOGE(TAG, "Failed to parse schema JSON");
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    cJSON *fields = cJSON_GetObjectItem(schema, "fields");
+    if (!cJSON_IsArray(fields)) {
+        ESP_LOGE(TAG, "Schema missing 'fields' array");
+        cJSON_Delete(schema);
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    // Build config array
+    cJSON *config_array = cJSON_CreateArray();
+    if (config_array == NULL) {
+        ESP_LOGE(TAG, "Failed to create JSON array");
+        cJSON_Delete(schema);
+        return ESP_ERR_NO_MEM;
+    }
+    
+    // Iterate through schema fields
+    cJSON *field = NULL;
+    cJSON_ArrayForEach(field, fields) {
+        cJSON *key_item = cJSON_GetObjectItem(field, "key");
+        cJSON *type_item = cJSON_GetObjectItem(field, "type");
+        
+        if (!cJSON_IsString(key_item) || !cJSON_IsString(type_item)) {
+            continue; // Skip invalid field
+        }
+        
+        const char *key = key_item->valuestring;
+        const char *type = type_item->valuestring;
+        
+        // Create config entry object
+        cJSON *entry = cJSON_CreateObject();
+        if (entry == NULL) {
+            continue;
+        }
+        
+        cJSON_AddStringToObject(entry, "key", key);
+        cJSON_AddStringToObject(entry, "type", type);
+        
+        // Get value based on type
+        if (strcmp(type, "string") == 0) {
+            char value_buf[256] = {0};
+            ret = config_get_string(key, value_buf, sizeof(value_buf));
+            if (ret == ESP_OK) {
+                // Mask password fields
+                if (strstr(key, "pass") != NULL) {
+                    cJSON_AddStringToObject(entry, "value", "********");
+                } else {
+                    cJSON_AddStringToObject(entry, "value", value_buf);
+                }
+            } else {
+                cJSON_AddStringToObject(entry, "value", "");
+            }
+        }
+        else if (strcmp(type, "integer") == 0) {
+            int32_t value = 0;
+            ret = config_get_int32(key, &value);
+            if (ret == ESP_OK) {
+                cJSON_AddNumberToObject(entry, "value", value);
+            } else {
+                cJSON_AddNumberToObject(entry, "value", 0);
+            }
+        }
+        else if (strcmp(type, "boolean") == 0) {
+            bool value = false;
+            ret = config_get_bool(key, &value);
+            if (ret == ESP_OK) {
+                cJSON_AddBoolToObject(entry, "value", value);
+            } else {
+                cJSON_AddBoolToObject(entry, "value", false);
+            }
+        }
+        
+        cJSON_AddItemToArray(config_array, entry);
+    }
+    
+    // Convert to string
+    char *json_str = cJSON_PrintUnformatted(config_array);
+    if (json_str == NULL) {
+        ESP_LOGE(TAG, "Failed to serialize config JSON");
+        cJSON_Delete(config_array);
+        cJSON_Delete(schema);
+        return ESP_ERR_NO_MEM;
+    }
+    
+    *config_json = json_str;
+    
+    cJSON_Delete(config_array);
+    cJSON_Delete(schema);
+    
+    ESP_LOGD(TAG, "Generated config JSON: %s", json_str);
+    return ESP_OK;
+}
+
+esp_err_t config_set_all_from_json(const char *config_json) {
+    if (config_json == NULL) {
+        ESP_LOGE(TAG, "config_set_all_from_json: config_json is NULL");
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    // Parse input JSON array
+    cJSON *config_array = cJSON_Parse(config_json);
+    if (config_array == NULL) {
+        ESP_LOGE(TAG, "Failed to parse config JSON");
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    if (!cJSON_IsArray(config_array)) {
+        ESP_LOGE(TAG, "Config JSON is not an array");
+        cJSON_Delete(config_array);
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    // Parse schema for validation
+    char *schema_str = NULL;
+    esp_err_t ret = config_get_schema_json(&schema_str);
+    if (ret != ESP_OK) {
+        cJSON_Delete(config_array);
+        return ret;
+    }
+    
+    cJSON *schema = cJSON_Parse(schema_str);
+    if (schema == NULL) {
+        ESP_LOGE(TAG, "Failed to parse schema JSON");
+        cJSON_Delete(config_array);
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    cJSON *schema_fields = cJSON_GetObjectItem(schema, "fields");
+    if (!cJSON_IsArray(schema_fields)) {
+        ESP_LOGE(TAG, "Schema missing 'fields' array");
+        cJSON_Delete(schema);
+        cJSON_Delete(config_array);
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    // Process each config entry
+    cJSON *entry = NULL;
+    int update_count = 0;
+    cJSON_ArrayForEach(entry, config_array) {
+        cJSON *key_item = cJSON_GetObjectItem(entry, "key");
+        cJSON *type_item = cJSON_GetObjectItem(entry, "type");
+        cJSON *value_item = cJSON_GetObjectItem(entry, "value");
+        
+        if (!cJSON_IsString(key_item) || !cJSON_IsString(type_item)) {
+            ESP_LOGW(TAG, "Skipping entry with missing key or type");
+            continue;
+        }
+        
+        const char *key = key_item->valuestring;
+        const char *type = type_item->valuestring;
+        
+        // Validate key exists in schema
+        bool key_found = false;
+        cJSON *schema_field = NULL;
+        cJSON_ArrayForEach(schema_field, schema_fields) {
+            cJSON *schema_key = cJSON_GetObjectItem(schema_field, "key");
+            cJSON *schema_type = cJSON_GetObjectItem(schema_field, "type");
+            
+            if (cJSON_IsString(schema_key) && strcmp(schema_key->valuestring, key) == 0) {
+                key_found = true;
+                
+                // Validate type matches
+                if (cJSON_IsString(schema_type) && strcmp(schema_type->valuestring, type) != 0) {
+                    ESP_LOGW(TAG, "Type mismatch for key '%s': expected %s, got %s",
+                            key, schema_type->valuestring, type);
+                    key_found = false;
+                }
+                break;
+            }
+        }
+        
+        if (!key_found) {
+            ESP_LOGW(TAG, "Unknown or invalid key '%s', ignoring (forward compatibility)", key);
+            continue;
+        }
+        
+        // Set value based on type
+        if (strcmp(type, "string") == 0) {
+            if (!cJSON_IsString(value_item)) {
+                ESP_LOGW(TAG, "Value for key '%s' is not a string", key);
+                continue;
+            }
+            ret = config_set_string_no_commit(key, value_item->valuestring);
+        }
+        else if (strcmp(type, "integer") == 0) {
+            if (!cJSON_IsNumber(value_item)) {
+                ESP_LOGW(TAG, "Value for key '%s' is not a number", key);
+                continue;
+            }
+            ret = config_set_int32_no_commit(key, (int32_t)value_item->valuedouble);
+        }
+        else if (strcmp(type, "boolean") == 0) {
+            if (!cJSON_IsBool(value_item)) {
+                ESP_LOGW(TAG, "Value for key '%s' is not a boolean", key);
+                continue;
+            }
+            ret = config_set_bool_no_commit(key, cJSON_IsTrue(value_item));
+        }
+        else {
+            ESP_LOGW(TAG, "Unknown type '%s' for key '%s'", type, key);
+            continue;
+        }
+        
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to set '%s': %s", key, esp_err_to_name(ret));
+            cJSON_Delete(schema);
+            cJSON_Delete(config_array);
+            return ret;
+        }
+        
+        update_count++;
+    }
+    
+    // Commit all changes atomically
+    ret = config_commit();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to commit config changes: %s", esp_err_to_name(ret));
+        cJSON_Delete(schema);
+        cJSON_Delete(config_array);
+        return ret;
+    }
+    
+    cJSON_Delete(schema);
+    cJSON_Delete(config_array);
+    
+    ESP_LOGI(TAG, "Updated %d configuration parameters", update_count);
     return ESP_OK;
 }

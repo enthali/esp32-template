@@ -33,7 +33,25 @@ def generate_factory_defaults(schema_file: str, output_file: str) -> None:
         print("ERROR: Schema missing 'parameters' array", file=sys.stderr)
         sys.exit(1)
     
-    # Generate C code
+    # Build structured JSON array: [{key, type, value}, ...]
+    config_entries = []
+    for field in schema['parameters']:
+        key = field['key']
+        ftype = field['type']
+        default = field['default']
+        
+        # Build JSON object for this parameter
+        entry = {
+            'key': key,
+            'type': ftype,
+            'value': default
+        }
+        config_entries.append(entry)
+    
+    # Convert to compact JSON string
+    json_defaults = json.dumps(config_entries, separators=(',', ':'), ensure_ascii=False)
+    
+    # Generate C code with embedded JSON
     lines = []
     lines.append("// Auto-generated from config_schema.json - DO NOT EDIT MANUALLY")
     lines.append("// Generator: tools/generate_config_factory.py")
@@ -47,44 +65,22 @@ def generate_factory_defaults(schema_file: str, output_file: str) -> None:
     lines.append(" * @brief Write factory default values to NVS")
     lines.append(" * ")
     lines.append(" * This function is auto-generated from config_schema.json.")
-    lines.append(" * It writes all default configuration values to NVS storage.")
+    lines.append(" * It writes all default configuration values to NVS storage")
+    lines.append(" * using the bulk JSON API with structured format: [{key, type, value}, ...]")
     lines.append(" */")
     lines.append("void config_write_factory_defaults(void)")
     lines.append("{")
     lines.append("    ESP_LOGI(TAG, \"Writing factory defaults to NVS...\");")
     lines.append("")
-    
-    # Generate config_set_xxx() calls for each parameter
-    for field in schema['parameters']:
-        key = field['key']
-        ftype = field['type']
-        default = field['default']
-        
-        # Generate appropriate config_set_xxx() call based on type
-        if ftype in ('string', 'password', 'hidden'):
-            # Escape quotes in default string
-            default_escaped = str(default).replace('"', '\\"')
-            lines.append(f'    config_set_string("{key}", "{default_escaped}");')
-        
-        elif ftype == 'integer':
-            # Determine integer size based on min/max range
-            min_val = field.get('min', 0)
-            max_val = field.get('max', 65535)
-            
-            if min_val >= -32768 and max_val <= 32767:
-                lines.append(f'    config_set_int16("{key}", {default});')
-            else:
-                lines.append(f'    config_set_int32("{key}", {default});')
-        
-        elif ftype == 'boolean':
-            bool_val = 'true' if default else 'false'
-            lines.append(f'    config_set_bool("{key}", {bool_val});')
-        
-        else:
-            print(f"WARNING: Unknown field type '{ftype}' for key '{key}'", file=sys.stderr)
-    
+    lines.append("    // Structured JSON array with factory defaults")
+    lines.append(f"    const char *factory_json = \"{json_defaults.replace(chr(34), chr(92) + chr(34))}\";")
     lines.append("")
-    lines.append("    ESP_LOGI(TAG, \"Factory defaults written successfully\");")
+    lines.append("    esp_err_t ret = config_set_all_from_json(factory_json);")
+    lines.append("    if (ret == ESP_OK) {")
+    lines.append("        ESP_LOGI(TAG, \"Factory defaults written successfully\");")
+    lines.append("    } else {")
+    lines.append("        ESP_LOGE(TAG, \"Failed to write factory defaults: %s\", esp_err_to_name(ret));")
+    lines.append("    }")
     lines.append("}")
     lines.append("")
     

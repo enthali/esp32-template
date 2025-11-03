@@ -53,6 +53,7 @@ static esp_err_t status_handler(httpd_req_t *req);
 static esp_err_t reset_handler(httpd_req_t *req);
 
 // Configuration management handlers (REQ-CFG-7)
+static esp_err_t config_schema_handler(httpd_req_t *req);
 static esp_err_t config_get_handler(httpd_req_t *req);
 static esp_err_t config_set_handler(httpd_req_t *req);
 static esp_err_t config_reset_handler(httpd_req_t *req);
@@ -574,6 +575,14 @@ esp_err_t web_server_init(const web_server_config_t *config)
     ESP_LOGI(TAG, "Registered handler for '/reset' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
     // Register configuration management API handlers (REQ-CFG-7)
+    httpd_uri_t config_schema_uri = {
+        .uri = "/api/config/schema",
+        .method = HTTP_GET,
+        .handler = config_schema_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &config_schema_uri);
+    ESP_LOGI(TAG, "Registered handler for '/api/config/schema' GET - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
     httpd_uri_t config_get_uri = {
         .uri = "/api/config",
         .method = HTTP_GET,
@@ -772,6 +781,43 @@ uint16_t web_server_get_port(void)
 /**
  * @brief GET /api/config - Retrieve current configuration
  */
+/**
+ * @brief GET /api/config/schema - Retrieve configuration JSON schema
+ */
+static esp_err_t config_schema_handler(httpd_req_t *req)
+{
+    ESP_LOGD(TAG, "Handling GET /api/config/schema");
+
+    // Set CORS headers
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    httpd_resp_set_hdr(req, "Content-Type", "application/json");
+
+    // Get embedded schema from config manager
+    char *schema_json = NULL;
+    esp_err_t ret = config_get_schema_json(&schema_json);
+    
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to get schema: %s", esp_err_to_name(ret));
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to read schema");
+        return ESP_FAIL;
+    }
+
+    if (schema_json == NULL) {
+        ESP_LOGE(TAG, "Schema JSON is NULL");
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Schema not found");
+        return ESP_FAIL;
+    }
+
+    // Send schema (no need to free - it's embedded)
+    httpd_resp_send(req, schema_json, HTTPD_RESP_USE_STRLEN);
+
+    ESP_LOGD(TAG, "Schema sent successfully");
+    return ESP_OK;
+}
+
+/**
+ * @brief GET /api/config - Retrieve current configuration
+ */
 static esp_err_t config_get_handler(httpd_req_t *req)
 {
     ESP_LOGD(TAG, "Handling GET /api/config");
@@ -780,68 +826,27 @@ static esp_err_t config_get_handler(httpd_req_t *req)
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
     httpd_resp_set_hdr(req, "Content-Type", "application/json");
 
-    // Create JSON response - flat structure matching schema keys
-    cJSON *json = cJSON_CreateObject();
-    if (json == NULL) {
-        ESP_LOGE(TAG, "Failed to create JSON object");
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Memory allocation failed");
+    // Use bulk JSON API to get all configuration as structured array
+    char *config_json = NULL;
+    esp_err_t ret = config_get_all_as_json(&config_json);
+    
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to get configuration: %s", esp_err_to_name(ret));
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to read configuration");
         return ESP_FAIL;
     }
 
-    // Read all configuration values from NVS
-    // WiFi SSID
-    char wifi_ssid[64];
-    esp_err_t ret = config_get_string("wifi_ssid", wifi_ssid, sizeof(wifi_ssid));
-    if (ret == ESP_OK) {
-        cJSON_AddStringToObject(json, "wifi_ssid", wifi_ssid);
-    } else {
-        cJSON_AddStringToObject(json, "wifi_ssid", "");
-    }
-    
-    // WiFi Password - never expose, always return empty
-    cJSON_AddStringToObject(json, "wifi_pass", "");
-    
-    // LED Count
-    int16_t led_count = 0;
-    ret = config_get_int16("led_count", &led_count);
-    if (ret == ESP_OK) {
-        cJSON_AddNumberToObject(json, "led_count", led_count);
-    } else {
-        cJSON_AddNumberToObject(json, "led_count", 0);
-    }
-    
-    // LED Brightness
-    int16_t led_bright = 0;
-    ret = config_get_int16("led_bright", &led_bright);
-    if (ret == ESP_OK) {
-        cJSON_AddNumberToObject(json, "led_bright", led_bright);
-    } else {
-        cJSON_AddNumberToObject(json, "led_bright", 0);
-    }
-    
-    // Device Name
-    char device_name[32];
-    ret = config_get_string("device_name", device_name, sizeof(device_name));
-    if (ret == ESP_OK) {
-        cJSON_AddStringToObject(json, "device_name", device_name);
-    } else {
-        cJSON_AddStringToObject(json, "device_name", "ESP32-Template");
-    }
-
-    // Convert to string and send
-    char *json_string = cJSON_Print(json);
-    if (json_string == NULL) {
-        ESP_LOGE(TAG, "Failed to print JSON");
-        cJSON_Delete(json);
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "JSON serialization failed");
+    if (config_json == NULL) {
+        ESP_LOGE(TAG, "Configuration JSON is NULL");
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Configuration error");
         return ESP_FAIL;
     }
 
-    httpd_resp_send(req, json_string, HTTPD_RESP_USE_STRLEN);
+    // Send structured JSON array response
+    httpd_resp_send(req, config_json, HTTPD_RESP_USE_STRLEN);
 
-    // Cleanup
-    free(json_string);
-    cJSON_Delete(json);
+    // Cleanup (caller must free the allocated string)
+    free(config_json);
 
     ESP_LOGD(TAG, "Configuration sent successfully");
     return ESP_OK;
@@ -888,78 +893,17 @@ static esp_err_t config_set_handler(httpd_req_t *req)
 
     ESP_LOGI(TAG, "Received configuration JSON (%d bytes): %s", ret, content);
 
-    // Parse JSON
-    cJSON *json = cJSON_Parse(content);
-    if (json == NULL) {
-        ESP_LOGE(TAG, "Failed to parse JSON");
-        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid JSON format");
-        return ESP_FAIL;
-    }
-// TODO: following implementation is config specific this is a clear requirement and design violation  !
-
-    // Update configuration from flat JSON structure matching schema
-    // PERFORMANCE: Use _no_commit variants and commit once at the end
-    esp_err_t config_ret = ESP_OK;
-    cJSON *item = NULL;
+    // Use bulk JSON API to update all configuration from structured array
+    // This validates against schema and atomically updates all fields
+    esp_err_t config_ret = config_set_all_from_json(content);
     
-    // WiFi SSID
-    if ((item = cJSON_GetObjectItem(json, "wifi_ssid")) != NULL && cJSON_IsString(item)) {
-        const char *ssid = cJSON_GetStringValue(item);
-        config_ret = config_set_string_no_commit("wifi_ssid", ssid);
-        if (config_ret != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to set wifi_ssid: %s", esp_err_to_name(config_ret));
-        }
-    }
-    
-    // WiFi Password
-    if ((item = cJSON_GetObjectItem(json, "wifi_pass")) != NULL && cJSON_IsString(item)) {
-        const char *password = cJSON_GetStringValue(item);
-        if (strlen(password) > 0) { // Only update if password is provided
-            config_ret = config_set_string_no_commit("wifi_pass", password);
-            if (config_ret != ESP_OK) {
-                ESP_LOGE(TAG, "Failed to set wifi_pass: %s", esp_err_to_name(config_ret));
-            }
-        }
-    }
-    
-    // LED Count
-    if ((item = cJSON_GetObjectItem(json, "led_count")) != NULL && cJSON_IsNumber(item)) {
-        int16_t count = (int16_t)cJSON_GetNumberValue(item);
-        config_ret = config_set_int16_no_commit("led_count", count);
-        if (config_ret != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to set led_count: %s", esp_err_to_name(config_ret));
-        }
-    }
-    
-    // LED Brightness
-    if ((item = cJSON_GetObjectItem(json, "led_bright")) != NULL && cJSON_IsNumber(item)) {
-        int16_t brightness = (int16_t)cJSON_GetNumberValue(item);
-        config_ret = config_set_int16_no_commit("led_bright", brightness);
-        if (config_ret != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to set led_bright: %s", esp_err_to_name(config_ret));
-        }
-    }
-    
-    // Device Name
-    if ((item = cJSON_GetObjectItem(json, "device_name")) != NULL && cJSON_IsString(item)) {
-        const char *name = cJSON_GetStringValue(item);
-        config_ret = config_set_string_no_commit("device_name", name);
-        if (config_ret != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to set device_name: %s", esp_err_to_name(config_ret));
-        }
-    }
-
-    cJSON_Delete(json);
-    
-    // CRITICAL: Commit all changes at once (much faster than individual commits)
-    ESP_LOGI(TAG, "Committing configuration changes to NVS...");
-    config_ret = config_commit();
     if (config_ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to commit config changes: %s", esp_err_to_name(config_ret));
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to save configuration");
+        ESP_LOGE(TAG, "Failed to update configuration: %s", esp_err_to_name(config_ret));
+        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Failed to update configuration");
         return ESP_FAIL;
     }
-    ESP_LOGI(TAG, "Configuration changes committed successfully");
+    
+    ESP_LOGI(TAG, "Configuration updated successfully via bulk API");
 
     // Send success response BEFORE scheduling restart
     // Content-Type already set earlier in handler

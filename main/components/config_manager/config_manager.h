@@ -254,6 +254,20 @@ esp_err_t config_set_int16_no_commit(const char* key, int16_t value);
 esp_err_t config_get_bool(const char* key, bool* value);
 
 /**
+ * @brief Set boolean parameter value without commit
+ * 
+ * Writes boolean to NVS but does NOT commit.
+ * Use config_commit() after batch updates for better performance.
+ * 
+ * @param[in] key NVS key name
+ * @param[in] value New parameter value
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if key is NULL
+ * @return ESP_ERR_NVS_* on NVS write failure
+ */
+esp_err_t config_set_bool_no_commit(const char* key, bool value);
+
+/**
  * @brief Set boolean parameter value
  * 
  * Writes boolean (stored as uint8) directly to NVS using provided key.
@@ -268,6 +282,73 @@ esp_err_t config_get_bool(const char* key, bool* value);
  * @requirement REQ_CFG_JSON_7 AC-2
  */
 esp_err_t config_set_bool(const char* key, bool value);
+
+// =============================================================================
+// BULK JSON CONFIGURATION API (REQ_CFG_JSON_12, REQ_CFG_JSON_13)
+// =============================================================================
+
+/**
+ * @brief Get embedded JSON schema for dynamic UI generation
+ * 
+ * Returns pointer to embedded config_schema.json string.
+ * Schema is embedded at build time via EMBED_FILES in CMakeLists.txt.
+ * 
+ * @param[out] schema_json Pointer to embedded schema string (no free() needed)
+ * @return ESP_OK on success
+ * @return ESP_ERR_NOT_FOUND if schema not embedded
+ * @return ESP_ERR_INVALID_ARG if schema_json is NULL
+ * 
+ * @requirement REQ_CFG_JSON_12 AC-1
+ */
+esp_err_t config_get_schema_json(char **schema_json);
+
+/**
+ * @brief Read all configuration values as structured JSON array
+ * 
+ * Reads JSON schema to enumerate all defined fields, then calls appropriate
+ * config_get_xxx() function for each field based on schema type.
+ * Builds JSON array with {key, type, value} objects.
+ * 
+ * Example output:
+ * [
+ *   {"key":"wifi_ssid","type":"string","value":"MyNetwork"},
+ *   {"key":"led_count","type":"integer","value":50}
+ * ]
+ * 
+ * @param[out] config_json Allocated JSON string (caller must free())
+ * @return ESP_OK on success
+ * @return ESP_ERR_NO_MEM on allocation failure
+ * @return ESP_ERR_INVALID_ARG if config_json is NULL
+ * 
+ * @requirement REQ_CFG_JSON_12 AC-2
+ */
+esp_err_t config_get_all_as_json(char **config_json);
+
+/**
+ * @brief Update configuration from structured JSON array
+ * 
+ * Parses JSON array with {key, type, value} objects, validates field names
+ * and types against schema, calls appropriate config_set_xxx_no_commit()
+ * function for each field, then performs single config_commit().
+ * 
+ * Atomic operation: all fields update or none (rollback on error).
+ * Unknown keys are ignored for forward compatibility.
+ * 
+ * Example input:
+ * [
+ *   {"key":"wifi_ssid","type":"string","value":"NewNetwork"},
+ *   {"key":"led_count","type":"integer","value":100}
+ * ]
+ * 
+ * @param[in] config_json JSON array string with key-type-value objects
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG on validation failure or malformed JSON
+ * @return ESP_ERR_NO_MEM on memory allocation failure
+ * @return ESP_ERR_NVS_* on NVS operation failure
+ * 
+ * @requirement REQ_CFG_JSON_13 AC-1
+ */
+esp_err_t config_set_all_from_json(const char *config_json);
 
 #ifdef __cplusplus
 }
