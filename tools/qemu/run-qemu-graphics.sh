@@ -40,7 +40,7 @@ echo ""
 
 # Ensure network stack (TUN bridge + HTTP proxy) is running
 echo -e "${YELLOW}Checking network infrastructure...${NC}"
-"${PROJECT_DIR}/tools/ensure-network-stack.sh"
+"${PROJECT_DIR}/tools/network/ensure-network-stack.sh"
 echo ""
 
 echo -e "${YELLOW}Starting QEMU with Graphics Output...${NC}"

@@ -23,7 +23,7 @@ idf_component_register(
 find_package(Python REQUIRED COMPONENTS Interpreter)
 
 # Python script to generate factory defaults from JSON schema
-set(GENERATOR_SCRIPT "${CMAKE_SOURCE_DIR}/tools/generate_config_factory.py")
+set(GENERATOR_SCRIPT "${CMAKE_SOURCE_DIR}/tools/config/generate_config_factory.py")
 set(CONFIG_SCHEMA "${CMAKE_CURRENT_SOURCE_DIR}/config_schema.json")
 set(GENERATED_CODE "${CMAKE_CURRENT_SOURCE_DIR}/config_factory_generated.c")
 

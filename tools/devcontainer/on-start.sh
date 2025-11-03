@@ -8,7 +8,7 @@ sudo chmod 1777 /tmp
 echo ""
 echo "Setting up network stack for QEMU..."
 cd /workspaces/esp32-template
-bash ./tools/ensure-network-stack.sh
+bash ./tools/network/ensure-network-stack.sh
 
 # Start code-server ONLY if NOT in GitHub Codespaces (for local development)
 if [ -z "$CODESPACES" ]; then

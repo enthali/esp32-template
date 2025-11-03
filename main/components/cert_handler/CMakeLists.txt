@@ -84,7 +84,7 @@ function(generate_certs_python)
     # Use ESP-IDF project directory (reliable source directory)
     # CMAKE_BINARY_DIR points to build, so go up one level to get project source
     get_filename_component(PROJECT_SOURCE_DIR "${CMAKE_BINARY_DIR}/.." ABSOLUTE)
-    set(CERT_SCRIPT "${PROJECT_SOURCE_DIR}/tools/generate_cert.py")
+    set(CERT_SCRIPT "${PROJECT_SOURCE_DIR}/tools/certificates/generate_cert.py")
     
     message(STATUS "Project source: ${PROJECT_SOURCE_DIR}")
     message(STATUS "Certificate script: ${CERT_SCRIPT}")

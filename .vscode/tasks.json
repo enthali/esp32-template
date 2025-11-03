@@ -4,7 +4,7 @@
         {
             "label": "Start QEMU Debug Server",
             "type": "shell",
-            "command": "${workspaceFolder}/tools/run-qemu-graphics.sh",
+            "command": "${workspaceFolder}/tools/qemu/run-qemu-graphics.sh",
             "isBackground": true,
             "problemMatcher": {
                 "pattern": {
@@ -29,7 +29,7 @@
         {
             "label": "Run QEMU (No Debug)",
             "type": "shell",
-            "command": "${workspaceFolder}/tools/run-qemu-graphics-run.sh",
+            "command": "${workspaceFolder}/tools/qemu/run-qemu-graphics-run.sh",
             "isBackground": true,
             "presentation": {
                 "echo": true,
@@ -42,7 +42,7 @@
         {
             "label": "Stop QEMU",
             "type": "shell",
-            "command": "${workspaceFolder}/tools/stop_qemu.sh",
+            "command": "${workspaceFolder}/tools/qemu/stop_qemu.sh",
             "presentation": {
                 "echo": true,
                 "reveal": "always",
