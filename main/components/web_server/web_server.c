@@ -694,13 +694,7 @@ esp_err_t web_server_init(const web_server_config_t *config)
     ret = httpd_register_uri_handler(server, &favicon_ico_uri);
     ESP_LOGI(TAG, "Registered handler for '/favicon.ico' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
-    httpd_uri_t config_schema_uri = {
-        .uri = "/config_schema.json",
-        .method = HTTP_GET,
-        .handler = static_file_handler,
-        .user_ctx = NULL};
-    ret = httpd_register_uri_handler(server, &config_schema_uri);
-    ESP_LOGI(TAG, "Registered handler for '/config_schema.json' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+    // Note: /config_schema.json static endpoint removed - now served via /api/config/schema
 
     ESP_LOGI(TAG, "Web server initialized successfully");
     return ESP_OK;

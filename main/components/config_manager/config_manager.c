@@ -352,6 +352,29 @@ esp_err_t config_set_int16(const char* key, int16_t value) {
     return config_commit();
 }
 
+esp_err_t config_set_int32_no_commit(const char* key, int32_t value) {
+    if (key == NULL) {
+        ESP_LOGE(TAG, "config_set_int32_no_commit: key is NULL");
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    esp_err_t ret = ensure_nvs_open();
+    if (ret != ESP_OK) {
+        return ret;
+    }
+    
+    // Write to NVS without commit
+    ret = nvs_set_i32(config_nvs_handle, key, value);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to write int32 key '%s': %s", 
+                 key, esp_err_to_name(ret));
+        return ret;
+    }
+    
+    ESP_LOGD(TAG, "Set int32 '%s' = %" PRId32 " (no commit)", key, value);
+    return ESP_OK;
+}
+
 // =============================================================================
 // BOOLEAN PARAMETER ACCESS (REQ_CFG_JSON_7)
 // =============================================================================

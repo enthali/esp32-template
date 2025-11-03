@@ -10,6 +10,7 @@ idf_component_register(
     REQUIRES 
         nvs_flash 
         esp_system
+        json
     EMBED_FILES
         "config_schema.json"
 )
