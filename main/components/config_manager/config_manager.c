@@ -489,9 +489,9 @@ esp_err_t config_get_all_as_json(char **config_json) {
         return ESP_ERR_INVALID_ARG;
     }
     
-    cJSON *fields = cJSON_GetObjectItem(schema, "fields");
+    cJSON *fields = cJSON_GetObjectItem(schema, "parameters");
     if (!cJSON_IsArray(fields)) {
-        ESP_LOGE(TAG, "Schema missing 'fields' array");
+        ESP_LOGE(TAG, "Schema missing 'parameters' array");
         cJSON_Delete(schema);
         return ESP_ERR_INVALID_ARG;
     }
@@ -527,12 +527,13 @@ esp_err_t config_get_all_as_json(char **config_json) {
         cJSON_AddStringToObject(entry, "type", type);
         
         // Get value based on type
-        if (strcmp(type, "string") == 0) {
+        if (strcmp(type, "string") == 0 || strcmp(type, "password") == 0) {
+            // Treat 'password' as 'string' (it's just a UI hint)
             char value_buf[256] = {0};
             ret = config_get_string(key, value_buf, sizeof(value_buf));
             if (ret == ESP_OK) {
                 // Mask password fields
-                if (strstr(key, "pass") != NULL) {
+                if (strcmp(type, "password") == 0 || strstr(key, "pass") != NULL) {
                     cJSON_AddStringToObject(entry, "value", "********");
                 } else {
                     cJSON_AddStringToObject(entry, "value", value_buf);
@@ -615,9 +616,9 @@ esp_err_t config_set_all_from_json(const char *config_json) {
         return ESP_ERR_INVALID_ARG;
     }
     
-    cJSON *schema_fields = cJSON_GetObjectItem(schema, "fields");
+    cJSON *schema_fields = cJSON_GetObjectItem(schema, "parameters");
     if (!cJSON_IsArray(schema_fields)) {
-        ESP_LOGE(TAG, "Schema missing 'fields' array");
+        ESP_LOGE(TAG, "Schema missing 'parameters' array");
         cJSON_Delete(schema);
         cJSON_Delete(config_array);
         return ESP_ERR_INVALID_ARG;
@@ -665,7 +666,8 @@ esp_err_t config_set_all_from_json(const char *config_json) {
         }
         
         // Set value based on type
-        if (strcmp(type, "string") == 0) {
+        if (strcmp(type, "string") == 0 || strcmp(type, "password") == 0) {
+            // Treat 'password' as 'string' (it's just a UI hint)
             if (!cJSON_IsString(value_item)) {
                 ESP_LOGW(TAG, "Value for key '%s' is not a string", key);
                 continue;
