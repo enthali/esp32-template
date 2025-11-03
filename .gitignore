@@ -3,6 +3,9 @@ build/
 sdkconfig.old
 dependencies.lock
 
+# Project generated files
+main/components/config_manager/config_factory_generated.c
+
 # IDE files - ignore all VS Code files except debug configuration
 .vscode/*
 !.vscode/launch.json
