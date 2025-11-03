@@ -124,7 +124,7 @@ Configuration Generation and Defaults
 
 
 NVS Storage and Access
----------------------
+----------------------
 
 .. req:: Key-Based NVS Storage
    :id: REQ_CFG_JSON_6
@@ -212,7 +212,7 @@ NVS Storage and Access
 
 
 Web Interface Integration
-------------------------
+-------------------------
 
 .. req:: Web Interface Integration Support
    :id: REQ_CFG_JSON_10
@@ -235,7 +235,7 @@ Web Interface Integration
    - AC-4: API SHALL return error codes suitable for HTTP status mapping
 
    **Note:** 
-   Detailed web interface requirements (HTML forms, REST API endpoints, validation) are specified in Web Server Requirements (:need:`req_web_server.rst`). This requirement ensures Config Manager provides necessary integration points without knowing HTTP details.
+   Detailed web interface requirements (HTML forms, REST API endpoints, validation) are specified in Web Server Requirements (:need:`REQ_WEB_CONF_1`). This requirement ensures Config Manager provides necessary integration points without knowing HTTP details.
 
 
 Error Handling

@@ -9,6 +9,7 @@ This section contains detailed design specifications for system components follo
 
    spec_high_level_architecture
    spec_config_manager_json
+   spec_config_webpage
    spec_web_server
 
 Overview

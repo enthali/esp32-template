@@ -895,10 +895,10 @@ static esp_err_t config_set_handler(httpd_req_t *req)
         httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid JSON format");
         return ESP_FAIL;
     }
+// TODO: following implementation is config specific this is a clear requirement and design violation  !
 
     // Update configuration from flat JSON structure matching schema
     // PERFORMANCE: Use _no_commit variants and commit once at the end
-    // This is critical for QEMU where NVS flash writes are slow
     esp_err_t config_ret = ESP_OK;
     cJSON *item = NULL;
     

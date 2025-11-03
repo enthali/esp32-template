@@ -3,9 +3,6 @@ Web Server Design Specification
 
 This document specifies the design of the ESP32 web server component that provides HTTP-based user interface, WiFi configuration, and device configuration capabilities.
 
-.. note::
-   This design documents the **existing implementation** in ``main/components/web_server/``. It serves as the bridge between requirements (:need:`req_web_server.rst`) and actual code implementation.
-
 
 Architecture Overview
 ---------------------
@@ -51,23 +48,27 @@ Architecture Overview
    - ``cJSON``: JSON serialization/deserialization
    - ``cert_handler``: HTTPS support (future)
 
-   **Data Flow Example (Configuration Update):**
+   **Data Flow Example (Schema-Driven Configuration Update):**
 
    ::
 
-      Browser POST /api/config
+      Browser GET /api/config/schema
         ↓
-      config_set_handler() in web_server.c
+      schema_get_handler() → config_get_schema_json()
         ↓
-      Parse JSON request (cJSON)
+      Return embedded config_schema.json
         ↓
-      config_set_string()/config_set_uint16() calls
+      Browser generates dynamic form from schema
         ↓
-      NVS write via config_manager
+      Browser POST /api/config (flat JSON)
         ↓
-      Schedule device restart (3s timer)
+      config_set_handler() → config_set_all_from_json()
         ↓
-      Return HTTP 200 with JSON response
+      Config manager parses JSON using schema for type validation
+        ↓
+      Bulk NVS write (all fields, single commit)
+        ↓
+      Return HTTP 200 with success response
 
 
 Static File Embedding
@@ -175,9 +176,6 @@ Static File Embedding
       httpd_resp_set_hdr(req, "Pragma", "no-cache");
       httpd_resp_set_hdr(req, "Expires", "0");
 
-   **Production Note:**
-   For production deployments, enable caching for .css/.js files with versioned URLs (``/js/app.js?v=2``) for cache busting.
-
 
 URI Routing and Handlers
 -------------------------
@@ -201,7 +199,7 @@ URI Routing and Handlers
    ``/index.html``            GET           ``static_file_handler()``         Main dashboard page
    ``/wifi-setup.html``       GET           ``static_file_handler()``         WiFi configuration page
    ``/settings.html``         GET           ``static_file_handler()``         Device settings page
-   ``/config``                GET           ``config_handler()``              Legacy captive portal (→ /wifi-setup.html)
+   ``/config``                GET           ``config_handler()``              **Captive portal redirect** (→ /wifi-setup.html)
    =========================  ============  ================================  ===============
 
    **Static Assets:**
@@ -222,8 +220,8 @@ URI Routing and Handlers
    =========================  ============  ================================  ===============
    ``/scan``                  GET           ``scan_handler()``                WiFi network scan
    ``/connect``               POST          ``connect_handler()``             Connect to WiFi network
-   ``/status``                GET           ``status_handler()``              WiFi connection status
    ``/reset``                 POST          ``reset_handler()``               Clear WiFi credentials, restart
+   ``/api/status``            GET           ``wifi_status_handler()``         **WiFi status** (SSID, RSSI, mode)
    =========================  ============  ================================  ===============
 
    **Configuration Management API:**
@@ -231,11 +229,18 @@ URI Routing and Handlers
    =========================  ============  ================================  ===============
    URI                        HTTP Method   Handler Function                  Purpose
    =========================  ============  ================================  ===============
-   ``/api/config``            GET           ``config_get_handler()``          Get all configuration values
-   ``/api/config``            POST          ``config_set_handler()``          Update configuration values
+   ``/api/config/schema``     GET           ``schema_get_handler()``          Get JSON schema for UI generation
+   ``/api/config``            GET           ``config_get_handler()``          Get all configuration values (bulk)
+   ``/api/config``            POST          ``config_set_handler()``          Update configuration values (bulk)
    ``/api/config/reset``      POST          ``config_reset_handler()``        Factory reset configuration
-   ``/api/status``            GET           ``wifi_status_handler()``         Detailed WiFi status (JSON)
-   ``/api/system/health``     GET           ``system_health_handler()``       System diagnostics
+   =========================  ============  ================================  ===============
+
+   **System Diagnostics API:**
+
+   =========================  ============  ================================  ===============
+   URI                        HTTP Method   Handler Function                  Purpose
+   =========================  ============  ================================  ===============
+   ``/api/system/health``     GET           ``system_health_handler()``       **System diagnostics** (uptime, memory, health)
    =========================  ============  ================================  ===============
 
    **CORS Support:**
@@ -266,34 +271,104 @@ URI Routing and Handlers
    - ``lru_purge_enable``: true (automatically remove least recently used handlers if limit reached)
 
 
-REST API Design
----------------
+Configuration API Design
+--------------------------
 
-.. spec:: Configuration REST API Endpoints
+.. spec:: Configuration API Endpoints
    :id: SPEC_WEB_REST_CFG_1
    :links: REQ_WEB_CONF_1, REQ_WEB_SCHEMA_1
    :status: approved
-   :tags: web, api, config
+   :tags: web, api, config, schema
 
-   **Endpoint: GET /api/config**
+   **Architecture:**
+   The web server provides HTTP transport for configuration operations. All configuration logic is delegated to the config manager component.
 
-   **Purpose:** Retrieve all current configuration values
+   **Endpoints:**
 
-   **Request:** None (GET with no body)
+   1. ``GET /api/config/schema`` - Retrieve JSON schema for UI generation
+   2. ``GET /api/config`` - Retrieve all configuration values  
+   3. ``POST /api/config`` - Update configuration values
+
+   ---
+
+   **Endpoint: GET /api/config/schema**
+
+   **Purpose:** Return JSON schema for frontend UI generation
+
+   **Request:** None
 
    **Response (200 OK):**
 
    .. code-block:: json
 
       {
-        "wifi": {
-          "ssid": "MyNetwork",
-          "password": ""
-        },
-        "led": {
-          "count": 60,
-          "brightness": 128
-        }
+        "title": "ESP32 Device Configuration",
+        "version": "1.0.0",
+        "fields": [
+          {
+            "key": "wifi_ssid",
+            "type": "string",
+            "label": "WiFi Network Name",
+            "default": "",
+            "required": false,
+            "maxLength": 63,
+            "group": "wifi"
+          },
+          {
+            "key": "ap_ssid", 
+            "type": "string",
+            "label": "AP SSID",
+            "default": "ESP32-Setup",
+            "required": true,
+            "maxLength": 32,
+            "group": "ap"
+          }
+        ]
+      }
+
+   **Implementation:**
+
+   .. code-block:: c
+
+      static esp_err_t schema_get_handler(httpd_req_t *req)
+      {
+          httpd_resp_set_hdr(req, "Content-Type", "application/json");
+          httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+
+          char *schema_json = NULL;
+          esp_err_t ret = config_get_schema_json(&schema_json);
+          if (ret != ESP_OK) {
+              httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, 
+                                  "Failed to load configuration schema");
+              return ESP_FAIL;
+          }
+
+          httpd_resp_send(req, schema_json, HTTPD_RESP_USE_STRLEN);
+          // Note: schema_json points to embedded flash data, no free() needed
+          
+          return ESP_OK;
+      }
+
+   ---
+
+   **Endpoint: GET /api/config**
+
+   **Purpose:** Retrieve all current configuration values
+
+   **Request:** None
+
+   **Response (200 OK):**
+
+   .. code-block:: json
+
+      {
+        "wifi_ssid": "MyNetwork",
+        "wifi_pass": "",
+        "ap_ssid": "ESP32-Setup", 
+        "ap_pass": "12345678",
+        "led_count": 50,
+        "led_bright": 128,
+        "device_name": "MyDevice"
       }
 
    **Implementation:**
@@ -305,55 +380,36 @@ REST API Design
           httpd_resp_set_hdr(req, "Content-Type", "application/json");
           httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
 
-          // Get values from config manager
-          char wifi_ssid[CONFIG_STRING_MAX_LEN + 1];
-          uint16_t led_count, led_brightness;
-          
-          config_get_string(CONFIG_WIFI_SSID, wifi_ssid, sizeof(wifi_ssid));
-          config_get_uint16(CONFIG_LED_COUNT, &led_count);
-          config_get_uint16(CONFIG_LED_BRIGHTNESS, &led_brightness);
+          char *config_json = NULL;
+          esp_err_t ret = config_get_all_as_json(&config_json);
+          if (ret != ESP_OK) {
+              httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, 
+                                  "Failed to read configuration");
+              return ESP_FAIL;
+          }
 
-          // Build JSON response
-          cJSON *json = cJSON_CreateObject();
-          cJSON *wifi = cJSON_CreateObject();
-          cJSON_AddStringToObject(wifi, "ssid", wifi_ssid);
-          cJSON_AddStringToObject(wifi, "password", ""); // Never expose!
-          cJSON_AddItemToObject(json, "wifi", wifi);
+          httpd_resp_send(req, config_json, HTTPD_RESP_USE_STRLEN);
+          free(config_json);
           
-          cJSON *led = cJSON_CreateObject();
-          cJSON_AddNumberToObject(led, "count", led_count);
-          cJSON_AddNumberToObject(led, "brightness", led_brightness);
-          cJSON_AddItemToObject(json, "led", led);
-
-          char *json_string = cJSON_Print(json);
-          httpd_resp_send(req, json_string, HTTPD_RESP_USE_STRLEN);
-          
-          free(json_string);
-          cJSON_Delete(json);
           return ESP_OK;
       }
-
-   **Security Note:** Password fields are never returned in GET responses.
 
    ---
 
    **Endpoint: POST /api/config**
 
-   **Purpose:** Update configuration values and trigger device restart
+   **Purpose:** Update configuration values
 
    **Request Body:**
 
    .. code-block:: json
 
       {
-        "wifi": {
-          "ssid": "NewNetwork",
-          "password": "newpassword123"
-        },
-        "led": {
-          "count": 144,
-          "brightness": 200
-        }
+        "wifi_ssid": "NewNetwork",
+        "wifi_pass": "newpassword123",
+        "ap_ssid": "MyDevice-AP",
+        "led_count": 144,
+        "device_name": "UpdatedDevice"
       }
 
    **Response (200 OK):**
@@ -362,7 +418,7 @@ REST API Design
 
       {
         "status": "success",
-        "message": "Configuration saved successfully. Device will restart in 3 seconds."
+        "message": "Configuration saved successfully"
       }
 
    **Implementation:**
@@ -371,54 +427,29 @@ REST API Design
 
       static esp_err_t config_set_handler(httpd_req_t *req)
       {
+          httpd_resp_set_hdr(req, "Content-Type", "application/json");
+          httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+
           // Read request body
           char content[1024];
           int ret = httpd_req_recv(req, content, sizeof(content) - 1);
+          if (ret <= 0) {
+              httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid request body");
+              return ESP_FAIL;
+          }
           content[ret] = '\0';
 
-          // Parse JSON
-          cJSON *json = cJSON_Parse(content);
-          
-          // Update WiFi settings
-          cJSON *wifi = cJSON_GetObjectItem(json, "wifi");
-          if (wifi != NULL) {
-              cJSON *item;
-              if ((item = cJSON_GetObjectItem(wifi, "ssid")) != NULL) {
-                  config_set_string(CONFIG_WIFI_SSID, cJSON_GetStringValue(item));
-              }
-              if ((item = cJSON_GetObjectItem(wifi, "password")) != NULL) {
-                  const char *password = cJSON_GetStringValue(item);
-                  if (strlen(password) > 0) { // Only update if non-empty
-                      config_set_string(CONFIG_WIFI_PASSWORD, password);
-                  }
-              }
-          }
-          
-          // Update LED settings
-          cJSON *led = cJSON_GetObjectItem(json, "led");
-          if (led != NULL) {
-              cJSON *item;
-              if ((item = cJSON_GetObjectItem(led, "count")) != NULL) {
-                  config_set_uint16(CONFIG_LED_COUNT, (uint16_t)cJSON_GetNumberValue(item));
-              }
-              if ((item = cJSON_GetObjectItem(led, "brightness")) != NULL) {
-                  config_set_uint16(CONFIG_LED_BRIGHTNESS, (uint16_t)cJSON_GetNumberValue(item));
-              }
+          esp_err_t config_ret = config_set_all_from_json(content);
+          if (config_ret != ESP_OK) {
+              httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Configuration update failed");
+              return ESP_FAIL;
           }
 
-          cJSON_Delete(json);
-
-          // Send response
-          const char *response = "{\"status\":\"success\",\"message\":\"Configuration saved successfully. Device will restart in 3 seconds.\"}";
+          const char *response = "{\"status\":\"success\",\"message\":\"Configuration saved successfully\"}";
           httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
-
-          // Schedule restart (allows HTTP response to complete first)
-          esp_timer_start_once(restart_timer, 3000000); // 3 seconds
           
           return ESP_OK;
       }
-
-   **Restart Strategy:** Device restart is scheduled using ``esp_timer`` to allow HTTP response to be sent before reboot.
 
    ---
 
@@ -426,7 +457,7 @@ REST API Design
 
    **Purpose:** Reset all configuration to factory defaults
 
-   **Request:** None (POST with no body)
+   **Request:** None
 
    **Response (200 OK):**
 
@@ -443,6 +474,9 @@ REST API Design
 
       static esp_err_t config_reset_handler(httpd_req_t *req)
       {
+          httpd_resp_set_hdr(req, "Content-Type", "application/json");
+          httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+
           esp_err_t ret = config_factory_reset();
           if (ret != ESP_OK) {
               httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, 

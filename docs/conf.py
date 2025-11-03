@@ -90,6 +90,7 @@ needs_extra_options = [
 # Status options
 needs_statuses = [
     dict(name="draft", description="Draft - Work in progress"),
+    dict(name="open", description="Open - Identified but not yet started"),
     dict(name="approved", description="Approved - Ready for implementation"),
     dict(name="implemented", description="Implemented - Code exists"),
     dict(name="verified", description="Verified - Tested and validated"),

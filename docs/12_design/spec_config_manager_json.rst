@@ -1,7 +1,7 @@
 JSON-Based Configuration Manager Design
 ========================================
 
-This document specifies the design for the new JSON-Schema-Driven Configuration System, covering architecture, data flow, schema design, and implementation approach.
+This document specifies the design for JSON-Schema-Driven Configuration System, covering architecture, data flow, schema design, and implementation approach.
 
 Architecture Design
 -------------------
@@ -88,12 +88,6 @@ Architecture Design
    2. **Type Safety**: C code validates types match schema (optional validator script)
    3. **Self-Documenting**: Schema contains labels, descriptions, validation rules
    4. **Zero Runtime Overhead**: JSON parsing happens at build-time only, not on ESP32
-
-   **Key Difference from Old System:**
-
-   - Old: Edit config.h structs + config.c defaults + settings.html + JSON serialization (4 places)
-   - New: Edit config_schema.json only (1 place), code/UI auto-sync
-
 
 Data Structure Design
 ---------------------
@@ -189,15 +183,15 @@ Data Structure Design
    - **Order Field**: Ensures predictable UI layout (JSON object order not guaranteed)
 
 
-.. spec:: Build-Time Code Generation
+.. spec:: Factory Reset via Bulk JSON Update
    :id: SPEC_CFG_JSON_CODEGEN_1
-   :links: REQ_CFG_JSON_1, REQ_CFG_JSON_4, REQ_CFG_JSON_5
+   :links: REQ_CFG_JSON_1, REQ_CFG_JSON_4, REQ_CFG_JSON_5, REQ_CFG_JSON_9
    :status: approved
-   :tags: build-process, code-generation
+   :tags: build-process, code-generation, factory-reset
 
-   **Description:** Python script generates C factory reset function from schema at build time.
+   **Description:** Factory reset uses the bulk JSON configuration system for consistent data processing and validation.
 
-   **Code Generation Flow:**
+   **JSON-Based Factory Reset Architecture:**
 
    .. code-block:: text
 
@@ -207,14 +201,19 @@ Data Structure Design
                  │
                  └──→ config_factory_generated.c (auto-generated, compiled)
                       
-                      void config_write_factory_defaults(void) {
-                          config_set_string("wifi_ssid", "");
-                          config_set_string("wifi_password", "");
-                          config_set_int32("led_count", 60);
-                          // ... auto-generated from schema
+                      const char* config_factory_defaults_json = 
+                      "["
+                      "  {\"key\":\"wifi_ssid\",\"type\":\"string\",\"value\":\"\"},"
+                      "  {\"key\":\"wifi_pass\",\"type\":\"string\",\"value\":\"\"},"
+                      "  {\"key\":\"ap_ssid\",\"type\":\"string\",\"value\":\"ESP32-Setup\"},"
+                      "  {\"key\":\"led_count\",\"type\":\"integer\",\"value\":50}"
+                      "]";
+
+                      esp_err_t config_write_factory_defaults(void) {
+                          return config_set_all_from_json(config_factory_defaults_json);
                       }
 
-   **Generator Script (~50 lines):**
+   **Generator Script (Simplified):**
 
    .. code-block:: python
 
@@ -222,34 +221,33 @@ Data Structure Design
       import json
       import sys
 
-      def generate_factory_reset(schema_file, output_file):
+      def generate_factory_json(schema_file, output_file):
           with open(schema_file) as f:
               schema = json.load(f)
+          
+          # Build factory defaults JSON array with {key, type, value} structure
+          defaults_array = []
+          for field in schema['fields']:
+              defaults_array.append({
+                  'key': field['key'],
+                  'type': field['type'],
+                  'value': field['default']
+              })
+          
+          factory_json = json.dumps(defaults_array, separators=(',', ':'))
           
           with open(output_file, 'w') as f:
               f.write('// Auto-generated - DO NOT EDIT\n')
               f.write('#include "config_manager.h"\n\n')
-              f.write('void config_write_factory_defaults(void) {\n')
-              
-              for field in schema['fields']:
-                  key = field['key']
-                  default = field['default']
-                  ftype = field['type']
-                  
-                  if ftype in ('string', 'password'):
-                      f.write(f'    config_set_string("{key}", "{default}");\n')
-                  elif ftype == 'integer':
-                      f.write(f'    config_set_int32("{key}", {default});\n')
-                  elif ftype == 'boolean':
-                      val = 'true' if default else 'false'
-                      f.write(f'    config_set_bool("{key}", {val});\n')
-              
+              f.write(f'const char* config_factory_defaults_json = "{factory_json}";\n\n')
+              f.write('esp_err_t config_write_factory_defaults(void) {\n')
+              f.write('    return config_set_all_from_json(config_factory_defaults_json);\n')
               f.write('}\n')
 
       if __name__ == '__main__':
-          generate_factory_reset(sys.argv[1], sys.argv[2])
+          generate_factory_json(sys.argv[1], sys.argv[2])
 
-   **CMake Integration:**
+   **CMake Integration:** (unchanged)
 
    .. code-block:: cmake
 
@@ -270,12 +268,12 @@ Data Structure Design
           EMBED_FILES "config_schema.json"
       )
 
-   **Key Benefits:**
-
-   1. **No Runtime JSON Parsing**: C code does not parse JSON at boot
-   2. **Type-Safe Factory Defaults**: Python script validates schema during build
-   3. **Single Maintenance Point**: Update config_schema.json, everything auto-syncs
-   4. **Embedded Schema**: config_schema.json embedded in flash for browser
+   **Key Design Properties:**
+   
+   - **Consistent API**: Factory reset uses same ``config_set_all_from_json()`` function
+   - **Schema-Driven**: Generator reads schema to create structured JSON array
+   - **Build-Time Generation**: Factory defaults compiled into firmware
+   - **Atomic Operation**: All defaults applied in single transaction
 
 
 .. spec:: NVS Storage Format
@@ -488,88 +486,120 @@ Web Interface Design
    - **Validation Rules as Schema**: Constraints visible in one place
 
 
-.. spec:: Configuration REST API
-   :id: SPEC_CFG_JSON_REST_1
+.. spec:: Bulk JSON Configuration API
+   :id: SPEC_CFG_JSON_BULK_1
    :links: REQ_CFG_JSON_12, REQ_CFG_JSON_13
    :status: approved
-   :tags: web, api, rest
+   :tags: api, json, bulk-operations
 
-   **Description:** Simple REST API for configuration get/set operations.
+   **Description:** Configuration manager provides bulk JSON operations for efficient configuration management. These functions process all configuration fields in atomic operations.
 
-   **API Endpoints:**
+   **Design Principle:** Bulk JSON API is the primary interface for multi-field configuration operations. Individual field access remains available for specific use cases.
 
-   .. code-block:: text
+   **Function 1: Schema Access**
 
-      GET  /config_schema.json           -> Embedded JSON schema file
-      
-      GET  /api/config/all               -> Get all current config values
-      GET  /api/config/:key              -> Get single value by key
-      
-      POST /api/config/:key              -> Set single value
-           Body: { "value": "new_value" }
-      
-      POST /api/config/bulk              -> Set multiple values
-           Body: { "key1": "value1", "key2": "value2" }
+   .. code-block:: c
 
-   **Example: Get Schema**
+      /**
+       * @brief Get embedded JSON schema for dynamic UI generation
+       * @param[out] schema_json Pointer to embedded schema string (no free() needed)
+       * @return ESP_OK on success, ESP_ERR_NOT_FOUND if schema not embedded
+       */
+      esp_err_t config_get_schema_json(char **schema_json);
 
-   .. code-block:: http
+   **Function 2: Bulk Configuration Read**
 
-      GET /config_schema.json
-      
-      Response: (200 OK)
-      {
-        "schema_version": "1.0",
-        "groups": [...],
-        "fields": [...]
-      }
+   .. code-block:: c
 
-   **Example: Get All Config**
+      /**
+       * @brief Read all configuration values as structured JSON array
+       * @param[out] config_json Allocated JSON string (caller must free())
+       * @return ESP_OK on success, ESP_ERR_NO_MEM on allocation failure
+       */
+      esp_err_t config_get_all_as_json(char **config_json);
 
-   .. code-block:: http
+   **Implementation Strategy:**
+   - Read JSON schema to enumerate all defined fields
+   - For each field, call appropriate ``config_get_*()`` function based on schema type
+   - Build JSON array with {key, type, value} objects for all current values
+   - Handle password masking (never expose sensitive fields)
 
-      GET /api/config/all
-      
-      Response: (200 OK)
-      {
-        "wifi_ssid": "MyNetwork",
-        "wifi_password": "***",
-        "led_count": 60
-      }
+   **Function 3: Bulk Configuration Write**
 
-   **Example: Set Single Value**
+   .. code-block:: c
 
-   .. code-block:: http
+      /**
+       * @brief Update configuration from structured JSON array
+       * @param[in] config_json JSON array with {key, type, value} objects
+       * @return ESP_OK on success, ESP_ERR_INVALID_ARG on validation failure
+       */
+      esp_err_t config_set_all_from_json(const char *config_json);
 
-      POST /api/config/wifi_ssid
-      Content-Type: application/json
-      
-      {"value": "NewNetwork"}
-      
-      Response: (200 OK)
-      {"status": "ok", "key": "wifi_ssid", "value": "NewNetwork"}
+   **Implementation Strategy:**
+   - Parse input JSON array to extract {key, type, value} objects
+   - For each object, validate ``key`` exists in schema and ``type`` matches
+   - Call appropriate ``config_set_*_no_commit()`` function based on ``type``
+   - Single ``config_commit()`` call for atomic update
+   - Return error if any field validation fails
 
-   **Example: Error Response**
+   **Error Handling:**
+   - Unknown ``key`` fields: ignored (forward compatibility)
+   - Invalid ``type`` values: return ESP_ERR_INVALID_ARG
+   - Type mismatch (``type`` vs schema): return ESP_ERR_INVALID_ARG
+   - Range violations: return ESP_ERR_INVALID_ARG  
+   - NVS errors: propagate ESP_ERR_NVS_* codes
+   - Malformed JSON: return ESP_ERR_INVALID_ARG
 
-   .. code-block:: http
+   **JSON Format Example:**
 
-      POST /api/config/wifi_ssid
-      Content-Type: application/json
-      
-      {"value": ""}  // Empty SSID invalid
-      
-      Response: (400 Bad Request)
-      {
-        "status": "error",
-        "key": "wifi_ssid",
-        "message": "Value cannot be empty"
-      }
+   .. code-block:: json
 
-   **Design Rationale:**
+      [
+        {
+          "key": "wifi_ssid",
+          "type": "string",
+          "value": "MyNetwork"
+        },
+        {
+          "key": "wifi_pass", 
+          "type": "string",
+          "value": "password123"
+        },
+        {
+          "key": "ap_ssid",
+          "type": "string", 
+          "value": "MyDevice-AP"
+        },
+        {
+          "key": "led_count",
+          "type": "integer",
+          "value": 50
+        },
+        {
+          "key": "led_bright",
+          "type": "integer",
+          "value": 128
+        },
+        {
+          "key": "device_name",
+          "type": "string",
+          "value": "MyDevice"
+        }
+      ]
 
-   - **Generic Endpoints**: No need for field-specific endpoints
-   - **Key-Based Access**: Matches schema directly (no enum system needed)
-   - **Simple Responses**: Status + value (no complex nested structures)
+   **Design Properties:**
+   - **No hardcoded fields** in any client component
+   - **Schema-driven completeness** (all fields included automatically)
+   - **Future-proof** (new schema fields work without client changes)
+   - **Atomic updates** (all changes committed together)
+   - **Type safety** (schema validates types before NVS storage)
+
+   **Primary Use Cases:**
+   - Web server HTTP endpoints: Use bulk APIs for GET/POST operations
+   - Factory reset: Load default values with ``config_set_all_from_json()``
+   - Configuration export/import: System backup and restore
+   - CLI commands: Batch configuration from command line
+   - Remote management: Configuration updates from network protocols
 
 
 Best Practices & Development Guide
@@ -630,13 +660,6 @@ Best Practices & Development Guide
    - ≤15 characters (NVS key length limit)
    - Avoid special characters except underscore
    - Make names descriptive ("led_count" better than "lc")
-
-   **Benefits of This Approach:**
-
-   - ✅ Single place to define (config_schema.json)
-   - ✅ Form auto-generates (no HTML updates needed)
-   - ✅ Defaults auto-generated (no C code for factory reset)
-   - ✅ Validation auto-applies (schema drives browser validation)
 
 
 .. spec:: Type Safety Without Code Generation
@@ -703,65 +726,6 @@ Best Practices & Development Guide
    - **Explicit > Implicit**: Keys appear in both JSON and C code (obvious when they match)
    - **Simple > Magic**: No hidden code generation unless chosen
    - **Learnable > Complex**: Beginners can understand entire system quickly
-
-
-Comparison: Old vs New System
------------------------------
-
-.. spec:: System Comparison
-   :id: SPEC_CFG_JSON_COMPARISON_1
-   :status: approved
-   :tags: documentation, comparison
-
-   **Description:** Side-by-side comparison of old config manager vs. new JSON-based system.
-
-   **Maintenance Effort:**
-
-   ====================  ========================================  ===============================
-   Aspect                Old System (config.h)                     New System (JSON Schema)
-   ====================  ========================================  ===============================
-   Add config field      4 places (struct, defaults, HTML, JSON)   1 place (JSON schema)
-   Lines of code         ~30 per field                             ~8 per field
-   Default generation    Manual C code                             Auto-generated Python
-   Form HTML             Manually written                          Auto-generated JavaScript
-   Browser validation    Manual HTML5 attributes                   Auto-applied from schema
-   ====================  ========================================  ===============================
-
-   **Code Complexity:**
-
-   ===================  =============================  ================================
-   Component            Old System                     New System
-   ===================  =============================  ================================
-   config_manager.c     200+ lines (complex logic)     ~50 lines (simple NVS wrapper)
-   config.h             100+ lines (struct+metadata)   Not needed (JSON replaces)
-   settings.html        100+ lines (hardcoded form)    Auto-generated from schema
-   Web JavaScript       150+ lines (serialization)     100 lines (generic generation)
-   Factory defaults     Manual in code                 Auto-generated from schema
-   Total                550+ lines                     200+ lines (50% reduction)
-   ===================  =============================  ================================
-
-   **Flash Memory Usage:**
-
-   - Old: config struct + defaults hardcoded in C → ~2KB
-   - New: config_schema.json embedded → ~1.5KB
-   - Savings: ~500 bytes
-
-   **Runtime Overhead:**
-
-   - Old: Runtime cache + struct manipulation
-   - New: Direct NVS access, no JSON parsing
-   - Result: **Same or lower overhead**
-
-   **Extensibility:**
-
-   ===================  ==========================  =========================
-   Task                 Old System                  New System
-   ===================  ==========================  =========================
-   Add field            High effort (4 files)       Low effort (1 file)
-   Rename field         High risk (4 places)        Low risk (1 place)
-   Change defaults      Edit code, rebuild          Edit JSON, rebuild
-   Add validation       Code + browser              Browser only
-   ===================  ==========================  =========================
 
 
 Traceability
