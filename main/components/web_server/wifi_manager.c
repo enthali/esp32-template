@@ -49,6 +49,7 @@
 
 #include "wifi_manager.h"
 #include "web_server.h"
+#include "config_manager.h"
 #include "esp_log.h"
 #include "esp_wifi.h"
 #include "esp_netif.h"
@@ -77,6 +78,12 @@ static const char *TAG = "wifi_manager";
 #define STA_TIMEOUT_MS (10 * 1000)      // 10 seconds STA timeout
 #define AP_TIMEOUT_MS (10 * 60 * 1000)  // 10 minutes AP timeout
 #define RESTART_DELAY_MS (3 * 1000)     // 3 seconds before restart
+
+// Default AP configuration
+#define DEFAULT_WIFI_AP_SSID "ESP32-Setup"
+#define DEFAULT_WIFI_AP_PASSWORD "12345678"
+#define DEFAULT_WIFI_AP_CHANNEL 1
+#define DEFAULT_WIFI_AP_MAX_CONN 4
 
 // Global state (minimal)
 static bool wifi_initialized = false;
@@ -251,27 +258,23 @@ esp_err_t wifi_manager_set_credentials(const wifi_credentials_t *credentials)
 
     ESP_LOGI(TAG, "Setting new WiFi credentials for SSID: %s", credentials->ssid);
 
-    // Save credentials to NVS
-    nvs_handle_t nvs_handle;
-    esp_err_t ret = nvs_open(NVS_NAMESPACE, NVS_READWRITE, &nvs_handle);
+    // Save credentials using config_manager (uses no_commit + commit pattern)
+    esp_err_t ret = config_set_string_no_commit("wifi_ssid", credentials->ssid);
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to open NVS namespace");
+        ESP_LOGE(TAG, "Failed to set wifi_ssid: %s", esp_err_to_name(ret));
         return ret;
     }
 
-    ret = nvs_set_str(nvs_handle, NVS_SSID_KEY, credentials->ssid);
-    if (ret == ESP_OK) {
-        ret = nvs_set_str(nvs_handle, NVS_PASSWORD_KEY, credentials->password);
-    }
-    
-    if (ret == ESP_OK) {
-        ret = nvs_commit(nvs_handle);
-    }
-    
-    nvs_close(nvs_handle);
-
+    ret = config_set_string_no_commit("wifi_pass", credentials->password);
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to save credentials to NVS");
+        ESP_LOGE(TAG, "Failed to set wifi_pass: %s", esp_err_to_name(ret));
+        return ret;
+    }
+
+    // Commit all changes at once
+    ret = config_commit();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to commit WiFi credentials: %s", esp_err_to_name(ret));
         return ret;
     }
 
@@ -345,26 +348,23 @@ esp_err_t wifi_manager_get_ip_address(char *ip_str, size_t max_len)
 
 static esp_err_t load_credentials_from_nvs(void)
 {
-    nvs_handle_t nvs_handle;
-    esp_err_t ret = nvs_open(NVS_NAMESPACE, NVS_READONLY, &nvs_handle);
+    // Load credentials from config_manager
+    esp_err_t ret = config_get_string("wifi_ssid", stored_credentials.ssid, sizeof(stored_credentials.ssid));
     if (ret != ESP_OK) {
-        ESP_LOGD(TAG, "No stored WiFi credentials found");
+        ESP_LOGD(TAG, "No stored WiFi SSID found");
         return ret;
     }
 
-    size_t ssid_len = sizeof(stored_credentials.ssid);
-    size_t password_len = sizeof(stored_credentials.password);
-
-    ret = nvs_get_str(nvs_handle, NVS_SSID_KEY, stored_credentials.ssid, &ssid_len);
-    if (ret == ESP_OK) {
-        ret = nvs_get_str(nvs_handle, NVS_PASSWORD_KEY, stored_credentials.password, &password_len);
-        if (ret == ESP_OK) {
-            ESP_LOGI(TAG, "Loaded stored credentials for SSID: %s", stored_credentials.ssid);
-        }
+    ret = config_get_string("wifi_pass", stored_credentials.password, sizeof(stored_credentials.password));
+    if (ret != ESP_OK) {
+        ESP_LOGD(TAG, "No stored WiFi password found");
+        // Clear SSID if password is missing
+        stored_credentials.ssid[0] = '\0';
+        return ret;
     }
 
-    nvs_close(nvs_handle);
-    return ret;
+    ESP_LOGI(TAG, "Loaded stored credentials for SSID: %s", stored_credentials.ssid);
+    return ESP_OK;
 }
 
 static esp_err_t save_boot_mode(const char* mode)
@@ -454,19 +454,39 @@ static esp_err_t start_ap_boot(void)
     // Configure AP mode
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
     
+    // Load AP configuration from config_manager
+    char ap_ssid[33] = {0};
+    char ap_pass[64] = {0};
+    
+    esp_err_t ret = config_get_string("ap_ssid", ap_ssid, sizeof(ap_ssid));
+    if (ret != ESP_OK) {
+        ESP_LOGW(TAG, "Failed to load ap_ssid, using default: %s", DEFAULT_WIFI_AP_SSID);
+        strncpy(ap_ssid, DEFAULT_WIFI_AP_SSID, sizeof(ap_ssid) - 1);
+    }
+    
+    ret = config_get_string("ap_pass", ap_pass, sizeof(ap_pass));
+    if (ret != ESP_OK) {
+        ESP_LOGW(TAG, "Failed to load ap_pass, using default");
+        strncpy(ap_pass, DEFAULT_WIFI_AP_PASSWORD, sizeof(ap_pass) - 1);
+    }
+    
+    // Configure AP with loaded settings
     wifi_config_t wifi_config = {
         .ap = {
-            .ssid = DEFAULT_WIFI_AP_SSID,
-            .ssid_len = strlen(DEFAULT_WIFI_AP_SSID),
+            .ssid_len = strlen(ap_ssid),
             .channel = DEFAULT_WIFI_AP_CHANNEL,
-            .password = DEFAULT_WIFI_AP_PASSWORD,
             .max_connection = DEFAULT_WIFI_AP_MAX_CONN,
-            .authmode = WIFI_AUTH_OPEN
+            .authmode = (strlen(ap_pass) >= 8) ? WIFI_AUTH_WPA2_PSK : WIFI_AUTH_OPEN
         }
     };
     
+    // Copy SSID and password to config structure
+    strncpy((char *)wifi_config.ap.ssid, ap_ssid, sizeof(wifi_config.ap.ssid));
+    strncpy((char *)wifi_config.ap.password, ap_pass, sizeof(wifi_config.ap.password));
+    
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &wifi_config));
-    ESP_LOGI(TAG, "AP mode configured: %s", DEFAULT_WIFI_AP_SSID);
+    ESP_LOGI(TAG, "AP mode configured: %s (auth: %s)", ap_ssid, 
+             wifi_config.ap.authmode == WIFI_AUTH_OPEN ? "Open" : "WPA2");
     
     current_mode = WIFI_MODE_AP_ACTIVE;
     

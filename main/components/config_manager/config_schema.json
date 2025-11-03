@@ -9,10 +9,16 @@
       "order": 1
     },
     {
+      "id": "ap",
+      "label": "📡 Access Point",
+      "description": "Fallback AP configuration",
+      "order": 2
+    },
+    {
       "id": "device",
       "label": "🔧 Device Settings",
       "description": "Device-specific configuration",
-      "order": 2
+      "order": 3
     }
   ],
   "parameters": [
@@ -39,6 +45,31 @@
       "minLength": 0,
       "maxLength": 63,
       "group": "wifi",
+      "order": 2
+    },
+    {
+      "key": "ap_ssid",
+      "type": "string",
+      "label": "AP SSID",
+      "description": "Access Point name when device can't connect to WiFi",
+      "default": "ESP32-Setup",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[\\x20-\\x7E]{1,32}$",
+      "group": "ap",
+      "order": 1
+    },
+    {
+      "key": "ap_pass",
+      "type": "password",
+      "label": "AP Password",
+      "description": "Access Point password (min 8 characters for WPA2)",
+      "default": "12345678",
+      "required": true,
+      "minLength": 8,
+      "maxLength": 63,
+      "group": "ap",
       "order": 2
     },
     {

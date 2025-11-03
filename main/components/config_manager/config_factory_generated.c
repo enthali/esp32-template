@@ -18,6 +18,8 @@ void config_write_factory_defaults(void)
 
     config_set_string("wifi_ssid", "");
     config_set_string("wifi_pass", "");
+    config_set_string("ap_ssid", "ESP32-Setup");
+    config_set_string("ap_pass", "12345678");
     config_set_int16("led_count", 60);
     config_set_int16("led_bright", 128);
     config_set_string("device_name", "ESP32-Device");
