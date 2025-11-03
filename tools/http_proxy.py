@@ -134,27 +134,63 @@ class ProxyHandler(http.server.SimpleHTTPRequestHandler):
                 sock.connect(('192.168.100.2', 80))
                 sock.sendall(http_request)
                 
-                # Read response
+                # Read response headers first
                 response_data = b''
-                while True:
-                    chunk = sock.recv(4096)
+                header_complete = False
+                while not header_complete:
+                    chunk = sock.recv(1024)
                     if not chunk:
-                        break
+                        raise Exception("Connection closed before headers received")
                     response_data += chunk
-                sock.close()
+                    if b'\r\n\r\n' in response_data:
+                        header_complete = True
                 
-                # Parse response
-                response_str = response_data.decode('utf-8', errors='ignore')
-                header_end = response_str.find('\r\n\r\n')
-                if header_end == -1:
-                    raise Exception("Invalid HTTP response")
+                # Parse headers to get Content-Length
+                # Find header/body separator in bytes
+                header_sep = b'\r\n\r\n'
+                header_end_idx = response_data.find(header_sep)
+                if header_end_idx == -1:
+                    raise Exception("Invalid HTTP response: no header separator found")
                 
-                response_headers = response_str[:header_end]
-                response_body = response_str[header_end+4:]
+                # Split headers and initial body data (both as bytes)
+                response_headers_bytes = response_data[:header_end_idx]
+                response_body_start = response_data[header_end_idx + len(header_sep):]
+                
+                # Decode headers to string for parsing
+                response_headers = response_headers_bytes.decode('utf-8', errors='ignore')
                 
                 # Extract status code
                 status_line = response_headers.split('\r\n')[0]
                 status_code = int(status_line.split()[1])
+                
+                # Extract Content-Length if present
+                content_length = None
+                for line in response_headers.split('\r\n')[1:]:
+                    if line.lower().startswith('content-length:'):
+                        content_length = int(line.split(':', 1)[1].strip())
+                        break
+                
+                # Read remaining body based on Content-Length (work with bytes)
+                body_data = response_body_start
+                if content_length is not None:
+                    # We know exactly how much to read
+                    while len(body_data) < content_length:
+                        remaining = content_length - len(body_data)
+                        chunk = sock.recv(min(remaining, 4096))
+                        if not chunk:
+                            break
+                        body_data += chunk
+                    response_body = body_data[:content_length].decode('utf-8', errors='ignore')
+                else:
+                    # No Content-Length, read until connection closes (old behavior)
+                    while True:
+                        chunk = sock.recv(4096)
+                        if not chunk:
+                            break
+                        body_data += chunk
+                    response_body = body_data.decode('utf-8', errors='ignore')
+                
+                sock.close()
                 
                 # Forward response to client
                 self.send_response(status_code)
