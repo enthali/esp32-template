@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-Simple HTTP server for ESP32 Web Flasher with proper index routing
+Simple HTTP server for ESP32 Web Flasher with proper index routing and error handling
 """
 import http.server
 import socketserver
 import os
+import sys
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -19,17 +20,25 @@ class WebFlasherHandler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
     
     def do_GET(self):
-        parsed_path = urlparse(self.path)
-        
-        # Redirect root to tools/web-flasher/web-flasher.html
-        if parsed_path.path == '/' or parsed_path.path == '':
-            self.send_response(302)
-            self.send_header('Location', '/tools/web-flasher/web-flasher.html')
-            self.end_headers()
-            return
-        
-        # Serve files normally
-        return super().do_GET()
+        try:
+            parsed_path = urlparse(self.path)
+            
+            # Redirect root to tools/web-flasher/web-flasher.html
+            if parsed_path.path == '/' or parsed_path.path == '':
+                self.send_response(302)
+                self.send_header('Location', '/tools/web-flasher/web-flasher.html')
+                self.end_headers()
+                return
+            
+            # Serve files normally
+            return super().do_GET()
+        except Exception as e:
+            # Log error but don't crash the server
+            print(f"⚠️  Error handling request {self.path}: {e}", file=sys.stderr)
+            try:
+                self.send_error(500, f"Internal Server Error: {str(e)}")
+            except:
+                pass  # If we can't even send error, just continue
     
     def log_message(self, format, *args):
         # Custom logging - just use default format but make it prettier
@@ -79,16 +88,29 @@ if __name__ == '__main__':
     # Enable SO_REUSEADDR to avoid "Address already in use" errors
     socketserver.TCPServer.allow_reuse_address = True
     
-    with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print(f"🚀 ESP32 Web Flasher running on port {PORT}")
-        print(f"📂 Serving from: {project_root}")
-        print(f"🌐 Access at: http://localhost:{PORT}/")
-        print(f"   (will auto-redirect to tools/web-flasher/web-flasher.html)")
-        print("")
-        print("Press Ctrl+C to stop")
-        print("")
-        
-        try:
+    # Allow server to continue even on errors
+    socketserver.TCPServer.allow_reuse_port = True if hasattr(socketserver.TCPServer, 'allow_reuse_port') else False
+    
+    print(f"🚀 ESP32 Web Flasher starting on port {PORT}")
+    print(f"📂 Serving from: {project_root}")
+    print(f"🌐 Access at: http://localhost:{PORT}/")
+    print(f"   (will auto-redirect to tools/web-flasher/web-flasher.html)")
+    print("")
+    print("💡 Server will continue running even if requests fail")
+    print("   (e.g., missing manifest.json won't crash the server)")
+    print("")
+    print("Press Ctrl+C to stop")
+    print("")
+    
+    try:
+        with socketserver.TCPServer(("", PORT), Handler) as httpd:
             httpd.serve_forever()
-        except KeyboardInterrupt:
-            print("\n👋 Server stopped")
+    except KeyboardInterrupt:
+        print("\n👋 Server stopped gracefully")
+    except OSError as e:
+        print(f"\n❌ Server error: {e}", file=sys.stderr)
+        print(f"💡 Tip: Port {PORT} might be in use. Try: ./tools/web-flasher/stop-web-flasher.sh")
+        sys.exit(1)
+    except Exception as e:
+        print(f"\n❌ Unexpected error: {e}", file=sys.stderr)
+        sys.exit(1)

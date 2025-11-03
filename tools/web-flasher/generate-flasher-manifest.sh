@@ -2,7 +2,7 @@
 # Generate ESP Web Tools manifest.json from ESP-IDF build artifacts
 # This script creates a manifest that the web flasher can use to flash firmware
 
-set -e
+set -e  # Exit on error
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TOOLS_DIR="$(dirname "$SCRIPT_DIR")"

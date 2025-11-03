@@ -93,4 +93,31 @@ echo -e "${YELLOW}Press Ctrl+C to stop${NC}"
 echo ""
 
 cd "$PROJECT_DIR"
-python3 "$SCRIPT_DIR/flasher_server.py"
+
+# Auto-restart loop for robustness
+RESTART_COUNT=0
+MAX_RESTARTS=5
+
+while true; do
+    # Start the server
+    python3 "$SCRIPT_DIR/flasher_server.py"
+    EXIT_CODE=$?
+    
+    # If exit code is 0 (Ctrl+C), exit cleanly
+    if [ $EXIT_CODE -eq 0 ] || [ $EXIT_CODE -eq 130 ]; then
+        echo -e "${GREEN}Server stopped cleanly${NC}"
+        break
+    fi
+    
+    # If server crashed, try to restart
+    RESTART_COUNT=$((RESTART_COUNT + 1))
+    
+    if [ $RESTART_COUNT -ge $MAX_RESTARTS ]; then
+        echo -e "${RED}❌ Server crashed $MAX_RESTARTS times, giving up${NC}"
+        exit 1
+    fi
+    
+    echo -e "${YELLOW}⚠️  Server crashed (exit code: $EXIT_CODE)${NC}"
+    echo -e "${YELLOW}🔄 Auto-restarting... (attempt $RESTART_COUNT/$MAX_RESTARTS)${NC}"
+    sleep 2
+done
