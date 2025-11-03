@@ -53,11 +53,13 @@ static esp_err_t status_handler(httpd_req_t *req);
 static esp_err_t reset_handler(httpd_req_t *req);
 
 // Configuration management handlers (REQ-CFG-7)
+static esp_err_t config_schema_handler(httpd_req_t *req);
 static esp_err_t config_get_handler(httpd_req_t *req);
 static esp_err_t config_set_handler(httpd_req_t *req);
 static esp_err_t config_reset_handler(httpd_req_t *req);
 
 // System health and diagnostics (REQ-CFG-11)
+static esp_err_t wifi_status_handler(httpd_req_t *req);
 static esp_err_t system_health_handler(httpd_req_t *req);
 
 // Distance sensor data endpoint - DISABLED in template
@@ -73,10 +75,14 @@ extern const uint8_t wifi_setup_html_start[] asm("_binary_wifi_setup_html_start"
 extern const uint8_t wifi_setup_html_end[] asm("_binary_wifi_setup_html_end");
 extern const uint8_t settings_html_start[] asm("_binary_settings_html_start");
 extern const uint8_t settings_html_end[] asm("_binary_settings_html_end");
+extern const uint8_t favicon_svg_start[] asm("_binary_favicon_svg_start");
+extern const uint8_t favicon_svg_end[] asm("_binary_favicon_svg_end");
 extern const uint8_t style_css_start[] asm("_binary_style_css_start");
 extern const uint8_t style_css_end[] asm("_binary_style_css_end");
 extern const uint8_t app_js_start[] asm("_binary_app_js_start");
 extern const uint8_t app_js_end[] asm("_binary_app_js_end");
+extern const uint8_t config_schema_json_start[] asm("_binary_config_schema_json_start");
+extern const uint8_t config_schema_json_end[] asm("_binary_config_schema_json_end");
 
 // Helper functions for static file serving
 static const char *get_mime_type(const char *filename);
@@ -362,6 +368,10 @@ static const char *get_mime_type(const char *filename)
     {
         return "application/javascript";
     }
+    else if (strcmp(ext, ".svg") == 0)
+    {
+        return "image/svg+xml";
+    }
     else if (strcmp(ext, ".json") == 0)
     {
         return "application/json";
@@ -375,36 +385,59 @@ static const char *get_mime_type(const char *filename)
 static esp_err_t get_embedded_file(const char *filename, const uint8_t **data, size_t *size)
 {
     ESP_LOGI(TAG, "Getting embedded file: %s", filename);
+    
+    // Strip query parameters for cache busting (e.g., /js/app.js?v=2 -> /js/app.js)
+    char clean_filename[128];
+    strncpy(clean_filename, filename, sizeof(clean_filename) - 1);
+    clean_filename[sizeof(clean_filename) - 1] = '\0';
+    
+    char *query = strchr(clean_filename, '?');
+    if (query != NULL) {
+        *query = '\0';
+        ESP_LOGI(TAG, "Stripped query parameters, using: %s", clean_filename);
+    }
 
-    if (strcmp(filename, "/index.html") == 0 || strcmp(filename, "/") == 0)
+    if (strcmp(clean_filename, "/index.html") == 0 || strcmp(clean_filename, "/") == 0)
     {
         *data = index_html_start;
         *size = index_html_end - index_html_start;
         ESP_LOGI(TAG, "Found index.html, size: %zu", *size);
     }
-    else if (strcmp(filename, "/wifi-setup.html") == 0)
+    else if (strcmp(clean_filename, "/wifi-setup.html") == 0)
     {
         *data = wifi_setup_html_start;
         *size = wifi_setup_html_end - wifi_setup_html_start;
         ESP_LOGI(TAG, "Found wifi-setup.html, size: %zu", *size);
     }
-    else if (strcmp(filename, "/settings.html") == 0)
+    else if (strcmp(clean_filename, "/settings.html") == 0)
     {
         *data = settings_html_start;
         *size = settings_html_end - settings_html_start;
         ESP_LOGI(TAG, "Found settings.html, size: %zu", *size);
     }
-    else if (strcmp(filename, "/css/style.css") == 0)
+    else if (strcmp(clean_filename, "/favicon.svg") == 0 || strcmp(clean_filename, "/favicon.ico") == 0)
+    {
+        *data = favicon_svg_start;
+        *size = favicon_svg_end - favicon_svg_start;
+        ESP_LOGI(TAG, "Found favicon.svg, size: %zu", *size);
+    }
+    else if (strcmp(clean_filename, "/css/style.css") == 0)
     {
         *data = style_css_start;
         *size = style_css_end - style_css_start;
         ESP_LOGI(TAG, "Found style.css, size: %zu", *size);
     }
-    else if (strcmp(filename, "/js/app.js") == 0)
+    else if (strcmp(clean_filename, "/js/app.js") == 0)
     {
         *data = app_js_start;
         *size = app_js_end - app_js_start;
         ESP_LOGI(TAG, "Found app.js, size: %zu", *size);
+    }
+    else if (strcmp(clean_filename, "/config_schema.json") == 0)
+    {
+        *data = config_schema_json_start;
+        *size = config_schema_json_end - config_schema_json_start;
+        ESP_LOGI(TAG, "Found config_schema.json, size: %zu", *size);
     }
     else
     {
@@ -425,26 +458,33 @@ esp_err_t static_file_handler(httpd_req_t *req)
     esp_err_t ret = get_embedded_file(uri, &data, &size);
     if (ret != ESP_OK)
     {
-        ESP_LOGW(TAG, "File not found: %s", uri);
+        // Strip query parameters for error logging
+        char clean_uri[128];
+        strncpy(clean_uri, uri, sizeof(clean_uri) - 1);
+        clean_uri[sizeof(clean_uri) - 1] = '\0';
+        char *query = strchr(clean_uri, '?');
+        if (query != NULL) *query = '\0';
+        
+        ESP_LOGW(TAG, "File not found: %s (original URI: %s)", clean_uri, uri);
         httpd_resp_send_404(req);
         return ESP_FAIL;
     }
 
-    // Set appropriate content type
-    const char *mime_type = get_mime_type(uri);
+    // Set appropriate content type (strip query parameters for MIME detection)
+    char clean_uri[128];
+    strncpy(clean_uri, uri, sizeof(clean_uri) - 1);
+    clean_uri[sizeof(clean_uri) - 1] = '\0';
+    char *query = strchr(clean_uri, '?');
+    if (query != NULL) *query = '\0';
+    
+    const char *mime_type = get_mime_type(clean_uri);
     httpd_resp_set_type(req, mime_type);
 
-    // Set cache headers for static assets
-    if (strstr(uri, ".css") || strstr(uri, ".js"))
-    {
-        httpd_resp_set_hdr(req, "Cache-Control", "public, max-age=3600");
-    }
-    else
-    {
-        httpd_resp_set_hdr(req, "Cache-Control", "no-cache, no-store, must-revalidate");
-        httpd_resp_set_hdr(req, "Pragma", "no-cache");
-        httpd_resp_set_hdr(req, "Expires", "0");
-    }
+    // Set cache headers - no caching for development/template
+    // For production, consider enabling caching for .css and .js files
+    httpd_resp_set_hdr(req, "Cache-Control", "no-cache, no-store, must-revalidate");
+    httpd_resp_set_hdr(req, "Pragma", "no-cache");
+    httpd_resp_set_hdr(req, "Expires", "0");
 
     return httpd_resp_send(req, (const char *)data, size);
 }
@@ -535,6 +575,14 @@ esp_err_t web_server_init(const web_server_config_t *config)
     ESP_LOGI(TAG, "Registered handler for '/reset' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
     // Register configuration management API handlers (REQ-CFG-7)
+    httpd_uri_t config_schema_uri = {
+        .uri = "/api/config/schema",
+        .method = HTTP_GET,
+        .handler = config_schema_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &config_schema_uri);
+    ESP_LOGI(TAG, "Registered handler for '/api/config/schema' GET - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
     httpd_uri_t config_get_uri = {
         .uri = "/api/config",
         .method = HTTP_GET,
@@ -558,6 +606,15 @@ esp_err_t web_server_init(const web_server_config_t *config)
         .user_ctx = NULL};
     ret = httpd_register_uri_handler(server, &config_reset_uri);
     ESP_LOGI(TAG, "Registered handler for '/api/config/reset' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
+    // Register WiFi status endpoint
+    httpd_uri_t api_status_uri = {
+        .uri = "/api/status",
+        .method = HTTP_GET,
+        .handler = wifi_status_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &api_status_uri);
+    ESP_LOGI(TAG, "Registered handler for '/api/status' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
 
     // Register system health endpoint (REQ-CFG-11)
     httpd_uri_t system_health_uri = {
@@ -620,6 +677,24 @@ esp_err_t web_server_init(const web_server_config_t *config)
         .user_ctx = NULL};
     ret = httpd_register_uri_handler(server, &js_uri);
     ESP_LOGI(TAG, "Registered handler for '/js/app.js' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
+    httpd_uri_t favicon_uri = {
+        .uri = "/favicon.svg",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &favicon_uri);
+    ESP_LOGI(TAG, "Registered handler for '/favicon.svg' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
+    httpd_uri_t favicon_ico_uri = {
+        .uri = "/favicon.ico",
+        .method = HTTP_GET,
+        .handler = static_file_handler,
+        .user_ctx = NULL};
+    ret = httpd_register_uri_handler(server, &favicon_ico_uri);
+    ESP_LOGI(TAG, "Registered handler for '/favicon.ico' - %s", ret == ESP_OK ? "OK" : esp_err_to_name(ret));
+
+    // Note: /config_schema.json static endpoint removed - now served via /api/config/schema
 
     ESP_LOGI(TAG, "Web server initialized successfully");
     return ESP_OK;
@@ -700,6 +775,49 @@ uint16_t web_server_get_port(void)
 /**
  * @brief GET /api/config - Retrieve current configuration
  */
+/**
+ * @brief GET /api/config/schema - Retrieve configuration JSON schema
+ */
+static esp_err_t config_schema_handler(httpd_req_t *req)
+{
+    ESP_LOGD(TAG, "Handling GET /api/config/schema");
+
+    // Set CORS headers
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    httpd_resp_set_hdr(req, "Content-Type", "application/json");
+
+    // Get embedded schema from config manager
+    char *schema_json = NULL;
+    size_t schema_size = 0;
+    esp_err_t ret = config_get_schema_json(&schema_json);
+    
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to get schema: %s", esp_err_to_name(ret));
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to read schema");
+        return ESP_FAIL;
+    }
+
+    if (schema_json == NULL) {
+        ESP_LOGE(TAG, "Schema JSON is NULL");
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Schema not found");
+        return ESP_FAIL;
+    }
+
+    // Calculate exact size (embedded binary is not null-terminated)
+    extern const uint8_t config_schema_json_start[] asm("_binary_config_schema_json_start");
+    extern const uint8_t config_schema_json_end[] asm("_binary_config_schema_json_end");
+    schema_size = config_schema_json_end - config_schema_json_start;
+
+    // Send schema with explicit length (embedded binary is NOT null-terminated)
+    httpd_resp_send(req, schema_json, schema_size);
+
+    ESP_LOGD(TAG, "Schema sent successfully (%zu bytes)", schema_size);
+    return ESP_OK;
+}
+
+/**
+ * @brief GET /api/config - Retrieve current configuration
+ */
 static esp_err_t config_get_handler(httpd_req_t *req)
 {
     ESP_LOGD(TAG, "Handling GET /api/config");
@@ -708,51 +826,27 @@ static esp_err_t config_get_handler(httpd_req_t *req)
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
     httpd_resp_set_hdr(req, "Content-Type", "application/json");
 
-    // Get current configuration
-    system_config_t config;
-    esp_err_t ret = config_get_current(&config);
+    // Use bulk JSON API to get all configuration as structured array
+    char *config_json = NULL;
+    esp_err_t ret = config_get_all_as_json(&config_json);
+    
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to get current configuration: %s", esp_err_to_name(ret));
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to get configuration");
+        ESP_LOGE(TAG, "Failed to get configuration: %s", esp_err_to_name(ret));
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to read configuration");
         return ESP_FAIL;
     }
 
-    // Create JSON response
-    cJSON *json = cJSON_CreateObject();
-    if (json == NULL) {
-        ESP_LOGE(TAG, "Failed to create JSON object");
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Memory allocation failed");
+    if (config_json == NULL) {
+        ESP_LOGE(TAG, "Configuration JSON is NULL");
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Configuration error");
         return ESP_FAIL;
     }
 
-    // Add configuration metadata
-    cJSON_AddNumberToObject(json, "config_version", config.config_version);
-    cJSON_AddNumberToObject(json, "save_count", config.save_count);
+    // Send structured JSON array response
+    httpd_resp_send(req, config_json, HTTPD_RESP_USE_STRLEN);
 
-    // Add WiFi configuration (exclude password for security)
-    cJSON *wifi = cJSON_CreateObject();
-    cJSON_AddStringToObject(wifi, "ssid", config.wifi_ssid);
-    cJSON_AddStringToObject(wifi, "password", ""); // Never expose password
-    cJSON_AddNumberToObject(wifi, "ap_channel", config.wifi_ap_channel);
-    cJSON_AddNumberToObject(wifi, "ap_max_conn", config.wifi_ap_max_conn);
-    cJSON_AddNumberToObject(wifi, "sta_max_retry", config.wifi_sta_max_retry);
-    cJSON_AddNumberToObject(wifi, "sta_timeout_ms", config.wifi_sta_timeout_ms);
-    cJSON_AddItemToObject(json, "wifi", wifi);
-
-    // Convert to string and send
-    char *json_string = cJSON_Print(json);
-    if (json_string == NULL) {
-        ESP_LOGE(TAG, "Failed to print JSON");
-        cJSON_Delete(json);
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "JSON serialization failed");
-        return ESP_FAIL;
-    }
-
-    httpd_resp_send(req, json_string, HTTPD_RESP_USE_STRLEN);
-
-    // Cleanup
-    free(json_string);
-    cJSON_Delete(json);
+    // Cleanup (caller must free the allocated string)
+    free(config_json);
 
     ESP_LOGD(TAG, "Configuration sent successfully");
     return ESP_OK;
@@ -763,7 +857,19 @@ static esp_err_t config_get_handler(httpd_req_t *req)
  */
 static esp_err_t config_set_handler(httpd_req_t *req)
 {
-    ESP_LOGD(TAG, "Handling POST /api/config");
+    ESP_LOGI(TAG, "=== POST /api/config called ===");
+    ESP_LOGI(TAG, "Content-Length: %d", req->content_len);
+    ESP_LOGI(TAG, "Method: %d", req->method);
+    
+    // Log all headers for debugging
+    size_t buf_len = httpd_req_get_hdr_value_len(req, "Content-Type") + 1;
+    if (buf_len > 1) {
+        char *buf = malloc(buf_len);
+        if (httpd_req_get_hdr_value_str(req, "Content-Type", buf, buf_len) == ESP_OK) {
+            ESP_LOGI(TAG, "Content-Type: %s", buf);
+        }
+        free(buf);
+    }
 
     // Set CORS headers
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -771,8 +877,11 @@ static esp_err_t config_set_handler(httpd_req_t *req)
 
     // Read request body
     char content[1024];
+    ESP_LOGI(TAG, "Attempting to read %d bytes...", req->content_len);
     int ret = httpd_req_recv(req, content, sizeof(content) - 1);
+    ESP_LOGI(TAG, "httpd_req_recv returned: %d", ret);
     if (ret <= 0) {
+        ESP_LOGE(TAG, "Failed to receive body: ret=%d, TIMEOUT=%d", ret, HTTPD_SOCK_ERR_TIMEOUT);
         if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
             httpd_resp_send_408(req);
         } else {
@@ -782,82 +891,53 @@ static esp_err_t config_set_handler(httpd_req_t *req)
     }
     content[ret] = '\0';
 
-    ESP_LOGD(TAG, "Received configuration JSON: %s", content);
+    ESP_LOGI(TAG, "Received configuration JSON (%d bytes): %s", ret, content);
 
-    // Parse JSON
-    cJSON *json = cJSON_Parse(content);
-    if (json == NULL) {
-        ESP_LOGE(TAG, "Failed to parse JSON");
-        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid JSON format");
-        return ESP_FAIL;
-    }
-
-    // Get current configuration as base
-    system_config_t new_config;
-    esp_err_t config_ret = config_get_current(&new_config);
-    if (config_ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to get current configuration");
-        cJSON_Delete(json);
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to get current configuration");
-        return ESP_FAIL;
-    }
-
-    // Update configuration from JSON
-    cJSON *wifi = cJSON_GetObjectItem(json, "wifi");
-    if (wifi != NULL) {
-        cJSON *item;
-        if ((item = cJSON_GetObjectItem(wifi, "ssid")) != NULL && cJSON_IsString(item)) {
-            strncpy(new_config.wifi_ssid, cJSON_GetStringValue(item), CONFIG_WIFI_SSID_MAX_LEN - 1);
-            new_config.wifi_ssid[CONFIG_WIFI_SSID_MAX_LEN - 1] = '\0';
-        }
-        if ((item = cJSON_GetObjectItem(wifi, "password")) != NULL && cJSON_IsString(item)) {
-            const char *password = cJSON_GetStringValue(item);
-            if (strlen(password) > 0) { // Only update if password is provided
-                strncpy(new_config.wifi_password, password, CONFIG_WIFI_PASSWORD_MAX_LEN - 1);
-                new_config.wifi_password[CONFIG_WIFI_PASSWORD_MAX_LEN - 1] = '\0';
-            }
-        }
-        if ((item = cJSON_GetObjectItem(wifi, "ap_channel")) != NULL && cJSON_IsNumber(item)) {
-            new_config.wifi_ap_channel = (uint8_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(wifi, "ap_max_conn")) != NULL && cJSON_IsNumber(item)) {
-            new_config.wifi_ap_max_conn = (uint8_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(wifi, "sta_max_retry")) != NULL && cJSON_IsNumber(item)) {
-            new_config.wifi_sta_max_retry = (uint8_t)cJSON_GetNumberValue(item);
-        }
-        if ((item = cJSON_GetObjectItem(wifi, "sta_timeout_ms")) != NULL && cJSON_IsNumber(item)) {
-            new_config.wifi_sta_timeout_ms = (uint32_t)cJSON_GetNumberValue(item);
-        }
-    }
-
-    cJSON_Delete(json);
-
-    // Validate and save configuration
-    config_ret = config_save(&new_config);
-    if (config_ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to save configuration: %s", esp_err_to_name(config_ret));
-        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Configuration validation failed");
-        return ESP_FAIL;
-    }
-
-    // Send success response
-    const char *response = "{\"status\":\"success\",\"message\":\"Configuration saved successfully. Device will restart in 3 seconds.\"}";
-    httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
-
-    ESP_LOGI(TAG, "Configuration updated and saved successfully. Scheduling device restart...");
+    // Use bulk JSON API to update all configuration from structured array
+    // This validates against schema and atomically updates all fields
+    esp_err_t config_ret = config_set_all_from_json(content);
     
-    // Schedule restart using a timer to avoid blocking the HTTP response
-    if (restart_timer == NULL) {
-        esp_timer_create_args_t timer_args = {
-            .callback = restart_timer_callback,
-            .name = "restart_timer"
-        };
-        esp_timer_create(&timer_args, &restart_timer);
+    if (config_ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to update configuration: %s", esp_err_to_name(config_ret));
+        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Failed to update configuration");
+        return ESP_FAIL;
     }
     
-    // Start the restart timer (3 seconds delay)
-    esp_timer_start_once(restart_timer, 3000000); // 3 seconds in microseconds
+    ESP_LOGI(TAG, "Configuration updated successfully via bulk API");
+
+    // Send success response BEFORE scheduling restart
+    // Content-Type already set earlier in handler
+    const char *response = "{\"status\":\"success\",\"message\":\"Configuration saved successfully.\"}";
+    size_t response_len = strlen(response);
+    
+    // Explicitly set Content-Length and Connection headers for proper HTTP/1.0 compatibility
+    char content_length_str[32];
+    snprintf(content_length_str, sizeof(content_length_str), "%zu", response_len);
+    httpd_resp_set_hdr(req, "Content-Length", content_length_str);
+    httpd_resp_set_hdr(req, "Connection", "close");
+    
+    esp_err_t send_result = httpd_resp_send(req, response, response_len);
+    if (send_result != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to send response: %s", esp_err_to_name(send_result));
+    } else {
+        ESP_LOGI(TAG, "Response sent successfully (%zu bytes)", response_len);
+    }
+    
+    // CRITICAL: Force TCP/IP stack to flush the response before restarting
+    // Give the HTTP server time to send the response buffer
+    vTaskDelay(pdMS_TO_TICKS(500)); // Wait 500ms for response to be sent
+
+    ESP_LOGI(TAG, "Scheduling device restart in 3 seconds...");
+    
+    // Schedule restart after 3 seconds (total: 3.5s from request)
+    // This ensures browser receives response before device restarts
+    const esp_timer_create_args_t restart_timer_args = {
+        .callback = &restart_timer_callback,
+        .name = "restart_timer"
+    };
+    esp_timer_handle_t restart_timer;
+    ESP_ERROR_CHECK(esp_timer_create(&restart_timer_args, &restart_timer));
+    ESP_ERROR_CHECK(esp_timer_start_once(restart_timer, 3000000)); // 3 seconds in microseconds
     
     return ESP_OK;
 }
@@ -893,6 +973,81 @@ static esp_err_t config_reset_handler(httpd_req_t *req)
 
 
 /**
+ * @brief GET /api/status - WiFi connection status
+ */
+static esp_err_t wifi_status_handler(httpd_req_t *req)
+{
+    ESP_LOGD(TAG, "Handling GET /api/status");
+
+    // Set CORS headers
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    httpd_resp_set_hdr(req, "Content-Type", "application/json");
+
+    // Create JSON response
+    cJSON *json = cJSON_CreateObject();
+    if (json == NULL) {
+        ESP_LOGE(TAG, "Failed to create JSON object");
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Memory allocation failed");
+        return ESP_FAIL;
+    }
+
+    // Get WiFi mode
+    wifi_mode_t mode;
+    esp_err_t mode_ret = esp_wifi_get_mode(&mode);
+    
+    // Get connection info
+    wifi_ap_record_t ap_info;
+    esp_err_t wifi_ret = esp_wifi_sta_get_ap_info(&ap_info);
+    
+    // Get IP address
+    esp_netif_ip_info_t ip_info;
+    esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
+    esp_err_t ip_ret = ESP_FAIL;
+    if (netif) {
+        ip_ret = esp_netif_get_ip_info(netif, &ip_info);
+    }
+
+    // Populate response
+    if (wifi_ret == ESP_OK) {
+        cJSON_AddStringToObject(json, "wifi_mode", "STA");
+        cJSON_AddStringToObject(json, "ssid", (char*)ap_info.ssid);
+        cJSON_AddNumberToObject(json, "rssi", ap_info.rssi);
+    } else if (mode_ret == ESP_OK && (mode == WIFI_MODE_AP || mode == WIFI_MODE_APSTA)) {
+        cJSON_AddStringToObject(json, "wifi_mode", "AP");
+        cJSON_AddStringToObject(json, "ssid", "ESP32-AP");
+        cJSON_AddNumberToObject(json, "rssi", 0);
+    } else {
+        cJSON_AddStringToObject(json, "wifi_mode", "Disconnected");
+        cJSON_AddStringToObject(json, "ssid", "--");
+        cJSON_AddNumberToObject(json, "rssi", 0);
+    }
+
+    // IP Address
+    if (ip_ret == ESP_OK) {
+        char ip_str[16];
+        snprintf(ip_str, sizeof(ip_str), IPSTR, IP2STR(&ip_info.ip));
+        cJSON_AddStringToObject(json, "ip_address", ip_str);
+    } else {
+        cJSON_AddStringToObject(json, "ip_address", "--");
+    }
+
+    // Send response
+    char *json_str = cJSON_PrintUnformatted(json);
+    if (json_str == NULL) {
+        ESP_LOGE(TAG, "Failed to print JSON");
+        cJSON_Delete(json);
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to create response");
+        return ESP_FAIL;
+    }
+
+    httpd_resp_sendstr(req, json_str);
+    
+    free(json_str);
+    cJSON_Delete(json);
+    return ESP_OK;
+}
+
+/**
  * @brief GET /api/system/health - System health and diagnostics (REQ-CFG-11)
  */
 static esp_err_t system_health_handler(httpd_req_t *req)
@@ -923,30 +1078,10 @@ static esp_err_t system_health_handler(httpd_req_t *req)
     cJSON_AddNumberToObject(json, "heap_fragmentation_percent", 
                            ((float)(free_heap - min_free_heap) / free_heap) * 100.0);
 
-    // NVS health check
-    size_t nvs_free_entries, nvs_total_entries;
-    esp_err_t nvs_health = config_nvs_health_check(&nvs_free_entries, &nvs_total_entries);
-    
-    cJSON *nvs_info = cJSON_CreateObject();
-    cJSON_AddStringToObject(nvs_info, "status", 
-                           (nvs_health == ESP_OK) ? "healthy" : 
-                           (nvs_health == ESP_ERR_INVALID_STATE) ? "corrupted" : "error");
-    cJSON_AddStringToObject(nvs_info, "status_message", esp_err_to_name(nvs_health));
-    cJSON_AddNumberToObject(nvs_info, "free_entries", nvs_free_entries);
-    cJSON_AddNumberToObject(nvs_info, "total_entries", nvs_total_entries);
-    cJSON_AddNumberToObject(nvs_info, "used_entries", nvs_total_entries - nvs_free_entries);
-    cJSON_AddItemToObject(json, "nvs", nvs_info);
-
-    // Configuration status
-    system_config_t current_config;
-    esp_err_t config_status = config_get_current(&current_config);
+    // Configuration status - simplified for new API
     cJSON *config_info = cJSON_CreateObject();
-    cJSON_AddStringToObject(config_info, "status", 
-                           (config_status == ESP_OK) ? "healthy" : "error");
-    if (config_status == ESP_OK) {
-        cJSON_AddNumberToObject(config_info, "version", current_config.config_version);
-        cJSON_AddNumberToObject(config_info, "save_count", current_config.save_count);
-    }
+    cJSON_AddStringToObject(config_info, "status", "healthy");
+    cJSON_AddStringToObject(config_info, "api_version", "2.0");
     cJSON_AddItemToObject(json, "configuration", config_info);
 
     // WiFi status (basic info)
@@ -963,12 +1098,11 @@ static esp_err_t system_health_handler(httpd_req_t *req)
     cJSON_AddItemToObject(json, "wifi", wifi_info);
 
     // Overall system health assessment
-    bool system_healthy = (nvs_health == ESP_OK) && 
-                         (config_status == ESP_OK) && 
+    bool system_healthy = (wifi_status == ESP_OK) && 
                          (free_heap > 50000); // At least 50KB free
 
     cJSON_AddStringToObject(json, "overall_status", system_healthy ? "healthy" : "degraded");
-    cJSON_AddStringToObject(json, "device_type", "ESP32 Distance Sensor");
+    cJSON_AddStringToObject(json, "device_type", "ESP32 Template");
     cJSON_AddStringToObject(json, "firmware_version", "1.0.0");
 
     // Convert to string and send

@@ -15,10 +15,10 @@ This template provides a complete development environment for ESP32 projects wit
 - 🐛 **GDB Debugging** - Full debugging in QEMU with VS Code integration
 - 🌐 **Example Components** - Web server with captive portal, configuration management
 - ⚙️ **Configuration Management** - NVS storage pattern examples
-- 📝 **Documentation** - Sphinx documentation with GitHub Pages deployment
+- 📝 **Documentation** - Sphinx with GitHub Pages deployment
 - 🤖 **GitHub Copilot Ready** - AI-assisted development instructions included
 - ✅ **Quality Gates** - Pre-commit hooks for linting and validation
-- 📚 **Requirements Engineering** - Structured requirements and design documentation
+- 📚 **Sphinx-Needs** - Requirements engineering with traceability matrices
 
 ## 🎯 Quick Start
 
@@ -42,7 +42,27 @@ idf.py build
 
 ### Hardware Development
 
-To flash a physical ESP32 device:
+#### Option 1: Web Flasher (Recommended) 🚀
+
+Flash your ESP32 directly from your browser - no drivers or CLI tools needed!
+
+```bash
+# Build the project
+idf.py build
+
+# Start web flasher
+./tools/web-flasher/start-web-flasher.sh
+
+# Then:
+# 1. Forward port 8000 in VS Code
+# 2. Open forwarded URL in Chrome/Edge/Opera
+# 3. Connect ESP32 via USB to your computer
+# 4. Click "Connect and Flash ESP32"
+```
+
+📖 See [Web Flasher Guide](tools/web-flasher/README.md) for detailed instructions.
+
+#### Option 2: Command Line
 
 ```bash
 # Build the project
@@ -67,9 +87,10 @@ esp32-template/
 │       ├── cert_handler/     # HTTPS certificate handling (WIP)
 │       └── netif_uart_tunnel/# QEMU network bridge
 ├── docs/                     # Sphinx documentation
-│   ├── requirements/         # Requirements documentation
-│   ├── design/              # System design documents
-│   └── development/         # Development guides
+│   ├── 11_requirements/     # Sphinx-Needs requirements
+│   ├── 12_design/           # Design specifications  
+│   ├── 21_api/              # API documentation
+│   └── 31_traceability/     # Traceability matrices
 ├── tools/                    # Development tools
 │   ├── run-qemu-network.sh  # QEMU with network bridge
 │   └── http_proxy.py        # HTTP proxy for QEMU access
@@ -130,10 +151,35 @@ mkdir -p main/components/my_component
 
 ### Run in QEMU
 
-```bash
-# Start QEMU with network bridge
-./tools/run-qemu-network.sh
+**With VS Code Tasks** (Recommended):
 
+```bash
+# Method 1: Debug Mode (waits for debugger)
+# Use VS Code Task: "Start QEMU Debug Server"
+# Then start debugger with F5
+
+# Method 2: Run Mode (starts immediately)  
+# Use VS Code Task: "Run QEMU (No Debug)"
+```
+
+**Manual Commands:**
+
+```bash
+# Debug mode (waits for GDB connection)
+./tools/run-qemu-graphics.sh
+
+# Run mode (starts immediately)
+./tools/run-qemu-graphics-run.sh
+
+# Legacy mode (network only, no graphics)
+./tools/run-qemu-network.sh
+```
+
+**Graphics Output**: All QEMU modes include GUI output visible in NoVNC (port 6080). The ESP32 console, boot sequence, and any graphics will be displayed in the QEMU window within your browser.
+
+**Network Access**: Use HTTP proxy for web interface:
+
+```bash
 # In another terminal, access web interface via HTTP proxy
 python3 tools/http_proxy.py
 # Then browse to http://localhost:8888
@@ -148,21 +194,56 @@ python3 tools/http_proxy.py
 
 See [Debugging Guide](docs/development/debugging.md) for details.
 
+### GUI Development Environment
+
+This template includes a full desktop environment for GUI applications and tools:
+
+1. **Automatic Setup**: VNC is configured automatically when the container starts
+2. **NoVNC Access**: Open GUI applications in your browser via port 6080
+3. **Manual VNC Start**: Run `./tools/start-vnc.sh` if needed
+
+```bash
+# Start VNC server manually
+./tools/start-vnc.sh
+
+# Set display for GUI applications
+export DISPLAY=:1
+
+# Test GUI applications
+xterm &
+xclock &
+xeyes &
+```
+
+**Access GUI**: In Codespaces, check the **PORTS** tab for port 6080 to open the desktop in your browser.
+
+**Keyboard Layout**: The default keyboard layout is German (DE). To change it:
+
+```bash
+# Switch to US layout
+setxkbmap us
+
+# Switch to German layout  
+setxkbmap de
+
+# Interactive keyboard switcher
+./tools/switch-keyboard.sh
+```
+
 ## 📚 Documentation
 
 Full documentation is available at [GitHub Pages](https://enthali.github.io/esp32-template/) or build locally:
 
 ```bash
-# Install Sphinx (if not in Codespaces)
-pip install sphinx sphinx-rtd-theme
+# Serve documentation locally
+cd docs
+sphinx-build -b html . _build/html
+python -m http.server 8000 -d _build/html
+# Browse to http://localhost:8000
 
 # Build documentation
 cd docs
-make html
-# View at _build/html/index.html
-
-# Or serve with live reload
-sphinx-autobuild . _build/html
+sphinx-build -b html . _build/html
 ```
 
 ## 🤖 GitHub Copilot Integration
@@ -172,7 +253,7 @@ This template includes comprehensive GitHub Copilot instructions in `.github/cop
 - ESP32-specific coding standards
 - Component architecture patterns
 - Memory optimization guidelines
-- Requirements engineering methodology
+- Sphinx-Needs requirements methodology
 - Build and testing workflows
 
 Just ask Copilot for help and it will use these project-specific guidelines!
@@ -192,7 +273,7 @@ pre-commit install
 Checks include:
 
 - Markdown linting
-- Sphinx build validation
+- Sphinx documentation build validation
 - Link verification
 - Trailing whitespace removal
 
@@ -226,13 +307,22 @@ HTTP server with captive portal:
 
 ## 📖 Requirements Engineering
 
-This template provides structured requirements and design documentation:
+This template uses **Sphinx-Needs** for professional requirements management:
 
-- **Requirements** in `docs/requirements/` - What to build
-- **Design** in `docs/design/` - How to build it
-- **Traceability** - Links between requirements, design, and implementation
+- **Requirements** in `docs/11_requirements/` - System and component requirements
+- **Design** in `docs/12_design/` - Design specifications
+- **API Reference** in `docs/21_api/` - Code documentation
+- **Traceability** in `docs/31_traceability/` - Auto-generated relationship graphs
 
-See [Requirements Documentation](docs/requirements/README.md) for more information.
+Features:
+
+- ✅ Unique requirement IDs with automatic validation
+- ✅ Bidirectional traceability links
+- ✅ Visual dependency graphs (needflow)
+- ✅ Filterable requirement tables
+- ✅ Coverage analysis and statistics
+
+See [Requirements Documentation](https://enthali.github.io/esp32-template/11_requirements/) for details.
 
 ## 🚧 Known Limitations
 
@@ -251,7 +341,7 @@ ESP32 embedded development template featuring:
 - **ESP-IDF v5.4.1** - Espressif IoT Development Framework
 - **FreeRTOS** - Real-time operating system
 - **QEMU** - Full system emulation with networking
-- **Sphinx** - Documentation generation
+- **Sphinx-Needs** - Requirements engineering with traceability
 - **GitHub Codespaces** - Cloud-based development
 - **GitHub Copilot** - AI-assisted development
 

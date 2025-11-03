@@ -11,6 +11,7 @@ idf_component_register(
         "www/index.html"
         "www/wifi-setup.html" 
         "www/settings.html"
+        "www/favicon.svg"
         "www/css/style.css"
         "www/js/app.js"
     REQUIRES 

@@ -231,75 +231,71 @@ idf_component_register(
 
 ## Documentation Standards
 
-### OpenFastTrack Design Documentation in Code
+### Sphinx-Needs Documentation Methodology
 
-Instead of separate design documents, embed design documentation directly in source code using structured comments for requirements traceability.
+This project uses **Sphinx-Needs** for professional requirements and design documentation:
 
-#### File-Level Design Documentation
+#### Requirements Documentation
+
+Requirements are documented in reStructuredText (`.rst`) files in `docs/11_requirements/`:
+
+```rst
+.. req:: Configuration Manager Initialization
+   :id: REQ_CFG_1
+   :links: REQ_SYS_CFG_1
+   :status: approved
+   :priority: mandatory
+   :tags: config, initialization
+
+   **Description:** The system SHALL initialize configuration manager on boot.
+
+   **Acceptance Criteria:**
+   - AC-1: Configuration loaded from NVS within 500ms
+   - AC-2: Default values used if NVS is empty
+```
+
+#### Design Specifications
+
+Design documents are maintained separately in `docs/12_design/` to avoid code bloat:
+
+- Detailed architectural decisions
+- Component interaction diagrams  
+- Algorithm specifications
+- State machine definitions
+
+Design specs link to requirements using `:links:` attribute for traceability.
+
+#### Code-Level Traceability
+
+Code should reference requirement and design IDs in comments:
 
 ```c
 /**
- * @file display_logic.c
- * @brief LED distance display implementation
- * 
- * DESIGN TRACEABILITY:
- * - DSN-DSP-IMPL-01: FreeRTOS task architecture (display_task function)
- * - DSN-DSP-IMPL-02: LED buffer management (led_state_buffer)
- * - DSN-DSP-IMPL-03: Distance calculation (calculate_led_position)
+ * @file config_manager.c
+ * @brief Configuration management implementation
  * 
  * REQUIREMENTS TRACEABILITY:
- * - REQ-DSP-IMPL-01: Task-based architecture implementation
- * - REQ-DSP-VISUAL-02: Normal range display logic
- * - REQ-DSP-VISUAL-03: Below minimum boundary display
- * - REQ-DSP-VISUAL-04: Above maximum boundary display
+ * - REQ_CFG_1: Configuration initialization
+ * - REQ_CFG_3: Runtime configuration structure
+ * - REQ_CFG_4: NVS persistent storage
  */
-```
 
-#### Function-Level Design Documentation
-
-```c
 /**
- * @brief Main display task - implements REQ-DSP-IMPL-01
+ * @brief Initialize configuration manager - implements REQ_CFG_1
  * 
- * DESIGN: Task blocks on distance_queue, calculates LED position,
- * updates buffer, and sends to hardware. Priority set below
- * measurement task per AC-3.
+ * Loads configuration from NVS or uses defaults if not found.
  * 
- * ARCHITECTURE: Uses FreeRTOS message queue pattern for loose coupling
- * between measurement and display subsystems.
- * 
- * @param pvParameters Unused task parameter (FreeRTOS standard)
+ * @return ESP_OK on success, error code otherwise
  */
-void display_task(void* pvParameters) {
-    // Implementation with inline design rationale
+esp_err_t config_manager_init(void) {
+    // Implementation
 }
 ```
 
-#### Algorithm Design Documentation
+#### Benefits of Sphinx-Needs
 
-```c
-/**
- * @brief Calculate LED position from distance - implements REQ-DSP-IMPL-03
- * 
- * DESIGN: Linear interpolation between min/max distance to LED positions 0..led_count-1
- * Formula: led_index = (distance - min) / (max - min) * (led_count - 1)
- * 
- * BOUNDARY CONDITIONS:
- * - distance < min_distance: return 0 (first LED)
- * - distance > max_distance: return led_count-1 (last LED)
- * 
- * @param distance_cm Measured distance in centimeters
- * @return LED index [0, led_count-1]
- */
-uint8_t calculate_led_position(float distance_cm) {
-    // Implementation with boundary checks
-}
-```
-
-#### Benefits of Code-Embedded Design Documentation
-
-- **Always Current**: Design documentation can't drift from implementation
-- **Single Source of Truth**: No synchronization issues between docs and code
-- **Developer-Friendly**: Engineers actually read and maintain header comments
-- **Traceability**: Direct mapping from requirements to design to implementation
-- **Embedded Reality**: Practical for small teams and rapid iteration
+- ✅ **Separate concerns**: Design docs don't bloat code files
+- ✅ **Professional tooling**: Auto-generated traceability matrices and graphs
+- ✅ **Version controlled**: Design docs tracked in Git like code
+- ✅ **Bidirectional links**: Requirements ↔ Design ↔ Code
+- ✅ **Scalable**: Works for projects of any size

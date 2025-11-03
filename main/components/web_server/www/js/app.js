@@ -1,11 +1,11 @@
 /**
- * ESP32 Distance Sensor - Shared JavaScript Functionality
+ * ESP32 Template - Shared JavaScript Functionality
  * Provides common functionality across all pages
  */
 
 // Global configuration
 const CONFIG = {
-    refreshInterval: 1000,  // 1 second - faster updates for testing
+    refreshInterval: 5000,  // 5 seconds
     notificationDuration: 3000,  // 3 seconds
     apiTimeout: 10000  // 10 seconds
 };
@@ -74,6 +74,13 @@ function formatUptime(seconds) {
     }
 }
 
+// Format bytes to human-readable format
+function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
 // API helper functions
 async function apiCall(endpoint, options = {}) {
     const defaultOptions = {
@@ -111,81 +118,36 @@ async function apiCall(endpoint, options = {}) {
 
 // Dashboard-specific functions
 async function refreshData() {
-    // Show loading state
-    const distanceValue = document.getElementById('distance-value');
-    const distanceStatus = document.getElementById('distance-status');
-    const lastUpdate = document.getElementById('last-update');
-    
-    // Skip loading state for smoother updates
-    
     try {
-        // Fetch real distance data from API
-        const response = await fetch('/api/distance', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            timeout: CONFIG.apiTimeout
-        });
+        // Fetch WiFi status
+        const statusData = await apiCall('/api/status');
         
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        // Update WiFi status
+        updateElement('wifi-status', statusData.wifi_mode || 'Disconnected');
+        updateElement('wifi-ssid', statusData.ssid || '--');
+        updateElement('wifi-ip', statusData.ip_address || '--');
+        updateElement('wifi-rssi', statusData.rssi ? `${statusData.rssi} dBm` : '--');
         
-        const data = await response.json();
+        // Fetch system health
+        const healthData = await apiCall('/api/system/health');
         
-        // Update display with real data
-        if (distanceValue) {
-            if (data.status === 'ok') {
-                distanceValue.textContent = `${data.distance_cm.toFixed(1)} cm`;
-                distanceStatus.textContent = 'Active';
-                distanceValue.className = 'distance-value success';
-                distanceStatus.className = 'distance-status success';
-            } else {
-                // Handle error states
-                let errorMessage;
-                switch (data.status) {
-                    case 'timeout':
-                        errorMessage = 'Sensor Timeout';
-                        break;
-                    case 'out_of_range':
-                        errorMessage = 'Out of Range';
-                        break;
-                    case 'no_echo':
-                        errorMessage = 'No Echo';
-                        break;
-                    case 'invalid':
-                        errorMessage = 'Invalid Reading';
-                        break;
-                    default:
-                        errorMessage = 'Sensor Error';
-                }
-                
-                distanceValue.textContent = '-- cm';
-                distanceStatus.textContent = errorMessage;
-                distanceValue.className = 'distance-value error';
-                distanceStatus.className = 'distance-status error';
-            }
-        }
-        
-        if (lastUpdate) {
-            lastUpdate.textContent = formatTimestamp(Date.now());
-        }
-        
-        // Remove the annoying success notification - only show errors
+        // Update system information
+        updateElement('system-uptime', formatUptime(healthData.uptime_sec || 0));
+        updateElement('system-heap', formatBytes(healthData.free_heap || 0));
+        updateElement('system-idf', healthData.idf_version || '--');
+        updateElement('system-chip', healthData.chip_model || 'ESP32');
         
     } catch (error) {
-        console.error('Failed to fetch distance data:', error);
-        
-        if (distanceValue) {
-            distanceValue.textContent = '-- cm';
-            distanceStatus.textContent = 'Connection Error';
-            distanceValue.className = 'distance-value error';
-            distanceStatus.className = 'distance-status error';
-        }
-        
-        // Only show notification for errors
-        showNotification('Failed to refresh data: ' + error.message, 'error');
+        console.error('Failed to fetch data:', error);
+        // Don't show notification for every failed refresh
+        updateElement('wifi-status', 'Error');
+    }
+}
+
+function updateElement(id, value) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.textContent = value;
     }
 }
 
@@ -234,19 +196,17 @@ function initializePage() {
 // Error handling
 window.addEventListener('error', function(event) {
     console.error('JavaScript error:', event.error);
-    showNotification('An error occurred. Please refresh the page.', 'error');
 });
 
 // Unhandled promise rejection handling
 window.addEventListener('unhandledrejection', function(event) {
     console.error('Unhandled promise rejection:', event.reason);
-    showNotification('A network error occurred. Please try again.', 'error');
 });
 
 // Network status detection
 window.addEventListener('online', function() {
-    // Connection restored silently - no popup needed
     console.log('Connection restored');
+    startAutoRefresh();
 });
 
 window.addEventListener('offline', function() {
@@ -339,37 +299,21 @@ function handleGesture() {
     }
 }
 
-// Performance monitoring
-const performanceObserver = new PerformanceObserver((list) => {
-    for (const entry of list.getEntries()) {
-        if (entry.entryType === 'navigation') {
-            console.log(`Page load time: ${entry.loadEventEnd - entry.loadEventStart}ms`);
-        }
-    }
-});
-
-if ('PerformanceObserver' in window) {
-    performanceObserver.observe({ entryTypes: ['navigation'] });
-}
-
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', initializePage);
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', function() {
     stopAutoRefresh();
-    
-    if ('PerformanceObserver' in window) {
-        performanceObserver.disconnect();
-    }
 });
 
 // Export functions for global access
-window.ESP32_DISTANCE = {
+window.ESP32 = {
     refreshData,
     showNotification,
     navigateTo,
     apiCall,
     formatTimestamp,
-    formatUptime
+    formatUptime,
+    formatBytes
 };

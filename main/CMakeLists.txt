@@ -4,9 +4,10 @@ idf_component_register(
     REQUIRES 
         nvs_flash
         esp_timer
-        # Optional example components (uncomment as needed):
-        # config_manager
-        # web_server
+        # Template components (web-based configuration)
+        config_manager
+        web_server
+        netif_uart_tunnel
+        # Optional: Uncomment when HTTPS is needed
         # cert_handler
-        # netif_uart_tunnel
 )
