@@ -5,9 +5,9 @@
 
 set -e
 
-# Determine project directory (script location parent directory)
+# Determine project directory (two levels up from tools/network/)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PROJECT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 TUN_SCRIPT="${PROJECT_DIR}/tools/qemu/serial_tun_bridge.py"
 PROXY_SCRIPT="${PROJECT_DIR}/tools/network/http_proxy.py"
 TUN_LOG="/tmp/tun_errors.log"

@@ -4,9 +4,9 @@
 # Run this in a separate terminal while QEMU is running
 # to see the LED strip visualization on a separate channel.
 
-# Determine project directory (script location parent directory)
+# Determine project directory (two levels up from tools/qemu/)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PROJECT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 UART1_SOCKET="${PROJECT_DIR}/build/esp32-uart1.sock"
 
 # Colors
