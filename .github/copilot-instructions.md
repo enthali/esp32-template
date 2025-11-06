@@ -169,14 +169,6 @@ This is a **template repository** designed to be:
 
 This project uses automated quality gates to ensure documentation and code quality. All changes **must pass pre-commit checks** before merging.
 
-#### Automated CI Checks
-
-**GitHub Actions will automatically run** on all PRs and commits to main branches:
-
-- **Markdown linting**: Checks syntax, formatting, and style consistency
-- **Sphinx build validation**: Ensures documentation builds without errors
-- **Link verification**: Validates all internal and external links
-
 **Environment Setup**: The `.github/actions/setup-coding-agent-env/action.yml` ensures all required tools are available in CI.
 
 #### Required Tools
