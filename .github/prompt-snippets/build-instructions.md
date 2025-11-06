@@ -1,32 +1,23 @@
-# Build Instructions for ESP32 Distance Sensor Project
+# Build Instructions for ESP32 Projects
 
-This document provides detailed build, flash, and debugging instructions for the ESP32 Distance Sensor project.
+This document provides detailed build, flash, and debugging instructions for ESP32 projects using the devcontainer environment.
 
 ## Prerequisites
 
-- **ESP-IDF**: Version 5.4.1 or compatible
-- **Hardware**: ESP32 development board connected via USB
-- **Operating System**: Windows (PowerShell), Linux, or macOS
-- **Git**: For version control and branch management
+- **ESP-IDF**: Version 5.4.1 (pre-installed in devcontainer)
+- **Development Environment**: GitHub Codespaces or VS Code with Dev Containers
+- **Hardware** (optional): ESP32 development board connected via USB
+- **QEMU** (included): For testing without physical hardware
 
 ## Environment Setup
 
-### Windows with PowerShell
-
-Ensure ESP-IDF is properly installed and configured:
-
-```powershell
-# Verify ESP-IDF installation
-Get-Command idf.py -ErrorAction SilentlyContinue
-```
-
-If `idf.py` is not found, you need to set up the ESP-IDF environment first.
+The devcontainer automatically sets up the ESP-IDF environment. All tools are ready to use immediately after container startup.
 
 ## Build Commands
 
 ### Standard Build Process
 
-1. **Set Target**:
+1. **Set Target** (first time only):
 
    ```bash
    idf.py set-target esp32
@@ -38,106 +29,15 @@ If `idf.py` is not found, you need to set up the ESP-IDF environment first.
    idf.py build
    ```
 
-3. **Flash and Monitor**:
+3. **Flash to Hardware** (if connected):
 
    ```bash
    idf.py flash monitor
    ```
 
-### Windows-Specific Complete Command
+4. **Run in QEMU Emulator**:
 
-For Windows users working with PowerShell, use this complete command that handles environment setup automatically:
-
-```powershell
-cmd /c "cd /D c:\workspace\ESP32_Projects\distance && C:\workspace\ESP32_Projects\esp\v5.4.1\esp-idf\export.bat && idf.py flash monitor"
-```
-
-**Command Breakdown**:
-
-- `cmd /c`: Executes command in Windows Command Prompt
-- `cd /D c:\workspace\ESP32_Projects\distance`: Changes to project directory
-- `C:\workspace\ESP32_Projects\esp\v5.4.1\esp-idf\export.bat`: Sets up ESP-IDF environment
-- `idf.py flash monitor`: Flashes firmware and starts serial monitor
-
-### Alternative Commands
-
-**Build Only**:
-
-```powershell
-cmd /c "cd /D c:\workspace\ESP32_Projects\distance && C:\workspace\ESP32_Projects\esp\v5.4.1\esp-idf\export.bat && idf.py build"
-```
-
-**Flash Only**:
-
-```powershell
-cmd /c "cd /D c:\workspace\ESP32_Projects\distance && C:\workspace\ESP32_Projects\esp\v5.4.1\esp-idf\export.bat && idf.py flash"
-```
-
-**Monitor Only**:
-
-```powershell
-cmd /c "cd /D c:\workspace\ESP32_Projects\distance && C:\workspace\ESP32_Projects\esp\v5.4.1\esp-idf\export.bat && idf.py monitor"
-```
-
-## Troubleshooting
-
-### Build Issues
-
-1. **Module Not Found Errors**:
-   - Verify all custom components are properly linked in `CMakeLists.txt`
-   - Check component dependencies in `main/CMakeLists.txt`
-
-2. **Environment Not Set**:
-   - Ensure ESP-IDF export script path is correct
-   - Verify ESP-IDF installation location
-
-3. **Permission Denied**:
-   - Close any open serial monitor applications
-   - Check USB connection and driver installation
-
-### Flash Issues
-
-1. **Port Access Denied**:
-   - Close other applications using the serial port
-   - Disconnect and reconnect USB cable
-   - Check device manager for proper COM port assignment
-
-2. **Flash Failed**:
-   - Verify ESP32 is in download mode
-   - Check USB cable connection
-   - Try different USB port
-
-### Monitor Issues
-
-1. **No Output**:
-   - Verify baud rate (default: 115200)
-   - Check if device is properly reset after flashing
-   - Ensure correct COM port selection
-
-2. **Garbled Output**:
-   - Verify baud rate settings
-   - Check for electromagnetic interference
-
-## Development Workflow
-
-### Git Branch Management
-
-When working on build fixes or new features:
-
-```bash
-# Create feature branch
-git checkout -b fix/build-issues
-
-# Make changes and test
-cmd /c "cd /D c:\workspace\ESP32_Projects\distance && C:\workspace\ESP32_Projects\esp\v5.4.1\esp-idf\export.bat && idf.py build"
-
-# Commit changes
-git add .
-git commit -m "Fix: Resolve build compilation errors"
-
-# Push and create PR
-git push origin fix/build-issues
-```
+   Use the VS Code task: `Run QEMU (No Debug)` or `Start QEMU Debug Server`
 
 ### Clean Build
 
@@ -148,23 +48,80 @@ idf.py fullclean
 idf.py build
 ```
 
-## Project-Specific Notes
+## Troubleshooting
 
-### Custom Components
+### Build Issues
 
-This project includes custom components in the `components/` directory:
+1. **Module Not Found Errors**:
+   - Verify all custom components are properly linked in `CMakeLists.txt`
+   - Check component dependencies in `main/CMakeLists.txt`
 
-- `distance_sensor/`: HC-SR04 ultrasonic sensor interface
-- `led_controller/`: WS2812 LED strip control
+2. **Component Errors**:
+   - Ensure component structure follows ESP-IDF conventions
+   - Check `CMakeLists.txt` in component directories
 
-### Main Application Modules
+### Flash Issues (Hardware)
+
+1. **Port Access Denied**:
+   - In Codespaces: Hardware flashing not supported, use QEMU
+   - In local devcontainer: Check USB passthrough configuration
+
+2. **Flash Failed**:
+   - Verify ESP32 is in download mode
+   - Check USB cable connection
+   - Try a different USB port or cable
+
+### QEMU Issues
+
+1. **QEMU Won't Start**:
+   - Check if another QEMU instance is running: `pkill qemu`
+   - Use VS Code task: `Stop QEMU` then restart
+
+2. **Network Issues in QEMU**:
+   - Verify `netif_uart_tunnel` component is enabled
+   - Check QEMU network configuration in `tools/qemu/`
+
+## Development Workflow
+
+### Git Branch Management
+
+When working on features or fixes:
+
+```bash
+# Create feature branch
+git checkout -b feat/new-component
+
+# Make changes and test
+idf.py build
+
+# Run in QEMU
+# Use VS Code task: "Run QEMU (No Debug)"
+
+# Commit changes
+git add .
+git commit -m "feat(component): Add new component"
+
+# Push and create PR
+git push origin feat/new-component
+```
+
+## Project Structure
+
+### Component Organization
+
+Custom components are located in `main/components/`:
+
+- Add new components as subdirectories
+- Each component needs its own `CMakeLists.txt`
+- Follow ESP-IDF component structure conventions
+
+### Main Application
 
 Located in `main/` directory:
 
-- `wifi_manager.c`: WiFi connectivity and captive portal
-- `web_server.c`: HTTP server implementation
-- `dns_server.c`: DNS server for captive portal
-- `display_logic.c`: Distance-to-LED mapping logic
+- `main.c`: Application entry point
+- Component implementations in `main/components/`
+- Configuration in `sdkconfig`
 
 ### Build Configuration
 
@@ -212,24 +169,38 @@ Key configuration options in `sdkconfig`:
 
 ## Serial Monitor Commands
 
-When monitoring device output:
+When monitoring device output (hardware or QEMU):
 
 - **Ctrl+]**: Exit monitor
 - **Ctrl+T, Ctrl+R**: Reset device
 - **Ctrl+T, Ctrl+H**: Show help
 
-## Performance Testing
+## Debugging
 
-To verify system performance after build:
+### Using VS Code
 
-1. **Monitor startup sequence**: Check for proper WiFi initialization
-2. **Test distance measurement**: Verify LED strip responds to sensor input
-3. **Web interface**: Access captive portal or web server
-4. **Memory usage**: Monitor heap and stack usage in logs
+1. **QEMU Debug**: Use launch configuration `Debug in QEMU`
+2. **Hardware Debug**: Use launch configuration `Debug on ESP32` (requires hardware debugger)
+
+### GDB Commands
+
+The devcontainer includes ESP32-specific GDB tools:
+
+```bash
+# Start GDB session (QEMU must be running)
+xtensa-esp32-elf-gdb build/esp32-template.elf
+```
 
 ## Version Information
 
-- **ESP-IDF**: v5.4.1
+- **ESP-IDF**: v5.4.1 (pre-installed in devcontainer)
 - **Target**: ESP32
-- **Toolchain**: xtensa-esp32-elf
+- **Toolchain**: xtensa-esp32-elf (pre-installed)
+- **QEMU**: ESP32 support included
 - **Project Version**: Check `CMakeLists.txt` for current version
+
+## Additional Resources
+
+- **QEMU Tools**: See `tools/qemu/` for emulation scripts
+- **Component Examples**: See `main/components/` for reference implementations
+- **Documentation**: See `docs/` for Sphinx documentation

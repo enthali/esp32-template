@@ -8,7 +8,7 @@ description: Generate GitHub Issue for Coding Agent from feature description
 
 ---
 
-Generate a complete GitHub Issue for the ESP32 Distance Sensor project that will be assigned to the GitHub Copilot Coding Agent.
+Generate a complete GitHub Issue for this ESP32 project that will be assigned to the GitHub Copilot Coding Agent.
 
 ## Feature Request
 
@@ -20,16 +20,16 @@ ${input:featureRequest:Describe the feature you want to implement}
 
 Analyze the feature request above and:
 
-1. **Search docs/requirements/** for related REQ-* requirements
-2. **Search docs/design/** for related DES-* design elements
+1. **Search docs/11_requirements/** for related REQ-* requirements
+2. **Search docs/12_design/** for related design elements
 3. **Search the codebase** to identify affected components (files/modules)
 4. **Determine priority** based on feature type:
-   - Core functionality (sensor, LED, WiFi) = High
+   - Core functionality = High
    - User experience improvements = Medium  
    - Nice-to-have features = Low
 5. **Extract clear objective** - what needs to be done and why
 6. **Infer current behavior** from codebase context
-7. **CREATE THE ISSUE using `mcp_github_create_issue` tool** (owner: "enthali", repo: "esp32-distance")
+7. **CREATE THE ISSUE using `mcp_github_create_issue` tool** in this repository
 
 ---
 
@@ -43,7 +43,7 @@ When creating the issue with `mcp_github_create_issue`, use this structure for t
 
 ## 📋 Context
 
-- **Related Requirements**: <List REQ-* IDs found in docs/requirements/, or state "Create REQ-<AREA>-N">
+- **Related Requirements**: <List REQ-* IDs found in docs/11_requirements/, or state "Create REQ-<AREA>-N">
 - **Affected Components**: <List files/modules identified from codebase search>
 - **Current Behavior**: <Describe current behavior based on code analysis>
 - **Desired Behavior**: <Extract from feature request>
@@ -58,29 +58,29 @@ When creating the issue with `mcp_github_create_issue`, use this structure for t
 
 ### Step 1: Requirements Analysis & Update
 
-1. Read existing requirements in \`docs/requirements/\`
-2. Create or update requirements following OpenFastTrack:
-   - Format: \`REQ-<AREA>-<NUMBER>\` (e.g., \`REQ-LED-5\`)
+1. Read existing requirements in \`docs/11_requirements/\`
+2. Create or update requirements following Sphinx-Needs:
+   - Format: \`REQ-<AREA>-<NUMBER>\` (e.g., \`REQ_CFG_5\`)
    - Include: ID, Title, Description, Rationale, Dependencies, Acceptance Criteria
    - Maintain bidirectional traceability
-3. Update \`docs/requirements/<area>-requirements.md\`
+3. Update \`docs/11_requirements/req_<area>.rst\`
 
 ### Step 2: Design Documentation
 
-1. Review affected design documents in \`docs/design/\`
+1. Review affected design documents in \`docs/12_design/\`
 2. Document design decisions in code comments with traceability:
    \`\`\`c
    /**
     - @brief Function description
     -
     - DESIGN TRACEABILITY:
-    - - DSN-<AREA>-<ID>: Design decision reference
+    - - Design document reference in docs/12_design/
     -
     - REQUIREMENTS TRACEABILITY:
-    - - REQ-<AREA>-<ID>: Requirement reference
+    - - REQ_<AREA>_<ID>: Requirement reference
     */
    \`\`\`
-3. Update \`docs/design/<component>-design.md\` if architectural changes
+3. Update \`docs/12_design/<component>-design.rst\` if architectural changes
 
 ### Step 3: Implementation
 
@@ -97,11 +97,14 @@ Follow ESP32 coding standards from \`.github/prompt-snippets/esp32-coding-standa
 **YOU MUST RUN THESE COMMANDS BEFORE COMMITTING:**
 
 \`\`\`bash
-pip install pre-commit sphinx sphinx-needs markdownlint-cli
-markdownlint --fix docs/**/*.md *.md
-cd docs && sphinx-build -W -b html . _build/html && cd ..
 pre-commit run --all-files --show-diff-on-failure
 \`\`\`
+
+**This will automatically run:**
+
+- Markdown linting with fixes
+- Sphinx documentation build (strict mode)
+- All configured quality checks
 
 **Why this is critical:**
 
@@ -125,13 +128,12 @@ Follow commit format from \`.github/prompt-snippets/commit-message.md\`:
 
 <body>
 
-DESIGN TRACEABILITY: DSN-<AREA>-<ID>
-REQUIREMENTS: REQ-<AREA>-<ID>
+REQUIREMENTS: REQ_<AREA>_<ID>
 Closes #<issue-number>
 \`\`\`
 
 **Types**: feat, fix, docs, refactor, test, chore, perf, security
-**Scopes**: sensor, led, wifi, web, build, memory, https, component, requirements, design
+**Scopes**: component, build, config, web, network, requirements, design
 
 ---
 
@@ -142,7 +144,7 @@ Before submitting PR verify:
 - [ ] Requirements documented and traceable
 - [ ] Design documentation updated
 - [ ] Code follows ESP32 coding standards
-- [ ] All quality gates passed (markdownlint, sphinx-build, pre-commit)
+- [ ] All quality gates passed (pre-commit hooks)
 - [ ] Build succeeds (\`idf.py build\`)
 - [ ] Memory usage acceptable (\`idf.py size\`)
 - [ ] Commit messages follow project format
@@ -162,12 +164,10 @@ Before submitting PR verify:
 
 1. **Analyze the feature request** (search codebase, requirements, determine priority)
 
-2. **Create the issue using `mcp_github_create_issue` tool**:
-   - **owner**: `"enthali"`
-   - **repo**: `"esp32-distance"`
+2. **Create the issue using `mcp_github_create_issue` tool** in this repository:
    - **title**: `"[Feature]: <clear title> #github-pull-request_copilot-coding-agent"`
    - **body**: Complete markdown issue body with all sections (Objective, Context, Technical Details, Workflow Steps, Success Criteria)
-   - **labels**: `["feature", "<component>", "coding-agent"]` (e.g., `["feature", "led-controller", "coding-agent"]`)
+   - **labels**: `["feature", "<component>", "coding-agent"]`
 
 3. **After creating the issue**, explain your analysis:
    - Which requirements you found (or identified as needed)
@@ -180,11 +180,9 @@ Before submitting PR verify:
 
 ```json
 {
-  "owner": "enthali",
-  "repo": "esp32-distance",
-  "title": "[Feature]: Implement dual-layer LED animation system #github-pull-request_copilot-coding-agent",
+  "title": "[Feature]: Implement configuration backup/restore feature #github-pull-request_copilot-coding-agent",
   "body": "## 🎯 Objective\n\n...\n\n## MANDATORY WORKFLOW...",
-  "labels": ["feature", "led-controller", "coding-agent"]
+  "labels": ["feature", "config-manager", "coding-agent"]
 }
 ```
 
