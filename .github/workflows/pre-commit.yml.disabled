@@ -44,7 +44,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Common Issues" >> $GITHUB_STEP_SUMMARY
           echo "- **Markdown linting**: Check for missing blank lines, trailing whitespace" >> $GITHUB_STEP_SUMMARY
-          echo "- **MkDocs build**: Verify documentation structure and links" >> $GITHUB_STEP_SUMMARY
+          echo "- **Sphinx build**: Verify documentation structure and links" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Run locally: \`pre-commit run --all-files\`" >> $GITHUB_STEP_SUMMARY
       
@@ -54,5 +54,5 @@ jobs:
           echo "## ✅ All Quality Checks Passed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- Markdown linting: ✅" >> $GITHUB_STEP_SUMMARY
-          echo "- MkDocs build validation: ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- Sphinx build validation: ✅" >> $GITHUB_STEP_SUMMARY
           echo "- Documentation integrity: ✅" >> $GITHUB_STEP_SUMMARY

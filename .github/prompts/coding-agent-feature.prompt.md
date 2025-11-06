@@ -97,9 +97,9 @@ Follow ESP32 coding standards from \`.github/prompt-snippets/esp32-coding-standa
 **YOU MUST RUN THESE COMMANDS BEFORE COMMITTING:**
 
 \`\`\`bash
-pip install pre-commit mkdocs mkdocs-material markdownlint-cli
-markdownlint --fix docs/**/*.md*.md
-mkdocs build --strict
+pip install pre-commit sphinx sphinx-needs markdownlint-cli
+markdownlint --fix docs/**/*.md *.md
+cd docs && sphinx-build -W -b html . _build/html && cd ..
 pre-commit run --all-files --show-diff-on-failure
 \`\`\`
 
@@ -142,7 +142,7 @@ Before submitting PR verify:
 - [ ] Requirements documented and traceable
 - [ ] Design documentation updated
 - [ ] Code follows ESP32 coding standards
-- [ ] All quality gates passed (markdownlint, mkdocs, pre-commit)
+- [ ] All quality gates passed (markdownlint, sphinx-build, pre-commit)
 - [ ] Build succeeds (\`idf.py build\`)
 - [ ] Memory usage acceptable (\`idf.py size\`)
 - [ ] Commit messages follow project format
