@@ -4,15 +4,15 @@
 
 ### Naming Conventions
 
-- **Functions**: `snake_case` (e.g., `distance_sensor_init()`, `led_strip_update()`)
-- **Variables**: `snake_case` (e.g., `sensor_distance`, `led_count`)
-- **Constants**: `UPPER_SNAKE_CASE` (e.g., `MAX_DISTANCE`, `LED_PIN`)
-- **Macros**: `UPPER_SNAKE_CASE` (e.g., `#define TRIGGER_PIN 5`)
-- **Structs/Enums**: `snake_case_t` (e.g., `wifi_config_t`, `sensor_data_t`)
+- **Functions**: `snake_case` (e.g., `config_manager_init()`, `web_server_start()`)
+- **Variables**: `snake_case` (e.g., `connection_status`, `buffer_size`)
+- **Constants**: `UPPER_SNAKE_CASE` (e.g., `MAX_BUFFER_SIZE`, `DEFAULT_TIMEOUT`)
+- **Macros**: `UPPER_SNAKE_CASE` (e.g., `#define TASK_STACK_SIZE 4096`)
+- **Structs/Enums**: `snake_case_t` (e.g., `wifi_config_t`, `app_state_t`)
 
 ### ESP-IDF Specific Conventions
 
-- **Component prefixes**: Use component name as prefix (e.g., `distance_sensor_read()`)
+- **Component prefixes**: Use component name as prefix (e.g., `config_manager_save()`)
 - **ESP-IDF functions**: Follow ESP-IDF naming (e.g., `esp_wifi_init()`, `esp_http_server_start()`)
 - **Error handling**: Always use `ESP_ERROR_CHECK()` for critical operations
 - **Logging**: Use ESP_LOG macros with appropriate log levels
@@ -63,30 +63,29 @@ cleanup:
 
 ```c
 // Define TAG at top of file
-static const char* TAG = "DISTANCE_SENSOR";
+static const char* TAG = "MY_COMPONENT";
 
 // Use appropriate log levels
-ESP_LOGI(TAG, "Sensor initialized successfully");
-ESP_LOGW(TAG, "Distance reading unstable: %d cm", distance);
-ESP_LOGE(TAG, "Sensor communication failed");
-ESP_LOGD(TAG, "Debug info: pin=%d, timeout=%d", pin, timeout);
+ESP_LOGI(TAG, "Component initialized successfully");
+ESP_LOGW(TAG, "Operation timeout, retrying");
+ESP_LOGE(TAG, "Critical failure in operation");
+ESP_LOGD(TAG, "Debug: state=%d, retry=%d", state, retry_count);
 ```
 
 ### GPIO and Hardware Interface
 
 ```c
 // Document pin assignments clearly
-#define TRIGGER_PIN    GPIO_NUM_5
-#define ECHO_PIN       GPIO_NUM_18
-#define LED_DATA_PIN   GPIO_NUM_19
+#define BUTTON_PIN     GPIO_NUM_0
+#define STATUS_LED_PIN GPIO_NUM_2
 
 // Use proper GPIO configuration
 gpio_config_t io_conf = {
-    .pin_bit_mask = (1ULL << TRIGGER_PIN),
-    .mode = GPIO_MODE_OUTPUT,
-    .pull_up_en = GPIO_PULLUP_DISABLE,
+    .pin_bit_mask = (1ULL << BUTTON_PIN),
+    .mode = GPIO_MODE_INPUT,
+    .pull_up_en = GPIO_PULLUP_ENABLE,
     .pull_down_en = GPIO_PULLDOWN_DISABLE,
-    .intr_type = GPIO_INTR_DISABLE,
+    .intr_type = GPIO_INTR_NEGEDGE,
 };
 ESP_ERROR_CHECK(gpio_config(&io_conf));
 ```
@@ -95,17 +94,16 @@ ESP_ERROR_CHECK(gpio_config(&io_conf));
 
 ```c
 // Use proper task priorities (0-25, higher = more priority)
-#define SENSOR_TASK_PRIORITY    5
-#define WIFI_TASK_PRIORITY      6
-#define LED_TASK_PRIORITY       4
+#define APP_TASK_PRIORITY       5
+#define NETWORK_TASK_PRIORITY   6
 
 // Use reasonable stack sizes
-#define SENSOR_TASK_STACK_SIZE  2048
-#define WIFI_TASK_STACK_SIZE    4096
+#define APP_TASK_STACK_SIZE     2048
+#define NETWORK_TASK_STACK_SIZE 4096
 
 // Proper task creation
-xTaskCreate(sensor_task, "sensor_task", SENSOR_TASK_STACK_SIZE, 
-            NULL, SENSOR_TASK_PRIORITY, NULL);
+xTaskCreate(app_task, "app_task", APP_TASK_STACK_SIZE, 
+            NULL, APP_TASK_PRIORITY, NULL);
 ```
 
 ### Component Structure
@@ -144,29 +142,28 @@ extern "C" {
 
 ```c
 /**
- * @brief Read distance from HC-SR04 sensor
+ * @brief Initialize configuration manager
  * 
- * This function triggers the ultrasonic sensor and measures the echo
- * time to calculate distance in centimeters.
+ * Loads configuration from NVS storage and initializes runtime structures.
+ * Creates default configuration if no saved configuration exists.
  * 
- * @param[out] distance_cm Pointer to store the measured distance
- * @return ESP_OK on success, ESP_ERR_TIMEOUT on sensor timeout,
- *         ESP_ERR_INVALID_ARG if distance_cm is NULL
+ * @return ESP_OK on success, ESP_ERR_NO_MEM on allocation failure,
+ *         ESP_ERR_NVS_* on storage errors
  */
-esp_err_t distance_sensor_read(uint16_t* distance_cm);
+esp_err_t config_manager_init(void);
 ```
 
 ### File Documentation
 
 ```c
 /**
- * @file distance_sensor.c
- * @brief HC-SR04 ultrasonic distance sensor implementation
+ * @file config_manager.c
+ * @brief Configuration management implementation
  * 
- * This module provides functions to initialize and read from an HC-SR04
- * ultrasonic distance sensor connected to ESP32 GPIO pins.
+ * Provides functions to load, save, and manage application configuration
+ * using ESP32 NVS (Non-Volatile Storage).
  * 
- * @author ESP32 Distance Project
+ * @author ESP32 Template Project
  * @date 2025
  */
 ```
@@ -182,10 +179,10 @@ esp_err_t distance_sensor_read(uint16_t* distance_cm);
 
 ```c
 // Use Kconfig for configurable parameters
-#ifdef CONFIG_DISTANCE_SENSOR_MAX_RANGE_CM
-#define MAX_SENSOR_RANGE CONFIG_DISTANCE_SENSOR_MAX_RANGE_CM
+#ifdef CONFIG_APP_MAX_RETRIES
+#define MAX_RETRIES CONFIG_APP_MAX_RETRIES
 #else
-#define MAX_SENSOR_RANGE 400  // Default value
+#define MAX_RETRIES 3  // Default value
 #endif
 ```
 
