@@ -20,12 +20,11 @@
     }
   },
 
-  // ⬇️ NEU: noVNC-Port forwarden + code-server (nur lokal)
-  "forwardPorts": [6080, 8088],
-  "portsAttributes": {
-    "6080": { "label": "noVNC (Desktop)" },
-    "8088": { "label": "code-server (VS Code Browser)" }
-  },
+	// ⬇️ NEU: noVNC-Port forwarden
+	"forwardPorts": [6080],
+	"portsAttributes": {
+		"6080": { "label": "noVNC (Desktop)" }
+	},
 
 	// execute on container creation and start used for setup of graphical environment and network tuneling
 	"postCreateCommand": "bash ./tools/devcontainer/on-create.sh",
