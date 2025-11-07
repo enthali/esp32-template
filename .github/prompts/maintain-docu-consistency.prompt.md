@@ -210,25 +210,6 @@ Prioritized list of fixes:
 4. [ ] **Low:** Fix typo in component README
 ```
 
----
-
-## Usage
-
-Run this prompt manually when:
-- After major refactoring or reorganization
-- Before releases
-- When adding new infrastructure components
-- Periodically (monthly) for maintenance
-
-Recommended workflow:
-1. Run prompt: "Please analyze project consistency following maintain-docu-consistency.prompt.md"
-2. Review generated `temp/docu-consistency-analysis.md`
-3. Create issues for critical/medium findings
-4. Fix low-priority items immediately
-5. Commit analysis file for reference
-
----
-
 ## Notes
 
 - **Source of truth priorities:**

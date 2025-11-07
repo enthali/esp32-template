@@ -585,27 +585,6 @@ Consider adding to development workflow:
 - **pre-commit hook** - Enforce standards before commit
 ```
 
----
-
-## Usage
-
-Run this prompt when:
-- Before releases (ensure code quality standards met)
-- After adding new components
-- During code reviews
-- When onboarding new contributors
-- Periodically (monthly) for quality maintenance
-
-Recommended workflow:
-1. Run prompt: "Please validate code quality following validate-code-quality.prompt.md"
-2. Review generated `temp/code-quality-analysis.md`
-3. Create issues for critical/high findings
-4. Fix medium/low issues in batch
-5. Track quality metrics over time
-6. Commit analysis file for reference
-
----
-
 ## Notes
 
 - **Baseline Standards:** `.github/prompt-snippets/esp32-coding-standards.md`
