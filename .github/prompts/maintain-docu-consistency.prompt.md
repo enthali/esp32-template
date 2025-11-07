@@ -76,6 +76,8 @@
 **Check:**
 - Does `README.md` mention features that don't exist?
 - Does `README.md` list components that have been removed?
+- **Is `README.md` an "elevator pitch" (< 100 lines) or does it duplicate Sphinx docs?**
+- **Does `README.md` link prominently to full documentation instead of replicating content?**
 - Is `tools/README.md` up-to-date with reorganized structure?
 - Do component READMEs match actual component functionality?
 - Are build instructions in `README.md` consistent with `build-instructions.md`?
@@ -84,6 +86,8 @@
 - Features mentioned but not implemented
 - Outdated examples or commands
 - Missing documentation for new features/tools
+- **README.md contains detailed guides that should live in Sphinx docs**
+- **README.md lacks prominent link to full documentation**
 
 ### 5. Prompt Snippets Internal Consistency
 
@@ -216,6 +220,12 @@ Prioritized list of fixes:
   1. Dockerfile (for tool versions)
   2. Actual code/scripts (for functionality)
   3. Root README (for user-facing features)
+  
+- **README.md philosophy:**
+  - **Keep it minimal** - "Elevator pitch" style (target < 100 lines)
+  - **Link, don't duplicate** - Point to Sphinx docs for details
+  - **Quick start only** - Basic usage, not comprehensive guides
+  - **No detailed instructions** - QEMU, debugging, customization belong in docs
   
 - **Exclusions:**
   - Code quality (covered by pre-commit)
