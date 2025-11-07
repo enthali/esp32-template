@@ -46,7 +46,7 @@ idf.py build
 ### Step 1: Build Firmware
 
 ```bash
-cd /workspaces/esp32-template
+cd /workspaces/esp32-template  # Or your project directory
 idf.py build
 ```
 
@@ -135,7 +135,7 @@ The `manifest.json` tells the web flasher what to flash and where:
 
 ```json
 {
-  "name": "esp32-template",
+  "name": "your-project-name",
   "version": "1.0.0",
   "builds": [
     {
@@ -150,7 +150,7 @@ The `manifest.json` tells the web flasher what to flash and where:
           "offset": 32768
         },
         {
-          "path": "../build/esp32-template.bin",
+          "path": "../build/your-project-name.bin",
           "offset": 65536
         }
       ]

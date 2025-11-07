@@ -18,7 +18,12 @@ A production-ready ESP32 project template with GitHub Codespaces, QEMU emulation
 
 1. **Use this template** - Click "Use this template" at the top
 2. **Open in Codespaces** - Click Code → Codespaces → Create codespace
-3. **Build and run**:
+3. **Customize your project** (Important!):
+   - [ ] Change project name in `CMakeLists.txt` (line 12: `set(PROJECT_NAME "your-project-name")`)
+   - [ ] Update binary path in `.vscode/launch.json` if using debugger (line 9)
+   - [ ] (Optional) Customize `main/Kconfig.projbuild` menu name
+   - [ ] (Optional) Update web UI titles in `main/components/web_server/www/` files
+4. **Build and run**:
 
 ```bash
 idf.py build                  # Build project

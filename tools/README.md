@@ -1,6 +1,6 @@
-# ESP32 Template Tools
+# Project Tools
 
-This directory contains various utility scripts and tools for development, testing, and deployment of the ESP32 template project.
+This directory contains various utility scripts and tools for development, testing, and deployment of this ESP32 project.
 
 ## Directory Structure
 
