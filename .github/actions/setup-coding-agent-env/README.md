@@ -23,7 +23,6 @@ This action ensures **all quality tools are available** in CI/CD pipelines, maki
 - **furo**: Modern Sphinx theme
 - **myst-parser**: Markdown support for Sphinx
 - **sphinxcontrib-plantuml**: PlantUML diagrams in Sphinx
-- **breathe**: C/C++ API documentation
 - **graphviz**: Graph visualization support
 
 ### Node.js Tools
