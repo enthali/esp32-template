@@ -3,10 +3,6 @@ GUI and Graphics Development
 
 This guide explains how to develop graphical applications using the VNC/noVNC setup in the ESP32 Template development container.
 
-.. contents::
-   :local:
-   :depth: 2
-
 Overview
 --------
 

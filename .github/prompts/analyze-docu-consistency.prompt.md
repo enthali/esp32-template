@@ -81,6 +81,8 @@
 - Is `tools/README.md` up-to-date with reorganized structure?
 - Do component READMEs match actual component functionality?
 - Are build instructions in `README.md` consistent with `build-instructions.md`?
+- **Do all major tools in `tools/` have corresponding guides in `docs/90_guides/`?**
+- **Are tool guides linked from the main guides index?**
 
 **Report inconsistencies:**
 - Features mentioned but not implemented
@@ -88,6 +90,8 @@
 - Missing documentation for new features/tools
 - **README.md contains detailed guides that should live in Sphinx docs**
 - **README.md lacks prominent link to full documentation**
+- **Tools without documentation guides (e.g., `tools/qemu/`, `tools/web-flasher/`, `tools/docu/`)**
+- **Tool guides not included in `docs/90_guides/index.rst` toctree**
 
 ### 5. Prompt Snippets Internal Consistency
 
