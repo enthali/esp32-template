@@ -12,9 +12,7 @@ cd "$PROJECT_DIR"
 # Start documentation web server
 echo ""
 echo "Starting documentation web server..."
-bash "$PROJECT_DIR/tools/docu/serve-docs.sh" &
-DOC_SERVER_PID=$!
-echo "Documentation server started (PID: $DOC_SERVER_PID)"
+bash "$PROJECT_DIR/tools/docu/serve-docs.sh"
 echo "Access documentation at http://localhost:8000"
 
 # Write timestamp to workspace root
