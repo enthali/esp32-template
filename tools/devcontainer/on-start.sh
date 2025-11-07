@@ -21,4 +21,4 @@ echo "Documentation server started (PID: $DOC_SERVER_PID)"
 echo "Access documentation at http://localhost:8000"
 
 # Write timestamp to workspace root
-echo "on-start.sh executed at $(date)" > .on-start-ran
+echo "on-start.sh executed at $(date)" > ./temp/on-start-ran
