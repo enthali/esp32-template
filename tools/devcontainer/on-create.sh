@@ -39,4 +39,8 @@ echo "Access via noVNC: http://localhost:6080/vnc.html"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$PROJECT_DIR"
+
+# Create temp directory for logs and runtime files
+mkdir -p "$PROJECT_DIR/temp"
+
 echo "on-create.sh executed at $(date)" > ./temp/on-create-ran
