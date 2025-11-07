@@ -106,16 +106,8 @@ xTaskCreate(app_task, "app_task", APP_TASK_STACK_SIZE,
             NULL, APP_TASK_PRIORITY, NULL);
 ```
 
-### Component Structure
 
-```text
-components/my_component/
-├── CMakeLists.txt
-├── include/
-│   └── my_component.h
-├── my_component.c
-└── README.md
-```
+See build-instructions.md for component structure and troubleshooting.
 
 ### Header File Guards
 
@@ -168,12 +160,13 @@ esp_err_t config_manager_init(void);
  */
 ```
 
+
 **Documentation Requirements:**
 
-- **Every function must have a Doxygen comment** explaining purpose, parameters, and return values
-- **Every file must have a header comment** describing the module's purpose
-- **Complex algorithms must include inline comments** explaining the logic
-- **Hardware dependencies must be documented** (pin assignments, timing constraints)
+- Every function must have a Doxygen comment explaining purpose, parameters, and return values
+- Every file must have a header comment describing the module's purpose
+- Complex algorithms must include inline comments explaining the logic
+- Hardware dependencies must be documented (pin assignments, timing constraints)
 
 ### Configuration Management
 

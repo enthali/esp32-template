@@ -22,17 +22,21 @@
 - **perf**: Performance improvements
 - **security**: Security improvements
 
-## ESP32 Project Specific Scopes
 
-- **component**: Component architecture changes
-- **build**: Build system and configuration
-- **config**: Configuration management
-- **web**: Web server and interface
-- **network**: Networking and connectivity
-- **memory**: Memory optimization
-- **docs**: Documentation updates
-- **requirements**: Requirements documentation
-- **design**: Design documentation
+## ESP32 Project Specific Scopes & Branch Naming
+
+Use descriptive branch names and commit scopes:
+
+- `feat/component-name` (component)
+- `fix/issue-description` (fix)
+- `docs/update-topic` (docs)
+- `build` (build system)
+- `config` (configuration management)
+- `web` (web server)
+- `network` (networking)
+- `memory` (memory optimization)
+- `requirements` (requirements docs)
+- `design` (design docs)
 
 ## Examples
 

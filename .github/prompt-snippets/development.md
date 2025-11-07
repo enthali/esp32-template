@@ -9,13 +9,10 @@ This document outlines the essential development workflow for ESP32 projects in 
 - `main`: Stable release branch
 - `develop`: Development integration branch
 
+
 ### Feature Branches
 
-Use descriptive branch names:
-
-- `feat/component-name`
-- `fix/issue-description`
-- `docs/update-topic`
+See commit-message.md for branch naming and commit scopes.
 
 ## Pull Request Process
 

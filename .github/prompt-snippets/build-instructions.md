@@ -50,15 +50,24 @@ idf.py build
 
 ## Troubleshooting
 
-### Build Issues
+### Build Issues & Component Structure
 
 1. **Module Not Found Errors**:
    - Verify all custom components are properly linked in `CMakeLists.txt`
    - Check component dependencies in `main/CMakeLists.txt`
 
 2. **Component Errors**:
-   - Ensure component structure follows ESP-IDF conventions
-   - Check `CMakeLists.txt` in component directories
+   - Ensure component structure follows ESP-IDF conventions:
+     - Component folder structure:
+       ```text
+       components/my_component/
+       ├── CMakeLists.txt
+       ├── include/
+       │   └── my_component.h
+       ├── my_component.c
+       └── README.md
+       ```
+     - Check `CMakeLists.txt` in component directories
 
 ### Flash Issues (Hardware)
 
@@ -87,10 +96,3 @@ idf.py build
 
 1. **QEMU Debug**: Use launch configuration `Debug in QEMU`
 2. **Hardware Debug**: Use launch configuration `Debug on ESP32` (requires hardware debugger)
-
-### GDB Commands
-
-```bash
-# Start GDB session (QEMU must be running)
-xtensa-esp32-elf-gdb build/esp32-template.elf
-```
