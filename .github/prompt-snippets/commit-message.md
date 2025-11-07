@@ -22,72 +22,66 @@
 - **perf**: Performance improvements
 - **security**: Security improvements
 
-## ESP32 Project Specific Scopes
 
-- **sensor**: Distance sensor related changes
-- **led**: LED controller changes
-- **wifi**: WiFi manager and networking
-- **web**: Web server and interface
-- **build**: Build system and configuration
-- **memory**: Memory optimization
-- **https**: HTTPS and security implementation
-- **component**: Component architecture changes
+## ESP32 Project Specific Scopes & Branch Naming
+
+Use descriptive branch names and commit scopes:
+
+- `feat/component-name` (component)
+- `fix/issue-description` (fix)
+- `docs/update-topic` (docs)
+- `build` (build system)
+- `config` (configuration management)
+- `web` (web server)
+- `network` (networking)
+- `memory` (memory optimization)
+- `requirements` (requirements docs)
+- `design` (design docs)
 
 ## Examples
 
 ### Feature Addition
 
 ```text
-feat(https): Implement certificate generation and embedding
+feat(config): Implement configuration backup and restore
 
-- Add CMake script for automated certificate generation
-- Embed self-signed certificates using ESP-IDF EMBED_FILES
-- Configure 10-year certificate validity for device lifecycle
-- Integrate OpenSSL tools in build process
+- Add NVS backup mechanism for configuration data
+- Implement restore from backup on corruption detection
+- Add validation of restored configuration
+- Tested with power loss scenarios
 ```
 
 ### Bug Fix
 
 ```text
-fix(sensor): Resolve HC-SR04 timeout handling
+fix(network): Resolve WiFi reconnection timeout
 
-- Add proper timeout validation for echo pin
-- Implement retry logic for failed readings
-- Log sensor communication errors appropriately
-- Tested with various distance ranges
+- Add proper timeout validation for connection attempts
+- Implement exponential backoff for retry logic
+- Log connection errors appropriately
+- Tested with various network conditions
 ```
 
 ### Memory Optimization
 
 ```text
-perf(memory): Optimize flash configuration for 4MB modules
+perf(build): Optimize flash partition configuration
 
-- Updated sdkconfig to use 4MB flash size
-- Switched to Single App Large partition table
-- Increased available flash from 14% to 41% free space
-- Prepared build configuration for HTTPS implementation
+- Adjust partition table for optimal space usage
+- Reduce bootloader size overhead
+- Increase available application space
+- Verified memory usage with idf.py size
 ```
 
 ### Documentation
 
 ```text
-docs(build): Update build instructions with flash configuration
+docs(requirements): Add system requirements documentation
 
-- Document 4MB flash memory configuration
-- Add memory usage verification commands
-- Include menuconfig navigation instructions
-- Prepare documentation for HTTPS readiness
-```
-
-### Component Refactoring
-
-```text
-refactor(component): Extract WiFi manager monitoring logic
-
-- Move WiFi connection monitoring to wifi_manager.c
-- Implement wifi_manager_monitor() function
-- Update main.c to use new monitoring API
-- Maintain backward compatibility
+- Document functional requirements in Sphinx-Needs format
+- Add requirement IDs and traceability links
+- Include acceptance criteria for each requirement
+- Update requirements index
 ```
 
 ## Subject Line Rules
@@ -108,4 +102,9 @@ refactor(component): Extract WiFi manager monitoring logic
 
 - Reference related issues: `Closes #123`
 - Note breaking changes: `BREAKING CHANGE: ...`
-- Co-author attribution: `Co-authored-by: Name <email>`
+
+## See Also
+
+- [Development Workflow](development.md) - Branch strategy and PR process
+- [ESP32 Coding Standards](esp32-coding-standards.md) - Code conventions and documentation
+- [Build Instructions](build-instructions.md) - Building and debugging

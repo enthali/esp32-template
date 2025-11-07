@@ -163,15 +163,6 @@ System-level utilities for desktop environment and peripherals.
 2. Rebuild project to embed certificates
 3. Flash to device
 
-## Path Updates Required
-
-After reorganizing the tools directory, the following files need to be updated:
-
-- [ ] `.devcontainer/devcontainer.json` - Update lifecycle script paths
-- [ ] `.vscode/tasks.json` - Update QEMU task paths
-- [ ] `CMakeLists.txt` - Update tool script paths if referenced
-- [ ] GitHub Actions workflows - Update paths in CI/CD scripts
-
 ## Contributing
 
 When adding new tools:

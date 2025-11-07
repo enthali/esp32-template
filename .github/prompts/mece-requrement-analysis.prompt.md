@@ -46,4 +46,4 @@ Provide analysis as markdown with:
 3. **Structural Issues**: List incomplete requirements
 4. **Summary**: Counts and overall PASS/FAIL assessment
 
-Create output file: `docs/requirements/analysis/${input:requirementsFile}-mece-analysis.md`
+Create output file: `temp/requirements/analysis/${input:requirementsFile}-mece-analysis.md`
