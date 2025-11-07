@@ -37,7 +37,7 @@ idf.py build
 # Run in QEMU emulator
 # Use VS Code task: "Start QEMU Debug Server"
 # Or run manually:
-./tools/run-qemu-network.sh
+./tools/qemu/run-qemu-network.sh
 ```
 
 ### Hardware Development
@@ -92,8 +92,8 @@ esp32-template/
 │   ├── 21_api/              # API documentation
 │   └── 31_traceability/     # Traceability matrices
 ├── tools/                    # Development tools
-│   ├── run-qemu-network.sh  # QEMU with network bridge
-│   └── http_proxy.py        # HTTP proxy for QEMU access
+│   ├── qemu/                # QEMU emulation scripts
+│   └── network/             # Network utilities
 ├── .devcontainer/           # GitHub Codespaces configuration
 ├── .github/                 # GitHub workflows and Copilot config
 └── .vscode/                 # VS Code tasks and settings
@@ -166,13 +166,13 @@ mkdir -p main/components/my_component
 
 ```bash
 # Debug mode (waits for GDB connection)
-./tools/run-qemu-graphics.sh
+./tools/qemu/run-qemu-graphics.sh
 
 # Run mode (starts immediately)
-./tools/run-qemu-graphics-run.sh
+./tools/qemu/run-qemu-graphics-run.sh
 
 # Legacy mode (network only, no graphics)
-./tools/run-qemu-network.sh
+./tools/qemu/run-qemu-network.sh
 ```
 
 **Graphics Output**: All QEMU modes include GUI output visible in NoVNC (port 6080). The ESP32 console, boot sequence, and any graphics will be displayed in the QEMU window within your browser.
@@ -181,7 +181,7 @@ mkdir -p main/components/my_component
 
 ```bash
 # In another terminal, access web interface via HTTP proxy
-python3 tools/http_proxy.py
+python3 tools/network/http_proxy.py
 # Then browse to http://localhost:8888
 ```
 

@@ -229,8 +229,12 @@ If pre-commit tools are not available in your environment:
 
 ## Build Environment
 
-Always use the correct build environment setup for Windows:
+This template is designed for **GitHub Codespaces** and **VS Code Dev Containers**:
 
-```powershell
-cmd /c "cd /D C:\workspace\ESP32_Projects\distance && C:\workspace\ESP32_Projects\esp\v5.4.1\esp-idf\export.bat && idf.py build"
+- **Primary**: GitHub Codespaces (zero-setup cloud development)
+- **Alternative**: Local dev container (requires Docker)
+- **Build commands**: Use `idf.py build` in the integrated terminal
+- **ESP-IDF**: Pre-configured and ready to use (v5.4.1)
+
+All build tools and dependencies are automatically available in the container environment.
 ```

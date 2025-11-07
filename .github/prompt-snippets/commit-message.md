@@ -102,3 +102,9 @@ docs(requirements): Add system requirements documentation
 
 - Reference related issues: `Closes #123`
 - Note breaking changes: `BREAKING CHANGE: ...`
+
+## See Also
+
+- [Development Workflow](development.md) - Branch strategy and PR process
+- [ESP32 Coding Standards](esp32-coding-standards.md) - Code conventions and documentation
+- [Build Instructions](build-instructions.md) - Building and debugging

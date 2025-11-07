@@ -106,8 +106,7 @@ xTaskCreate(app_task, "app_task", APP_TASK_STACK_SIZE,
             NULL, APP_TASK_PRIORITY, NULL);
 ```
 
-
-See build-instructions.md for component structure and troubleshooting.
+**Component Structure:** See build-instructions.md for detailed component folder structure and troubleshooting guide.
 
 ### Header File Guards
 
@@ -289,3 +288,9 @@ esp_err_t config_manager_init(void) {
 - ✅ **Version controlled**: Design docs tracked in Git like code
 - ✅ **Bidirectional links**: Requirements ↔ Design ↔ Code
 - ✅ **Scalable**: Works for projects of any size
+
+## See Also
+
+- [Build Instructions](build-instructions.md) - Component structure and troubleshooting
+- [Development Workflow](development.md) - Branch strategy and PR process
+- [Commit Message Guidelines](commit-message.md) - Commit format and scopes

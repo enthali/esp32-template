@@ -302,7 +302,13 @@ pkill -f "python3.*http.server.*8000"
 Use QEMU to test firmware before flashing:
 
 ```bash
-./tools/run-qemu-graphics.sh
+## Testing in QEMU
+
+You can test the web interface without hardware using QEMU:
+
+```bash
+# Start QEMU
+./tools/qemu/run-qemu-graphics.sh
 ```
 
 ## 📝 Files Created

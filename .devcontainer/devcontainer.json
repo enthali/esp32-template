@@ -9,24 +9,22 @@
 		}
 	},
 
- // ⬇️ NEU: Desktop-Lite einschalten
-  "features": {
-    "ghcr.io/devcontainers/features/desktop-lite:1": {
-      // optional: Auflösung oder Passwort setzen
-      // "password": "vscode",
-      // "webPort": 6080,
-      // "vncPort": 5901,
-      // "screenResolution": "1280x800"
-    }
-  },
+	// Enable Desktop-Lite feature
+	"features": {
+		"ghcr.io/devcontainers/features/desktop-lite:1": {
+			// optional: Set resolution or password
+			// "password": "vscode",
+			// "webPort": 6080,
+			// "vncPort": 5901,
+			// "screenResolution": "1280x800"
+		}
+	},
 
-	// ⬇️ NEU: noVNC-Port forwarden
+	// Forward noVNC port
 	"forwardPorts": [6080],
 	"portsAttributes": {
 		"6080": { "label": "noVNC (Desktop)" }
-	},
-
-	// execute on container creation and start used for setup of graphical environment and network tuneling
+	},	// execute on container creation and start used for setup of graphical environment and network tuneling
 	"postCreateCommand": "bash ./tools/devcontainer/on-create.sh",
 	"postStartCommand": "bash ./tools/devcontainer/on-start.sh",
 	"postAttachCommand": "bash ./tools/devcontainer/on-attach.sh",

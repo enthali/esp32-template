@@ -22,3 +22,9 @@ See commit-message.md for branch naming and commit scopes.
 4. Submit PR with clear description
 5. Address review feedback
 6. Merge after approval
+
+## See Also
+
+- [Commit Message Guidelines](commit-message.md) - Commit format and branch naming
+- [ESP32 Coding Standards](esp32-coding-standards.md) - Code conventions
+- [Build Instructions](build-instructions.md) - Building and debugging

@@ -23,7 +23,7 @@ RUN groupadd --gid $USER_GID $CONTAINER_USER \
 # the system-managed Python environment (avoids PEP 668 issues)
 USER root
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends python3-venv python3-pip nodejs npm doxygen graphviz \
+  && apt-get install -y --no-install-recommends python3-venv python3-pip nodejs npm doxygen graphviz libgraphviz-dev \
   # install XFCE4 desktop environment for GUI support
   && apt-get install -y --no-install-recommends xfce4 xfce4-goodies \
   # set German keyboard layout as default (can be changed later)
