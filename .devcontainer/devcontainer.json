@@ -20,11 +20,12 @@
 		}
 	},
 
-	// Forward noVNC and documentation server ports
-	"forwardPorts": [6080, 8000],
+	// Forward noVNC, documentation server, and web-flasher ports
+	"forwardPorts": [6080, 8000, 8001],
 	"portsAttributes": {
 		"6080": { "label": "noVNC (Desktop)" },
-		"8000": { "label": "Documentation Server" }
+		"8000": { "label": "Documentation Server" },
+		"8001": { "label": "Web Flasher" }
 	},	// execute on container creation and start used for setup of graphical environment and network tuneling
 	"postCreateCommand": "bash ./tools/devcontainer/on-create.sh",
 	"postStartCommand": "bash ./tools/devcontainer/on-start.sh",

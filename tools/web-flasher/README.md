@@ -11,7 +11,7 @@ idf.py build
 # 2. Start web flasher server
 ./tools/web-flasher/start-web-flasher.sh
 
-# 3. Forward port 8000 in VS Code (Ports tab)
+# 3. Forward port 8001 in VS Code (Ports tab)
 
 # 4. Open the forwarded URL in Chrome/Edge/Opera
 
@@ -59,7 +59,7 @@ idf.py build
 This will:
 
 - Generate `manifest.json` with flash offsets
-- Start HTTP server on port 8000
+- Start HTTP server on port 8001
 - Serve the web flasher interface
 
 ### Step 3: Port Forwarding
@@ -68,7 +68,7 @@ In VS Code (GitHub Codespaces):
 
 1. Open the **Ports** tab (next to Terminal)
 2. Click **Forward a Port**
-3. Enter `8000`
+3. Enter `8001`
 4. Set visibility to **Public** if accessing from different network
 5. Click on the forwarded URL
 
@@ -98,7 +98,7 @@ After flashing completes, the browser will show:
 │  Container      │
 │                 │
 │  ┌───────────┐  │
-│  │ HTTP      │  │  Port 8000 Forwarded
+│  │ HTTP      │  │  Port 8001 Forwarded
 │  │ Server    │  │◄─────────────────────┐
 │  └───────────┘  │                      │
 │  ┌───────────┐  │                      │
@@ -175,12 +175,12 @@ The `manifest.json` tells the web flasher what to flash and where:
 
 ### Connection Refused
 
-**Problem**: Can't access <http://localhost:8000>
+**Problem**: Can't access <http://localhost:8001>
 
 **Solutions**:
 
-- ✅ Verify web server is running (`./tools/start-web-flasher.sh`)
-- ✅ Check port 8000 is forwarded in VS Code Ports tab
+- ✅ Verify web server is running (`./tools/web-flasher/start-web-flasher.sh`)
+- ✅ Check port 8001 is forwarded in VS Code Ports tab
 - ✅ Try using the forwarded URL instead of localhost
 - ✅ Check firewall settings
 
@@ -219,7 +219,6 @@ sudo usermod -a -G dialout $USER
 # Change port permissions (temporary)
 sudo chmod 666 /dev/ttyUSB0
 ```
-
 
 ## 📚 Additional Resources
 
@@ -291,10 +290,12 @@ idf.py build && ./tools/generate-flasher-manifest.sh
 
 ```bash
 # Run server in background
-nohup ./tools/start-web-flasher.sh &
+nohup ./tools/web-flasher/start-web-flasher.sh &
 
 # Stop server
-pkill -f "python3.*http.server.*8000"
+pkill -f flasher_server.py
+# or use the stop script
+./tools/web-flasher/stop-web-flasher.sh
 ```
 
 ### Testing Without Hardware

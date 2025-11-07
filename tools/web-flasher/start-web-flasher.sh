@@ -33,50 +33,50 @@ echo -e "${YELLOW}📝 Generating flasher manifest...${NC}"
 echo ""
 echo ""
 
-# Function to kill processes on port 8000
-kill_port_8000() {
+# Function to kill processes on port 8001
+kill_port_8001() {
     # Try multiple methods to free the port
     pkill -9 -f "flasher_server.py" 2>/dev/null || true
-    pkill -9 -f "python3.*http.server.*8000" 2>/dev/null || true
+    pkill -9 -f "python3.*http.server.*8001" 2>/dev/null || true
     
     # Use fuser if available
     if command -v fuser &> /dev/null; then
-        fuser -k 8000/tcp 2>/dev/null || true
+        fuser -k 8001/tcp 2>/dev/null || true
     fi
     
     # Use lsof if available
     if command -v lsof &> /dev/null; then
-        lsof -ti:8000 | xargs -r kill -9 2>/dev/null || true
+        lsof -ti:8001 | xargs -r kill -9 2>/dev/null || true
     fi
     
     sleep 1
 }
 
-# Check if port 8000 is already in use
-if lsof -Pi :8000 -sTCP:LISTEN -t >/dev/null 2>&1; then
-    echo -e "${YELLOW}⚠️  Port 8000 is already in use${NC}"
+# Check if port 8001 is already in use
+if lsof -Pi :8001 -sTCP:LISTEN -t >/dev/null 2>&1; then
+    echo -e "${YELLOW}⚠️  Port 8001 is already in use${NC}"
     echo -e "${YELLOW}Stopping existing server...${NC}"
-    kill_port_8000
+    kill_port_8001
     
     # Verify port is free
-    if lsof -Pi :8000 -sTCP:LISTEN -t >/dev/null 2>&1; then
-        echo -e "${RED}❌ Failed to free port 8000${NC}"
+    if lsof -Pi :8001 -sTCP:LISTEN -t >/dev/null 2>&1; then
+        echo -e "${RED}❌ Failed to free port 8001${NC}"
         echo -e "${YELLOW}Please manually kill the process:${NC}"
-        lsof -Pi :8000 -sTCP:LISTEN
+        lsof -Pi :8001 -sTCP:LISTEN
         exit 1
     fi
-    echo -e "${GREEN}✅ Port 8000 is now free${NC}"
+    echo -e "${GREEN}✅ Port 8001 is now free${NC}"
 fi
 
 # Start HTTP server
-echo -e "${GREEN}🚀 Starting web server on port 8000...${NC}"
+echo -e "${GREEN}🚀 Starting web server on port 8001...${NC}"
 echo ""
 echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
 echo -e "${BLUE}║                     Access Instructions                    ║${NC}"
 echo -e "${BLUE}╠════════════════════════════════════════════════════════════╣${NC}"
-echo -e "${BLUE}║ 1. Forward port 8000 in VS Code:                          ║${NC}"
+echo -e "${BLUE}║ 1. Forward port 8001 in VS Code:                          ║${NC}"
 echo -e "${BLUE}║    - Open 'Ports' tab in VS Code                          ║${NC}"
-echo -e "${BLUE}║    - Forward port 8000                                     ║${NC}"
+echo -e "${BLUE}║    - Forward port 8001                                     ║${NC}"
 echo -e "${BLUE}║    - Set visibility to 'Public' if needed                 ║${NC}"
 echo -e "${BLUE}║                                                            ║${NC}"
 echo -e "${BLUE}║ 2. Open the forwarded URL in your browser                 ║${NC}"
@@ -87,7 +87,7 @@ echo -e "${BLUE}║                                                            �
 echo -e "${BLUE}║ 4. Click 'Connect and Flash ESP32'                        ║${NC}"
 echo -e "${BLUE}╚════════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${GREEN}📡 Server running at: http://localhost:8000/${NC}"
+echo -e "${GREEN}📡 Server running at: http://localhost:8001/${NC}"
 echo -e "${GREEN}   (auto-redirects to web-flasher.html)${NC}"
 echo -e "${YELLOW}Press Ctrl+C to stop${NC}"
 echo ""

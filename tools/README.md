@@ -67,7 +67,7 @@ Web-based firmware flashing interface using ESP Web Tools.
 # Start web flasher
 ./tools/web-flasher/start-web-flasher.sh
 
-# Access at http://localhost:8000
+# Access at http://localhost:8001 (port forwarding required)
 ```
 
 ### 🔌 network/

@@ -28,7 +28,7 @@ Quick Start
 
       ./tools/web-flasher/start-web-flasher.sh
 
-3. **Forward port 8000** in VS Code (Ports tab)
+3. **Forward port 8001** in VS Code (Ports tab)
 
 4. **Open the forwarded URL** in Chrome/Edge/Opera
 
@@ -96,7 +96,7 @@ Run the web flasher server:
 This automatically:
 
 - Generates ``build/flasher-manifest.json`` with flash offsets
-- Starts HTTP server on port 8000
+- Starts HTTP server on port 8001
 - Serves the web flasher interface
 
 Step 3: Port Forwarding
@@ -151,7 +151,7 @@ How It Works
    │  Container      │
    │                 │
    │  ┌───────────┐  │
-   │  │ HTTP      │  │  Port 8000 forwarded
+   │  │ HTTP      │  │  Port 8001 forwarded
    │  │ Server    │◄─┼──────────────────────┐
    │  └───────────┘  │                      │
    │                 │                      │
@@ -225,7 +225,7 @@ The ``build/flasher-manifest.json`` tells the browser what to flash:
 Troubleshooting
 ---------------
 
-Port 8000 Already in Use
+Port 8001 Already in Use
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Symptom:** Server fails to start with "Address already in use"
@@ -239,7 +239,7 @@ Port 8000 Already in Use
    
    # Or manually kill process
    pkill -f flasher_server.py
-   lsof -ti:8000 | xargs kill -9
+   lsof -ti:8001 | xargs kill -9
 
 Serial Port Not Appearing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

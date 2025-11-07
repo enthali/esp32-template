@@ -75,7 +75,7 @@ class WebFlasherHandler(http.server.SimpleHTTPRequestHandler):
             print(f"📝 {format % args}")
 
 if __name__ == '__main__':
-    PORT = 8000
+    PORT = 8001
     
     # Change to project root directory (two levels up from web-flasher/)
     script_dir = Path(__file__).parent.resolve()  # tools/web-flasher
