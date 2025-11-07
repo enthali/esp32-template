@@ -25,3 +25,6 @@ Component APIs
    
    api_config_manager
 
+   api_netif_uart_tunnel
+   api_cert_handler
+
