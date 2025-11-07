@@ -78,6 +78,28 @@ needs_types = [
         color="#DCB239",
         style="node"
     ),
+    # API Documentation Types
+    dict(
+        directive="apicomponent",
+        title="API Component",
+        prefix="API_COMP_",
+        color="#A8DADC",
+        style="node"
+    ),
+    dict(
+        directive="apifunction",
+        title="API Function",
+        prefix="API_FUNC_",
+        color="#457B9D",
+        style="node"
+    ),
+    dict(
+        directive="apistruct",
+        title="API Data Structure",
+        prefix="API_STRUCT_",
+        color="#1D3557",
+        style="node"
+    ),
 ]
 
 # Extra options for needs (status is built-in, don't redefine it)
@@ -85,6 +107,12 @@ needs_extra_options = [
     "priority",
     "rationale",
     "acceptance_criteria",
+    # API-specific options
+    "api_signature",   # Function signature (e.g., "esp_err_t config_init(void)")
+    "returns",         # Return value description
+    "parameters",      # Parameter descriptions
+    "component",       # Parent component name
+    "header_file",     # Source header file path
 ]
 
 # Status options

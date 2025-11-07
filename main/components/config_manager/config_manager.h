@@ -58,10 +58,14 @@ extern "C" {
  * Opens NVS namespace "config". If namespace is empty or uninitialized,
  * calls config_factory_reset() to write default values from JSON schema.
  * 
- * Must be called once during system startup.
+ * Must be called once during system startup, before any other config_*
+ * functions are used.
  * 
  * @return ESP_OK on success
  * @return ESP_ERR_NVS_* on NVS initialization failure
+ * 
+ * @note Not thread-safe. Call once during startup before multi-task access.
+ * @note Subsequent calls will return ESP_ERR_INVALID_STATE.
  * 
  * @requirement REQ_CFG_JSON_12 AC-1
  */
@@ -76,6 +80,9 @@ esp_err_t config_init(void);
  * @return ESP_OK on success
  * @return ESP_ERR_NVS_* on NVS operation failure
  * 
+ * @note Not thread-safe. Caller must ensure no concurrent NVS access.
+ * @note All configuration values will be overwritten with defaults.
+ * 
  * @requirement REQ_CFG_JSON_9
  */
 esp_err_t config_factory_reset(void);
@@ -88,6 +95,10 @@ esp_err_t config_factory_reset(void);
  * 
  * @return ESP_OK on success
  * @return ESP_ERR_NVS_* on commit failure
+ * 
+ * @note Thread-safe. NVS internal locking ensures safe concurrent access.
+ * 
+ * @requirement REQ_CFG_JSON_8
  */
 esp_err_t config_commit(void);
 
@@ -120,6 +131,8 @@ void config_write_factory_defaults(void);
  * @return ESP_ERR_NVS_NOT_FOUND if key doesn't exist in NVS
  * @return ESP_ERR_NVS_INVALID_LENGTH if buffer too small
  * 
+ * @note Thread-safe. NVS internal locking ensures safe concurrent access.
+ * 
  * @requirement REQ_CFG_JSON_7 AC-1
  */
 esp_err_t config_get_string(const char* key, char* buffer, size_t buf_len);
@@ -136,6 +149,8 @@ esp_err_t config_get_string(const char* key, char* buffer, size_t buf_len);
  * @return ESP_ERR_INVALID_ARG if key or value is NULL
  * @return ESP_ERR_NVS_* on NVS write failure
  * 
+ * @note Thread-safe. NVS internal locking ensures safe concurrent access.
+ * 
  * @requirement REQ_CFG_JSON_7 AC-2
  */
 esp_err_t config_set_string(const char* key, const char* value);
@@ -151,6 +166,10 @@ esp_err_t config_set_string(const char* key, const char* value);
  * @return ESP_OK on success
  * @return ESP_ERR_INVALID_ARG if key or value is NULL
  * @return ESP_ERR_NVS_* on NVS write failure
+ * 
+ * @note Thread-safe. NVS internal locking ensures safe concurrent access.
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-2
  */
 esp_err_t config_set_string_no_commit(const char* key, const char* value);
 
@@ -231,6 +250,10 @@ esp_err_t config_set_int16(const char* key, int16_t value);
  * @return ESP_OK on success
  * @return ESP_ERR_INVALID_ARG if key is NULL
  * @return ESP_ERR_NVS_* on NVS write failure
+ * 
+ * @note Thread-safe. NVS internal locking ensures safe concurrent access.
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-2
  */
 esp_err_t config_set_int16_no_commit(const char* key, int16_t value);
 
@@ -264,6 +287,10 @@ esp_err_t config_get_bool(const char* key, bool* value);
  * @return ESP_OK on success
  * @return ESP_ERR_INVALID_ARG if key is NULL
  * @return ESP_ERR_NVS_* on NVS write failure
+ * 
+ * @note Thread-safe. NVS internal locking ensures safe concurrent access.
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-2
  */
 esp_err_t config_set_bool_no_commit(const char* key, bool value);
 

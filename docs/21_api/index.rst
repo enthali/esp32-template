@@ -1,15 +1,30 @@
 API Reference
 =============
 
-This section will contain auto-generated API documentation from C code using Doxygen and Breathe.
+Complete API documentation for ESP32 Template components using Sphinx-Needs methodology.
 
-.. note::
-   API documentation will be added in a future phase using Doxygen → Breathe integration.
+Each API is documented with full traceability to requirements and design specifications.
 
-Planned Components
-------------------
+Overview
+--------
 
-* **config_manager** - Configuration management API
-* **web_server** - HTTP/HTTPS server API
-* **cert_handler** - Certificate handling API
-* **netif_uart_tunnel** - QEMU network bridge API
+The ESP32 Template provides modular components for common IoT patterns:
+
+* **Configuration Management** - JSON schema-driven configuration with NVS storage
+* **Web Server** - HTTP server with captive portal support  
+* **WiFi Management** - Station and Access Point mode management
+* **Network Tunneling** - QEMU network bridge for emulation
+* **Certificate Handling** - HTTPS certificate management
+
+Component APIs
+--------------
+
+.. toctree::
+   :maxdepth: 3
+   :caption: API Documentation
+   
+   api_config_manager
+
+   api_netif_uart_tunnel
+   api_cert_handler
+
