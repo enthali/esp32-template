@@ -33,6 +33,9 @@ echo -e "${BLUE}ESP32 QEMU - Network Development Mode${NC}"
 echo -e "${BLUE}========================================${NC}"
 echo ""
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+cd "$PROJECT_DIR"
 # Build project first (delta build is fast, ensures latest code)
 echo -e "${YELLOW}Building project...${NC}"
 cd "${PROJECT_DIR}"

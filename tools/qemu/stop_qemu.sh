@@ -12,7 +12,7 @@ NC='\033[0m'
 
 # Determine project directory (two levels up from tools/qemu/)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 echo -e "${YELLOW}Stopping QEMU ESP32...${NC}"
 

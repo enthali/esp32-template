@@ -7,7 +7,9 @@ sudo chmod 1777 /tmp
 # Start network stack (TUN bridge and HTTP proxy) for QEMU
 echo ""
 echo "Setting up network stack for QEMU..."
-cd /workspaces/esp32-template
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+cd "$PROJECT_DIR"
 bash ./tools/network/ensure-network-stack.sh
 
 # Write timestamp to workspace root

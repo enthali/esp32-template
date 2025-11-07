@@ -36,5 +36,7 @@ echo "VNC should start automatically via desktop-lite feature"
 echo "Access via noVNC: http://localhost:6080/vnc.html"
 
 # Write timestamp to workspace root
-cd /workspaces/esp32-template
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+cd "$PROJECT_DIR"
 echo "on-create.sh executed at $(date)" > .on-create-ran
