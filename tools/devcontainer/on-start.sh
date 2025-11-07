@@ -12,5 +12,13 @@ PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$PROJECT_DIR"
 bash ./tools/network/ensure-network-stack.sh
 
+# Start documentation web server
+echo ""
+echo "Starting documentation web server..."
+bash "$PROJECT_DIR/tools/docu/serve-docs.sh" &
+DOC_SERVER_PID=$!
+echo "Documentation server started (PID: $DOC_SERVER_PID)"
+echo "Access documentation at http://localhost:8000"
+
 # Write timestamp to workspace root
 echo "on-start.sh executed at $(date)" > .on-start-ran
