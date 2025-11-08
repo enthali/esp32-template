@@ -5,11 +5,11 @@
 
 set -e
 
-# Determine project directory (two levels up from tools/network/)
+# Determine project directory (three levels up from tools/qemu/network/)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-TUN_SCRIPT="${PROJECT_DIR}/tools/qemu/serial_tun_bridge.py"
-PROXY_SCRIPT="${PROJECT_DIR}/tools/network/http_proxy.py"
+PROJECT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+TUN_SCRIPT="${PROJECT_DIR}/tools/qemu/network/serial_tun_bridge.py"
+PROXY_SCRIPT="${PROJECT_DIR}/tools/qemu/network/http_proxy.py"
 TUN_LOG="${PROJECT_DIR}/temp/tun_errors.log"
 PROXY_LOG="${PROJECT_DIR}/temp/proxy_errors.log"
 

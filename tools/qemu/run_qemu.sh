@@ -19,7 +19,7 @@ if [ -z "$DISPLAY" ]; then
     export DISPLAY=:1
 fi
 
-"${PROJECT_DIR}/tools/network/ensure-network-stack.sh"
+"${PROJECT_DIR}/tools/qemu/network/ensure-network-stack.sh"
 echo -e "${YELLOW}Starting QEMU (graphics, runs immediately)...${NC}"
 
 cd "${PROJECT_DIR}"

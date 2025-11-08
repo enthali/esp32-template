@@ -2,11 +2,11 @@
 """
 Serial-TUN Bridge for ESP32 QEMU IP Tunnel
 
-Bridges IP packets between QEMU UART1 (TCP port 5556) and a Linux TUN device.
+Bridges IP packets between QEMU UART1 (Unix socket) and a Linux TUN device.
 This provides full TCP/IP connectivity to the simulated ESP32.
 
 Architecture:
-- Reads IP frames from TCP socket (QEMU UART1)
+- Reads IP frames from Unix socket (QEMU UART1)
 - Writes frames to TUN device (Linux network stack)
 - Bidirectional: TUN → Serial also works
 
@@ -21,7 +21,7 @@ Requirements:
     - Root privileges (for TUN device creation)
     - pytun or python-pytun package
 
-Author: ESP32 Distance Project
+Author: ESP32 Template Project
 Date: 2025
 """
 
@@ -35,9 +35,9 @@ import logging
 import argparse
 from pathlib import Path
 
-# Determine project directory dynamically
+# Determine project directory dynamically (3 levels up from tools/qemu/network/)
 SCRIPT_DIR = Path(__file__).parent.resolve()
-PROJECT_DIR = SCRIPT_DIR.parent
+PROJECT_DIR = SCRIPT_DIR.parent.parent.parent
 TEMP_DIR = PROJECT_DIR / "temp"
 
 # Setup logging (will be configured based on command line arguments)
@@ -226,8 +226,6 @@ class SerialTunBridge:
                         # Map protocol numbers to names
                         proto_map = {1: "ICMP", 6: "TCP", 17: "UDP"}
                         proto_name = proto_map.get(protocol, f"Proto{protocol}")
-                        proto_map = {1: "ICMP", 6: "TCP", 17: "UDP"}
-                        proto_name = proto_map.get(protocol, f"Proto{protocol}")
                 except:
                     pass
             
@@ -380,7 +378,6 @@ def main():
         action='store_true',
         help='Quiet mode: only log errors (to ${PROJECT_DIR}/temp/tun_errors.log)'
     )
-    # Keine Port-Option mehr nötig, da jetzt Unix-Socket verwendet wird
     args = parser.parse_args()
     
     # Configure logging based on quiet mode
@@ -406,11 +403,11 @@ def main():
         logger.error("This script must be run as root (for TUN device)")
         if not args.quiet:
             print("Error: This script must be run as root (for TUN device)", file=sys.stderr)
-            print("Try: sudo ./serial_tun_bridge.py", file=sys.stderr)
+            print("Try: sudo ./network/serial_tun_bridge.py", file=sys.stderr)
         return 1
     
     if not args.quiet:
-        print(f"Starting TUN bridge (port {args.port})...")
+        print(f"Starting TUN bridge...")
         print(f"TUN device: {TUN_NAME} ({TUN_IP})")
         print(f"ESP32 IP: {ESP32_IP}")
         print("Press Ctrl+C to stop\n")

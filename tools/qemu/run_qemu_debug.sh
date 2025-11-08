@@ -19,11 +19,11 @@ if [ -z "$DISPLAY" ]; then
     export DISPLAY=:1
 fi
 
-"${PROJECT_DIR}/tools/network/ensure-network-stack.sh"
+"${PROJECT_DIR}/tools/qemu/network/ensure-network-stack.sh"
 echo -e "${YELLOW}Starting QEMU in Debug Mode (graphics, waits for GDB)...${NC}"
 
 cd "${PROJECT_DIR}"
-idf.py qemu -g --qemu-extra-args="-serial unix:${UART0_SOCKET},server,nowait -serial unix:${UART1_SOCKET},server,nowait" &
+idf.py qemu -d -g --qemu-extra-args="-serial unix:${UART0_SOCKET},server,nowait -serial unix:${UART1_SOCKET},server,nowait" &
 QEMU_PID=$!
 
 echo -e "${YELLOW}QEMU running with PID: ${QEMU_PID}${NC}"

@@ -29,9 +29,9 @@ INITIAL_BACKOFF = 0.5  # seconds
 # Parse command line arguments
 QUIET_MODE = '--quiet' in sys.argv
 
-# Determine project directory dynamically
+# Determine project directory dynamically (three levels up from tools/qemu/network/)
 SCRIPT_DIR = Path(__file__).parent.resolve()
-PROJECT_DIR = SCRIPT_DIR.parent
+PROJECT_DIR = SCRIPT_DIR.parent.parent.parent
 ERROR_LOG = PROJECT_DIR / "temp" / "proxy_errors.log"
 
 def log_error(message):

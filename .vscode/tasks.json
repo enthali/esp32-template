@@ -15,7 +15,7 @@
                 "background": {
                     "activeOnStart": true,
                     "beginsPattern": ".*Starting QEMU.*",
-                    "endsPattern": ".*QEMU_READY_FOR_GDB.*"
+                    "endsPattern": ".*QEMU running with PID:.*"
                 }
             },
             "presentation": {
