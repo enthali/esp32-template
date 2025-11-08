@@ -12,7 +12,7 @@
             "MIMode": "gdb",
             "miDebuggerPath": "xtensa-esp32-elf-gdb",
             "miDebuggerServerAddress": "localhost:3333",
-            "preLaunchTask": "Start QEMU Debug Server",
+            "preLaunchTask": "Run QEMU Debug",
             "postDebugTask": "Stop QEMU",
             "setupCommands": [
                 {

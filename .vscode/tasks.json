@@ -2,9 +2,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Start QEMU Debug Server",
+            "label": "Run QEMU Debug",
             "type": "shell",
-            "command": "${workspaceFolder}/tools/qemu/run-qemu-graphics.sh",
+            "command": "${workspaceFolder}/tools/qemu/run_qemu_debug.sh",
             "isBackground": true,
             "problemMatcher": {
                 "pattern": {
@@ -29,7 +29,7 @@
         {
             "label": "Run QEMU (No Debug)",
             "type": "shell",
-            "command": "${workspaceFolder}/tools/qemu/run-qemu-graphics-run.sh",
+            "command": "${workspaceFolder}/tools/qemu/run_qemu.sh",
             "isBackground": true,
             "presentation": {
                 "echo": true,

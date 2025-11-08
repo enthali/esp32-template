@@ -44,8 +44,7 @@ TEMP_DIR = PROJECT_DIR / "temp"
 logger = logging.getLogger(__name__)
 
 # Configuration
-SERIAL_HOST = 'localhost'
-SERIAL_PORT = 5556
+UART1_SOCKET = TEMP_DIR / "esp32-uart1.sock"
 TUN_NAME = 'tun0'
 TUN_IP = '192.168.100.1'
 TUN_NETMASK = '255.255.255.0'
@@ -157,24 +156,23 @@ class SerialTunBridge:
             return self.tun
 
     def connect_to_serial(self):
-        """Connect to QEMU UART TCP socket - retry forever"""
-        logger.info(f"Connecting to QEMU UART at {SERIAL_HOST}:{SERIAL_PORT}...")
-        
+        """Connect to QEMU UART1 Unix socket - retry forever"""
+        logger.info(f"Connecting to QEMU UART1 socket at {UART1_SOCKET} ...")
         attempt = 0
-        while True:  # Retry forever
+        while True:
             try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.connect((SERIAL_HOST, SERIAL_PORT))
-                logger.info(f"Connected to QEMU UART (after {attempt} attempts)")
+                sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                sock.connect(str(UART1_SOCKET))
+                logger.info(f"Connected to QEMU UART1 socket (after {attempt} attempts)")
                 return sock
-            except ConnectionRefusedError:
+            except FileNotFoundError:
                 attempt += 1
-                if attempt == 1 or attempt % 10 == 0:  # Log first and every 10th attempt
-                    logger.warning(f"Connection refused, retrying... (attempt {attempt})")
+                if attempt == 1 or attempt % 10 == 0:
+                    logger.warning(f"Socket not found, retrying... (attempt {attempt})")
                 import time
                 time.sleep(1)
             except Exception as e:
-                logger.error(f"Failed to connect to serial: {e}")
+                logger.error(f"Failed to connect to UART1 socket: {e}")
                 import time
                 time.sleep(1)
 
@@ -382,12 +380,7 @@ def main():
         action='store_true',
         help='Quiet mode: only log errors (to ${PROJECT_DIR}/temp/tun_errors.log)'
     )
-    parser.add_argument(
-        '--port', '-p',
-        type=int,
-        default=SERIAL_PORT,
-        help=f'QEMU UART TCP port (default: {SERIAL_PORT})'
-    )
+    # Keine Port-Option mehr nötig, da jetzt Unix-Socket verwendet wird
     args = parser.parse_args()
     
     # Configure logging based on quiet mode
