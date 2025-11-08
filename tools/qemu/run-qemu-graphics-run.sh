@@ -29,14 +29,41 @@ if [ -z "$DISPLAY" ]; then
     export DISPLAY=:1
 fi
 
-# Build project first (delta build is fast, ensures latest code)
-echo -e "${YELLOW}Building project...${NC}"
-cd "${PROJECT_DIR}"
-idf.py build || {
-    echo -e "${RED}Build failed!${NC}"
-    exit 1
-}
-echo ""
+# Check if build is needed
+BUILD_NEEDED=false
+if [ ! -d "${PROJECT_DIR}/build" ]; then
+    BUILD_NEEDED=true
+    echo -e "${YELLOW}No build directory found${NC}"
+elif [ ! -f "${PROJECT_DIR}/build/bootloader/bootloader.bin" ]; then
+    BUILD_NEEDED=true
+    echo -e "${YELLOW}Bootloader binary missing${NC}"
+else
+    # Extract project name for ELF check
+    PROJECT_NAME=$(grep -oP 'set\(PROJECT_NAME\s+"?\K[^")]+' "${PROJECT_DIR}/CMakeLists.txt" | head -1 | tr -d ' ')
+    if [ -z "$PROJECT_NAME" ]; then
+        PROJECT_NAME="esp32-template"
+    fi
+    
+    if [ ! -f "${PROJECT_DIR}/build/${PROJECT_NAME}.elf" ]; then
+        BUILD_NEEDED=true
+        echo -e "${YELLOW}ELF binary missing${NC}"
+    fi
+fi
+
+# Build only if necessary
+if [ "$BUILD_NEEDED" = true ]; then
+    echo -e "${BLUE}🔨 Building project...${NC}"
+    cd "${PROJECT_DIR}"
+    idf.py build || {
+        echo -e "${RED}Build failed!${NC}"
+        exit 1
+    }
+    echo -e "${GREEN}✓ Build complete${NC}"
+    echo ""
+else
+    echo -e "${GREEN}✓ Build artifacts found, skipping build${NC}"
+    echo ""
+fi
 
 # Ensure network stack (TUN bridge + HTTP proxy) is running
 echo -e "${YELLOW}Checking network infrastructure...${NC}"
