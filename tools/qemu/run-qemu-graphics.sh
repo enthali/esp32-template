@@ -86,6 +86,8 @@ echo -e "${YELLOW}Note:${NC} QEMU will wait for GDB to connect"
 echo -e "${YELLOW}VS Code debugger will connect automatically${NC}"
 echo ""
 echo -e "${BLUE}========================================${NC}"
+echo -e "${GREEN}QEMU is ready and waiting for GDB connection.${NC}"
+echo -e "${BLUE}========================================${NC}"
 echo ""
 
 # Run QEMU via ESP-IDF with:
@@ -108,6 +110,7 @@ for i in {1..30}; do
     if nc -z localhost 3333 2>/dev/null; then
         echo -e "${GREEN}✓ QEMU is ready and waiting for GDB connection${NC}"
         echo -e "${GREEN}✓ Graphics window should be visible in noVNC${NC}"
+        echo "QEMU_READY_FOR_GDB"  # Plain text marker for VS Code task matcher - AFTER port check!
         break
     fi
     sleep 0.5
