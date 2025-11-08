@@ -11,6 +11,7 @@ main/components/config_manager/config_factory_generated.c
 !.vscode/launch.json
 !.vscode/tasks.json
 !.vscode/settings.json
+!.vscode/c_cpp_properties.json
 !.vscode/mcp.json
 !.vscode/mcp.json.example
 
