@@ -23,17 +23,29 @@ fi
 echo -e "${YELLOW}Starting QEMU (graphics, runs immediately)...${NC}"
 
 cd "${PROJECT_DIR}"
+
+# Start idf.py qemu in background (will build first if needed)
 idf.py qemu -g --qemu-extra-args="-serial unix:${UART0_SOCKET},server,nowait -serial unix:${UART1_SOCKET},server,nowait" &
 QEMU_PID=$!
 
-echo -e "${YELLOW}QEMU running with PID: ${QEMU_PID}${NC}"
-echo -e "${YELLOW}Press Ctrl+C to stop QEMU${NC}"
-    # Warte auf das Erscheinen der UART-Sockets (ohne Timeout, abbrechbar mit Ctrl+C)
+echo -e "${YELLOW}QEMU build/start process running with PID: ${QEMU_PID}${NC}"
+
+# Wait for ELF file to exist (created by build process)
+ELF_FILE="${PROJECT_DIR}/build/esp32-template.elf"
+echo -e "${YELLOW}Waiting for build to complete...${NC}"
+while [ ! -f "${ELF_FILE}" ]; do
+    sleep 0.5
+done
+echo -e "${GREEN}✓ Build complete: ${ELF_FILE}${NC}"
+
+# Wait for UART sockets (QEMU has started)
+echo -e "${YELLOW}Waiting for QEMU to start...${NC}"
 while [ ! -S "${UART0_SOCKET}" ] || [ ! -S "${UART1_SOCKET}" ]; do
     sleep 0.5
 done
 echo -e "${GREEN}✓ QEMU UART0 socket ready: ${UART0_SOCKET}${NC}"
 echo -e "${GREEN}✓ QEMU UART1 socket ready: ${UART1_SOCKET}${NC}"
+
 sleep 1
 echo -e "${YELLOW}QEMU running with PID: ${QEMU_PID}${NC}"
 echo -e "${YELLOW}Press Ctrl+C to stop QEMU${NC}"
