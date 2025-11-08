@@ -60,4 +60,20 @@ if [ ! -z "$MONITOR_PIDS" ]; then
     echo -e "${GREEN}idf_monitor stopped.${NC}"
 fi
 
+# Kill network bridge processes
+BRIDGE_PIDS=$(pgrep -f "serial_tun_bridge.py" || true)
+if [ ! -z "$BRIDGE_PIDS" ]; then
+    echo -e "${YELLOW}Stopping serial_tun_bridge...${NC}"
+    kill $BRIDGE_PIDS 2>/dev/null || true
+    echo -e "${GREEN}serial_tun_bridge stopped.${NC}"
+fi
+
+# Kill HTTP proxy processes
+PROXY_PIDS=$(pgrep -f "http_proxy.py" || true)
+if [ ! -z "$PROXY_PIDS" ]; then
+    echo -e "${YELLOW}Stopping http_proxy...${NC}"
+    kill $PROXY_PIDS 2>/dev/null || true
+    echo -e "${GREEN}http_proxy stopped.${NC}"
+fi
+
 echo -e "${GREEN}Cleanup complete.${NC}"
