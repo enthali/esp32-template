@@ -18,7 +18,11 @@ if [ ! -d "$BUILD_DIR" ]; then
 fi
 
 # Get project name from CMakeLists.txt
-PROJECT_NAME=$(grep -oP 'project\(\K[^)]+' "$PROJECT_DIR/CMakeLists.txt" | head -1 | tr -d ' ')
+# Try to extract from set(PROJECT_NAME ...) or project() command
+PROJECT_NAME=$(grep -oP 'set\(PROJECT_NAME\s+"?\K[^")]+' "$PROJECT_DIR/CMakeLists.txt" | head -1 | tr -d ' ')
+if [ -z "$PROJECT_NAME" ]; then
+    PROJECT_NAME=$(grep -oP 'project\(\K[^)]+' "$PROJECT_DIR/CMakeLists.txt" | head -1 | tr -d ' ')
+fi
 if [ -z "$PROJECT_NAME" ]; then
     PROJECT_NAME="esp32-template"
 fi

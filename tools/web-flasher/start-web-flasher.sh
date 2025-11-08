@@ -20,11 +20,51 @@ echo -e "${BLUE}║         ESP32 Template Web Flasher Server                 �
 echo -e "${BLUE}╚════════════════════════════════════════════════════════════╝${NC}"
 echo ""
 
-# Check if build exists
+# Check if build exists and has required files
+BUILD_NEEDED=false
 if [ ! -d "$PROJECT_DIR/build" ]; then
-    echo -e "${RED}❌ Error: Build directory not found${NC}"
-    echo -e "${YELLOW}Please run 'idf.py build' first${NC}"
-    exit 1
+    BUILD_NEEDED=true
+    echo -e "${YELLOW}⚠️  No build directory found${NC}"
+else
+    # Check for required build artifacts
+    if [ ! -f "$PROJECT_DIR/build/bootloader/bootloader.bin" ] || \
+       [ ! -f "$PROJECT_DIR/build/partition_table/partition-table.bin" ]; then
+        BUILD_NEEDED=true
+        echo -e "${YELLOW}⚠️  Build artifacts incomplete${NC}"
+    fi
+    
+    # Check if app binary exists (extract project name first)
+    PROJECT_NAME=$(grep -oP 'set\(PROJECT_NAME\s+"?\K[^")]+' "$PROJECT_DIR/CMakeLists.txt" | head -1 | tr -d ' ')
+    if [ -z "$PROJECT_NAME" ]; then
+        PROJECT_NAME="esp32-template"
+    fi
+    
+    if [ ! -f "$PROJECT_DIR/build/${PROJECT_NAME}.bin" ]; then
+        BUILD_NEEDED=true
+        echo -e "${YELLOW}⚠️  Application binary not found${NC}"
+    fi
+fi
+
+# Build if necessary
+if [ "$BUILD_NEEDED" = true ]; then
+    echo -e "${BLUE}🔨 Building firmware...${NC}"
+    echo ""
+    cd "$PROJECT_DIR"
+    idf.py build
+    BUILD_EXIT=$?
+    
+    if [ $BUILD_EXIT -ne 0 ]; then
+        echo ""
+        echo -e "${RED}❌ Build failed with exit code $BUILD_EXIT${NC}"
+        echo -e "${YELLOW}Please fix build errors before starting web flasher${NC}"
+        exit $BUILD_EXIT
+    fi
+    
+    echo ""
+    echo -e "${GREEN}✅ Build completed successfully${NC}"
+    echo ""
+else
+    echo -e "${GREEN}✅ Build artifacts found${NC}"
 fi
 
 # Generate manifest
