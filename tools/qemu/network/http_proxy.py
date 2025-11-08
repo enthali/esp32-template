@@ -260,9 +260,14 @@ class ProxyHandler(http.server.SimpleHTTPRequestHandler):
             print(f"{self.address_string()} - {format % args}")
 
 if __name__ == "__main__":
-    # Clear error log on startup
-    if os.path.exists(ERROR_LOG):
-        os.remove(ERROR_LOG)
+    # Always log startup (even in quiet mode) for debugging
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    startup_msg = f"[{timestamp}] HTTP Proxy starting on http://localhost:{PORT} -> {ESP32_URL}"
+    
+    # Create log directory and write startup message
+    ERROR_LOG.parent.mkdir(parents=True, exist_ok=True)
+    with open(ERROR_LOG, 'w') as f:  # Overwrite on startup
+        f.write(startup_msg + "\n")
     
     log_info(f"HTTP Proxy starting on http://localhost:{PORT}")
     log_info(f"Forwarding to ESP32 at {ESP32_URL}")
@@ -270,8 +275,23 @@ if __name__ == "__main__":
         log_info(f"Quiet mode: Errors logged to {ERROR_LOG}")
     log_info("Press Ctrl+C to stop\n")
     
-    with socketserver.TCPServer(("", PORT), ProxyHandler) as httpd:
-        try:
-            httpd.serve_forever()
-        except KeyboardInterrupt:
-            log_info("\nProxy stopped")
+    try:
+        # Enable SO_REUSEADDR to allow immediate port reuse after restart
+        socketserver.TCPServer.allow_reuse_address = True
+        
+        with socketserver.TCPServer(("", PORT), ProxyHandler) as httpd:
+            # Log successful binding
+            success_msg = f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Proxy successfully bound to port {PORT}"
+            with open(ERROR_LOG, 'a') as f:
+                f.write(success_msg + "\n")
+            
+            try:
+                httpd.serve_forever()
+            except KeyboardInterrupt:
+                log_info("\nProxy stopped")
+    except OSError as e:
+        error_msg = f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] FATAL: Failed to bind to port {PORT}: {e}"
+        with open(ERROR_LOG, 'a') as f:
+            f.write(error_msg + "\n")
+        log_error(f"Failed to start proxy: {e}")
+        sys.exit(1)

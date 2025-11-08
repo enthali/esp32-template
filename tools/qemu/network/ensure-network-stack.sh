@@ -38,10 +38,12 @@ fi
 # Check if HTTP proxy is running
 if pgrep -f "http_proxy.py" > /dev/null; then
     echo -e "${GREEN}✓${NC} HTTP proxy already running"
+elif netstat -tuln 2>/dev/null | grep -q ":8888 " || ss -tuln 2>/dev/null | grep -q ":8888 "; then
+    echo -e "${GREEN}✓${NC} HTTP proxy port 8888 already in use (proxy running)"
 else
     echo -e "${YELLOW}Starting HTTP proxy...${NC}"
     python3 "${PROXY_SCRIPT}" --quiet 2>"${PROXY_LOG}" &
-    sleep 0.5
+    sleep 1
     if pgrep -f "http_proxy.py" > /dev/null; then
         echo -e "${GREEN}✓${NC} HTTP proxy started"
     else

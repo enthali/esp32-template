@@ -385,6 +385,14 @@ def main():
         # In quiet mode: only errors to file
         error_log = TEMP_DIR / 'tun_errors.log'
         error_log.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Always log startup message for debugging
+        from datetime import datetime
+        with open(error_log, 'w') as f:  # Overwrite on startup
+            f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] TUN bridge starting...\n")
+            f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] TUN device: {TUN_NAME} ({TUN_IP})\n")
+            f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ESP32 IP: {ESP32_IP}\n")
+        
         logging.basicConfig(
             level=logging.ERROR,
             format='%(asctime)s - %(levelname)s - %(message)s',

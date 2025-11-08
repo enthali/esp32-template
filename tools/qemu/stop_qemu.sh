@@ -60,11 +60,17 @@ if [ ! -z "$MONITOR_PIDS" ]; then
     echo -e "${GREEN}idf_monitor stopped.${NC}"
 fi
 
-# Kill network bridge processes
+# Kill network bridge processes (may need sudo since it was started with sudo)
 BRIDGE_PIDS=$(pgrep -f "serial_tun_bridge.py" || true)
 if [ ! -z "$BRIDGE_PIDS" ]; then
     echo -e "${YELLOW}Stopping serial_tun_bridge...${NC}"
-    kill $BRIDGE_PIDS 2>/dev/null || true
+    sudo kill $BRIDGE_PIDS 2>/dev/null || kill $BRIDGE_PIDS 2>/dev/null || true
+    sleep 0.5
+    # Force kill if still running
+    BRIDGE_PIDS=$(pgrep -f "serial_tun_bridge.py" || true)
+    if [ ! -z "$BRIDGE_PIDS" ]; then
+        sudo kill -9 $BRIDGE_PIDS 2>/dev/null || true
+    fi
     echo -e "${GREEN}serial_tun_bridge stopped.${NC}"
 fi
 

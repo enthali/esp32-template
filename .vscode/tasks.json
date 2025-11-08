@@ -51,6 +51,20 @@
                 "showReuseMessage": false
             },
             "problemMatcher": []
+        },
+        {
+            "label": "UART0 Terminal",
+            "type": "shell",
+            "command": "${workspaceFolder}/tools/qemu/uart0_terminal.sh",
+            "isBackground": true,
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": false
+            },
+            "problemMatcher": []
         }
     ]
 }
