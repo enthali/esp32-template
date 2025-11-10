@@ -20,7 +20,6 @@ The [`prompt-snippets/`](prompt-snippets/) directory contains detailed reference
 - **[build-instructions.md](prompt-snippets/build-instructions.md)** - Build, flash, and troubleshooting guides
 - **[development.md](prompt-snippets/development.md)** - Development workflow and branch management
 - **[commit-message.md](prompt-snippets/commit-message.md)** - Commit message format and examples
-- **[oft-requirements.md](prompt-snippets/oft-requirements.md)** - OpenFastTrack requirements methodology
 
 ### GitHub Actions
 
@@ -45,7 +44,7 @@ The instructions provide context about:
 - Memory management for ESP32 (4MB flash)
 - FreeRTOS and ESP-IDF best practices
 - Testing, linting, and quality gates
-- OpenFastTrack requirements methodology
+- Sphinx-Needs requirements methodology
 
 ## For Contributors
 

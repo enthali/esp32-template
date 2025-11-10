@@ -1,42 +1,47 @@
 /**
  * @file config_manager.h
- * @brief Configuration Management API for ESP32 Distance Sensor Project
+ * @brief JSON Schema-Driven Configuration Management API
  * 
- * This module provides runtime configuration management with persistent NVS storage,
- * parameter validation, and thread-safe access. It implements the dynamic configuration
- * system requirements for the ESP32 Distance Sensor project.
+ * This module provides a simple key-value configuration system with:
+ * - JSON schema as single source of truth (config_schema.json)
+ * - Direct NVS key-value storage (no enums, no metadata tables)
+ * - Type-safe API functions (string, int32, int16, bool)
+ * - Build-time factory defaults generation (no runtime JSON parsing)
+ * - Web integration: schema embedded for browser UI generation
  * 
- * FEATURES:
- * - Runtime configuration structure matching compile-time defaults
- * - NVS persistence with power-loss protection
- * - Parameter validation with range checking
- * - Thread-safe access with mutex protection
- * - Automatic fallback to factory defaults
- * - Configuration versioning and change tracking
+ * ARCHITECTURE:
+ * Config manager is a thin NVS wrapper with no validation logic.
+ * Browser performs validation using JSON schema constraints.
  * 
- * THREAD SAFETY:
- * All functions are thread-safe and can be called from multiple tasks simultaneously.
- * Internal mutex protection ensures data consistency.
+ * USAGE:
+ * 1. Define parameters in config_schema.json
+ * 2. Build system generates config_factory_generated.c
+ * 3. Application calls config_get_xxx("key"), config_set_xxx("key", value)
+ * 4. Web UI fetches /config_schema.json and generates forms dynamically
+ * 
+ * MEMORY EFFICIENCY:
+ * No runtime caches - direct NVS access on every get/set.
+ * Trades CPU cycles for zero RAM overhead.
  * 
  * ERROR HANDLING:
- * All functions return esp_err_t codes for proper error handling integration
- * with ESP-IDF error handling patterns.
+ * All functions return esp_err_t for ESP-IDF error handling patterns.
  * 
- * @author ESP32 Distance Project Team
+ * @author ESP32 Template Project
  * @date 2025
- * @version 1.0
+ * @version 3.0 (JSON-based)
  * 
  * Requirements Traceability:
- * - REQ-CFG-3: Configuration Data Structure
- * - REQ-CFG-4: Non-Volatile Storage (NVS)
- * - REQ-CFG-5: Configuration API
- * - REQ-CFG-6: Parameter Validation
+ * - REQ_CFG_JSON_1: JSON Schema as Source of Truth
+ * - REQ_CFG_JSON_6: Key-Based NVS Storage
+ * - REQ_CFG_JSON_7: Type-Safe Configuration API
+ * - REQ_CFG_JSON_8: Persistent Configuration Storage
  */
 
 #pragma once
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include "esp_err.h"
 
 #ifdef __cplusplus
@@ -44,240 +49,333 @@ extern "C" {
 #endif
 
 // =============================================================================
-// CONFIGURATION DATA STRUCTURE (REQ-CFG-3)
+// CONFIGURATION LIFECYCLE (REQ_CFG_JSON_12)
 // =============================================================================
 
 /**
- * @brief Current configuration version
- * @note Used for compatibility checking and migration
- */
-#define CONFIG_VERSION 1
-
-/**
- * @brief Maximum length for WiFi SSID (including null terminator)
- * @note Based on IEEE 802.11 standard (32 chars + null)
- */
-#define CONFIG_WIFI_SSID_MAX_LEN 33
-
-/**
- * @brief Maximum length for WiFi password (including null terminator)
- * @note Based on WPA standard (64 chars + null)
- */
-#define CONFIG_WIFI_PASSWORD_MAX_LEN 65
-
-/**
- * @brief Runtime configuration structure
+ * @brief Initialize configuration manager
  * 
- * Contains all user-configurable parameters with metadata for versioning
- * and change tracking. Optimized for NVS storage efficiency using appropriate
- * data types aligned with ESP32 memory requirements.
+ * Opens NVS namespace "config". If namespace is empty or uninitialized,
+ * calls config_factory_reset() to write default values from JSON schema.
  * 
- * @requirement REQ-CFG-3 AC-1-6
- */
-typedef struct {
-    // Configuration metadata
-    uint32_t config_version;         ///< Configuration version (current: 1)
-    uint32_t save_count;             ///< Number of times configuration has been saved
-    
-    // Distance sensor settings (runtime configurable)
-    uint16_t distance_min_mm;        ///< Minimum distance for LED mapping in mm (50-1000 = 5.0-100.0cm)
-    uint16_t distance_max_mm;        ///< Maximum distance for LED mapping in mm (200-4000 = 20.0-400.0cm)
-    uint16_t measurement_interval_ms; ///< Measurement interval in ms (50-1000)
-    uint32_t sensor_timeout_ms;      ///< Sensor timeout in ms (10-50)
-    int16_t temperature_c_x10;       ///< Ambient temperature in tenths of Celsius (-200 to 600 = -20.0 to 60.0°C)
-    uint16_t smoothing_factor;       ///< EMA smoothing factor (100-1000, where 1000=1.0, 300=0.3)
-    
-    // LED settings (runtime configurable)
-    uint8_t led_count;               ///< Number of LEDs in strip (1-60)
-    uint8_t led_brightness;          ///< LED brightness level (10-255)
-    
-    // WiFi settings (runtime configurable)
-    char wifi_ssid[CONFIG_WIFI_SSID_MAX_LEN];        ///< WiFi network name
-    char wifi_password[CONFIG_WIFI_PASSWORD_MAX_LEN]; ///< WiFi network password
-    uint8_t wifi_ap_channel;         ///< WiFi AP channel (1-13)
-    uint8_t wifi_ap_max_conn;        ///< Maximum AP connections (1-10)
-    uint8_t wifi_sta_max_retry;      ///< STA connection retry attempts (1-10)
-    uint32_t wifi_sta_timeout_ms;    ///< STA connection timeout in ms (1000-30000)
-} system_config_t;
-
-// =============================================================================
-// CONFIGURATION API (REQ-CFG-5)
-// =============================================================================
-
-/**
- * @brief Initialize configuration management subsystem
- * 
- * Initializes the configuration manager, creates necessary mutex protection,
- * and loads configuration from NVS. If NVS read fails, automatically performs
- * factory reset and saves default configuration.
- * 
- * Must be called once during system startup before any other config functions.
+ * Must be called once during system startup, before any other config_*
+ * functions are used.
  * 
  * @return ESP_OK on success
- * @return ESP_ERR_NO_MEM if memory allocation fails
- * @return Other ESP error codes for initialization failures
+ * @return ESP_ERR_NVS_* on NVS initialization failure
  * 
- * @requirement REQ-CFG-5 AC-1
+ * @note Not thread-safe. Call once during startup before multi-task access.
+ * @note Subsequent calls will return ESP_ERR_INVALID_STATE.
+ * 
+ * @requirement REQ_CFG_JSON_12 AC-1
  */
 esp_err_t config_init(void);
 
 /**
- * @brief Load configuration from NVS
+ * @brief Reset all configuration to factory defaults
  * 
- * Reads current configuration from NVS storage into provided structure.
- * If NVS read fails or validation fails, automatically calls config_factory_reset()
- * to restore defaults and persist them.
- * 
- * @param[out] config Pointer to configuration structure to populate
- * @return ESP_OK on success
- * @return ESP_ERR_INVALID_ARG if config is NULL
- * @return ESP_ERR_NOT_FOUND if no configuration exists in NVS (triggers factory reset)
- * @return Other ESP error codes for NVS or validation failures
- * 
- * @requirement REQ-CFG-5 AC-2, AC-3
- */
-esp_err_t config_load(system_config_t* config);
-
-/**
- * @brief Save configuration to NVS
- * 
- * Validates configuration parameters using config_validate_range() and saves
- * to NVS if validation passes. Updates save_count and performs atomic write
- * operation for power-loss protection.
- * 
- * @param[in] config Pointer to configuration structure to save
- * @return ESP_OK on success
- * @return ESP_ERR_INVALID_ARG if config is NULL or validation fails
- * @return Other ESP error codes for NVS write failures
- * 
- * @requirement REQ-CFG-5 AC-4
- */
-esp_err_t config_save(const system_config_t* config);
-
-/**
- * @brief Validate configuration parameter ranges
- * 
- * Validates all parameters in configuration structure against defined ranges
- * and inter-parameter relationships. Logs specific error messages for invalid
- * parameters.
- * 
- * @param[in] config Pointer to configuration structure to validate
- * @return ESP_OK if all parameters are valid
- * @return ESP_ERR_INVALID_ARG if config is NULL
- * @return ESP_ERR_INVALID_SIZE if any parameter is out of range
- * 
- * @requirement REQ-CFG-5 AC-5, REQ-CFG-6 AC-1-6
- */
-esp_err_t config_validate_range(const system_config_t* config);
-
-/**
- * @brief Reset configuration to factory defaults
- * 
- * Restores compile-time defaults from config.h and persists them to NVS
- * using config_save(). Completes the error recovery sequence atomically.
+ * Erases all values in NVS "config" namespace and calls
+ * config_write_factory_defaults() (auto-generated from JSON schema).
  * 
  * @return ESP_OK on success
- * @return Other ESP error codes for save operation failures
+ * @return ESP_ERR_NVS_* on NVS operation failure
  * 
- * @requirement REQ-CFG-5 AC-6, AC-9
+ * @note Not thread-safe. Caller must ensure no concurrent NVS access.
+ * @note All configuration values will be overwritten with defaults.
+ * 
+ * @requirement REQ_CFG_JSON_9
  */
 esp_err_t config_factory_reset(void);
 
 /**
- * @brief Check if parameter value is within valid range
- * @param[in] param_name Name of parameter for logging
- * @param[in] value Value to validate
- * @param[in] min_val Minimum valid value
- * @param[in] max_val Maximum valid value
- * @return true if value is within range, false otherwise
+ * @brief Manually commit pending NVS changes
  * 
- * @requirement REQ-CFG-6 AC-1-2
- */
-/**
- * @brief Validate integer parameter is within specified range
+ * Commits all pending NVS write operations to flash storage.
+ * Use this after multiple _no_commit() calls to batch writes.
  * 
- * @param param_name Parameter name for logging
- * @param value Value to validate
- * @param min_val Minimum allowed value (inclusive)
- * @param max_val Maximum allowed value (inclusive)
- * @return true if valid, false if out of range
- */
-bool config_is_valid_int_range(const char* param_name, int32_t value, int32_t min_val, int32_t max_val);
-
-/**
- * @brief Get current configuration (thread-safe)
- * 
- * Returns a copy of the current configuration structure with mutex protection.
- * This function is safe to call from multiple tasks simultaneously.
- * 
- * @param[out] config Pointer to configuration structure to populate
  * @return ESP_OK on success
- * @return ESP_ERR_INVALID_ARG if config is NULL
- * @return ESP_ERR_INVALID_STATE if config manager not initialized
+ * @return ESP_ERR_NVS_* on commit failure
+ * 
+ * @note Thread-safe. NVS internal locking ensures safe concurrent access.
+ * 
+ * @requirement REQ_CFG_JSON_8
  */
-esp_err_t config_get_current(system_config_t* config);
+esp_err_t config_commit(void);
 
 /**
- * @brief Update current configuration (thread-safe)
+ * @brief Write factory defaults to NVS (auto-generated)
  * 
- * Updates the current configuration with validation and mutex protection.
- * Does not automatically save to NVS - call config_save() separately if
- * persistence is required.
+ * This function is generated by tools/generate_config_factory.py from
+ * config_schema.json during build. It writes all default values to NVS.
  * 
- * @param[in] config Pointer to new configuration structure
- * @return ESP_OK on success
- * @return ESP_ERR_INVALID_ARG if config is NULL or validation fails
- * @return ESP_ERR_INVALID_STATE if config manager not initialized
+ * Do not call directly - use config_factory_reset() instead.
+ * 
+ * @requirement REQ_CFG_JSON_4
  */
-esp_err_t config_set_current(const system_config_t* config);
-
-/**
- * @brief Perform NVS health check and diagnostics (REQ-CFG-11)
- * 
- * Checks NVS partition health, available space, and configuration integrity.
- * Can be used for system monitoring and preventive maintenance.
- * 
- * @param[out] free_entries Number of free NVS entries (optional, can be NULL)
- * @param[out] total_entries Total number of NVS entries (optional, can be NULL)
- * @return ESP_OK if NVS is healthy
- * @return ESP_ERR_NVS_CORRUPT if corruption is detected
- * @return Other ESP error codes for NVS issues
- */
-esp_err_t config_nvs_health_check(size_t* free_entries, size_t* total_entries);
+void config_write_factory_defaults(void);
 
 // =============================================================================
-// PARAMETER VALIDATION CONSTANTS (REQ-CFG-6)
+// STRING PARAMETER ACCESS (REQ_CFG_JSON_7)
 // =============================================================================
 
-// Distance sensor parameter ranges
-#define CONFIG_DISTANCE_MIN_MM_MIN          50     // 5.0cm in mm
-#define CONFIG_DISTANCE_MIN_MM_MAX          1000   // 100.0cm in mm
-#define CONFIG_DISTANCE_MAX_MM_MIN          200    // 20.0cm in mm
-#define CONFIG_DISTANCE_MAX_MM_MAX          4000   // 400.0cm in mm
-#define CONFIG_MEASUREMENT_INTERVAL_MS_MIN  50
-#define CONFIG_MEASUREMENT_INTERVAL_MS_MAX  1000
-#define CONFIG_SENSOR_TIMEOUT_MS_MIN        10
-#define CONFIG_SENSOR_TIMEOUT_MS_MAX        50
-#define CONFIG_TEMPERATURE_C_X10_MIN        -200   // -20.0°C in tenths
-#define CONFIG_TEMPERATURE_C_X10_MAX        600    // 60.0°C in tenths
-#define CONFIG_SMOOTHING_FACTOR_MIN         100    // 0.1 * 1000
-#define CONFIG_SMOOTHING_FACTOR_MAX         1000   // 1.0 * 1000
+/**
+ * @brief Get string parameter value
+ * 
+ * Reads string directly from NVS using provided key.
+ * 
+ * @param[in] key NVS key name (must match config_schema.json field key)
+ * @param[out] buffer Buffer to store string (must be at least buf_len bytes)
+ * @param[in] buf_len Maximum buffer size (including null terminator)
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if key or buffer is NULL
+ * @return ESP_ERR_NVS_NOT_FOUND if key doesn't exist in NVS
+ * @return ESP_ERR_NVS_INVALID_LENGTH if buffer too small
+ * 
+ * @note Thread-safe. NVS internal locking ensures safe concurrent access.
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-1
+ */
+esp_err_t config_get_string(const char* key, char* buffer, size_t buf_len);
 
-// LED parameter ranges
-#define CONFIG_LED_COUNT_MIN                1
-#define CONFIG_LED_COUNT_MAX                100
-#define CONFIG_LED_BRIGHTNESS_MIN           10
-#define CONFIG_LED_BRIGHTNESS_MAX           255
+/**
+ * @brief Set string parameter value
+ * 
+ * Writes string directly to NVS using provided key.
+ * No validation performed (browser validates using JSON schema).
+ * 
+ * @param[in] key NVS key name (must match config_schema.json field key)
+ * @param[in] value New parameter value (null-terminated string)
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if key or value is NULL
+ * @return ESP_ERR_NVS_* on NVS write failure
+ * 
+ * @note Thread-safe. NVS internal locking ensures safe concurrent access.
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-2
+ */
+esp_err_t config_set_string(const char* key, const char* value);
 
-// WiFi parameter ranges
-#define CONFIG_WIFI_AP_CHANNEL_MIN          1
-#define CONFIG_WIFI_AP_CHANNEL_MAX          13
-#define CONFIG_WIFI_AP_MAX_CONN_MIN         1
-#define CONFIG_WIFI_AP_MAX_CONN_MAX         10
-#define CONFIG_WIFI_STA_MAX_RETRY_MIN       1
-#define CONFIG_WIFI_STA_MAX_RETRY_MAX       10
-#define CONFIG_WIFI_STA_TIMEOUT_MS_MIN      1000
-#define CONFIG_WIFI_STA_TIMEOUT_MS_MAX      30000
+/**
+ * @brief Set string parameter without committing to flash
+ * 
+ * Writes string to NVS but does NOT commit.
+ * Use config_commit() after batch updates for better performance.
+ * 
+ * @param[in] key NVS key name
+ * @param[in] value New parameter value (null-terminated string)
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if key or value is NULL
+ * @return ESP_ERR_NVS_* on NVS write failure
+ * 
+ * @note Thread-safe. NVS internal locking ensures safe concurrent access.
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-2
+ */
+esp_err_t config_set_string_no_commit(const char* key, const char* value);
+
+// =============================================================================
+// INTEGER PARAMETER ACCESS (REQ_CFG_JSON_7)
+// =============================================================================
+
+/**
+ * @brief Get int32 parameter value
+ * 
+ * Reads 32-bit signed integer directly from NVS using provided key.
+ * 
+ * @param[in] key NVS key name (must match config_schema.json field key)
+ * @param[out] value Pointer to store parameter value
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if key or value is NULL
+ * @return ESP_ERR_NVS_NOT_FOUND if key doesn't exist in NVS
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-1
+ */
+esp_err_t config_get_int32(const char* key, int32_t* value);
+
+/**
+ * @brief Set int32 parameter value
+ * 
+ * Writes 32-bit signed integer directly to NVS using provided key.
+ * No validation performed (browser validates using JSON schema).
+ * 
+ * @param[in] key NVS key name (must match config_schema.json field key)
+ * @param[in] value New parameter value
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if key is NULL
+ * @return ESP_ERR_NVS_* on NVS write failure
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-2
+ */
+esp_err_t config_set_int32(const char* key, int32_t value);
+
+/**
+ * @brief Get int16 parameter value
+ * 
+ * Reads 16-bit signed integer directly from NVS using provided key.
+ * 
+ * @param[in] key NVS key name (must match config_schema.json field key)
+ * @param[out] value Pointer to store parameter value
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if key or value is NULL
+ * @return ESP_ERR_NVS_NOT_FOUND if key doesn't exist in NVS
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-1
+ */
+esp_err_t config_get_int16(const char* key, int16_t* value);
+
+/**
+ * @brief Set int16 parameter value
+ * 
+ * Writes 16-bit signed integer directly to NVS using provided key.
+ * No validation performed (browser validates using JSON schema).
+ * 
+ * @param[in] key NVS key name (must match config_schema.json field key)
+ * @param[in] value New parameter value
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if key is NULL
+ * @return ESP_ERR_NVS_* on NVS write failure
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-2
+ */
+esp_err_t config_set_int16(const char* key, int16_t value);
+
+/**
+ * @brief Set int16 parameter without committing to flash
+ * 
+ * Writes int16 to NVS but does NOT commit.
+ * Use config_commit() after batch updates for better performance.
+ * 
+ * @param[in] key NVS key name
+ * @param[in] value New parameter value
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if key is NULL
+ * @return ESP_ERR_NVS_* on NVS write failure
+ * 
+ * @note Thread-safe. NVS internal locking ensures safe concurrent access.
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-2
+ */
+esp_err_t config_set_int16_no_commit(const char* key, int16_t value);
+
+// =============================================================================
+// BOOLEAN PARAMETER ACCESS (REQ_CFG_JSON_7)
+// =============================================================================
+
+/**
+ * @brief Get boolean parameter value
+ * 
+ * Reads boolean (stored as uint8) directly from NVS using provided key.
+ * 
+ * @param[in] key NVS key name (must match config_schema.json field key)
+ * @param[out] value Pointer to store parameter value
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if key or value is NULL
+ * @return ESP_ERR_NVS_NOT_FOUND if key doesn't exist in NVS
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-1
+ */
+esp_err_t config_get_bool(const char* key, bool* value);
+
+/**
+ * @brief Set boolean parameter value without commit
+ * 
+ * Writes boolean to NVS but does NOT commit.
+ * Use config_commit() after batch updates for better performance.
+ * 
+ * @param[in] key NVS key name
+ * @param[in] value New parameter value
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if key is NULL
+ * @return ESP_ERR_NVS_* on NVS write failure
+ * 
+ * @note Thread-safe. NVS internal locking ensures safe concurrent access.
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-2
+ */
+esp_err_t config_set_bool_no_commit(const char* key, bool value);
+
+/**
+ * @brief Set boolean parameter value
+ * 
+ * Writes boolean (stored as uint8) directly to NVS using provided key.
+ * No validation performed (browser validates using JSON schema).
+ * 
+ * @param[in] key NVS key name (must match config_schema.json field key)
+ * @param[in] value New parameter value
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG if key is NULL
+ * @return ESP_ERR_NVS_* on NVS write failure
+ * 
+ * @requirement REQ_CFG_JSON_7 AC-2
+ */
+esp_err_t config_set_bool(const char* key, bool value);
+
+// =============================================================================
+// BULK JSON CONFIGURATION API (REQ_CFG_JSON_12, REQ_CFG_JSON_13)
+// =============================================================================
+
+/**
+ * @brief Get embedded JSON schema for dynamic UI generation
+ * 
+ * Returns pointer to embedded config_schema.json string.
+ * Schema is embedded at build time via EMBED_FILES in CMakeLists.txt.
+ * 
+ * @param[out] schema_json Pointer to embedded schema string (no free() needed)
+ * @return ESP_OK on success
+ * @return ESP_ERR_NOT_FOUND if schema not embedded
+ * @return ESP_ERR_INVALID_ARG if schema_json is NULL
+ * 
+ * @requirement REQ_CFG_JSON_12 AC-1
+ */
+esp_err_t config_get_schema_json(char **schema_json);
+
+/**
+ * @brief Read all configuration values as structured JSON array
+ * 
+ * Reads JSON schema to enumerate all defined fields, then calls appropriate
+ * config_get_xxx() function for each field based on schema type.
+ * Builds JSON array with {key, type, value} objects.
+ * 
+ * Example output:
+ * [
+ *   {"key":"wifi_ssid","type":"string","value":"MyNetwork"},
+ *   {"key":"led_count","type":"integer","value":50}
+ * ]
+ * 
+ * @param[out] config_json Allocated JSON string (caller must free())
+ * @return ESP_OK on success
+ * @return ESP_ERR_NO_MEM on allocation failure
+ * @return ESP_ERR_INVALID_ARG if config_json is NULL
+ * 
+ * @requirement REQ_CFG_JSON_12 AC-2
+ */
+esp_err_t config_get_all_as_json(char **config_json);
+
+/**
+ * @brief Update configuration from structured JSON array
+ * 
+ * Parses JSON array with {key, type, value} objects, validates field names
+ * and types against schema, calls appropriate config_set_xxx_no_commit()
+ * function for each field, then performs single config_commit().
+ * 
+ * Atomic operation: all fields update or none (rollback on error).
+ * Unknown keys are ignored for forward compatibility.
+ * 
+ * Example input:
+ * [
+ *   {"key":"wifi_ssid","type":"string","value":"NewNetwork"},
+ *   {"key":"led_count","type":"integer","value":100}
+ * ]
+ * 
+ * @param[in] config_json JSON array string with key-type-value objects
+ * @return ESP_OK on success
+ * @return ESP_ERR_INVALID_ARG on validation failure or malformed JSON
+ * @return ESP_ERR_NO_MEM on memory allocation failure
+ * @return ESP_ERR_NVS_* on NVS operation failure
+ * 
+ * @requirement REQ_CFG_JSON_13 AC-1
+ */
+esp_err_t config_set_all_from_json(const char *config_json);
 
 #ifdef __cplusplus
 }

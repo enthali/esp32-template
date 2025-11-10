@@ -17,10 +17,13 @@ This action ensures **all quality tools are available** in CI/CD pipelines, maki
 ### Python Tools
 
 - **pre-commit**: Git hook framework for quality checks
-- **mkdocs**: Documentation site generator
-- **mkdocs-material**: Material Design theme for MkDocs
-- **mkdocstrings**: API documentation generator
-- **pymdown-extensions**: Markdown extensions
+- **sphinx**: Documentation generation system
+- **sphinx-needs**: Requirements engineering for Sphinx
+- **sphinx-rtd-theme**: Read the Docs theme for Sphinx
+- **furo**: Modern Sphinx theme
+- **myst-parser**: Markdown support for Sphinx
+- **sphinxcontrib-plantuml**: PlantUML diagrams in Sphinx
+- **graphviz**: Graph visualization support
 
 ### Node.js Tools
 
@@ -96,8 +99,8 @@ Edit `action.yml` to update version constraints:
   run: |
     pip install --no-cache-dir \
       pre-commit>=3.5 \
-      mkdocs>=1.6 \
-      mkdocs-material>=9.5
+      sphinx>=8.0 \
+      sphinx-needs>=6.0
 ```
 
 ### Testing Changes

@@ -1,5 +1,5 @@
 name: 'Setup Coding Agent Environment'
-description: 'Install tools for quality gates (pre-commit, mkdocs, markdownlint)'
+description: 'Install tools for quality gates (pre-commit, sphinx, markdownlint)'
 author: 'ESP32 Distance Project'
 
 runs:
@@ -25,10 +25,13 @@ runs:
         python -m pip install --upgrade pip
         pip install --no-cache-dir \
           pre-commit \
-          mkdocs>=1.5 \
-          mkdocs-material>=9.0 \
-          mkdocstrings>=0.19 \
-          pymdown-extensions
+          sphinx>=8.0 \
+          sphinx-needs>=6.0 \
+          sphinx-rtd-theme>=3.0 \
+          furo>=2025.0 \
+          myst-parser>=4.0 \
+          sphinxcontrib-plantuml>=0.31 \
+          graphviz>=0.20
     
     - name: Install Node.js tools
       shell: bash
@@ -41,6 +44,6 @@ runs:
       run: |
         echo "Verifying tool installations..."
         pre-commit --version
-        mkdocs --version
+        sphinx-build --version
         markdownlint --version
         echo "✅ All quality tools installed successfully"

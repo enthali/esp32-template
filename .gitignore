@@ -3,11 +3,15 @@ build/
 sdkconfig.old
 dependencies.lock
 
+# Project generated files
+main/components/config_manager/config_factory_generated.c
+
 # IDE files - ignore all VS Code files except debug configuration
 .vscode/*
 !.vscode/launch.json
 !.vscode/tasks.json
 !.vscode/settings.json
+!.vscode/c_cpp_properties.json
 !.vscode/mcp.json
 !.vscode/mcp.json.example
 
@@ -41,6 +45,9 @@ ENV/
 # Logs
 *.log
 
+# Devcontainer lifecycle marker files
+.on-*-ran
+
 # Temporary files
 *.tmp
 *.temp
@@ -70,5 +77,7 @@ ssl/
 tools/test_*.pem
 tools/server_*.pem
 
-# MkDocs build output - generated site
+# Sphinx build output - generated documentation site
 site/
+docs/_build/
+docs/.doctrees/

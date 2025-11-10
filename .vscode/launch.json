@@ -1,16 +1,18 @@
 {
     "version": "0.2.0",
     "configurations": [
+        
         {
-            "name": "QEMU ESP32 Debug",
+            "name": "QEMU ESP32 Debug (with Graphics)",
             "type": "cppdbg",
             "request": "launch",
+            // NOTE: If you change the project name in CMakeLists.txt, update this path accordingly
             "program": "${workspaceFolder}/build/esp32-template.elf",
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
             "miDebuggerPath": "xtensa-esp32-elf-gdb",
             "miDebuggerServerAddress": "localhost:3333",
-            "preLaunchTask": "Start QEMU Debug Server",
+            "preLaunchTask": "Run QEMU Debug",
             "postDebugTask": "Stop QEMU",
             "setupCommands": [
                 {
