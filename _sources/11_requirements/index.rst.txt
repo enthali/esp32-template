@@ -9,7 +9,7 @@ This section contains system and component requirements following Sphinx-Needs m
 
    req_system
    req_web_server
-   req_config_manager
+   req_config_manager_json
    req_netif_tunnel
 
 Overview
@@ -31,7 +31,7 @@ Requirements are organized in two levels:
 2. **Component Requirements** - Detailed component-level specifications
 
    * ``REQ_WEB_*`` - Web server and user interface
-   * ``REQ_CFG_*`` - Configuration management
+   * ``REQ_CFG_JSON_*`` - Configuration management (JSON-based system)
    * ``REQ_NETIF_TUNNEL_*`` - QEMU network tunnel driver
 
 Component requirements are **linked** to their parent system requirements using Sphinx-Needs ``:links:`` attribute.

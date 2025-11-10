@@ -12,11 +12,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/modern.css?v=803738c0" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=2dda3639" />
@@ -204,19 +204,28 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_system.html">System Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_web_server.html">Web Server Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_config_manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_config_manager_json.html">JSON-Based Configuration Manager Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_netif_tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../12_design/spec_high_level_architecture.html">High-Level Architecture Design Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_manager.html">Configuration Manager Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_manager_json.html">JSON-Based Configuration Manager Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_webpage.html">Configuration Webpage Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_web_server.html">Web Server Design Specification</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../21_api/index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../21_api/api_config_manager.html">Config Manager API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html">Network Tunnel API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../21_api/api_cert_handler.html">Certificate Handler API</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui-development.html">GUI and Graphics Development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-flasher.html">Web-Based Firmware Flashing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="debugging.html">Debugging Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="qemu-network-internals.html">QEMU Network Internals</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Known Issues and Limitations</a></li>
@@ -265,105 +274,51 @@
         <article role="main" id="furo-main-content">
           <section id="known-issues-and-limitations">
 <h1>Known Issues and Limitations<a class="headerlink" href="#known-issues-and-limitations" title="Link to this heading">¶</a></h1>
-<p>This document tracks known issues, limitations, and areas requiring improvement in the ESP32 Template.</p>
-<section id="component-initialization-order">
-<h2>Component Initialization Order<a class="headerlink" href="#component-initialization-order" title="Link to this heading">¶</a></h2>
-<p><strong>Issue:</strong> Component initialization sequence has implicit dependencies that are not formally documented.</p>
+<p>This document tracks known issues, limitations, and areas requiring improvement in this ESP32 project.</p>
+<section id="https-support">
+<h2>HTTPS Support<a class="headerlink" href="#https-support" title="Link to this heading">¶</a></h2>
+<p><strong>Status:</strong> Not yet implemented</p>
 <p><strong>Current Behavior:</strong></p>
-<p>The initialization order in <code class="docutils literal notranslate"><span class="pre">main.c</span></code> follows this sequence:</p>
-<ol class="arabic simple">
-<li><p>NVS Flash initialization</p></li>
-<li><p>Configuration Manager</p></li>
-<li><p>Web Server (includes WiFi Manager)</p></li>
-<li><p>QEMU Network Tunnel (if emulator build)</p></li>
-</ol>
-<p><strong>Problem:</strong></p>
 <ul class="simple">
-<li><p>Web server depends on NVS being initialized (for WiFi credentials)</p></li>
-<li><p>Configuration manager depends on NVS</p></li>
-<li><p>Network tunnel depends on lwIP stack being initialized</p></li>
-<li><p>Dependencies are implicit in code, not enforced by build system</p></li>
+<li><p>HTTP web server works fine in both QEMU and hardware</p></li>
+<li><p>HTTPS/SSL/TLS support is not implemented</p></li>
+<li><p>Certificate handler component exists but is work-in-progress</p></li>
 </ul>
 <p><strong>Impact:</strong></p>
 <ul class="simple">
-<li><p>Easy to break initialization order when modifying <code class="docutils literal notranslate"><span class="pre">main.c</span></code></p></li>
-<li><p>New developers may not understand dependencies</p></li>
-<li><p>Refactoring requires careful analysis</p></li>
+<li><p>Web interface is not encrypted (HTTP only)</p></li>
+<li><p>Credentials transmitted in plain text over WiFi</p></li>
+<li><p>Not suitable for production deployment without VPN/secure network</p></li>
 </ul>
-<p><strong>Potential Solutions:</strong></p>
-<ol class="arabic simple">
-<li><p><strong>Explicit Dependency Graph</strong>: Document component dependencies in architecture design</p></li>
-<li><p><strong>CMake Dependency Checking</strong>: Use <code class="docutils literal notranslate"><span class="pre">idf_component_register(REQUIRES</span> <span class="pre">...)</span></code> more strictly</p></li>
-<li><p><strong>Runtime Validation</strong>: Add assert checks for prerequisite initialization</p></li>
-<li><p><strong>Init Manager Pattern</strong>: Create initialization manager that enforces order</p></li>
-</ol>
-<p><strong>Status:</strong> Open - needs architecture discussion</p>
-<p><strong>Workaround:</strong> Follow existing <code class="docutils literal notranslate"><span class="pre">main.c</span></code> initialization sequence carefully</p>
-</section>
-<section id="https-in-qemu-emulation">
-<h2>HTTPS in QEMU Emulation<a class="headerlink" href="#https-in-qemu-emulation" title="Link to this heading">¶</a></h2>
-<p><strong>Issue:</strong> HTTPS server does not work correctly in QEMU emulation.</p>
-<p><strong>Current Behavior:</strong></p>
+<p><strong>Recommendation:</strong></p>
 <ul class="simple">
-<li><p>HTTP works fine in QEMU via UART tunnel</p></li>
-<li><p>HTTPS connections fail or hang</p></li>
-<li><p>Certificate handler component builds successfully</p></li>
+<li><p>Use only on trusted networks</p></li>
+<li><p>For production: Implement HTTPS before deployment</p></li>
+<li><p>Certificate handler component provides foundation for future HTTPS support</p></li>
 </ul>
-<p><strong>Root Cause:</strong> Not yet fully diagnosed. Potential issues:</p>
-<ul class="simple">
-<li><p>QEMU UART tunnel may not handle SSL/TLS traffic correctly</p></li>
-<li><p>Certificate validation issues in emulated environment</p></li>
-<li><p>mbedTLS configuration incompatibility</p></li>
-</ul>
-<p><strong>Impact:</strong></p>
-<ul class="simple">
-<li><p>HTTPS testing requires real hardware</p></li>
-<li><p>Cannot fully test secure web interface in emulator</p></li>
-</ul>
-<p><strong>Status:</strong> Open - WIP</p>
-<p><strong>Workaround:</strong> Use HTTP for QEMU testing, test HTTPS on real ESP32 hardware</p>
+<p><strong>Workaround:</strong> Deploy only on secure/isolated networks</p>
 </section>
 <section id="dns-captive-portal">
 <h2>DNS Captive Portal<a class="headerlink" href="#dns-captive-portal" title="Link to this heading">¶</a></h2>
-<p><strong>Issue:</strong> DNS server for captive portal detection does not work reliably.</p>
+<p><strong>Issue:</strong> DNS server for captive portal detection is not implemented.</p>
 <p><strong>Current Behavior:</strong></p>
 <ul class="simple">
-<li><p>DNS server component exists but captive portal redirect is unreliable</p></li>
-<li><p>Some devices don’t trigger captive portal popup</p></li>
-<li><p>Manual navigation to <code class="docutils literal notranslate"><span class="pre">http://192.168.4.1</span></code> required in AP mode</p></li>
+<li><p>Device runs as WiFi AP in configuration mode</p></li>
+<li><p>No automatic captive portal popup on mobile devices</p></li>
+<li><p>Users must manually navigate to <code class="docutils literal notranslate"><span class="pre">http://192.168.4.1</span></code></p></li>
 </ul>
 <p><strong>Root Cause:</strong></p>
 <ul class="simple">
-<li><p>Platform-specific captive portal detection varies (iOS vs Android vs Windows)</p></li>
-<li><p>DNS redirect logic may not handle all query types correctly</p></li>
+<li><p>DNS server not implemented</p></li>
+<li><p>Captive portal detection varies by platform (iOS/Android/Windows)</p></li>
 </ul>
 <p><strong>Impact:</strong></p>
 <ul class="simple">
 <li><p>Reduced user experience in AP mode configuration</p></li>
-<li><p>Users must manually discover device IP address</p></li>
+<li><p>Users must manually discover device IP address (<code class="docutils literal notranslate"><span class="pre">192.168.4.1</span></code>)</p></li>
 </ul>
 <p><strong>Status:</strong> Open - low priority</p>
-<p><strong>Workaround:</strong> Document explicit IP address access in user documentation</p>
-</section>
-<section id="flash-memory-for-https">
-<h2>Flash Memory for HTTPS<a class="headerlink" href="#flash-memory-for-https" title="Link to this heading">¶</a></h2>
-<p><strong>Issue:</strong> 2MB flash modules may have insufficient space for full HTTPS implementation.</p>
-<p><strong>Current Status:</strong> ✅ Resolved</p>
-<p><strong>Solution:</strong> Template now configured for 4MB flash with Single App Large partition table, providing ~41% free space after base system.</p>
-<p><strong>Recommendation:</strong> Use ESP32 modules with 4MB flash (most common variant).</p>
-</section>
-<section id="build-system-complexity">
-<h2>Build System Complexity<a class="headerlink" href="#build-system-complexity" title="Link to this heading">¶</a></h2>
-<p><strong>Issue:</strong> CMake build system with conditional QEMU/hardware component selection adds complexity.</p>
-<p><strong>Trade-off:</strong></p>
-<ul class="simple">
-<li><p>✅ Clean separation of simulator vs hardware code</p></li>
-<li><p>✅ No <code class="docutils literal notranslate"><span class="pre">#ifdef</span></code> pollution in application code</p></li>
-<li><p>❌ More complex build system</p></li>
-<li><p>❌ Steeper learning curve for ESP-IDF beginners</p></li>
-</ul>
-<p><strong>Status:</strong> Accepted trade-off - benefits outweigh complexity</p>
-<p><strong>Documentation:</strong> See <a class="reference internal" href="qemu-emulator.html"><span class="doc">QEMU Emulator Guide</span></a> and <a class="reference internal" href="qemu-network-internals.html"><span class="doc">QEMU Network Internals</span></a> for details</p>
+<p><strong>Workaround:</strong> Document explicit IP address (<code class="docutils literal notranslate"><span class="pre">http://192.168.4.1</span></code>) in user documentation</p>
 </section>
 <section id="contributing">
 <h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">¶</a></h2>
@@ -375,7 +330,7 @@
 <li><p>Include ESP-IDF version, hardware variant, build configuration</p></li>
 </ol>
 <hr class="docutils" />
-<p><em>Last Updated: October 2025</em></p>
+<p><em>Last Updated: November 2025</em></p>
 </section>
 </section>
 
@@ -435,11 +390,8 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Known Issues and Limitations</a><ul>
-<li><a class="reference internal" href="#component-initialization-order">Component Initialization Order</a></li>
-<li><a class="reference internal" href="#https-in-qemu-emulation">HTTPS in QEMU Emulation</a></li>
+<li><a class="reference internal" href="#https-support">HTTPS Support</a></li>
 <li><a class="reference internal" href="#dns-captive-portal">DNS Captive Portal</a></li>
-<li><a class="reference internal" href="#flash-memory-for-https">Flash Memory for HTTPS</a></li>
-<li><a class="reference internal" href="#build-system-complexity">Build System Complexity</a></li>
 <li><a class="reference internal" href="#contributing">Contributing</a></li>
 </ul>
 </li>

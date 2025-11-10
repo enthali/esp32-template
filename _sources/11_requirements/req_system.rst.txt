@@ -152,6 +152,84 @@ This document contains high-level system requirements for the ESP32 Template pro
    * AC-4: Emulator build runnable under QEMU with console output
    * AC-5: Documentation provides build/run verification steps
 
+.. req:: Emulator Network Connectivity
+   :id: REQ_SYS_SIM_2
+   :status: approved
+   :priority: optional
+   :tags: emulator, qemu, network, development
+   :links: REQ_SYS_SIM_1, REQ_SYS_NET_1
+
+   **Description:**
+   The system SHOULD provide network connectivity when running in QEMU emulation to enable testing of network-dependent features.
+
+   **Rationale:**
+   Enables development and testing of web interfaces, WiFi configuration, and network protocols without physical ESP32 hardware.
+
+   **Acceptance Criteria:**
+
+   * AC-1: UART-based network tunnel bridges QEMU to host network stack
+   * AC-2: Web interface accessible from host machine during emulation
+   * AC-3: DHCP client obtains IP address in emulation mode
+   * AC-4: Network features testable without hardware WiFi module
+   * AC-5: Documentation describes emulation network setup and limitations
+
+
+Future Enhancements
+-------------------
+
+.. req:: HTTPS Support
+   :id: REQ_SYS_SEC_1
+   :status: open
+   :priority: optional
+   :tags: security, https, future
+
+   **Description:**
+   The system MAY support HTTPS for encrypted web interface communication.
+
+   **Rationale:**
+   Encrypted communication protects sensitive data (WiFi passwords, configuration) from network eavesdropping. However, embedded certificate management is complex.
+
+   **Known Challenges:**
+
+   * ESP32 flash constraints for certificate storage
+   * Self-signed certificates trigger browser warnings
+   * OTA updates complicate certificate lifecycle
+   * QEMU emulation does not support HTTPS testing
+   * Previous implementation attempts encountered stability issues
+
+   **Acceptance Criteria (if implemented):**
+
+   * AC-1: Web server supports both HTTP and HTTPS ports
+   * AC-2: Self-signed certificate generated at build time or first boot
+   * AC-3: Certificate embedded in flash or stored in NVS
+   * AC-4: Browser security warnings documented for users
+   * AC-5: Certificate renewal process defined for production deployments
+
+   **Note:** This requirement is intentionally marked "open" due to complexity. For many embedded use cases, physical access security and network isolation provide sufficient protection. Production deployments requiring HTTPS should evaluate alternatives (VPN, mTLS, secure network).
+
+
+.. req:: System Time and NTP Support
+   :id: REQ_SYS_TIME_1
+   :status: open
+   :priority: optional
+   :tags: time, ntp, future
+
+   **Description:**
+   The system MAY support network time synchronization via NTP for accurate timestamps.
+
+   **Rationale:**
+   Accurate system time enables timestamped logs, scheduled tasks, and time-based security features. Many IoT applications require synchronized time.
+
+   **Acceptance Criteria (if implemented):**
+
+   * AC-1: NTP client synchronizes with configurable NTP server
+   * AC-2: Timezone configuration via web interface
+   * AC-3: System time persists across reboots (RTC or NVS)
+   * AC-4: Time synchronization status visible in web interface
+   * AC-5: Fallback behavior defined if NTP unavailable
+
+   **Note:** This requirement is marked "open" as template focuses on core functionality. Time synchronization can be added when application requires timestamped events or scheduling.
+
 
 Traceability
 ------------

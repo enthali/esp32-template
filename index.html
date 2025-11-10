@@ -12,11 +12,11 @@
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-needs/modern.css?v=803738c0" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css?v=2dda3639" />
@@ -204,19 +204,28 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="11_requirements/req_system.html">System Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="11_requirements/req_web_server.html">Web Server Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="11_requirements/req_config_manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_requirements/req_config_manager_json.html">JSON-Based Configuration Manager Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="11_requirements/req_netif_tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="12_design/spec_high_level_architecture.html">High-Level Architecture Design Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="12_design/spec_config_manager.html">Configuration Manager Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_design/spec_config_manager_json.html">JSON-Based Configuration Manager Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_design/spec_config_webpage.html">Configuration Webpage Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_design/spec_web_server.html">Web Server Design Specification</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="21_api/index.html">API Reference</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="21_api/index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="21_api/api_config_manager.html">Config Manager API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="21_api/api_netif_uart_tunnel.html">Network Tunnel API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="21_api/api_cert_handler.html">Certificate Handler API</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/gui-development.html">GUI and Graphics Development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="90_guides/web-flasher.html">Web-Based Firmware Flashing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="90_guides/debugging.html">Debugging Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="90_guides/known-issues.html">Known Issues and Limitations</a></li>
@@ -314,17 +323,21 @@
 <section id="all-requirements-overview">
 <h1>All Requirements Overview<a class="headerlink" href="#all-requirements-overview" title="Link to this heading">¶</a></h1>
 <div class="line-block" id="needlist-index-0">
-<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_1">REQ_CFG_1: Centralized Configuration Header (approved) [config; architecture]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_2">REQ_CFG_2: Compile-Time Configuration Access (approved) [config; api]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_3">REQ_CFG_3: Runtime Configuration Structure (approved) [config; runtime]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_4">REQ_CFG_4: Persistent Configuration Storage (approved) [config; storage; nvs]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_5">REQ_CFG_5: Configuration Read API (approved) [config; api]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_6">REQ_CFG_6: Configuration Validation (approved) [config; validation]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_7">REQ_CFG_7: Configuration Web Interface (approved) [config; web; api]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_8">REQ_CFG_8: Configuration Save Operation (approved) [config; web; persistence]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_9">REQ_CFG_9: Configuration Reset/Reload (approved) [config; web; factory-reset]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_10">REQ_CFG_10: NVS Error Recovery (approved) [config; error-handling]</a></div>
-<div class="line"><a class="reference external" href="11_requirements/req_config_manager.html#REQ_CFG_11">REQ_CFG_11: Configuration Logging (approved) [config; logging; debugging]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1: JSON Schema as Configuration Source of Truth (draft) [config; schema; architecture]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_2">REQ_CFG_JSON_2: Parameter Grouping for UI Organization (draft) [config; ui; schema]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_3">REQ_CFG_JSON_3: Parameter Type System (draft) [config; types]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_4">REQ_CFG_JSON_4: Build-Time Factory Defaults Generation (draft) [config; build; code-generation]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_5">REQ_CFG_JSON_5: No Runtime JSON Parsing in C Code (draft) [config; performance; memory]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_6">REQ_CFG_JSON_6: Key-Based NVS Storage (draft) [config; storage; nvs]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_7">REQ_CFG_JSON_7: Type-Safe Configuration API (draft) [config; api; type-safety]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_8">REQ_CFG_JSON_8: Persistent Configuration Storage (draft) [config; storage; nvs]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_9">REQ_CFG_JSON_9: Factory Reset Capability (draft) [config; reset]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_10">REQ_CFG_JSON_10: Web Interface Integration Support (approved) [config; integration]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_11">REQ_CFG_JSON_11: NVS Error Graceful Handling (draft) [config; error-handling; reliability]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_12">REQ_CFG_JSON_12: Configuration Initialization on Boot (draft) [config; boot]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_13">REQ_CFG_JSON_13: Simple Process to Add Configuration Fields (draft) [config; extensibility; developer-experience]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_14">REQ_CFG_JSON_14: Type Safety via Optional Static Validation (draft) [config; validation; developer-experience]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_config_manager_json.html#REQ_CFG_JSON_15">REQ_CFG_JSON_15: Configuration Schema Versioning and Migration (open) [config; versioning; migration; future]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_1: QEMU UART Network Bridge (approved) [emulation; network; qemu; uart]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_2">REQ_NETIF_TUNNEL_2: Packet Encapsulation (approved) [emulation; protocol]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_3">REQ_NETIF_TUNNEL_3: Host-Side Bridge Script (approved) [emulation; tooling; host]</a></div>
@@ -341,25 +354,36 @@
 <div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_REL_1">REQ_SYS_REL_1: Error Handling and Recovery (approved) [reliability; error-handling]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_PERF_1">REQ_SYS_PERF_1: Memory Management (approved) [performance; memory]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_SIM_1">REQ_SYS_SIM_1: Emulator Support (approved) [emulator; qemu; testing]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_SIM_2">REQ_SYS_SIM_2: Emulator Network Connectivity (approved) [emulator; qemu; network; development]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_SEC_1">REQ_SYS_SEC_1: HTTPS Support (open) [security; https; future]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_system.html#REQ_SYS_TIME_1">REQ_SYS_TIME_1: System Time and NTP Support (open) [time; ntp; future]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_1">REQ_WEB_1: Real-time Status Display (approved) [web; ui; monitoring]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_2">REQ_WEB_2: Configuration Interface (approved) [web; ui; configuration]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_3">REQ_WEB_3: WiFi Setup Interface (approved) [web; wifi; network]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_CONF_1">REQ_WEB_CONF_1: Configuration REST API (approved) [web; api; config]</a></div>
+<div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_SCHEMA_1">REQ_WEB_SCHEMA_1: Schema-Driven Configuration Form (approved) [web; ui; config]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_4">REQ_WEB_4: Web Interface Navigation (approved) [web; ui; navigation]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_5">REQ_WEB_5: HTTP Server Concurrency (approved) [web; performance]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_NF_1">REQ_WEB_NF_1: Web UI Responsiveness (approved) [web; performance; ux]</a></div>
 <div class="line"><a class="reference external" href="11_requirements/req_web_server.html#REQ_WEB_NF_2">REQ_WEB_NF_2: Mobile-First Design (approved) [web; ui; mobile]</a></div>
-<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1: Layered Configuration Architecture (approved) [architecture; config]</a></div>
-<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1: Configuration Data Flow (approved) [architecture; dataflow]</a></div>
-<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1: NVS Storage Format (approved) [data-structure; storage]</a></div>
-<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1: Runtime Configuration Structure (approved) [data-structure; runtime]</a></div>
-<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1: Configuration Parameter Identifiers (approved) [api; parameter]</a></div>
-<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1: Configuration API Interface (approved) [api; interface]</a></div>
-<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1: Parameter Validation Rules (approved) [validation; api]</a></div>
-<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1: Configuration REST API (approved) [web; api; rest]</a></div>
-<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1: Real-time Configuration Updates (approved) [web; ui; lifecycle]</a></div>
-<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1: Web Settings Page (approved) [web; ui; html]</a></div>
-<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1: NVS Error Recovery Strategy (approved) [error-handling; nvs]</a></div>
-<div class="line"><a class="reference external" href="12_design/spec_config_manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1: Configuration Logging (approved) [logging; debugging]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager_json.html#SPEC_CFG_JSON_ARCH_1">SPEC_CFG_JSON_ARCH_1: JSON Schema-Driven Architecture (draft) [architecture; config; json-schema]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager_json.html#SPEC_CFG_JSON_SOURCE_1">SPEC_CFG_JSON_SOURCE_1: JSON Schema as Single Source of Truth (approved) [architecture; schema; design-pattern]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager_json.html#SPEC_CFG_JSON_SCHEMA_1">SPEC_CFG_JSON_SCHEMA_1: Configuration Schema Structure (approved) [data-structure; schema]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager_json.html#SPEC_CFG_JSON_CODEGEN_1">SPEC_CFG_JSON_CODEGEN_1: Factory Reset via Bulk JSON Update (approved) [build-process; code-generation; factory-reset]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager_json.html#SPEC_CFG_JSON_STORAGE_1">SPEC_CFG_JSON_STORAGE_1: NVS Storage Format (approved) [storage; nvs]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager_json.html#SPEC_CFG_JSON_API_1">SPEC_CFG_JSON_API_1: Type-Safe Configuration API (approved) [api; interface; c-api]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager_json.html#SPEC_CFG_JSON_UI_1">SPEC_CFG_JSON_UI_1: JSON Schema for UI Generation (approved) [web; ui; javascript]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager_json.html#SPEC_CFG_JSON_BULK_1">SPEC_CFG_JSON_BULK_1: Bulk JSON Configuration API (approved) [api; json; bulk-operations]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager_json.html#SPEC_CFG_JSON_EXTEND_1">SPEC_CFG_JSON_EXTEND_1: Adding New Configuration Fields (approved) [development; guide; extensibility]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_manager_json.html#SPEC_CFG_JSON_TYPESAFETY_1">SPEC_CFG_JSON_TYPESAFETY_1: Type Safety Without Code Generation (approved) [type-safety; best-practices]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_webpage.html#SPEC_CFG_WEB_ARCH_1">SPEC_CFG_WEB_ARCH_1: Configuration Webpage Architecture (open) [frontend; javascript; ui]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_webpage.html#SPEC_CFG_WEB_FLOW_1">SPEC_CFG_WEB_FLOW_1: Configuration Data Flow (open) [data-flow; json; api]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_webpage.html#SPEC_CFG_WEB_FORM_1">SPEC_CFG_WEB_FORM_1: Dynamic Form Generation from Schema (open) [form-generation; schema; javascript]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_webpage.html#SPEC_CFG_WEB_MAPPING_1">SPEC_CFG_WEB_MAPPING_1: JSON Array to Form Field Mapping (open) [data-mapping; json; form]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_webpage.html#SPEC_CFG_WEB_STATE_1">SPEC_CFG_WEB_STATE_1: UI State Management (open) [ui-state; javascript]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_webpage.html#SPEC_CFG_WEB_COUNTDOWN_1">SPEC_CFG_WEB_COUNTDOWN_1: Device Reset Countdown Interface (open) [ui; countdown; reset]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_webpage.html#SPEC_CFG_WEB_ERROR_1">SPEC_CFG_WEB_ERROR_1: Error Handling and User Feedback (open) [error-handling; feedback]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_config_webpage.html#SPEC_CFG_WEB_INIT_1">SPEC_CFG_WEB_INIT_1: Complete Page Initialization Flow (open) [initialization; lifecycle]</a></div>
 <div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_LAYERS_1">SPEC_ARCH_LAYERS_1: ESP32 Template Layered Architecture (approved) [architecture; layering]</a></div>
 <div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_CONFIG_1">SPEC_ARCH_CONFIG_1: Configuration Manager Component Design (approved) [component; config]</a></div>
 <div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_WEB_1">SPEC_ARCH_WEB_1: Web Server Component Design (approved) [component; web; network]</a></div>
@@ -379,6 +403,49 @@
 <div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1: Logging and Diagnostics Strategy (approved) [logging; diagnostics; debugging]</a></div>
 <div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1: Error Recovery and Reset Strategy (approved) [error-handling; reliability; reset]</a></div>
 <div class="line"><a class="reference external" href="12_design/spec_high_level_architecture.html#SPEC_ARCH_PERF_1">SPEC_ARCH_PERF_1: System Performance Requirements (approved) [performance; requirements]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_ARCH_1">SPEC_WEB_ARCH_1: Web Server Architecture (approved) [web; architecture]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_STATIC_1">SPEC_WEB_STATIC_1: Static File Embedding Strategy (approved) [web; build; embedding]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_ROUTES_1">SPEC_WEB_ROUTES_1: URI Routing Table (approved) [web; routing]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_REST_CFG_1">SPEC_WEB_REST_CFG_1: Configuration API Endpoints (approved) [web; api; config; schema]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_REST_WIFI_1">SPEC_WEB_REST_WIFI_1: WiFi Management REST API Endpoints (approved) [web; api; wifi]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_REST_HEALTH_1">SPEC_WEB_REST_HEALTH_1: System Health API Endpoint (approved) [web; api; diagnostics]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_INTEGRATION_CFG_1">SPEC_WEB_INTEGRATION_CFG_1: Config Manager Integration Pattern (approved) [web; integration; config]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_INTEGRATION_WIFI_1">SPEC_WEB_INTEGRATION_WIFI_1: WiFi Manager Integration Pattern (approved) [web; integration; wifi]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_CAPTIVE_1">SPEC_WEB_CAPTIVE_1: Captive Portal Design (approved) [web; captive-portal; wifi]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_CONFIG_1">SPEC_WEB_CONFIG_1: HTTP Server Configuration (approved) [web; config; performance]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_EXTEND_1">SPEC_WEB_EXTEND_1: Extension Guide for Web Pages (approved) [web; extensibility; guide]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_SECURITY_1">SPEC_WEB_SECURITY_1: CORS Configuration (approved) [web; security; cors]</a></div>
+<div class="line"><a class="reference external" href="12_design/spec_web_server.html#SPEC_WEB_TEST_1">SPEC_WEB_TEST_1: Web Server Testing Strategy (approved) [web; testing]</a></div>
+<div class="line"><a class="reference external" href="21_api/api_cert_handler.html#API_COMP_CERT_HANDLER">API_COMP_CERT_HANDLER: Certificate Handler (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_INIT">API_FUNC_CERT_HANDLER_INIT: cert_handler_init (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_SERVER_CERT">API_FUNC_CERT_HANDLER_GET_SERVER_CERT: cert_handler_get_server_cert (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_SERVER_KEY">API_FUNC_CERT_HANDLER_GET_SERVER_KEY: cert_handler_get_server_key (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_CA_CERT">API_FUNC_CERT_HANDLER_GET_CA_CERT: cert_handler_get_ca_cert (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_INFO">API_FUNC_CERT_HANDLER_GET_INFO: cert_handler_get_info (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_COMP_CONFIG_MANAGER">API_COMP_CONFIG_MANAGER: Config Manager (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_INIT">API_FUNC_CONFIG_INIT: config_init (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_FACTORY_RESET">API_FUNC_CONFIG_FACTORY_RESET: config_factory_reset (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_COMMIT">API_FUNC_CONFIG_COMMIT: config_commit (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_WRITE_FACTORY_DEFAULTS">API_FUNC_CONFIG_WRITE_FACTORY_DEFAULTS: config_write_factory_defaults (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_GET_STRING">API_FUNC_CONFIG_GET_STRING: config_get_string (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_SET_STRING">API_FUNC_CONFIG_SET_STRING: config_set_string (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_SET_STRING_NO_COMMIT">API_FUNC_CONFIG_SET_STRING_NO_COMMIT: config_set_string_no_commit (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_GET_INT32">API_FUNC_CONFIG_GET_INT32: config_get_int32 (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT32">API_FUNC_CONFIG_SET_INT32: config_set_int32 (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_GET_INT16">API_FUNC_CONFIG_GET_INT16: config_get_int16 (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT16">API_FUNC_CONFIG_SET_INT16: config_set_int16 (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT16_NO_COMMIT">API_FUNC_CONFIG_SET_INT16_NO_COMMIT: config_set_int16_no_commit (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_GET_BOOL">API_FUNC_CONFIG_GET_BOOL: config_get_bool (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_SET_BOOL_NO_COMMIT">API_FUNC_CONFIG_SET_BOOL_NO_COMMIT: config_set_bool_no_commit (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_SET_BOOL">API_FUNC_CONFIG_SET_BOOL: config_set_bool (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_GET_SCHEMA_JSON">API_FUNC_CONFIG_GET_SCHEMA_JSON: config_get_schema_json (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_GET_ALL_AS_JSON">API_FUNC_CONFIG_GET_ALL_AS_JSON: config_get_all_as_json (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_config_manager.html#API_FUNC_CONFIG_SET_ALL_FROM_JSON">API_FUNC_CONFIG_SET_ALL_FROM_JSON: config_set_all_from_json (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_netif_uart_tunnel.html#API_COMP_NETIF_TUNNEL">API_COMP_NETIF_TUNNEL: Network Tunnel (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_netif_uart_tunnel.html#API_STRUCT_NETIF_TUNNEL_CONFIG">API_STRUCT_NETIF_TUNNEL_CONFIG: netif_uart_tunnel_config_t (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_INIT">API_FUNC_NETIF_TUNNEL_INIT: netif_uart_tunnel_init (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_DEINIT">API_FUNC_NETIF_TUNNEL_DEINIT: netif_uart_tunnel_deinit (implemented)</a></div>
+<div class="line"><a class="reference external" href="21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_GET_HANDLE">API_FUNC_NETIF_TUNNEL_GET_HANDLE: netif_uart_tunnel_get_handle (implemented)</a></div>
 </div>
 <div class="toctree-wrapper compound">
 </div>

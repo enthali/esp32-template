@@ -1,0 +1,932 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="QEMU Emulator Guide" href="qemu-emulator.html"><link rel="prev" title="Development Container Setup" href="devcontainer.html">
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+        <title>GUI and Graphics Development - ESP32 Template Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=2dda3639" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">ESP32 Template Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">ESP32 Template Documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_system.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_web_server.html">Web Server Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_config_manager_json.html">JSON-Based Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_netif_tunnel.html">Network Interface Tunnel Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_high_level_architecture.html">High-Level Architecture Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_manager_json.html">JSON-Based Configuration Manager Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_webpage.html">Configuration Webpage Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_web_server.html">Web Server Design Specification</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../21_api/index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../21_api/api_config_manager.html">Config Manager API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html">Network Tunnel API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../21_api/api_cert_handler.html">Certificate Handler API</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">GUI and Graphics Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-flasher.html">Web-Based Firmware Flashing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html">Debugging Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qemu-network-internals.html">QEMU Network Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="known-issues.html">Known Issues and Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../31_traceability/index.html">Traceability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/impressum.html">Impressum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../legal/datenschutz.html">Datenschutzerklärung</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/90_guides/gui-development.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="gui-and-graphics-development">
+<h1>GUI and Graphics Development<a class="headerlink" href="#gui-and-graphics-development" title="Link to this heading">¶</a></h1>
+<p>This guide explains how to develop graphical applications using the VNC/noVNC setup in the ESP32 Template development container.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>The dev container includes a complete desktop environment for GUI development:</p>
+<ul class="simple">
+<li><p><strong>Fluxbox Window Manager</strong>: Lightweight desktop environment</p></li>
+<li><p><strong>TigerVNC Server</strong>: VNC server running on display <code class="docutils literal notranslate"><span class="pre">:1</span></code></p></li>
+<li><p><strong>noVNC Web Client</strong>: Browser-based VNC access</p></li>
+<li><p><strong>X11 Support</strong>: Full X Window System for GUI applications</p></li>
+</ul>
+<p>This setup allows you to:</p>
+<ul class="simple">
+<li><p>Run GUI applications from the terminal (they appear on the desktop)</p></li>
+<li><p>Access the desktop via web browser at port 6080</p></li>
+<li><p>Use VNC clients for better performance</p></li>
+<li><p>Develop and test graphical tools without leaving Codespaces</p></li>
+</ul>
+</section>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading">¶</a></h2>
+<section id="desktop-stack">
+<h3>Desktop Stack<a class="headerlink" href="#desktop-stack" title="Link to this heading">¶</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────┐
+│  Browser (noVNC) or VNC Client              │
+└──────────────────┬──────────────────────────┘
+                   │ Port 6080 (HTTP+WebSocket)
+                   │ Port 5901 (VNC Protocol)
+┌──────────────────▼──────────────────────────┐
+│  noVNC Server (websockify)                  │
+│  - HTTP server for web interface            │
+│  - WebSocket → VNC protocol bridge          │
+└──────────────────┬──────────────────────────┘
+                   │ VNC Protocol
+┌──────────────────▼──────────────────────────┐
+│  TigerVNC Server (:1)                       │
+│  - DISPLAY=:1                               │
+│  - Resolution: 1024x768 @ 24-bit            │
+│  - TMPDIR=/home/esp/vnc-tmp                 │
+└──────────────────┬──────────────────────────┘
+                   │ X11 Protocol
+┌──────────────────▼──────────────────────────┐
+│  Fluxbox Window Manager                     │
+│  - Lightweight, minimal resource usage      │
+│  - Right-click for application menu         │
+└──────────────────┬──────────────────────────┘
+                   │
+┌──────────────────▼──────────────────────────┐
+│  X11 Applications                           │
+│  - GUI tools (gtkwave, etc.)                │
+│  - VS Code terminal commands                │
+│  - Custom graphical applications            │
+└─────────────────────────────────────────────┘
+</pre></div>
+</div>
+</section>
+</section>
+<section id="accessing-the-desktop">
+<h2>Accessing the Desktop<a class="headerlink" href="#accessing-the-desktop" title="Link to this heading">¶</a></h2>
+<section id="via-web-browser-recommended-for-codespaces">
+<h3>Via Web Browser (Recommended for Codespaces)<a class="headerlink" href="#via-web-browser-recommended-for-codespaces" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Automatic Port Forwarding</strong>: Codespaces automatically forwards port 6080</p></li>
+<li><p><strong>Open in Browser</strong>: Click on “Ports” tab → Port 6080 → Click globe icon</p></li>
+<li><p><strong>Full Screen</strong>: Use browser’s full screen mode (F11) for better experience</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>noVNC is perfect for Codespaces as it requires no client installation and works in any browser.</p>
+</div>
+</section>
+<section id="via-vnc-client-better-performance">
+<h3>Via VNC Client (Better Performance)<a class="headerlink" href="#via-vnc-client-better-performance" title="Link to this heading">¶</a></h3>
+<p>For local Docker containers or better performance:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find your container&#39;s IP or use port forwarding</span>
+<span class="c1"># Connect VNC client to: localhost:5901</span>
+<span class="c1"># Password: (typically &#39;vscode&#39; or none)</span>
+</pre></div>
+</div>
+<p><strong>Recommended VNC Clients:</strong></p>
+<ul class="simple">
+<li><p><strong>RealVNC Viewer</strong> (cross-platform)</p></li>
+<li><p><strong>TigerVNC Viewer</strong> (Linux)</p></li>
+<li><p><strong>TightVNC</strong> (Windows)</p></li>
+</ul>
+</section>
+</section>
+<section id="vnc-setup-details">
+<h2>VNC Setup Details<a class="headerlink" href="#vnc-setup-details" title="Link to this heading">¶</a></h2>
+<section id="automatic-startup">
+<h3>Automatic Startup<a class="headerlink" href="#automatic-startup" title="Link to this heading">¶</a></h3>
+<p>VNC server starts automatically when the dev container launches:</p>
+<ul class="simple">
+<li><p><strong>Startup Script</strong>: <code class="docutils literal notranslate"><span class="pre">.devcontainer/setup-vnc.sh</span></code></p></li>
+<li><p><strong>systemd Integration</strong>: VNC runs as a service</p></li>
+<li><p><strong>TMPDIR Workaround</strong>: Uses <code class="docutils literal notranslate"><span class="pre">/home/esp/vnc-tmp</span></code> instead of <code class="docutils literal notranslate"><span class="pre">/tmp</span></code></p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check VNC status</span>
+ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vnc
+
+<span class="c1"># View VNC log</span>
+tail<span class="w"> </span>-f<span class="w"> </span>/home/esp/.vnc/*.log
+
+<span class="c1"># Restart VNC if needed</span>
+vncserver<span class="w"> </span>-kill<span class="w"> </span>:1
+vncserver<span class="w"> </span>:1<span class="w"> </span>-geometry<span class="w"> </span>1024x768<span class="w"> </span>-depth<span class="w"> </span><span class="m">24</span>
+</pre></div>
+</div>
+</section>
+<section id="key-configuration-files">
+<h3>Key Configuration Files<a class="headerlink" href="#key-configuration-files" title="Link to this heading">¶</a></h3>
+<p><strong>``.devcontainer/setup-vnc.sh``</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1"># VNC server startup script</span>
+
+<span class="nb">export</span><span class="w"> </span><span class="nv">TMPDIR</span><span class="o">=</span>/home/esp/vnc-tmp
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$TMPDIR</span>
+
+vncserver<span class="w"> </span>:1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-geometry<span class="w"> </span>1024x768<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-depth<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-localhost<span class="w"> </span>no<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-SecurityTypes<span class="w"> </span>None
+</pre></div>
+</div>
+<p><strong>``.vnc/xstartup``</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nb">unset</span><span class="w"> </span>SESSION_MANAGER
+<span class="nb">unset</span><span class="w"> </span>DBUS_SESSION_BUS_ADDRESS
+
+<span class="nb">export</span><span class="w"> </span><span class="nv">TMPDIR</span><span class="o">=</span>/home/esp/vnc-tmp
+
+<span class="o">[</span><span class="w"> </span>-x<span class="w"> </span>/etc/vnc/xstartup<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exec</span><span class="w"> </span>/etc/vnc/xstartup
+<span class="o">[</span><span class="w"> </span>-r<span class="w"> </span><span class="nv">$HOME</span>/.Xresources<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>xrdb<span class="w"> </span><span class="nv">$HOME</span>/.Xresources
+
+xsetroot<span class="w"> </span>-solid<span class="w"> </span>grey
+<span class="nb">exec</span><span class="w"> </span>fluxbox
+</pre></div>
+</div>
+</section>
+<section id="tmpdir-workaround">
+<h3>TMPDIR Workaround<a class="headerlink" href="#tmpdir-workaround" title="Link to this heading">¶</a></h3>
+<p><strong>Problem</strong>: Codespaces mounts <code class="docutils literal notranslate"><span class="pre">/tmp</span></code> as read-only, causing VNC to fail.</p>
+<p><strong>Solution</strong>: Use custom TMPDIR for VNC temporary files.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Environment variable set in all VNC-related scripts</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">TMPDIR</span><span class="o">=</span>/home/esp/vnc-tmp
+
+<span class="c1"># Directory is writable by container user</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>/home/esp/vnc-tmp
+chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/home/esp/vnc-tmp
+</pre></div>
+</div>
+</section>
+</section>
+<section id="running-gui-applications">
+<h2>Running GUI Applications<a class="headerlink" href="#running-gui-applications" title="Link to this heading">¶</a></h2>
+<section id="from-vs-code-terminal">
+<h3>From VS Code Terminal<a class="headerlink" href="#from-vs-code-terminal" title="Link to this heading">¶</a></h3>
+<p>Any GUI application launched from the terminal appears on the VNC desktop:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set display (usually automatic)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DISPLAY</span><span class="o">=</span>:1
+
+<span class="c1"># Launch GUI application</span>
+firefox<span class="w"> </span><span class="p">&amp;</span>
+
+<span class="c1"># Launch VS Code (if available)</span>
+code<span class="w"> </span>.<span class="w"> </span><span class="p">&amp;</span>
+
+<span class="c1"># Run custom GUI tool</span>
+./my_gui_app<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p><strong>Common GUI Tools in Container:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xterm</span></code>: Terminal emulator</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xcalc</span></code>: Calculator (for testing)</p></li>
+<li><p>File manager (if installed)</p></li>
+<li><p>Custom debugging tools</p></li>
+</ul>
+</section>
+<section id="example-gtkwave-for-waveform-viewing">
+<h3>Example: GTKWave for Waveform Viewing<a class="headerlink" href="#example-gtkwave-for-waveform-viewing" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install GTKWave (if needed)</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>gtkwave
+
+<span class="c1"># Launch GTKWave</span>
+gtkwave<span class="w"> </span>waveform.vcd<span class="w"> </span><span class="p">&amp;</span>
+
+<span class="c1"># Application window appears on VNC desktop</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="developing-custom-gui-applications">
+<h2>Developing Custom GUI Applications<a class="headerlink" href="#developing-custom-gui-applications" title="Link to this heading">¶</a></h2>
+<section id="esp32-gui-frameworks">
+<h3>ESP32 GUI Frameworks<a class="headerlink" href="#esp32-gui-frameworks" title="Link to this heading">¶</a></h3>
+<p>While the VNC desktop is for <strong>host-side tools</strong>, ESP32 can drive real displays:</p>
+<p><strong>For ESP32 Display Output:</strong></p>
+<ul class="simple">
+<li><p><strong>LVGL</strong> (Light and Versatile Graphics Library)</p></li>
+<li><p><strong>ESP-IDF LCD/Display Drivers</strong></p></li>
+<li><p><strong>SPI/I2C Display Libraries</strong></p></li>
+</ul>
+<p><strong>Host Development Tools:</strong></p>
+<ul class="simple">
+<li><p>Use VNC desktop for testing GUI tool scripts</p></li>
+<li><p>Visualize sensor data with Python matplotlib</p></li>
+<li><p>Debug display layouts before deploying to ESP32</p></li>
+</ul>
+</section>
+<section id="python-gui-example">
+<h3>Python GUI Example<a class="headerlink" href="#python-gui-example" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># gui_test.py - Simple GUI application</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tkinter</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tk</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Tk</span><span class="p">()</span>
+<span class="n">root</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;ESP32 Configuration Tool&quot;</span><span class="p">)</span>
+
+<span class="n">label</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hello from VNC Desktop!&quot;</span><span class="p">)</span>
+<span class="n">label</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="n">button</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Close&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="n">root</span><span class="o">.</span><span class="n">quit</span><span class="p">)</span>
+<span class="n">button</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+
+<span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run the GUI app (appears on VNC desktop)</span>
+python3<span class="w"> </span>gui_test.py
+</pre></div>
+</div>
+</section>
+<section id="c-gui-with-gtk-advanced">
+<h3>C++ GUI with GTK (Advanced)<a class="headerlink" href="#c-gui-with-gtk-advanced" title="Link to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// example_gtk.cpp</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;gtk/gtk.h&gt;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">on_button_clicked</span><span class="p">(</span><span class="n">GtkWidget</span><span class="w"> </span><span class="o">*</span><span class="n">widget</span><span class="p">,</span><span class="w"> </span><span class="n">gpointer</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">g_print</span><span class="p">(</span><span class="s">&quot;Button clicked!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">argv</span><span class="p">[])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">gtk_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">GtkWidget</span><span class="w"> </span><span class="o">*</span><span class="n">window</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gtk_window_new</span><span class="p">(</span><span class="n">GTK_WINDOW_TOPLEVEL</span><span class="p">);</span>
+<span class="w">    </span><span class="n">gtk_window_set_title</span><span class="p">(</span><span class="n">GTK_WINDOW</span><span class="p">(</span><span class="n">window</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ESP32 Tool&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">GtkWidget</span><span class="w"> </span><span class="o">*</span><span class="n">button</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gtk_button_new_with_label</span><span class="p">(</span><span class="s">&quot;Click Me&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">g_signal_connect</span><span class="p">(</span><span class="n">button</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;clicked&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">G_CALLBACK</span><span class="p">(</span><span class="n">on_button_clicked</span><span class="p">),</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">gtk_container_add</span><span class="p">(</span><span class="n">GTK_CONTAINER</span><span class="p">(</span><span class="n">window</span><span class="p">),</span><span class="w"> </span><span class="n">button</span><span class="p">);</span>
+<span class="w">    </span><span class="n">gtk_widget_show_all</span><span class="p">(</span><span class="n">window</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">gtk_main</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compile and run</span>
+g++<span class="w"> </span>example_gtk.cpp<span class="w"> </span>-o<span class="w"> </span>example_gtk<span class="w"> </span><span class="sb">`</span>pkg-config<span class="w"> </span>--cflags<span class="w"> </span>--libs<span class="w"> </span>gtk+-3.0<span class="sb">`</span>
+./example_gtk<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">¶</a></h2>
+<section id="vnc-server-not-starting">
+<h3>VNC Server Not Starting<a class="headerlink" href="#vnc-server-not-starting" title="Link to this heading">¶</a></h3>
+<p><strong>Symptom</strong>: Cannot connect to VNC on port 6080</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check if VNC server is running</span>
+ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vnc
+
+<span class="c1"># Check VNC log for errors</span>
+cat<span class="w"> </span>/home/esp/.vnc/*.log
+
+<span class="c1"># Common issue: TMPDIR not writable</span>
+ls<span class="w"> </span>-ld<span class="w"> </span>/home/esp/vnc-tmp
+
+<span class="c1"># Restart VNC with correct TMPDIR</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">TMPDIR</span><span class="o">=</span>/home/esp/vnc-tmp
+vncserver<span class="w"> </span>-kill<span class="w"> </span>:1
+vncserver<span class="w"> </span>:1<span class="w"> </span>-geometry<span class="w"> </span>1024x768<span class="w"> </span>-depth<span class="w"> </span><span class="m">24</span>
+</pre></div>
+</div>
+</section>
+<section id="cannot-see-gui-applications">
+<h3>Cannot See GUI Applications<a class="headerlink" href="#cannot-see-gui-applications" title="Link to this heading">¶</a></h3>
+<p><strong>Symptom</strong>: Applications launch but don’t appear on desktop</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Verify DISPLAY is set correctly</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$DISPLAY</span><span class="w">  </span><span class="c1"># Should show :1</span>
+
+<span class="c1"># Set DISPLAY if needed</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DISPLAY</span><span class="o">=</span>:1
+
+<span class="c1"># Test with simple GUI</span>
+xterm<span class="w"> </span><span class="p">&amp;</span>
+
+<span class="c1"># Check X server errors</span>
+xdpyinfo<span class="w"> </span>-display<span class="w"> </span>:1
+</pre></div>
+</div>
+</section>
+<section id="black-screen-in-novnc">
+<h3>Black Screen in noVNC<a class="headerlink" href="#black-screen-in-novnc" title="Link to this heading">¶</a></h3>
+<p><strong>Symptom</strong>: VNC connects but shows black screen</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fluxbox might not be running</span>
+ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>fluxbox
+
+<span class="c1"># Restart Fluxbox</span>
+<span class="nv">DISPLAY</span><span class="o">=</span>:1<span class="w"> </span>fluxbox<span class="w"> </span><span class="p">&amp;</span>
+
+<span class="c1"># Or restart entire VNC session</span>
+vncserver<span class="w"> </span>-kill<span class="w"> </span>:1
+<span class="nb">export</span><span class="w"> </span><span class="nv">TMPDIR</span><span class="o">=</span>/home/esp/vnc-tmp
+vncserver<span class="w"> </span>:1<span class="w"> </span>-geometry<span class="w"> </span>1024x768<span class="w"> </span>-depth<span class="w"> </span><span class="m">24</span>
+</pre></div>
+</div>
+</section>
+<section id="performance-issues">
+<h3>Performance Issues<a class="headerlink" href="#performance-issues" title="Link to this heading">¶</a></h3>
+<p><strong>Symptom</strong>: Slow or laggy VNC connection</p>
+<ol class="arabic simple">
+<li><p><strong>Use native VNC client</strong> instead of noVNC (better performance)</p></li>
+<li><p><strong>Reduce color depth</strong>: Change <code class="docutils literal notranslate"><span class="pre">-depth</span> <span class="pre">24</span></code> to <code class="docutils literal notranslate"><span class="pre">-depth</span> <span class="pre">16</span></code></p></li>
+<li><p><strong>Lower resolution</strong>: Use <code class="docutils literal notranslate"><span class="pre">1024x768</span></code> instead of higher resolutions</p></li>
+<li><p><strong>Close unused applications</strong> on the VNC desktop</p></li>
+</ol>
+</section>
+<section id="port-6080-already-in-use">
+<h3>Port 6080 Already in Use<a class="headerlink" href="#port-6080-already-in-use" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find what&#39;s using the port</span>
+sudo<span class="w"> </span>lsof<span class="w"> </span>-i<span class="w"> </span>:6080
+
+<span class="c1"># Kill the process</span>
+sudo<span class="w"> </span><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;PID&gt;
+
+<span class="c1"># Restart noVNC</span>
+websockify<span class="w"> </span>--web<span class="o">=</span>/usr/share/novnc<span class="w"> </span><span class="m">6080</span><span class="w"> </span>localhost:5901<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading">¶</a></h2>
+<section id="development-workflow">
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Use Terminal First</strong>: Most ESP-IDF work is command-line based</p></li>
+<li><p><strong>GUI for Visualization</strong>: Use VNC desktop for:</p>
+<ul class="simple">
+<li><p>Waveform viewing (GTKWave)</p></li>
+<li><p>Data plotting (Python matplotlib)</p></li>
+<li><p>Custom debugging tools</p></li>
+<li><p>Web browser testing</p></li>
+</ul>
+</li>
+<li><p><strong>Keep Desktop Clean</strong>: Close unused GUI apps to save resources</p></li>
+<li><p><strong>Persistent Sessions</strong>: VNC survives terminal disconnections</p></li>
+</ol>
+</section>
+<section id="resource-management">
+<h3>Resource Management<a class="headerlink" href="#resource-management" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Monitor container resource usage</span>
+top
+
+<span class="c1"># Check memory usage</span>
+free<span class="w"> </span>-h
+
+<span class="c1"># Kill heavy GUI processes if needed</span>
+pkill<span class="w"> </span>firefox
+pkill<span class="w"> </span>chrome
+</pre></div>
+</div>
+</section>
+<section id="security-considerations">
+<h3>Security Considerations<a class="headerlink" href="#security-considerations" title="Link to this heading">¶</a></h3>
+<p><strong>VNC Security in Codespaces:</strong></p>
+<ul class="simple">
+<li><p>VNC runs without password (container is private)</p></li>
+<li><p>Codespaces port forwarding is authenticated via GitHub</p></li>
+<li><p><strong>Do NOT expose port 5901 publicly</strong> without authentication</p></li>
+</ul>
+<p><strong>For Production Use:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set VNC password</span>
+vncpasswd
+
+<span class="c1"># Start with security</span>
+vncserver<span class="w"> </span>:1<span class="w"> </span>-SecurityTypes<span class="w"> </span>VncAuth
+</pre></div>
+</div>
+</section>
+</section>
+<section id="use-cases">
+<h2>Use Cases<a class="headerlink" href="#use-cases" title="Link to this heading">¶</a></h2>
+<section id="common-development-scenarios">
+<h3>Common Development Scenarios<a class="headerlink" href="#common-development-scenarios" title="Link to this heading">¶</a></h3>
+<p><strong>1. Testing Web Interfaces</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build and run ESP32 web server in QEMU</span>
+idf.py<span class="w"> </span>build
+./tools/run-qemu-network.sh
+
+<span class="c1"># Open browser on VNC desktop</span>
+firefox<span class="w"> </span>http://10.0.2.15<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p><strong>2. Visualizing Sensor Data</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot_sensor.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">serial</span>
+
+<span class="c1"># Read from ESP32 serial port</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">with</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span><span class="s1">&#39;/dev/ttyUSB0&#39;</span><span class="p">,</span> <span class="mi">115200</span><span class="p">)</span> <span class="k">as</span> <span class="n">ser</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">ser</span><span class="o">.</span><span class="n">readline</span><span class="p">()))</span>
+
+<span class="c1"># Plot on VNC desktop</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>3. Debugging with gtkwave</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate VCD file from logic analyzer</span>
+idf.py<span class="w"> </span>build
+
+<span class="c1"># View waveforms</span>
+gtkwave<span class="w"> </span>debug/signals.vcd<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="integration-with-vs-code">
+<h2>Integration with VS Code<a class="headerlink" href="#integration-with-vs-code" title="Link to this heading">¶</a></h2>
+<section id="opening-files-from-desktop">
+<h3>Opening Files from Desktop<a class="headerlink" href="#opening-files-from-desktop" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># From VNC terminal (xterm)</span>
+code<span class="w"> </span>/workspaces/esp32-template/main/main.c
+
+<span class="c1"># File opens in VS Code editor</span>
+</pre></div>
+</div>
+</section>
+<section id="running-vs-code-tasks">
+<h3>Running VS Code Tasks<a class="headerlink" href="#running-vs-code-tasks" title="Link to this heading">¶</a></h3>
+<p>GUI applications can be launched from VS Code tasks:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="c1">// .vscode/tasks.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;tasks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;View Waveform&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;shell&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DISPLAY=:1 gtkwave ${file} &amp;&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;problemMatcher&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="advanced-configuration">
+<h2>Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Link to this heading">¶</a></h2>
+<section id="custom-desktop-resolution">
+<h3>Custom Desktop Resolution<a class="headerlink" href="#custom-desktop-resolution" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Stop current VNC server</span>
+vncserver<span class="w"> </span>-kill<span class="w"> </span>:1
+
+<span class="c1"># Start with custom resolution</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">TMPDIR</span><span class="o">=</span>/home/esp/vnc-tmp
+vncserver<span class="w"> </span>:1<span class="w"> </span>-geometry<span class="w"> </span>1920x1080<span class="w"> </span>-depth<span class="w"> </span><span class="m">24</span>
+</pre></div>
+</div>
+</section>
+<section id="multiple-vnc-displays">
+<h3>Multiple VNC Displays<a class="headerlink" href="#multiple-vnc-displays" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start second display</span>
+vncserver<span class="w"> </span>:2<span class="w"> </span>-geometry<span class="w"> </span>800x600<span class="w"> </span>-depth<span class="w"> </span><span class="m">24</span>
+
+<span class="c1"># Applications on different displays</span>
+<span class="nv">DISPLAY</span><span class="o">=</span>:1<span class="w"> </span>firefox<span class="w"> </span><span class="p">&amp;</span>
+<span class="nv">DISPLAY</span><span class="o">=</span>:2<span class="w"> </span>gtkwave<span class="w"> </span>waveform.vcd<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+</section>
+<section id="alternative-window-managers">
+<h3>Alternative Window Managers<a class="headerlink" href="#alternative-window-managers" title="Link to this heading">¶</a></h3>
+<p>Replace Fluxbox with other window managers:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install alternative WM</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>openbox
+
+<span class="c1"># Edit ~/.vnc/xstartup</span>
+<span class="c1"># Replace &#39;exec fluxbox&#39; with &#39;exec openbox&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://tigervnc.org/">TigerVNC Documentation</a></p></li>
+<li><p><a class="reference external" href="https://novnc.com/">noVNC Project</a></p></li>
+<li><p><a class="reference external" href="http://fluxbox.org/">Fluxbox Window Manager</a></p></li>
+<li><p><a class="reference external" href="https://www.x.org/">X Window System</a></p></li>
+</ul>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="devcontainer.html"><span class="doc">Development Container Setup</span></a> - Dev container setup and configuration</p></li>
+<li><p><a class="reference internal" href="debugging.html"><span class="doc">Debugging Guide</span></a> - Debugging ESP32 applications</p></li>
+<li><p><a class="reference internal" href="qemu-emulator.html"><span class="doc">QEMU Emulator Guide</span></a> - QEMU emulation for ESP32</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="qemu-emulator.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">QEMU Emulator Guide</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="devcontainer.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Development Container Setup</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, ESP32 Template Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">GUI and Graphics Development</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#architecture">Architecture</a><ul>
+<li><a class="reference internal" href="#desktop-stack">Desktop Stack</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#accessing-the-desktop">Accessing the Desktop</a><ul>
+<li><a class="reference internal" href="#via-web-browser-recommended-for-codespaces">Via Web Browser (Recommended for Codespaces)</a></li>
+<li><a class="reference internal" href="#via-vnc-client-better-performance">Via VNC Client (Better Performance)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#vnc-setup-details">VNC Setup Details</a><ul>
+<li><a class="reference internal" href="#automatic-startup">Automatic Startup</a></li>
+<li><a class="reference internal" href="#key-configuration-files">Key Configuration Files</a></li>
+<li><a class="reference internal" href="#tmpdir-workaround">TMPDIR Workaround</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#running-gui-applications">Running GUI Applications</a><ul>
+<li><a class="reference internal" href="#from-vs-code-terminal">From VS Code Terminal</a></li>
+<li><a class="reference internal" href="#example-gtkwave-for-waveform-viewing">Example: GTKWave for Waveform Viewing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#developing-custom-gui-applications">Developing Custom GUI Applications</a><ul>
+<li><a class="reference internal" href="#esp32-gui-frameworks">ESP32 GUI Frameworks</a></li>
+<li><a class="reference internal" href="#python-gui-example">Python GUI Example</a></li>
+<li><a class="reference internal" href="#c-gui-with-gtk-advanced">C++ GUI with GTK (Advanced)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li><a class="reference internal" href="#vnc-server-not-starting">VNC Server Not Starting</a></li>
+<li><a class="reference internal" href="#cannot-see-gui-applications">Cannot See GUI Applications</a></li>
+<li><a class="reference internal" href="#black-screen-in-novnc">Black Screen in noVNC</a></li>
+<li><a class="reference internal" href="#performance-issues">Performance Issues</a></li>
+<li><a class="reference internal" href="#port-6080-already-in-use">Port 6080 Already in Use</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#best-practices">Best Practices</a><ul>
+<li><a class="reference internal" href="#development-workflow">Development Workflow</a></li>
+<li><a class="reference internal" href="#resource-management">Resource Management</a></li>
+<li><a class="reference internal" href="#security-considerations">Security Considerations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#use-cases">Use Cases</a><ul>
+<li><a class="reference internal" href="#common-development-scenarios">Common Development Scenarios</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#integration-with-vs-code">Integration with VS Code</a><ul>
+<li><a class="reference internal" href="#opening-files-from-desktop">Opening Files from Desktop</a></li>
+<li><a class="reference internal" href="#running-vs-code-tasks">Running VS Code Tasks</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#advanced-configuration">Advanced Configuration</a><ul>
+<li><a class="reference internal" href="#custom-desktop-resolution">Custom Desktop Resolution</a></li>
+<li><a class="reference internal" href="#multiple-vnc-displays">Multiple VNC Displays</a></li>
+<li><a class="reference internal" href="#alternative-window-managers">Alternative Window Managers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a></li>
+<li><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    </body>
+</html>

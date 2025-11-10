@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Development Guide" href="../90_guides/index.html"><link rel="prev" title="Configuration Manager Design Specification" href="../12_design/spec_config_manager.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Config Manager API" href="api_config_manager.html"><link rel="prev" title="Web Server Design Specification" href="../12_design/spec_web_server.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
         <title>API Reference - ESP32 Template Documentation</title>
@@ -12,11 +12,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/modern.css?v=803738c0" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=2dda3639" />
@@ -204,19 +204,28 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_system.html">System Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_web_server.html">Web Server Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_config_manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_config_manager_json.html">JSON-Based Configuration Manager Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_netif_tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../12_design/spec_high_level_architecture.html">High-Level Architecture Design Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_manager.html">Configuration Manager Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_manager_json.html">JSON-Based Configuration Manager Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_webpage.html">Configuration Webpage Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_web_server.html">Web Server Design Specification</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">API Reference</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">API Reference</a><input aria-label="Toggle navigation of API Reference" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_config_manager.html">Config Manager API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_netif_uart_tunnel.html">Network Tunnel API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_cert_handler.html">Certificate Handler API</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/gui-development.html">GUI and Graphics Development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/web-flasher.html">Web-Based Firmware Flashing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/known-issues.html">Known Issues and Limitations</a></li>
@@ -265,19 +274,44 @@
         <article role="main" id="furo-main-content">
           <section id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">¶</a></h1>
-<p>This section will contain auto-generated API documentation from C code using Doxygen and Breathe.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>API documentation will be added in a future phase using Doxygen → Breathe integration.</p>
-</div>
-<section id="planned-components">
-<h2>Planned Components<a class="headerlink" href="#planned-components" title="Link to this heading">¶</a></h2>
+<p>Complete API documentation for ESP32 Template components using Sphinx-Needs methodology.</p>
+<p>Each API is documented with full traceability to requirements and design specifications.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>The ESP32 Template provides modular components for common IoT patterns:</p>
 <ul class="simple">
-<li><p><strong>config_manager</strong> - Configuration management API</p></li>
-<li><p><strong>web_server</strong> - HTTP/HTTPS server API</p></li>
-<li><p><strong>cert_handler</strong> - Certificate handling API</p></li>
-<li><p><strong>netif_uart_tunnel</strong> - QEMU network bridge API</p></li>
+<li><p><strong>Configuration Management</strong> - JSON schema-driven configuration with NVS storage</p></li>
+<li><p><strong>Web Server</strong> - HTTP server with captive portal support</p></li>
+<li><p><strong>WiFi Management</strong> - Station and Access Point mode management</p></li>
+<li><p><strong>Network Tunneling</strong> - QEMU network bridge for emulation</p></li>
+<li><p><strong>Certificate Handling</strong> - HTTPS certificate management</p></li>
 </ul>
+</section>
+<section id="component-apis">
+<h2>Component APIs<a class="headerlink" href="#component-apis" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api_config_manager.html">Config Manager API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_config_manager.html#lifecycle-functions">Lifecycle Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_config_manager.html#string-parameter-access">String Parameter Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_config_manager.html#integer-parameter-access">Integer Parameter Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_config_manager.html#boolean-parameter-access">Boolean Parameter Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_config_manager.html#bulk-json-configuration-api">Bulk JSON Configuration API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_netif_uart_tunnel.html">Network Tunnel API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_netif_uart_tunnel.html#configuration-structure">Configuration Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_netif_uart_tunnel.html#lifecycle-functions">Lifecycle Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_cert_handler.html">Certificate Handler API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_cert_handler.html#lifecycle-functions">Lifecycle Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_cert_handler.html#certificate-access-functions">Certificate Access Functions</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </section>
 </section>
 
@@ -286,23 +320,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../90_guides/index.html">
+          <a class="next-page" href="api_config_manager.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Development Guide</div>
+                <div class="title">Config Manager API</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="../12_design/spec_config_manager.html">
+          <a class="prev-page" href="../12_design/spec_web_server.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Configuration Manager Design Specification</div>
+                <div class="title">Web Server Design Specification</div>
                 
               </div>
             </a>
@@ -337,7 +371,8 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">API Reference</a><ul>
-<li><a class="reference internal" href="#planned-components">Planned Components</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#component-apis">Component APIs</a></li>
 </ul>
 </li>
 </ul>

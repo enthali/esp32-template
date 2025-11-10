@@ -80,7 +80,7 @@ Component Design Specifications
 
    **API Pattern**: Getter/setter functions with validation
 
-   **See Also**: :doc:`spec_config_manager` for detailed design
+   **See Also**: :doc:`spec_config_manager_json` for detailed design
 
 
 .. spec:: Web Server Component Design

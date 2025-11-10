@@ -12,11 +12,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-needs/modern.css?v=803738c0" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=2dda3639" />
@@ -204,19 +204,28 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../11_requirements/index.html">Requirements Documentation</a><input aria-label="Toggle navigation of Requirements Documentation" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_system.html">System Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_web_server.html">Web Server Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_config_manager.html">Configuration Manager Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_config_manager_json.html">JSON-Based Configuration Manager Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../11_requirements/req_netif_tunnel.html">Network Interface Tunnel Requirements</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../12_design/index.html">Design Specifications</a><input aria-label="Toggle navigation of Design Specifications" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../12_design/spec_high_level_architecture.html">High-Level Architecture Design Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_manager.html">Configuration Manager Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_manager_json.html">JSON-Based Configuration Manager Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_config_webpage.html">Configuration Webpage Design Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../12_design/spec_web_server.html">Web Server Design Specification</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../21_api/index.html">API Reference</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../21_api/index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../21_api/api_config_manager.html">Config Manager API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html">Network Tunnel API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../21_api/api_cert_handler.html">Certificate Handler API</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../90_guides/index.html">Development Guide</a><input aria-label="Toggle navigation of Development Guide" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/devcontainer.html">Development Container Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/gui-development.html">GUI and Graphics Development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-emulator.html">QEMU Emulator Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../90_guides/web-flasher.html">Web-Based Firmware Flashing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/debugging.html">Debugging Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/qemu-network-internals.html">QEMU Network Internals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../90_guides/known-issues.html">Known Issues and Limitations</a></li>
@@ -270,92 +279,110 @@
 <h2>Requirements Hierarchy Visualization<a class="headerlink" href="#requirements-hierarchy-visualization" title="Link to this heading">¶</a></h2>
 <p>This diagram shows the hierarchical relationship between system-level and component-level requirements.</p>
 <figure class="align-center" id="needflow-31_traceability/index-0">
-<div class="graphviz"><img src="../_images/needflow-3a5190bd230cd0821bc0d4df1b613e7b6e1a2ad0.png" alt="" usemap="#needflow" class="graphviz" /></div>
+<div class="graphviz"><img src="../_images/needflow-4a7c789fff2d551a55278c4e360d7c65b06212cc.png" alt="" usemap="#needflow" class="graphviz" /></div>
 <map id="needflow" name="needflow">
-<area shape="rect" id="node1" href="../11_requirements/req_config_manager.html#REQ_CFG_1" target="_top" title="REQ_CFG_1" alt="" coords="379,1369,565,1476"/>
-<area shape="rect" id="node23" href="../11_requirements/req_system.html#REQ_SYS_CFG_1" target="_top" title="REQ_SYS_CFG_1" alt="" coords="560,1595,747,1701"/>
-<area shape="rect" id="node2" href="../11_requirements/req_config_manager.html#REQ_CFG_2" target="_top" title="REQ_CFG_2" alt="" coords="376,1144,563,1251"/>
-<area shape="rect" id="node3" href="../11_requirements/req_config_manager.html#REQ_CFG_3" target="_top" title="REQ_CFG_3" alt="" coords="917,1144,1104,1251"/>
-<area shape="rect" id="node4" href="../11_requirements/req_config_manager.html#REQ_CFG_4" target="_top" title="REQ_CFG_4" alt="" coords="560,919,747,1025"/>
-<area shape="rect" id="node5" href="../11_requirements/req_config_manager.html#REQ_CFG_5" target="_top" title="REQ_CFG_5" alt="" coords="279,625,465,713"/>
-<area shape="rect" id="node6" href="../11_requirements/req_config_manager.html#REQ_CFG_6" target="_top" title="REQ_CFG_6" alt="" coords="1232,928,1419,1016"/>
-<area shape="rect" id="node7" href="../11_requirements/req_config_manager.html#REQ_CFG_7" target="_top" title="REQ_CFG_7" alt="" coords="337,419,525,507"/>
-<area shape="rect" id="node29" href="../11_requirements/req_web_server.html#REQ_WEB_2" target="_top" title="REQ_WEB_2" alt="" coords="1020,625,1207,713"/>
-<area shape="rect" id="node8" href="../11_requirements/req_config_manager.html#REQ_CFG_8" target="_top" title="REQ_CFG_8" alt="" coords="476,212,676,300"/>
-<area shape="rect" id="node9" href="../11_requirements/req_config_manager.html#REQ_CFG_9" target="_top" title="REQ_CFG_9" alt="" coords="207,212,393,300"/>
-<area shape="rect" id="node10" href="../11_requirements/req_config_manager.html#REQ_CFG_10" target="_top" title="REQ_CFG_10" alt="" coords="636,625,783,713"/>
-<area shape="rect" id="node11" href="../11_requirements/req_config_manager.html#REQ_CFG_11" target="_top" title="REQ_CFG_11" alt="" coords="5,5,192,93"/>
-<area shape="rect" id="node12" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_1" target="_top" title="REQ_NETIF_TUNNEL_1" alt="" coords="2438,1153,2647,1241"/>
-<area shape="rect" id="node27" href="../11_requirements/req_system.html#REQ_SYS_SIM_1" target="_top" title="REQ_SYS_SIM_1" alt="" coords="2798,1379,2954,1467"/>
-<area shape="rect" id="node13" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_2" target="_top" title="REQ_NETIF_TUNNEL_2" alt="" coords="2103,928,2313,1016"/>
-<area shape="rect" id="node14" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_3" target="_top" title="REQ_NETIF_TUNNEL_3" alt="" coords="2570,928,2779,1016"/>
-<area shape="rect" id="node15" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_4" target="_top" title="REQ_NETIF_TUNNEL_4" alt="" coords="1870,928,2079,1016"/>
-<area shape="rect" id="node21" href="../11_requirements/req_system.html#REQ_SYS_NET_1" target="_top" title="REQ_SYS_NET_1" alt="" coords="1623,1153,1796,1241"/>
-<area shape="rect" id="node16" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_5" target="_top" title="REQ_NETIF_TUNNEL_5" alt="" coords="2337,928,2546,1016"/>
-<area shape="rect" id="node17" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_NF_1" target="_top" title="REQ_NETIF_TUNNEL_NF_1" alt="" coords="2804,928,3041,1016"/>
-<area shape="rect" id="node18" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_NF_2" target="_top" title="REQ_NETIF_TUNNEL_NF_2" alt="" coords="2089,625,2327,713"/>
-<area shape="rect" id="node19" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_DOC_1" target="_top" title="REQ_NETIF_TUNNEL_DOC_1" alt="" coords="2753,625,3001,713"/>
-<area shape="rect" id="node20" href="../11_requirements/req_system.html#REQ_SYS_HW_1" target="_top" title="REQ_SYS_HW_1" alt="" coords="217,5,434,93"/>
-<area shape="rect" id="node22" href="../11_requirements/req_system.html#REQ_SYS_WEB_1" target="_top" title="REQ_SYS_WEB_1" alt="" coords="1443,928,1629,1016"/>
-<area shape="rect" id="node24" href="../11_requirements/req_system.html#REQ_SYS_ARCH_1" target="_top" title="REQ_SYS_ARCH_1" alt="" coords="458,5,689,93"/>
-<area shape="rect" id="node25" href="../11_requirements/req_system.html#REQ_SYS_REL_1" target="_top" title="REQ_SYS_REL_1" alt="" coords="713,5,914,93"/>
-<area shape="rect" id="node26" href="../11_requirements/req_system.html#REQ_SYS_PERF_1" target="_top" title="REQ_SYS_PERF_1" alt="" coords="938,5,1118,93"/>
-<area shape="rect" id="node28" href="../11_requirements/req_web_server.html#REQ_WEB_1" target="_top" title="REQ_WEB_1" alt="" coords="1232,625,1424,713"/>
-<area shape="rect" id="node30" href="../11_requirements/req_web_server.html#REQ_WEB_3" target="_top" title="REQ_WEB_3" alt="" coords="1631,737,1787,825"/>
-<area shape="rect" id="node31" href="../11_requirements/req_web_server.html#REQ_WEB_4" target="_top" title="REQ_WEB_4" alt="" coords="807,625,995,713"/>
-<area shape="rect" id="node32" href="../11_requirements/req_web_server.html#REQ_WEB_5" target="_top" title="REQ_WEB_5" alt="" coords="1449,625,1623,713"/>
-<area shape="rect" id="node33" href="../11_requirements/req_web_server.html#REQ_WEB_NF_1" target="_top" title="REQ_WEB_NF_1" alt="" coords="961,419,1169,507"/>
-<area shape="rect" id="node34" href="../11_requirements/req_web_server.html#REQ_WEB_NF_2" target="_top" title="REQ_WEB_NF_2" alt="" coords="1440,419,1611,507"/>
+<area shape="rect" id="node1" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1" target="_top" title="REQ_CFG_JSON_1" alt="" coords="953,1012,1167,1119"/>
+<area shape="rect" id="node27" href="../11_requirements/req_system.html#REQ_SYS_CFG_1" target="_top" title="REQ_SYS_CFG_1" alt="" coords="967,1237,1153,1344"/>
+<area shape="rect" id="node2" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_2" target="_top" title="REQ_CFG_JSON_2" alt="" coords="1545,777,1751,884"/>
+<area shape="rect" id="node3" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_3" target="_top" title="REQ_CFG_JSON_3" alt="" coords="367,787,572,875"/>
+<area shape="rect" id="node4" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_4" target="_top" title="REQ_CFG_JSON_4" alt="" coords="175,768,343,893"/>
+<area shape="rect" id="node5" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_5" target="_top" title="REQ_CFG_JSON_5" alt="" coords="220,543,449,649"/>
+<area shape="rect" id="node6" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_6" target="_top" title="REQ_CFG_JSON_6" alt="" coords="1319,787,1521,875"/>
+<area shape="rect" id="node7" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_7" target="_top" title="REQ_CFG_JSON_7" alt="" coords="1355,543,1541,649"/>
+<area shape="rect" id="node8" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_8" target="_top" title="REQ_CFG_JSON_8" alt="" coords="1565,543,1752,649"/>
+<area shape="rect" id="node9" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_9" target="_top" title="REQ_CFG_JSON_9" alt="" coords="5,552,189,640"/>
+<area shape="rect" id="node10" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_10" target="_top" title="REQ_CFG_JSON_10" alt="" coords="1377,231,1565,337"/>
+<area shape="rect" id="node26" href="../11_requirements/req_system.html#REQ_SYS_WEB_1" target="_top" title="REQ_SYS_WEB_1" alt="" coords="2479,552,2665,640"/>
+<area shape="rect" id="node11" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_11" target="_top" title="REQ_CFG_JSON_11" alt="" coords="779,543,955,649"/>
+<area shape="rect" id="node29" href="../11_requirements/req_system.html#REQ_SYS_REL_1" target="_top" title="REQ_SYS_REL_1" alt="" coords="821,787,1022,875"/>
+<area shape="rect" id="node12" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_12" target="_top" title="REQ_CFG_JSON_12" alt="" coords="935,231,1121,337"/>
+<area shape="rect" id="node13" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_13" target="_top" title="REQ_CFG_JSON_13" alt="" coords="596,768,796,893"/>
+<area shape="rect" id="node14" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_14" target="_top" title="REQ_CFG_JSON_14" alt="" coords="1155,231,1352,337"/>
+<area shape="rect" id="node15" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_15" target="_top" title="REQ_CFG_JSON_15" alt="" coords="1097,768,1295,893"/>
+<area shape="rect" id="node16" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_1" target="_top" title="REQ_NETIF_TUNNEL_1" alt="" coords="3663,552,3873,640"/>
+<area shape="rect" id="node31" href="../11_requirements/req_system.html#REQ_SYS_SIM_1" target="_top" title="REQ_SYS_SIM_1" alt="" coords="3690,787,3846,875"/>
+<area shape="rect" id="node17" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_2" target="_top" title="REQ_NETIF_TUNNEL_2" alt="" coords="3911,240,4121,328"/>
+<area shape="rect" id="node18" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_3" target="_top" title="REQ_NETIF_TUNNEL_3" alt="" coords="4145,240,4354,328"/>
+<area shape="rect" id="node19" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_4" target="_top" title="REQ_NETIF_TUNNEL_4" alt="" coords="3182,240,3391,328"/>
+<area shape="rect" id="node25" href="../11_requirements/req_system.html#REQ_SYS_NET_1" target="_top" title="REQ_SYS_NET_1" alt="" coords="2875,787,3048,875"/>
+<area shape="rect" id="node20" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_5" target="_top" title="REQ_NETIF_TUNNEL_5" alt="" coords="3415,240,3625,328"/>
+<area shape="rect" id="node21" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_NF_1" target="_top" title="REQ_NETIF_TUNNEL_NF_1" alt="" coords="3649,240,3887,328"/>
+<area shape="rect" id="node22" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_NF_2" target="_top" title="REQ_NETIF_TUNNEL_NF_2" alt="" coords="3897,15,4135,103"/>
+<area shape="rect" id="node23" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_DOC_1" target="_top" title="REQ_NETIF_TUNNEL_DOC_1" alt="" coords="4220,15,4468,103"/>
+<area shape="rect" id="node24" href="../11_requirements/req_system.html#REQ_SYS_HW_1" target="_top" title="REQ_SYS_HW_1" alt="" coords="4493,15,4710,103"/>
+<area shape="rect" id="node28" href="../11_requirements/req_system.html#REQ_SYS_ARCH_1" target="_top" title="REQ_SYS_ARCH_1" alt="" coords="4734,15,4965,103"/>
+<area shape="rect" id="node30" href="../11_requirements/req_system.html#REQ_SYS_PERF_1" target="_top" title="REQ_SYS_PERF_1" alt="" coords="4989,15,5169,103"/>
+<area shape="rect" id="node32" href="../11_requirements/req_system.html#REQ_SYS_SIM_2" target="_top" title="REQ_SYS_SIM_2" alt="" coords="3387,543,3560,649"/>
+<area shape="rect" id="node33" href="../11_requirements/req_system.html#REQ_SYS_SEC_1" target="_top" title="REQ_SYS_SEC_1" alt="" coords="5193,24,5396,93"/>
+<area shape="rect" id="node34" href="../11_requirements/req_system.html#REQ_SYS_TIME_1" target="_top" title="REQ_SYS_TIME_1" alt="" coords="5420,15,5641,103"/>
+<area shape="rect" id="node35" href="../11_requirements/req_web_server.html#REQ_WEB_1" target="_top" title="REQ_WEB_1" alt="" coords="2143,240,2335,328"/>
+<area shape="rect" id="node36" href="../11_requirements/req_web_server.html#REQ_WEB_2" target="_top" title="REQ_WEB_2" alt="" coords="1900,240,2087,328"/>
+<area shape="rect" id="node37" href="../11_requirements/req_web_server.html#REQ_WEB_3" target="_top" title="REQ_WEB_3" alt="" coords="1701,361,1857,449"/>
+<area shape="rect" id="node38" href="../11_requirements/req_web_server.html#REQ_WEB_CONF_1" target="_top" title="REQ_WEB_CONF_1" alt="" coords="2359,240,2545,328"/>
+<area shape="rect" id="node39" href="../11_requirements/req_web_server.html#REQ_WEB_SCHEMA_1" target="_top" title="REQ_WEB_SCHEMA_1" alt="" coords="2797,5,2998,112"/>
+<area shape="rect" id="node40" href="../11_requirements/req_web_server.html#REQ_WEB_4" target="_top" title="REQ_WEB_4" alt="" coords="2570,240,2758,328"/>
+<area shape="rect" id="node41" href="../11_requirements/req_web_server.html#REQ_WEB_5" target="_top" title="REQ_WEB_5" alt="" coords="2782,240,2957,328"/>
+<area shape="rect" id="node42" href="../11_requirements/req_web_server.html#REQ_WEB_NF_1" target="_top" title="REQ_WEB_NF_1" alt="" coords="2319,15,2527,103"/>
+<area shape="rect" id="node43" href="../11_requirements/req_web_server.html#REQ_WEB_NF_2" target="_top" title="REQ_WEB_NF_2" alt="" coords="1877,15,2048,103"/>
 </map></figure>
 <section id="system-requirements-flow">
 <h3>System Requirements Flow<a class="headerlink" href="#system-requirements-flow" title="Link to this heading">¶</a></h3>
 <p>System-level requirements and their component refinements:</p>
 <figure class="align-center" id="needflow-31_traceability/index-1">
-<div class="graphviz"><img src="../_images/needflow-eedb337341893fb2a93ff39258239a9902555070.png" alt="" usemap="#needflow" class="graphviz" /></div>
+<div class="graphviz"><img src="../_images/needflow-04c46ab5749dbfc38aa131e80b1512a9b6e1bead.png" alt="" usemap="#needflow" class="graphviz" /></div>
 <map id="needflow" name="needflow">
 <area shape="rect" id="node1" href="../11_requirements/req_system.html#REQ_SYS_HW_1" target="_top" title="REQ_SYS_HW_1" alt="" coords="5,15,223,103"/>
-<area shape="rect" id="node2" href="../11_requirements/req_system.html#REQ_SYS_NET_1" target="_top" title="REQ_SYS_NET_1" alt="" coords="254,231,427,319"/>
+<area shape="rect" id="node2" href="../11_requirements/req_system.html#REQ_SYS_NET_1" target="_top" title="REQ_SYS_NET_1" alt="" coords="343,231,517,319"/>
 <area shape="rect" id="node3" href="../11_requirements/req_system.html#REQ_SYS_WEB_1" target="_top" title="REQ_SYS_WEB_1" alt="" coords="247,15,434,103"/>
-<area shape="rect" id="node4" href="../11_requirements/req_system.html#REQ_SYS_CFG_1" target="_top" title="REQ_SYS_CFG_1" alt="" coords="458,5,645,112"/>
-<area shape="rect" id="node5" href="../11_requirements/req_system.html#REQ_SYS_ARCH_1" target="_top" title="REQ_SYS_ARCH_1" alt="" coords="669,15,900,103"/>
-<area shape="rect" id="node6" href="../11_requirements/req_system.html#REQ_SYS_REL_1" target="_top" title="REQ_SYS_REL_1" alt="" coords="924,15,1125,103"/>
-<area shape="rect" id="node7" href="../11_requirements/req_system.html#REQ_SYS_PERF_1" target="_top" title="REQ_SYS_PERF_1" alt="" coords="1149,15,1329,103"/>
-<area shape="rect" id="node8" href="../11_requirements/req_system.html#REQ_SYS_SIM_1" target="_top" title="REQ_SYS_SIM_1" alt="" coords="1353,15,1509,103"/>
+<area shape="rect" id="node4" href="../11_requirements/req_system.html#REQ_SYS_CFG_1" target="_top" title="REQ_SYS_CFG_1" alt="" coords="738,5,925,112"/>
+<area shape="rect" id="node5" href="../11_requirements/req_system.html#REQ_SYS_ARCH_1" target="_top" title="REQ_SYS_ARCH_1" alt="" coords="949,15,1180,103"/>
+<area shape="rect" id="node6" href="../11_requirements/req_system.html#REQ_SYS_REL_1" target="_top" title="REQ_SYS_REL_1" alt="" coords="1204,15,1405,103"/>
+<area shape="rect" id="node7" href="../11_requirements/req_system.html#REQ_SYS_PERF_1" target="_top" title="REQ_SYS_PERF_1" alt="" coords="1429,15,1609,103"/>
+<area shape="rect" id="node8" href="../11_requirements/req_system.html#REQ_SYS_SIM_1" target="_top" title="REQ_SYS_SIM_1" alt="" coords="631,231,787,319"/>
+<area shape="rect" id="node9" href="../11_requirements/req_system.html#REQ_SYS_SIM_2" target="_top" title="REQ_SYS_SIM_2" alt="" coords="541,5,714,112"/>
+<area shape="rect" id="node10" href="../11_requirements/req_system.html#REQ_SYS_SEC_1" target="_top" title="REQ_SYS_SEC_1" alt="" coords="1634,24,1837,93"/>
+<area shape="rect" id="node11" href="../11_requirements/req_system.html#REQ_SYS_TIME_1" target="_top" title="REQ_SYS_TIME_1" alt="" coords="1861,15,2082,103"/>
 </map></figure>
 </section>
 <section id="web-server-component-traceability">
 <h3>Web Server Component Traceability<a class="headerlink" href="#web-server-component-traceability" title="Link to this heading">¶</a></h3>
 <figure class="align-center" id="needflow-31_traceability/index-2">
-<div class="graphviz"><img src="../_images/needflow-a7b1f1c6eda3ffe68b415ca5354c5b4cf005b5e2.png" alt="" usemap="#needflow" class="graphviz" /></div>
+<div class="graphviz"><img src="../_images/needflow-8b8f67e577b401587c0a1dbb3afa607ce1ac5de1.png" alt="" usemap="#needflow" class="graphviz" /></div>
 <map id="needflow" name="needflow">
-<area shape="rect" id="node1" href="../11_requirements/req_system.html#REQ_SYS_NET_1" target="_top" title="REQ_SYS_NET_1" alt="" coords="130,712,303,800"/>
-<area shape="rect" id="node2" href="../11_requirements/req_system.html#REQ_SYS_WEB_1" target="_top" title="REQ_SYS_WEB_1" alt="" coords="330,505,517,593"/>
-<area shape="rect" id="node3" href="../11_requirements/req_web_server.html#REQ_WEB_1" target="_top" title="REQ_WEB_1" alt="" coords="327,212,519,300"/>
-<area shape="rect" id="node4" href="../11_requirements/req_web_server.html#REQ_WEB_2" target="_top" title="REQ_WEB_2" alt="" coords="117,212,303,300"/>
-<area shape="rect" id="node5" href="../11_requirements/req_web_server.html#REQ_WEB_3" target="_top" title="REQ_WEB_3" alt="" coords="5,324,161,412"/>
-<area shape="rect" id="node6" href="../11_requirements/req_web_server.html#REQ_WEB_4" target="_top" title="REQ_WEB_4" alt="" coords="544,212,732,300"/>
-<area shape="rect" id="node7" href="../11_requirements/req_web_server.html#REQ_WEB_5" target="_top" title="REQ_WEB_5" alt="" coords="756,212,931,300"/>
-<area shape="rect" id="node8" href="../11_requirements/req_web_server.html#REQ_WEB_NF_1" target="_top" title="REQ_WEB_NF_1" alt="" coords="566,5,774,93"/>
-<area shape="rect" id="node9" href="../11_requirements/req_web_server.html#REQ_WEB_NF_2" target="_top" title="REQ_WEB_NF_2" alt="" coords="125,5,295,93"/>
+<area shape="rect" id="node1" href="../11_requirements/req_system.html#REQ_SYS_NET_1" target="_top" title="REQ_SYS_NET_1" alt="" coords="166,731,339,819"/>
+<area shape="rect" id="node2" href="../11_requirements/req_system.html#REQ_SYS_WEB_1" target="_top" title="REQ_SYS_WEB_1" alt="" coords="511,524,698,612"/>
+<area shape="rect" id="node3" href="../11_requirements/req_web_server.html#REQ_WEB_1" target="_top" title="REQ_WEB_1" alt="" coords="89,231,281,319"/>
+<area shape="rect" id="node4" href="../11_requirements/req_web_server.html#REQ_WEB_2" target="_top" title="REQ_WEB_2" alt="" coords="717,231,903,319"/>
+<area shape="rect" id="node5" href="../11_requirements/req_web_server.html#REQ_WEB_3" target="_top" title="REQ_WEB_3" alt="" coords="5,343,161,431"/>
+<area shape="rect" id="node6" href="../11_requirements/req_web_server.html#REQ_WEB_CONF_1" target="_top" title="REQ_WEB_CONF_1" alt="" coords="927,231,1114,319"/>
+<area shape="rect" id="node7" href="../11_requirements/req_web_server.html#REQ_WEB_SCHEMA_1" target="_top" title="REQ_WEB_SCHEMA_1" alt="" coords="943,5,1144,112"/>
+<area shape="rect" id="node8" href="../11_requirements/req_web_server.html#REQ_WEB_4" target="_top" title="REQ_WEB_4" alt="" coords="305,231,493,319"/>
+<area shape="rect" id="node9" href="../11_requirements/req_web_server.html#REQ_WEB_5" target="_top" title="REQ_WEB_5" alt="" coords="517,231,692,319"/>
+<area shape="rect" id="node10" href="../11_requirements/req_web_server.html#REQ_WEB_NF_1" target="_top" title="REQ_WEB_NF_1" alt="" coords="646,15,854,103"/>
+<area shape="rect" id="node11" href="../11_requirements/req_web_server.html#REQ_WEB_NF_2" target="_top" title="REQ_WEB_NF_2" alt="" coords="150,15,321,103"/>
 </map></figure>
 </section>
 <section id="configuration-manager-traceability">
 <h3>Configuration Manager Traceability<a class="headerlink" href="#configuration-manager-traceability" title="Link to this heading">¶</a></h3>
 <figure class="align-center" id="needflow-31_traceability/index-3">
-<div class="graphviz"><img src="../_images/needflow-b0753c4704768adeabb6b3836096f7460b5c385f.png" alt="" usemap="#needflow" class="graphviz" /></div>
+<div class="graphviz"><img src="../_images/needflow-06e4a36feb0e998ed26b214c7342cb1b9fbfc3c5.png" alt="" usemap="#needflow" class="graphviz" /></div>
 <map id="needflow" name="needflow">
-<area shape="rect" id="node1" href="../11_requirements/req_config_manager.html#REQ_CFG_1" target="_top" title="REQ_CFG_1" alt="" coords="587,1283,773,1389"/>
-<area shape="rect" id="node12" href="../11_requirements/req_system.html#REQ_SYS_CFG_1" target="_top" title="REQ_SYS_CFG_1" alt="" coords="333,1508,520,1615"/>
-<area shape="rect" id="node2" href="../11_requirements/req_config_manager.html#REQ_CFG_2" target="_top" title="REQ_CFG_2" alt="" coords="587,1057,773,1164"/>
-<area shape="rect" id="node3" href="../11_requirements/req_config_manager.html#REQ_CFG_3" target="_top" title="REQ_CFG_3" alt="" coords="355,1057,541,1164"/>
-<area shape="rect" id="node4" href="../11_requirements/req_config_manager.html#REQ_CFG_4" target="_top" title="REQ_CFG_4" alt="" coords="159,832,345,939"/>
-<area shape="rect" id="node5" href="../11_requirements/req_config_manager.html#REQ_CFG_5" target="_top" title="REQ_CFG_5" alt="" coords="343,625,529,713"/>
-<area shape="rect" id="node6" href="../11_requirements/req_config_manager.html#REQ_CFG_6" target="_top" title="REQ_CFG_6" alt="" coords="404,841,591,929"/>
-<area shape="rect" id="node7" href="../11_requirements/req_config_manager.html#REQ_CFG_7" target="_top" title="REQ_CFG_7" alt="" coords="342,419,530,507"/>
-<area shape="rect" id="node8" href="../11_requirements/req_config_manager.html#REQ_CFG_8" target="_top" title="REQ_CFG_8" alt="" coords="213,212,413,300"/>
-<area shape="rect" id="node9" href="../11_requirements/req_config_manager.html#REQ_CFG_9" target="_top" title="REQ_CFG_9" alt="" coords="675,212,861,300"/>
-<area shape="rect" id="node10" href="../11_requirements/req_config_manager.html#REQ_CFG_10" target="_top" title="REQ_CFG_10" alt="" coords="5,625,152,713"/>
-<area shape="rect" id="node11" href="../11_requirements/req_config_manager.html#REQ_CFG_11" target="_top" title="REQ_CFG_11" alt="" coords="312,5,499,93"/>
+<area shape="rect" id="node1" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1" target="_top" title="REQ_CFG_JSON_1" alt="" coords="639,700,852,807"/>
+<area shape="rect" id="node16" href="../11_requirements/req_system.html#REQ_SYS_CFG_1" target="_top" title="REQ_SYS_CFG_1" alt="" coords="465,925,652,1032"/>
+<area shape="rect" id="node2" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_2" target="_top" title="REQ_CFG_JSON_2" alt="" coords="979,465,1186,572"/>
+<area shape="rect" id="node3" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_3" target="_top" title="REQ_CFG_JSON_3" alt="" coords="1211,475,1416,563"/>
+<area shape="rect" id="node4" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_4" target="_top" title="REQ_CFG_JSON_4" alt="" coords="203,456,371,581"/>
+<area shape="rect" id="node5" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_5" target="_top" title="REQ_CFG_JSON_5" alt="" coords="533,231,763,337"/>
+<area shape="rect" id="node6" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_6" target="_top" title="REQ_CFG_JSON_6" alt="" coords="1441,475,1642,563"/>
+<area shape="rect" id="node7" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_7" target="_top" title="REQ_CFG_JSON_7" alt="" coords="1275,231,1461,337"/>
+<area shape="rect" id="node8" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_8" target="_top" title="REQ_CFG_JSON_8" alt="" coords="1064,231,1251,337"/>
+<area shape="rect" id="node9" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_9" target="_top" title="REQ_CFG_JSON_9" alt="" coords="5,240,189,328"/>
+<area shape="rect" id="node10" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_10" target="_top" title="REQ_CFG_JSON_10" alt="" coords="730,5,918,112"/>
+<area shape="rect" id="node11" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_11" target="_top" title="REQ_CFG_JSON_11" alt="" coords="1701,231,1877,337"/>
+<area shape="rect" id="node12" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_12" target="_top" title="REQ_CFG_JSON_12" alt="" coords="1500,5,1687,112"/>
+<area shape="rect" id="node13" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_13" target="_top" title="REQ_CFG_JSON_13" alt="" coords="533,456,733,581"/>
+<area shape="rect" id="node14" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_14" target="_top" title="REQ_CFG_JSON_14" alt="" coords="1269,5,1467,112"/>
+<area shape="rect" id="node15" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_15" target="_top" title="REQ_CFG_JSON_15" alt="" coords="757,456,955,581"/>
 </map></figure>
 </section>
 <section id="network-tunnel-qemu-traceability">
@@ -434,13 +461,31 @@
 <td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_tags"><p>reliability<em>; </em>error-handling</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SIM_1">REQ_SYS_SIM_1</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SEC_1">REQ_SYS_SEC_1</a></p></td>
+<td class="needs_title"><p>HTTPS Support</p></td>
+<td class="needs_status"><p>open</p></td>
+<td class="needs_priority"><p>optional</p></td>
+<td class="needs_tags"><p>security<em>; </em>https<em>; </em>future</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SIM_1">REQ_SYS_SIM_1</a></p></td>
 <td class="needs_title"><p>Emulator Support</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_tags"><p>emulator<em>; </em>qemu<em>; </em>testing</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SIM_2">REQ_SYS_SIM_2</a></p></td>
+<td class="needs_title"><p>Emulator Network Connectivity</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>optional</p></td>
+<td class="needs_tags"><p>emulator<em>; </em>qemu<em>; </em>network<em>; </em>development</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_TIME_1">REQ_SYS_TIME_1</a></p></td>
+<td class="needs_title"><p>System Time and NTP Support</p></td>
+<td class="needs_status"><p>open</p></td>
+<td class="needs_priority"><p>optional</p></td>
+<td class="needs_tags"><p>time<em>; </em>ntp<em>; </em>future</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a></p></td>
 <td class="needs_title"><p>Web-based Configuration</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
@@ -482,7 +527,7 @@
 <td class="needs_title"><p>Configuration Interface</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a><em>; </em><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_3">REQ_CFG_3</a></p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a><em>; </em><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_7">REQ_CFG_JSON_7</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_3">REQ_WEB_3</a></p></td>
 <td class="needs_title"><p>WiFi Setup Interface</p></td>
@@ -502,17 +547,29 @@
 <td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_NF_1">REQ_WEB_NF_1</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_CONF_1">REQ_WEB_CONF_1</a></p></td>
+<td class="needs_title"><p>Configuration REST API</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a><em>; </em><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_CFG_1">REQ_SYS_CFG_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_NF_1">REQ_WEB_NF_1</a></p></td>
 <td class="needs_title"><p>Web UI Responsiveness</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>optional</p></td>
 <td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_1">REQ_WEB_1</a><em>; </em><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_2">REQ_WEB_2</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_NF_2">REQ_WEB_NF_2</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_NF_2">REQ_WEB_NF_2</a></p></td>
 <td class="needs_title"><p>Mobile-First Design</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>optional</p></td>
 <td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_1">REQ_WEB_1</a><em>; </em><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_2">REQ_WEB_2</a><em>; </em><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_3">REQ_WEB_3</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_SCHEMA_1">REQ_WEB_SCHEMA_1</a></p></td>
+<td class="needs_title"><p>Schema-Driven Configuration Form</p></td>
+<td class="needs_status"><p>approved</p></td>
+<td class="needs_priority"><p>optional</p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_CONF_1">REQ_WEB_CONF_1</a><em>; </em><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -538,71 +595,95 @@
 </tr>
 </thead>
 <tbody>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_1">REQ_CFG_1</a></p></td>
-<td class="needs_title"><p>Centralized Configuration Header</p></td>
-<td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1</a></p></td>
+<td class="needs_title"><p>JSON Schema as Configuration Source of Truth</p></td>
+<td class="needs_status"><p>draft</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_CFG_1">REQ_SYS_CFG_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_10">REQ_CFG_10</a></p></td>
-<td class="needs_title"><p>NVS Error Recovery</p></td>
-<td class="needs_status"><p>approved</p></td>
-<td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_4">REQ_CFG_4</a></p></td>
-</tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_11">REQ_CFG_11</a></p></td>
-<td class="needs_title"><p>Configuration Logging</p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_10">REQ_CFG_JSON_10</a></p></td>
+<td class="needs_title"><p>Web Interface Integration Support</p></td>
 <td class="needs_status"><p>approved</p></td>
 <td class="needs_priority"><p>optional</p></td>
-<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_5">REQ_CFG_5</a><em>; </em><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_8">REQ_CFG_8</a></p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a><em>; </em><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1</a><em>; </em><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_7">REQ_CFG_JSON_7</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_2">REQ_CFG_2</a></p></td>
-<td class="needs_title"><p>Compile-Time Configuration Access</p></td>
-<td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_11">REQ_CFG_JSON_11</a></p></td>
+<td class="needs_title"><p>NVS Error Graceful Handling</p></td>
+<td class="needs_status"><p>draft</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_1">REQ_CFG_1</a></p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_6">REQ_CFG_JSON_6</a><em>; </em><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_REL_1">REQ_SYS_REL_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_3">REQ_CFG_3</a></p></td>
-<td class="needs_title"><p>Runtime Configuration Structure</p></td>
-<td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_12">REQ_CFG_JSON_12</a></p></td>
+<td class="needs_title"><p>Configuration Initialization on Boot</p></td>
+<td class="needs_status"><p>draft</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_1">REQ_CFG_1</a><em>; </em><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_CFG_1">REQ_SYS_CFG_1</a></p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_6">REQ_CFG_JSON_6</a><em>; </em><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_11">REQ_CFG_JSON_11</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_4">REQ_CFG_4</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_13">REQ_CFG_JSON_13</a></p></td>
+<td class="needs_title"><p>Simple Process to Add Configuration Fields</p></td>
+<td class="needs_status"><p>draft</p></td>
+<td class="needs_priority"><p>optional</p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_14">REQ_CFG_JSON_14</a></p></td>
+<td class="needs_title"><p>Type Safety via Optional Static Validation</p></td>
+<td class="needs_status"><p>draft</p></td>
+<td class="needs_priority"><p>optional</p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_7">REQ_CFG_JSON_7</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_15">REQ_CFG_JSON_15</a></p></td>
+<td class="needs_title"><p>Configuration Schema Versioning and Migration</p></td>
+<td class="needs_status"><p>open</p></td>
+<td class="needs_priority"><p>optional</p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_2">REQ_CFG_JSON_2</a></p></td>
+<td class="needs_title"><p>Parameter Grouping for UI Organization</p></td>
+<td class="needs_status"><p>draft</p></td>
+<td class="needs_priority"><p>optional</p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_3">REQ_CFG_JSON_3</a></p></td>
+<td class="needs_title"><p>Parameter Type System</p></td>
+<td class="needs_status"><p>draft</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_4">REQ_CFG_JSON_4</a></p></td>
+<td class="needs_title"><p>Build-Time Factory Defaults Generation</p></td>
+<td class="needs_status"><p>draft</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1</a><em>; </em><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_CFG_1">REQ_SYS_CFG_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_5">REQ_CFG_JSON_5</a></p></td>
+<td class="needs_title"><p>No Runtime JSON Parsing in C Code</p></td>
+<td class="needs_status"><p>draft</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_4">REQ_CFG_JSON_4</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_6">REQ_CFG_JSON_6</a></p></td>
+<td class="needs_title"><p>Key-Based NVS Storage</p></td>
+<td class="needs_status"><p>draft</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1</a><em>; </em><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_CFG_1">REQ_SYS_CFG_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_7">REQ_CFG_JSON_7</a></p></td>
+<td class="needs_title"><p>Type-Safe Configuration API</p></td>
+<td class="needs_status"><p>draft</p></td>
+<td class="needs_priority"><p>mandatory</p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_6">REQ_CFG_JSON_6</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_8">REQ_CFG_JSON_8</a></p></td>
 <td class="needs_title"><p>Persistent Configuration Storage</p></td>
-<td class="needs_status"><p>approved</p></td>
+<td class="needs_status"><p>draft</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_3">REQ_CFG_3</a><em>; </em><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_CFG_1">REQ_SYS_CFG_1</a></p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_6">REQ_CFG_JSON_6</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_5">REQ_CFG_5</a></p></td>
-<td class="needs_title"><p>Configuration Read API</p></td>
-<td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_9">REQ_CFG_JSON_9</a></p></td>
+<td class="needs_title"><p>Factory Reset Capability</p></td>
+<td class="needs_status"><p>draft</p></td>
 <td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_4">REQ_CFG_4</a></p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_6">REQ_CFG_6</a></p></td>
-<td class="needs_title"><p>Configuration Validation</p></td>
-<td class="needs_status"><p>approved</p></td>
-<td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_3">REQ_CFG_3</a></p></td>
-</tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_7">REQ_CFG_7</a></p></td>
-<td class="needs_title"><p>Configuration Web Interface</p></td>
-<td class="needs_status"><p>approved</p></td>
-<td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_5">REQ_CFG_5</a><em>; </em><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_2">REQ_WEB_2</a></p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_8">REQ_CFG_8</a></p></td>
-<td class="needs_title"><p>Configuration Save Operation</p></td>
-<td class="needs_status"><p>approved</p></td>
-<td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_7">REQ_CFG_7</a><em>; </em><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_4">REQ_CFG_4</a></p></td>
-</tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_9">REQ_CFG_9</a></p></td>
-<td class="needs_title"><p>Configuration Reset/Reload</p></td>
-<td class="needs_status"><p>approved</p></td>
-<td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_7">REQ_CFG_7</a><em>; </em><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_1">REQ_CFG_1</a></p></td>
+<td class="needs_links"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_4">REQ_CFG_JSON_4</a><em>; </em><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_CFG_1">REQ_SYS_CFG_1</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -703,38 +784,140 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 </tr>
 </thead>
 <tbody>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_1">REQ_CFG_1</a></p></td>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_COMP_CERT_HANDLER">API_COMP_CERT_HANDLER</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_COMP_CONFIG_MANAGER">API_COMP_CONFIG_MANAGER</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_COMP_NETIF_TUNNEL">API_COMP_NETIF_TUNNEL</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_CA_CERT">API_FUNC_CERT_HANDLER_GET_CA_CERT</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_INFO">API_FUNC_CERT_HANDLER_GET_INFO</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_SERVER_CERT">API_FUNC_CERT_HANDLER_GET_SERVER_CERT</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_SERVER_KEY">API_FUNC_CERT_HANDLER_GET_SERVER_KEY</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_INIT">API_FUNC_CERT_HANDLER_INIT</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_COMMIT">API_FUNC_CONFIG_COMMIT</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_FACTORY_RESET">API_FUNC_CONFIG_FACTORY_RESET</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_ALL_AS_JSON">API_FUNC_CONFIG_GET_ALL_AS_JSON</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_BOOL">API_FUNC_CONFIG_GET_BOOL</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_INT16">API_FUNC_CONFIG_GET_INT16</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_INT32">API_FUNC_CONFIG_GET_INT32</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_SCHEMA_JSON">API_FUNC_CONFIG_GET_SCHEMA_JSON</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_STRING">API_FUNC_CONFIG_GET_STRING</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_INIT">API_FUNC_CONFIG_INIT</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_ALL_FROM_JSON">API_FUNC_CONFIG_SET_ALL_FROM_JSON</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_BOOL">API_FUNC_CONFIG_SET_BOOL</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_BOOL_NO_COMMIT">API_FUNC_CONFIG_SET_BOOL_NO_COMMIT</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT16">API_FUNC_CONFIG_SET_INT16</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT16_NO_COMMIT">API_FUNC_CONFIG_SET_INT16_NO_COMMIT</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT32">API_FUNC_CONFIG_SET_INT32</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_STRING">API_FUNC_CONFIG_SET_STRING</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_STRING_NO_COMMIT">API_FUNC_CONFIG_SET_STRING_NO_COMMIT</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_WRITE_FACTORY_DEFAULTS">API_FUNC_CONFIG_WRITE_FACTORY_DEFAULTS</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_DEINIT">API_FUNC_NETIF_TUNNEL_DEINIT</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_GET_HANDLE">API_FUNC_NETIF_TUNNEL_GET_HANDLE</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_INIT">API_FUNC_NETIF_TUNNEL_INIT</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_STRUCT_NETIF_TUNNEL_CONFIG">API_STRUCT_NETIF_TUNNEL_CONFIG</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_10">REQ_CFG_10</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_10">REQ_CFG_JSON_10</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_11">REQ_CFG_11</a></p></td>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_11">REQ_CFG_JSON_11</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_2">REQ_CFG_2</a></p></td>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_12">REQ_CFG_JSON_12</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_3">REQ_CFG_3</a></p></td>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_13">REQ_CFG_JSON_13</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_4">REQ_CFG_4</a></p></td>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_14">REQ_CFG_JSON_14</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_5">REQ_CFG_5</a></p></td>
+<tr class="need row-even"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_15">REQ_CFG_JSON_15</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_6">REQ_CFG_6</a></p></td>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_2">REQ_CFG_JSON_2</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_7">REQ_CFG_7</a></p></td>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_3">REQ_CFG_JSON_3</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_8">REQ_CFG_8</a></p></td>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_4">REQ_CFG_JSON_4</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_9">REQ_CFG_9</a></p></td>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_5">REQ_CFG_JSON_5</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_6">REQ_CFG_JSON_6</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_7">REQ_CFG_JSON_7</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_8">REQ_CFG_JSON_8</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_9">REQ_CFG_JSON_9</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_1</a></p></td>
@@ -778,26 +961,38 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_REL_1">REQ_SYS_REL_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SEC_1">REQ_SYS_SEC_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SIM_1">REQ_SYS_SIM_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SIM_2">REQ_SYS_SIM_2</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_TIME_1">REQ_SYS_TIME_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_1">REQ_WEB_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_2">REQ_WEB_2</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_3">REQ_WEB_3</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_4">REQ_WEB_4</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_5">REQ_WEB_5</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_CONF_1">REQ_WEB_CONF_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_NF_1">REQ_WEB_NF_1</a></p></td>
@@ -806,97 +1001,157 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_NF_2">REQ_WEB_NF_2</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_SCHEMA_1">REQ_WEB_SCHEMA_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_BUILD_1">SPEC_ARCH_BUILD_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CERT_1">SPEC_ARCH_CERT_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CODESPACES_1">SPEC_ARCH_CODESPACES_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_COMM_1">SPEC_ARCH_COMM_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CONFIG_1">SPEC_ARCH_CONFIG_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CONFIG_FLOW_1">SPEC_ARCH_CONFIG_FLOW_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_FLASH_1">SPEC_ARCH_FLASH_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_HTTP_1">SPEC_ARCH_HTTP_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_LAYERS_1">SPEC_ARCH_LAYERS_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_MEMORY_1">SPEC_ARCH_MEMORY_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_NETIF_1">SPEC_ARCH_NETIF_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_PERF_1">SPEC_ARCH_PERF_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_QEMU_1">SPEC_ARCH_QEMU_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_QEMU_BUILD_1">SPEC_ARCH_QEMU_BUILD_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_TASKS_1">SPEC_ARCH_TASKS_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_WEB_1">SPEC_ARCH_WEB_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_WIFI_1">SPEC_ARCH_WIFI_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1</a></p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_API_1">SPEC_CFG_JSON_API_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_ARCH_1">SPEC_CFG_JSON_ARCH_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_BULK_1">SPEC_CFG_JSON_BULK_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_CODEGEN_1">SPEC_CFG_JSON_CODEGEN_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_EXTEND_1">SPEC_CFG_JSON_EXTEND_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_SCHEMA_1">SPEC_CFG_JSON_SCHEMA_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_SOURCE_1">SPEC_CFG_JSON_SOURCE_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_STORAGE_1">SPEC_CFG_JSON_STORAGE_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_TYPESAFETY_1">SPEC_CFG_JSON_TYPESAFETY_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_UI_1">SPEC_CFG_JSON_UI_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_ARCH_1">SPEC_CFG_WEB_ARCH_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_COUNTDOWN_1">SPEC_CFG_WEB_COUNTDOWN_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_ERROR_1">SPEC_CFG_WEB_ERROR_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_FLOW_1">SPEC_CFG_WEB_FLOW_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_FORM_1">SPEC_CFG_WEB_FORM_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_INIT_1">SPEC_CFG_WEB_INIT_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_MAPPING_1">SPEC_CFG_WEB_MAPPING_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_STATE_1">SPEC_CFG_WEB_STATE_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_ARCH_1">SPEC_WEB_ARCH_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_CAPTIVE_1">SPEC_WEB_CAPTIVE_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_CONFIG_1">SPEC_WEB_CONFIG_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_EXTEND_1">SPEC_WEB_EXTEND_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_INTEGRATION_CFG_1">SPEC_WEB_INTEGRATION_CFG_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_INTEGRATION_WIFI_1">SPEC_WEB_INTEGRATION_WIFI_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_REST_CFG_1">SPEC_WEB_REST_CFG_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_REST_HEALTH_1">SPEC_WEB_REST_HEALTH_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_REST_WIFI_1">SPEC_WEB_REST_WIFI_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_ROUTES_1">SPEC_WEB_ROUTES_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_SECURITY_1">SPEC_WEB_SECURITY_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_STATIC_1">SPEC_WEB_STATIC_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_TEST_1">SPEC_WEB_TEST_1</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -916,38 +1171,140 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 </tr>
 </thead>
 <tbody>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_COMP_CERT_HANDLER">API_COMP_CERT_HANDLER</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_COMP_CONFIG_MANAGER">API_COMP_CONFIG_MANAGER</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_COMP_NETIF_TUNNEL">API_COMP_NETIF_TUNNEL</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_CA_CERT">API_FUNC_CERT_HANDLER_GET_CA_CERT</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_INFO">API_FUNC_CERT_HANDLER_GET_INFO</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_SERVER_CERT">API_FUNC_CERT_HANDLER_GET_SERVER_CERT</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_SERVER_KEY">API_FUNC_CERT_HANDLER_GET_SERVER_KEY</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_INIT">API_FUNC_CERT_HANDLER_INIT</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_COMMIT">API_FUNC_CONFIG_COMMIT</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_FACTORY_RESET">API_FUNC_CONFIG_FACTORY_RESET</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_ALL_AS_JSON">API_FUNC_CONFIG_GET_ALL_AS_JSON</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_BOOL">API_FUNC_CONFIG_GET_BOOL</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_INT16">API_FUNC_CONFIG_GET_INT16</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_INT32">API_FUNC_CONFIG_GET_INT32</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_SCHEMA_JSON">API_FUNC_CONFIG_GET_SCHEMA_JSON</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_STRING">API_FUNC_CONFIG_GET_STRING</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_INIT">API_FUNC_CONFIG_INIT</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_ALL_FROM_JSON">API_FUNC_CONFIG_SET_ALL_FROM_JSON</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_BOOL">API_FUNC_CONFIG_SET_BOOL</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_BOOL_NO_COMMIT">API_FUNC_CONFIG_SET_BOOL_NO_COMMIT</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT16">API_FUNC_CONFIG_SET_INT16</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT16_NO_COMMIT">API_FUNC_CONFIG_SET_INT16_NO_COMMIT</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT32">API_FUNC_CONFIG_SET_INT32</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_STRING">API_FUNC_CONFIG_SET_STRING</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_STRING_NO_COMMIT">API_FUNC_CONFIG_SET_STRING_NO_COMMIT</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_WRITE_FACTORY_DEFAULTS">API_FUNC_CONFIG_WRITE_FACTORY_DEFAULTS</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_DEINIT">API_FUNC_NETIF_TUNNEL_DEINIT</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_GET_HANDLE">API_FUNC_NETIF_TUNNEL_GET_HANDLE</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_INIT">API_FUNC_NETIF_TUNNEL_INIT</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_STRUCT_NETIF_TUNNEL_CONFIG">API_STRUCT_NETIF_TUNNEL_CONFIG</a></p></td>
+</tr>
 <tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_1">REQ_CFG_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p>optional</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_10">REQ_CFG_JSON_10</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_11">REQ_CFG_JSON_11</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_10">REQ_CFG_10</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_12">REQ_CFG_JSON_12</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_priority"><p>optional</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_11">REQ_CFG_11</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_13">REQ_CFG_JSON_13</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_2">REQ_CFG_2</a></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p>optional</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_14">REQ_CFG_JSON_14</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_3">REQ_CFG_3</a></p></td>
+<tr class="need row-even"><td class="needs_priority"><p>optional</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_15">REQ_CFG_JSON_15</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_4">REQ_CFG_4</a></p></td>
-</tr>
-<tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_5">REQ_CFG_5</a></p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_6">REQ_CFG_6</a></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p>optional</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_2">REQ_CFG_JSON_2</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_7">REQ_CFG_7</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_3">REQ_CFG_JSON_3</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_8">REQ_CFG_8</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_4">REQ_CFG_JSON_4</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_9">REQ_CFG_9</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_5">REQ_CFG_JSON_5</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_6">REQ_CFG_JSON_6</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_7">REQ_CFG_JSON_7</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_8">REQ_CFG_JSON_8</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_9">REQ_CFG_JSON_9</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_1</a></p></td>
@@ -991,26 +1348,38 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_REL_1">REQ_SYS_REL_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
+<tr class="need row-odd"><td class="needs_priority"><p>optional</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SEC_1">REQ_SYS_SEC_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SIM_1">REQ_SYS_SIM_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
+<tr class="need row-odd"><td class="needs_priority"><p>optional</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SIM_2">REQ_SYS_SIM_2</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p>optional</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_TIME_1">REQ_SYS_TIME_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
+<tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_1">REQ_WEB_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
+<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_2">REQ_WEB_2</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
+<tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_3">REQ_WEB_3</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
+<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_4">REQ_WEB_4</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
+<tr class="need row-even"><td class="needs_priority"><p>mandatory</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_5">REQ_WEB_5</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p>mandatory</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_CONF_1">REQ_WEB_CONF_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_priority"><p>optional</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_NF_1">REQ_WEB_NF_1</a></p></td>
@@ -1018,98 +1387,158 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <tr class="need row-odd"><td class="needs_priority"><p>optional</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_NF_2">REQ_WEB_NF_2</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p>optional</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_SCHEMA_1">REQ_WEB_SCHEMA_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_BUILD_1">SPEC_ARCH_BUILD_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CERT_1">SPEC_ARCH_CERT_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CODESPACES_1">SPEC_ARCH_CODESPACES_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_COMM_1">SPEC_ARCH_COMM_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CONFIG_1">SPEC_ARCH_CONFIG_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CONFIG_FLOW_1">SPEC_ARCH_CONFIG_FLOW_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_FLASH_1">SPEC_ARCH_FLASH_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_HTTP_1">SPEC_ARCH_HTTP_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_LAYERS_1">SPEC_ARCH_LAYERS_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_MEMORY_1">SPEC_ARCH_MEMORY_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_NETIF_1">SPEC_ARCH_NETIF_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_PERF_1">SPEC_ARCH_PERF_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_QEMU_1">SPEC_ARCH_QEMU_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_QEMU_BUILD_1">SPEC_ARCH_QEMU_BUILD_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_TASKS_1">SPEC_ARCH_TASKS_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_WEB_1">SPEC_ARCH_WEB_1</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_WIFI_1">SPEC_ARCH_WIFI_1</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1</a></p></td>
-</tr>
 <tr class="need row-even"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_API_1">SPEC_CFG_JSON_API_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_ARCH_1">SPEC_CFG_JSON_ARCH_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_BULK_1">SPEC_CFG_JSON_BULK_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_CODEGEN_1">SPEC_CFG_JSON_CODEGEN_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_EXTEND_1">SPEC_CFG_JSON_EXTEND_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_SCHEMA_1">SPEC_CFG_JSON_SCHEMA_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_SOURCE_1">SPEC_CFG_JSON_SOURCE_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_STORAGE_1">SPEC_CFG_JSON_STORAGE_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_TYPESAFETY_1">SPEC_CFG_JSON_TYPESAFETY_1</a></p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_UI_1">SPEC_CFG_JSON_UI_1</a></p></td>
 </tr>
 <tr class="need row-even"><td class="needs_priority"><p></p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_ARCH_1">SPEC_CFG_WEB_ARCH_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_COUNTDOWN_1">SPEC_CFG_WEB_COUNTDOWN_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_ERROR_1">SPEC_CFG_WEB_ERROR_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_FLOW_1">SPEC_CFG_WEB_FLOW_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_FORM_1">SPEC_CFG_WEB_FORM_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_INIT_1">SPEC_CFG_WEB_INIT_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_MAPPING_1">SPEC_CFG_WEB_MAPPING_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_STATE_1">SPEC_CFG_WEB_STATE_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_ARCH_1">SPEC_WEB_ARCH_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_CAPTIVE_1">SPEC_WEB_CAPTIVE_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_CONFIG_1">SPEC_WEB_CONFIG_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_EXTEND_1">SPEC_WEB_EXTEND_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_INTEGRATION_CFG_1">SPEC_WEB_INTEGRATION_CFG_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_INTEGRATION_WIFI_1">SPEC_WEB_INTEGRATION_WIFI_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_REST_CFG_1">SPEC_WEB_REST_CFG_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_REST_HEALTH_1">SPEC_WEB_REST_HEALTH_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_REST_WIFI_1">SPEC_WEB_REST_WIFI_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_ROUTES_1">SPEC_WEB_ROUTES_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_SECURITY_1">SPEC_WEB_SECURITY_1</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_STATIC_1">SPEC_WEB_STATIC_1</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_priority"><p></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_TEST_1">SPEC_WEB_TEST_1</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1134,49 +1563,185 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 </tr>
 </thead>
 <tbody>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_1">REQ_CFG_1</a></p></td>
-<td class="needs_title"><p>Centralized Configuration Header</p></td>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_COMP_CERT_HANDLER">API_COMP_CERT_HANDLER</a></p></td>
+<td class="needs_title"><p>Certificate Handler</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_COMP_CONFIG_MANAGER">API_COMP_CONFIG_MANAGER</a></p></td>
+<td class="needs_title"><p>Config Manager</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_COMP_NETIF_TUNNEL">API_COMP_NETIF_TUNNEL</a></p></td>
+<td class="needs_title"><p>Network Tunnel</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_CA_CERT">API_FUNC_CERT_HANDLER_GET_CA_CERT</a></p></td>
+<td class="needs_title"><p>cert_handler_get_ca_cert</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_INFO">API_FUNC_CERT_HANDLER_GET_INFO</a></p></td>
+<td class="needs_title"><p>cert_handler_get_info</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_SERVER_CERT">API_FUNC_CERT_HANDLER_GET_SERVER_CERT</a></p></td>
+<td class="needs_title"><p>cert_handler_get_server_cert</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_SERVER_KEY">API_FUNC_CERT_HANDLER_GET_SERVER_KEY</a></p></td>
+<td class="needs_title"><p>cert_handler_get_server_key</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_INIT">API_FUNC_CERT_HANDLER_INIT</a></p></td>
+<td class="needs_title"><p>cert_handler_init</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_COMMIT">API_FUNC_CONFIG_COMMIT</a></p></td>
+<td class="needs_title"><p>config_commit</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_FACTORY_RESET">API_FUNC_CONFIG_FACTORY_RESET</a></p></td>
+<td class="needs_title"><p>config_factory_reset</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_ALL_AS_JSON">API_FUNC_CONFIG_GET_ALL_AS_JSON</a></p></td>
+<td class="needs_title"><p>config_get_all_as_json</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_BOOL">API_FUNC_CONFIG_GET_BOOL</a></p></td>
+<td class="needs_title"><p>config_get_bool</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_INT16">API_FUNC_CONFIG_GET_INT16</a></p></td>
+<td class="needs_title"><p>config_get_int16</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_INT32">API_FUNC_CONFIG_GET_INT32</a></p></td>
+<td class="needs_title"><p>config_get_int32</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_SCHEMA_JSON">API_FUNC_CONFIG_GET_SCHEMA_JSON</a></p></td>
+<td class="needs_title"><p>config_get_schema_json</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_STRING">API_FUNC_CONFIG_GET_STRING</a></p></td>
+<td class="needs_title"><p>config_get_string</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_INIT">API_FUNC_CONFIG_INIT</a></p></td>
+<td class="needs_title"><p>config_init</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_ALL_FROM_JSON">API_FUNC_CONFIG_SET_ALL_FROM_JSON</a></p></td>
+<td class="needs_title"><p>config_set_all_from_json</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_BOOL">API_FUNC_CONFIG_SET_BOOL</a></p></td>
+<td class="needs_title"><p>config_set_bool</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_BOOL_NO_COMMIT">API_FUNC_CONFIG_SET_BOOL_NO_COMMIT</a></p></td>
+<td class="needs_title"><p>config_set_bool_no_commit</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT16">API_FUNC_CONFIG_SET_INT16</a></p></td>
+<td class="needs_title"><p>config_set_int16</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT16_NO_COMMIT">API_FUNC_CONFIG_SET_INT16_NO_COMMIT</a></p></td>
+<td class="needs_title"><p>config_set_int16_no_commit</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT32">API_FUNC_CONFIG_SET_INT32</a></p></td>
+<td class="needs_title"><p>config_set_int32</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_STRING">API_FUNC_CONFIG_SET_STRING</a></p></td>
+<td class="needs_title"><p>config_set_string</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_STRING_NO_COMMIT">API_FUNC_CONFIG_SET_STRING_NO_COMMIT</a></p></td>
+<td class="needs_title"><p>config_set_string_no_commit</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_WRITE_FACTORY_DEFAULTS">API_FUNC_CONFIG_WRITE_FACTORY_DEFAULTS</a></p></td>
+<td class="needs_title"><p>config_write_factory_defaults</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_DEINIT">API_FUNC_NETIF_TUNNEL_DEINIT</a></p></td>
+<td class="needs_title"><p>netif_uart_tunnel_deinit</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_GET_HANDLE">API_FUNC_NETIF_TUNNEL_GET_HANDLE</a></p></td>
+<td class="needs_title"><p>netif_uart_tunnel_get_handle</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_INIT">API_FUNC_NETIF_TUNNEL_INIT</a></p></td>
+<td class="needs_title"><p>netif_uart_tunnel_init</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>implemented</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../21_api/api_netif_uart_tunnel.html#API_STRUCT_NETIF_TUNNEL_CONFIG">API_STRUCT_NETIF_TUNNEL_CONFIG</a></p></td>
+<td class="needs_title"><p>netif_uart_tunnel_config_t</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1</a></p></td>
+<td class="needs_title"><p>JSON Schema as Configuration Source of Truth</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_10">REQ_CFG_10</a></p></td>
-<td class="needs_title"><p>NVS Error Recovery</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_10">REQ_CFG_JSON_10</a></p></td>
+<td class="needs_title"><p>Web Interface Integration Support</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_11">REQ_CFG_11</a></p></td>
-<td class="needs_title"><p>Configuration Logging</p></td>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_11">REQ_CFG_JSON_11</a></p></td>
+<td class="needs_title"><p>NVS Error Graceful Handling</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_2">REQ_CFG_2</a></p></td>
-<td class="needs_title"><p>Compile-Time Configuration Access</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_12">REQ_CFG_JSON_12</a></p></td>
+<td class="needs_title"><p>Configuration Initialization on Boot</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_3">REQ_CFG_3</a></p></td>
-<td class="needs_title"><p>Runtime Configuration Structure</p></td>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_13">REQ_CFG_JSON_13</a></p></td>
+<td class="needs_title"><p>Simple Process to Add Configuration Fields</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_4">REQ_CFG_4</a></p></td>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_14">REQ_CFG_JSON_14</a></p></td>
+<td class="needs_title"><p>Type Safety via Optional Static Validation</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_15">REQ_CFG_JSON_15</a></p></td>
+<td class="needs_title"><p>Configuration Schema Versioning and Migration</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_2">REQ_CFG_JSON_2</a></p></td>
+<td class="needs_title"><p>Parameter Grouping for UI Organization</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_3">REQ_CFG_JSON_3</a></p></td>
+<td class="needs_title"><p>Parameter Type System</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_4">REQ_CFG_JSON_4</a></p></td>
+<td class="needs_title"><p>Build-Time Factory Defaults Generation</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_5">REQ_CFG_JSON_5</a></p></td>
+<td class="needs_title"><p>No Runtime JSON Parsing in C Code</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_6">REQ_CFG_JSON_6</a></p></td>
+<td class="needs_title"><p>Key-Based NVS Storage</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_7">REQ_CFG_JSON_7</a></p></td>
+<td class="needs_title"><p>Type-Safe Configuration API</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_8">REQ_CFG_JSON_8</a></p></td>
 <td class="needs_title"><p>Persistent Configuration Storage</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_5">REQ_CFG_5</a></p></td>
-<td class="needs_title"><p>Configuration Read API</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_6">REQ_CFG_6</a></p></td>
-<td class="needs_title"><p>Configuration Validation</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_7">REQ_CFG_7</a></p></td>
-<td class="needs_title"><p>Configuration Web Interface</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_8">REQ_CFG_8</a></p></td>
-<td class="needs_title"><p>Configuration Save Operation</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager.html#REQ_CFG_9">REQ_CFG_9</a></p></td>
-<td class="needs_title"><p>Configuration Reset/Reload</p></td>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_9">REQ_CFG_JSON_9</a></p></td>
+<td class="needs_title"><p>Factory Reset Capability</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_1</a></p></td>
@@ -1234,33 +1799,49 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_REL_1">REQ_SYS_REL_1</a></p></td>
 <td class="needs_title"><p>Error Handling and Recovery</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SEC_1">REQ_SYS_SEC_1</a></p></td>
+<td class="needs_title"><p>HTTPS Support</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SIM_1">REQ_SYS_SIM_1</a></p></td>
 <td class="needs_title"><p>Emulator Support</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_SIM_2">REQ_SYS_SIM_2</a></p></td>
+<td class="needs_title"><p>Emulator Network Connectivity</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_TIME_1">REQ_SYS_TIME_1</a></p></td>
+<td class="needs_title"><p>System Time and NTP Support</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_system.html#REQ_SYS_WEB_1">REQ_SYS_WEB_1</a></p></td>
 <td class="needs_title"><p>Web-based Configuration</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_1">REQ_WEB_1</a></p></td>
 <td class="needs_title"><p>Real-time Status Display</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_2">REQ_WEB_2</a></p></td>
 <td class="needs_title"><p>Configuration Interface</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_3">REQ_WEB_3</a></p></td>
 <td class="needs_title"><p>WiFi Setup Interface</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_4">REQ_WEB_4</a></p></td>
 <td class="needs_title"><p>Web Interface Navigation</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_5">REQ_WEB_5</a></p></td>
 <td class="needs_title"><p>HTTP Server Concurrency</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_CONF_1">REQ_WEB_CONF_1</a></p></td>
+<td class="needs_title"><p>Configuration REST API</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_NF_1">REQ_WEB_NF_1</a></p></td>
@@ -1271,128 +1852,208 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <td class="needs_title"><p>Mobile-First Design</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../11_requirements/req_web_server.html#REQ_WEB_SCHEMA_1">REQ_WEB_SCHEMA_1</a></p></td>
+<td class="needs_title"><p>Schema-Driven Configuration Form</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_BUILD_1">SPEC_ARCH_BUILD_1</a></p></td>
 <td class="needs_title"><p>ESP-IDF CMake Integration</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<tr class="need row-even"><td class="needs_status"><p>draft</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CERT_1">SPEC_ARCH_CERT_1</a></p></td>
 <td class="needs_title"><p>Certificate Handler Component Design</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CODESPACES_1">SPEC_ARCH_CODESPACES_1</a></p></td>
 <td class="needs_title"><p>GitHub Codespaces Integration</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_COMM_1">SPEC_ARCH_COMM_1</a></p></td>
 <td class="needs_title"><p>Component Communication Pattern</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CONFIG_1">SPEC_ARCH_CONFIG_1</a></p></td>
 <td class="needs_title"><p>Configuration Manager Component Design</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CONFIG_FLOW_1">SPEC_ARCH_CONFIG_FLOW_1</a></p></td>
 <td class="needs_title"><p>Configuration Data Flow</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1</a></p></td>
 <td class="needs_title"><p>Error Recovery and Reset Strategy</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_FLASH_1">SPEC_ARCH_FLASH_1</a></p></td>
 <td class="needs_title"><p>Flash Memory Configuration</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_HTTP_1">SPEC_ARCH_HTTP_1</a></p></td>
 <td class="needs_title"><p>HTTP Server Architecture Details</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_LAYERS_1">SPEC_ARCH_LAYERS_1</a></p></td>
 <td class="needs_title"><p>ESP32 Template Layered Architecture</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1</a></p></td>
 <td class="needs_title"><p>Logging and Diagnostics Strategy</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_MEMORY_1">SPEC_ARCH_MEMORY_1</a></p></td>
 <td class="needs_title"><p>Memory Management Strategy</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_NETIF_1">SPEC_ARCH_NETIF_1</a></p></td>
 <td class="needs_title"><p>Network Tunnel Component Design</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_PERF_1">SPEC_ARCH_PERF_1</a></p></td>
 <td class="needs_title"><p>System Performance Requirements</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_QEMU_1">SPEC_ARCH_QEMU_1</a></p></td>
 <td class="needs_title"><p>QEMU Hardware Abstraction</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_QEMU_BUILD_1">SPEC_ARCH_QEMU_BUILD_1</a></p></td>
 <td class="needs_title"><p>QEMU Component Selection</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_TASKS_1">SPEC_ARCH_TASKS_1</a></p></td>
 <td class="needs_title"><p>FreeRTOS Task Organization</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_WEB_1">SPEC_ARCH_WEB_1</a></p></td>
 <td class="needs_title"><p>Web Server Component Design</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_WIFI_1">SPEC_ARCH_WIFI_1</a></p></td>
 <td class="needs_title"><p>WiFi Manager Design Details</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1</a></p></td>
-<td class="needs_title"><p>Configuration API Interface</p></td>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_API_1">SPEC_CFG_JSON_API_1</a></p></td>
+<td class="needs_title"><p>Type-Safe Configuration API</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>draft</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_ARCH_1">SPEC_CFG_JSON_ARCH_1</a></p></td>
+<td class="needs_title"><p>JSON Schema-Driven Architecture</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1</a></p></td>
-<td class="needs_title"><p>Layered Configuration Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_BULK_1">SPEC_CFG_JSON_BULK_1</a></p></td>
+<td class="needs_title"><p>Bulk JSON Configuration API</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1</a></p></td>
-<td class="needs_title"><p>NVS Error Recovery Strategy</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_CODEGEN_1">SPEC_CFG_JSON_CODEGEN_1</a></p></td>
+<td class="needs_title"><p>Factory Reset via Bulk JSON Update</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1</a></p></td>
-<td class="needs_title"><p>Configuration Data Flow</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_EXTEND_1">SPEC_CFG_JSON_EXTEND_1</a></p></td>
+<td class="needs_title"><p>Adding New Configuration Fields</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1</a></p></td>
-<td class="needs_title"><p>Configuration Logging</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_SCHEMA_1">SPEC_CFG_JSON_SCHEMA_1</a></p></td>
+<td class="needs_title"><p>Configuration Schema Structure</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1</a></p></td>
-<td class="needs_title"><p>Configuration Parameter Identifiers</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_SOURCE_1">SPEC_CFG_JSON_SOURCE_1</a></p></td>
+<td class="needs_title"><p>JSON Schema as Single Source of Truth</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1</a></p></td>
-<td class="needs_title"><p>Real-time Configuration Updates</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1</a></p></td>
-<td class="needs_title"><p>Runtime Configuration Structure</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1</a></p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_STORAGE_1">SPEC_CFG_JSON_STORAGE_1</a></p></td>
 <td class="needs_title"><p>NVS Storage Format</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1</a></p></td>
-<td class="needs_title"><p>Web Settings Page</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_TYPESAFETY_1">SPEC_CFG_JSON_TYPESAFETY_1</a></p></td>
+<td class="needs_title"><p>Type Safety Without Code Generation</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1</a></p></td>
-<td class="needs_title"><p>Parameter Validation Rules</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_UI_1">SPEC_CFG_JSON_UI_1</a></p></td>
+<td class="needs_title"><p>JSON Schema for UI Generation</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_ARCH_1">SPEC_CFG_WEB_ARCH_1</a></p></td>
+<td class="needs_title"><p>Configuration Webpage Architecture</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_COUNTDOWN_1">SPEC_CFG_WEB_COUNTDOWN_1</a></p></td>
+<td class="needs_title"><p>Device Reset Countdown Interface</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_ERROR_1">SPEC_CFG_WEB_ERROR_1</a></p></td>
+<td class="needs_title"><p>Error Handling and User Feedback</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_FLOW_1">SPEC_CFG_WEB_FLOW_1</a></p></td>
+<td class="needs_title"><p>Configuration Data Flow</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_FORM_1">SPEC_CFG_WEB_FORM_1</a></p></td>
+<td class="needs_title"><p>Dynamic Form Generation from Schema</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_INIT_1">SPEC_CFG_WEB_INIT_1</a></p></td>
+<td class="needs_title"><p>Complete Page Initialization Flow</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_MAPPING_1">SPEC_CFG_WEB_MAPPING_1</a></p></td>
+<td class="needs_title"><p>JSON Array to Form Field Mapping</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>open</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_STATE_1">SPEC_CFG_WEB_STATE_1</a></p></td>
+<td class="needs_title"><p>UI State Management</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_status"><p>approved</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_config_manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1</a></p></td>
-<td class="needs_title"><p>Configuration REST API</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_ARCH_1">SPEC_WEB_ARCH_1</a></p></td>
+<td class="needs_title"><p>Web Server Architecture</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_CAPTIVE_1">SPEC_WEB_CAPTIVE_1</a></p></td>
+<td class="needs_title"><p>Captive Portal Design</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_CONFIG_1">SPEC_WEB_CONFIG_1</a></p></td>
+<td class="needs_title"><p>HTTP Server Configuration</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_EXTEND_1">SPEC_WEB_EXTEND_1</a></p></td>
+<td class="needs_title"><p>Extension Guide for Web Pages</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_INTEGRATION_CFG_1">SPEC_WEB_INTEGRATION_CFG_1</a></p></td>
+<td class="needs_title"><p>Config Manager Integration Pattern</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_INTEGRATION_WIFI_1">SPEC_WEB_INTEGRATION_WIFI_1</a></p></td>
+<td class="needs_title"><p>WiFi Manager Integration Pattern</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_REST_CFG_1">SPEC_WEB_REST_CFG_1</a></p></td>
+<td class="needs_title"><p>Configuration API Endpoints</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_REST_HEALTH_1">SPEC_WEB_REST_HEALTH_1</a></p></td>
+<td class="needs_title"><p>System Health API Endpoint</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_REST_WIFI_1">SPEC_WEB_REST_WIFI_1</a></p></td>
+<td class="needs_title"><p>WiFi Management REST API Endpoints</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_ROUTES_1">SPEC_WEB_ROUTES_1</a></p></td>
+<td class="needs_title"><p>URI Routing Table</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_SECURITY_1">SPEC_WEB_SECURITY_1</a></p></td>
+<td class="needs_title"><p>CORS Configuration</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_STATIC_1">SPEC_WEB_STATIC_1</a></p></td>
+<td class="needs_title"><p>Static File Embedding Strategy</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_status"><p>approved</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../12_design/spec_web_server.html#SPEC_WEB_TEST_1">SPEC_WEB_TEST_1</a></p></td>
+<td class="needs_title"><p>Web Server Testing Strategy</p></td>
 </tr>
 </tbody>
 </table>
@@ -1402,17 +2063,21 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <h3>All Requirements List<a class="headerlink" href="#all-requirements-list" title="Link to this heading">¶</a></h3>
 <p>Complete list of all requirements with status and links:</p>
 <div class="line-block" id="needlist-31_traceability/index-0">
-<div class="line"><a class="reference external" href="../11_requirements/req_config_manager.html#REQ_CFG_1">REQ_CFG_1: Centralized Configuration Header (approved) [config; architecture]</a></div>
-<div class="line"><a class="reference external" href="../11_requirements/req_config_manager.html#REQ_CFG_2">REQ_CFG_2: Compile-Time Configuration Access (approved) [config; api]</a></div>
-<div class="line"><a class="reference external" href="../11_requirements/req_config_manager.html#REQ_CFG_3">REQ_CFG_3: Runtime Configuration Structure (approved) [config; runtime]</a></div>
-<div class="line"><a class="reference external" href="../11_requirements/req_config_manager.html#REQ_CFG_4">REQ_CFG_4: Persistent Configuration Storage (approved) [config; storage; nvs]</a></div>
-<div class="line"><a class="reference external" href="../11_requirements/req_config_manager.html#REQ_CFG_5">REQ_CFG_5: Configuration Read API (approved) [config; api]</a></div>
-<div class="line"><a class="reference external" href="../11_requirements/req_config_manager.html#REQ_CFG_6">REQ_CFG_6: Configuration Validation (approved) [config; validation]</a></div>
-<div class="line"><a class="reference external" href="../11_requirements/req_config_manager.html#REQ_CFG_7">REQ_CFG_7: Configuration Web Interface (approved) [config; web; api]</a></div>
-<div class="line"><a class="reference external" href="../11_requirements/req_config_manager.html#REQ_CFG_8">REQ_CFG_8: Configuration Save Operation (approved) [config; web; persistence]</a></div>
-<div class="line"><a class="reference external" href="../11_requirements/req_config_manager.html#REQ_CFG_9">REQ_CFG_9: Configuration Reset/Reload (approved) [config; web; factory-reset]</a></div>
-<div class="line"><a class="reference external" href="../11_requirements/req_config_manager.html#REQ_CFG_10">REQ_CFG_10: NVS Error Recovery (approved) [config; error-handling]</a></div>
-<div class="line"><a class="reference external" href="../11_requirements/req_config_manager.html#REQ_CFG_11">REQ_CFG_11: Configuration Logging (approved) [config; logging; debugging]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_1">REQ_CFG_JSON_1: JSON Schema as Configuration Source of Truth (draft) [config; schema; architecture]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_2">REQ_CFG_JSON_2: Parameter Grouping for UI Organization (draft) [config; ui; schema]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_3">REQ_CFG_JSON_3: Parameter Type System (draft) [config; types]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_4">REQ_CFG_JSON_4: Build-Time Factory Defaults Generation (draft) [config; build; code-generation]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_5">REQ_CFG_JSON_5: No Runtime JSON Parsing in C Code (draft) [config; performance; memory]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_6">REQ_CFG_JSON_6: Key-Based NVS Storage (draft) [config; storage; nvs]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_7">REQ_CFG_JSON_7: Type-Safe Configuration API (draft) [config; api; type-safety]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_8">REQ_CFG_JSON_8: Persistent Configuration Storage (draft) [config; storage; nvs]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_9">REQ_CFG_JSON_9: Factory Reset Capability (draft) [config; reset]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_10">REQ_CFG_JSON_10: Web Interface Integration Support (approved) [config; integration]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_11">REQ_CFG_JSON_11: NVS Error Graceful Handling (draft) [config; error-handling; reliability]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_12">REQ_CFG_JSON_12: Configuration Initialization on Boot (draft) [config; boot]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_13">REQ_CFG_JSON_13: Simple Process to Add Configuration Fields (draft) [config; extensibility; developer-experience]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_14">REQ_CFG_JSON_14: Type Safety via Optional Static Validation (draft) [config; validation; developer-experience]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_config_manager_json.html#REQ_CFG_JSON_15">REQ_CFG_JSON_15: Configuration Schema Versioning and Migration (open) [config; versioning; migration; future]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_1">REQ_NETIF_TUNNEL_1: QEMU UART Network Bridge (approved) [emulation; network; qemu; uart]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_2">REQ_NETIF_TUNNEL_2: Packet Encapsulation (approved) [emulation; protocol]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/req_netif_tunnel.html#REQ_NETIF_TUNNEL_3">REQ_NETIF_TUNNEL_3: Host-Side Bridge Script (approved) [emulation; tooling; host]</a></div>
@@ -1429,25 +2094,36 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <div class="line"><a class="reference external" href="../11_requirements/req_system.html#REQ_SYS_REL_1">REQ_SYS_REL_1: Error Handling and Recovery (approved) [reliability; error-handling]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/req_system.html#REQ_SYS_PERF_1">REQ_SYS_PERF_1: Memory Management (approved) [performance; memory]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/req_system.html#REQ_SYS_SIM_1">REQ_SYS_SIM_1: Emulator Support (approved) [emulator; qemu; testing]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_system.html#REQ_SYS_SIM_2">REQ_SYS_SIM_2: Emulator Network Connectivity (approved) [emulator; qemu; network; development]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_system.html#REQ_SYS_SEC_1">REQ_SYS_SEC_1: HTTPS Support (open) [security; https; future]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_system.html#REQ_SYS_TIME_1">REQ_SYS_TIME_1: System Time and NTP Support (open) [time; ntp; future]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/req_web_server.html#REQ_WEB_1">REQ_WEB_1: Real-time Status Display (approved) [web; ui; monitoring]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/req_web_server.html#REQ_WEB_2">REQ_WEB_2: Configuration Interface (approved) [web; ui; configuration]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/req_web_server.html#REQ_WEB_3">REQ_WEB_3: WiFi Setup Interface (approved) [web; wifi; network]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_web_server.html#REQ_WEB_CONF_1">REQ_WEB_CONF_1: Configuration REST API (approved) [web; api; config]</a></div>
+<div class="line"><a class="reference external" href="../11_requirements/req_web_server.html#REQ_WEB_SCHEMA_1">REQ_WEB_SCHEMA_1: Schema-Driven Configuration Form (approved) [web; ui; config]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/req_web_server.html#REQ_WEB_4">REQ_WEB_4: Web Interface Navigation (approved) [web; ui; navigation]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/req_web_server.html#REQ_WEB_5">REQ_WEB_5: HTTP Server Concurrency (approved) [web; performance]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/req_web_server.html#REQ_WEB_NF_1">REQ_WEB_NF_1: Web UI Responsiveness (approved) [web; performance; ux]</a></div>
 <div class="line"><a class="reference external" href="../11_requirements/req_web_server.html#REQ_WEB_NF_2">REQ_WEB_NF_2: Mobile-First Design (approved) [web; ui; mobile]</a></div>
-<div class="line"><a class="reference external" href="../12_design/spec_config_manager.html#SPEC_CFG_ARCH_1">SPEC_CFG_ARCH_1: Layered Configuration Architecture (approved) [architecture; config]</a></div>
-<div class="line"><a class="reference external" href="../12_design/spec_config_manager.html#SPEC_CFG_FLOW_1">SPEC_CFG_FLOW_1: Configuration Data Flow (approved) [architecture; dataflow]</a></div>
-<div class="line"><a class="reference external" href="../12_design/spec_config_manager.html#SPEC_CFG_STORAGE_1">SPEC_CFG_STORAGE_1: NVS Storage Format (approved) [data-structure; storage]</a></div>
-<div class="line"><a class="reference external" href="../12_design/spec_config_manager.html#SPEC_CFG_RUNTIME_1">SPEC_CFG_RUNTIME_1: Runtime Configuration Structure (approved) [data-structure; runtime]</a></div>
-<div class="line"><a class="reference external" href="../12_design/spec_config_manager.html#SPEC_CFG_PARAM_1">SPEC_CFG_PARAM_1: Configuration Parameter Identifiers (approved) [api; parameter]</a></div>
-<div class="line"><a class="reference external" href="../12_design/spec_config_manager.html#SPEC_CFG_API_1">SPEC_CFG_API_1: Configuration API Interface (approved) [api; interface]</a></div>
-<div class="line"><a class="reference external" href="../12_design/spec_config_manager.html#SPEC_CFG_VALIDATION_1">SPEC_CFG_VALIDATION_1: Parameter Validation Rules (approved) [validation; api]</a></div>
-<div class="line"><a class="reference external" href="../12_design/spec_config_manager.html#SPEC_CFG_WEB_API_1">SPEC_CFG_WEB_API_1: Configuration REST API (approved) [web; api; rest]</a></div>
-<div class="line"><a class="reference external" href="../12_design/spec_config_manager.html#SPEC_CFG_PREVIEW_1">SPEC_CFG_PREVIEW_1: Real-time Configuration Updates (approved) [web; ui; lifecycle]</a></div>
-<div class="line"><a class="reference external" href="../12_design/spec_config_manager.html#SPEC_CFG_UI_1">SPEC_CFG_UI_1: Web Settings Page (approved) [web; ui; html]</a></div>
-<div class="line"><a class="reference external" href="../12_design/spec_config_manager.html#SPEC_CFG_ERROR_1">SPEC_CFG_ERROR_1: NVS Error Recovery Strategy (approved) [error-handling; nvs]</a></div>
-<div class="line"><a class="reference external" href="../12_design/spec_config_manager.html#SPEC_CFG_LOGGING_1">SPEC_CFG_LOGGING_1: Configuration Logging (approved) [logging; debugging]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_ARCH_1">SPEC_CFG_JSON_ARCH_1: JSON Schema-Driven Architecture (draft) [architecture; config; json-schema]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_SOURCE_1">SPEC_CFG_JSON_SOURCE_1: JSON Schema as Single Source of Truth (approved) [architecture; schema; design-pattern]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_SCHEMA_1">SPEC_CFG_JSON_SCHEMA_1: Configuration Schema Structure (approved) [data-structure; schema]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_CODEGEN_1">SPEC_CFG_JSON_CODEGEN_1: Factory Reset via Bulk JSON Update (approved) [build-process; code-generation; factory-reset]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_STORAGE_1">SPEC_CFG_JSON_STORAGE_1: NVS Storage Format (approved) [storage; nvs]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_API_1">SPEC_CFG_JSON_API_1: Type-Safe Configuration API (approved) [api; interface; c-api]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_UI_1">SPEC_CFG_JSON_UI_1: JSON Schema for UI Generation (approved) [web; ui; javascript]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_BULK_1">SPEC_CFG_JSON_BULK_1: Bulk JSON Configuration API (approved) [api; json; bulk-operations]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_EXTEND_1">SPEC_CFG_JSON_EXTEND_1: Adding New Configuration Fields (approved) [development; guide; extensibility]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_manager_json.html#SPEC_CFG_JSON_TYPESAFETY_1">SPEC_CFG_JSON_TYPESAFETY_1: Type Safety Without Code Generation (approved) [type-safety; best-practices]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_ARCH_1">SPEC_CFG_WEB_ARCH_1: Configuration Webpage Architecture (open) [frontend; javascript; ui]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_FLOW_1">SPEC_CFG_WEB_FLOW_1: Configuration Data Flow (open) [data-flow; json; api]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_FORM_1">SPEC_CFG_WEB_FORM_1: Dynamic Form Generation from Schema (open) [form-generation; schema; javascript]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_MAPPING_1">SPEC_CFG_WEB_MAPPING_1: JSON Array to Form Field Mapping (open) [data-mapping; json; form]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_STATE_1">SPEC_CFG_WEB_STATE_1: UI State Management (open) [ui-state; javascript]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_COUNTDOWN_1">SPEC_CFG_WEB_COUNTDOWN_1: Device Reset Countdown Interface (open) [ui; countdown; reset]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_ERROR_1">SPEC_CFG_WEB_ERROR_1: Error Handling and User Feedback (open) [error-handling; feedback]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_config_webpage.html#SPEC_CFG_WEB_INIT_1">SPEC_CFG_WEB_INIT_1: Complete Page Initialization Flow (open) [initialization; lifecycle]</a></div>
 <div class="line"><a class="reference external" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_LAYERS_1">SPEC_ARCH_LAYERS_1: ESP32 Template Layered Architecture (approved) [architecture; layering]</a></div>
 <div class="line"><a class="reference external" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_CONFIG_1">SPEC_ARCH_CONFIG_1: Configuration Manager Component Design (approved) [component; config]</a></div>
 <div class="line"><a class="reference external" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_WEB_1">SPEC_ARCH_WEB_1: Web Server Component Design (approved) [component; web; network]</a></div>
@@ -1467,6 +2143,49 @@ Install with: <code class="docutils literal notranslate"><span class="pre">pip</
 <div class="line"><a class="reference external" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_LOGGING_1">SPEC_ARCH_LOGGING_1: Logging and Diagnostics Strategy (approved) [logging; diagnostics; debugging]</a></div>
 <div class="line"><a class="reference external" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_ERROR_RECOVERY_1">SPEC_ARCH_ERROR_RECOVERY_1: Error Recovery and Reset Strategy (approved) [error-handling; reliability; reset]</a></div>
 <div class="line"><a class="reference external" href="../12_design/spec_high_level_architecture.html#SPEC_ARCH_PERF_1">SPEC_ARCH_PERF_1: System Performance Requirements (approved) [performance; requirements]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_ARCH_1">SPEC_WEB_ARCH_1: Web Server Architecture (approved) [web; architecture]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_STATIC_1">SPEC_WEB_STATIC_1: Static File Embedding Strategy (approved) [web; build; embedding]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_ROUTES_1">SPEC_WEB_ROUTES_1: URI Routing Table (approved) [web; routing]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_REST_CFG_1">SPEC_WEB_REST_CFG_1: Configuration API Endpoints (approved) [web; api; config; schema]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_REST_WIFI_1">SPEC_WEB_REST_WIFI_1: WiFi Management REST API Endpoints (approved) [web; api; wifi]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_REST_HEALTH_1">SPEC_WEB_REST_HEALTH_1: System Health API Endpoint (approved) [web; api; diagnostics]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_INTEGRATION_CFG_1">SPEC_WEB_INTEGRATION_CFG_1: Config Manager Integration Pattern (approved) [web; integration; config]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_INTEGRATION_WIFI_1">SPEC_WEB_INTEGRATION_WIFI_1: WiFi Manager Integration Pattern (approved) [web; integration; wifi]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_CAPTIVE_1">SPEC_WEB_CAPTIVE_1: Captive Portal Design (approved) [web; captive-portal; wifi]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_CONFIG_1">SPEC_WEB_CONFIG_1: HTTP Server Configuration (approved) [web; config; performance]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_EXTEND_1">SPEC_WEB_EXTEND_1: Extension Guide for Web Pages (approved) [web; extensibility; guide]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_SECURITY_1">SPEC_WEB_SECURITY_1: CORS Configuration (approved) [web; security; cors]</a></div>
+<div class="line"><a class="reference external" href="../12_design/spec_web_server.html#SPEC_WEB_TEST_1">SPEC_WEB_TEST_1: Web Server Testing Strategy (approved) [web; testing]</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_cert_handler.html#API_COMP_CERT_HANDLER">API_COMP_CERT_HANDLER: Certificate Handler (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_INIT">API_FUNC_CERT_HANDLER_INIT: cert_handler_init (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_SERVER_CERT">API_FUNC_CERT_HANDLER_GET_SERVER_CERT: cert_handler_get_server_cert (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_SERVER_KEY">API_FUNC_CERT_HANDLER_GET_SERVER_KEY: cert_handler_get_server_key (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_CA_CERT">API_FUNC_CERT_HANDLER_GET_CA_CERT: cert_handler_get_ca_cert (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_cert_handler.html#API_FUNC_CERT_HANDLER_GET_INFO">API_FUNC_CERT_HANDLER_GET_INFO: cert_handler_get_info (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_COMP_CONFIG_MANAGER">API_COMP_CONFIG_MANAGER: Config Manager (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_INIT">API_FUNC_CONFIG_INIT: config_init (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_FACTORY_RESET">API_FUNC_CONFIG_FACTORY_RESET: config_factory_reset (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_COMMIT">API_FUNC_CONFIG_COMMIT: config_commit (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_WRITE_FACTORY_DEFAULTS">API_FUNC_CONFIG_WRITE_FACTORY_DEFAULTS: config_write_factory_defaults (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_STRING">API_FUNC_CONFIG_GET_STRING: config_get_string (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_STRING">API_FUNC_CONFIG_SET_STRING: config_set_string (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_STRING_NO_COMMIT">API_FUNC_CONFIG_SET_STRING_NO_COMMIT: config_set_string_no_commit (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_INT32">API_FUNC_CONFIG_GET_INT32: config_get_int32 (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT32">API_FUNC_CONFIG_SET_INT32: config_set_int32 (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_INT16">API_FUNC_CONFIG_GET_INT16: config_get_int16 (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT16">API_FUNC_CONFIG_SET_INT16: config_set_int16 (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_INT16_NO_COMMIT">API_FUNC_CONFIG_SET_INT16_NO_COMMIT: config_set_int16_no_commit (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_BOOL">API_FUNC_CONFIG_GET_BOOL: config_get_bool (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_BOOL_NO_COMMIT">API_FUNC_CONFIG_SET_BOOL_NO_COMMIT: config_set_bool_no_commit (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_BOOL">API_FUNC_CONFIG_SET_BOOL: config_set_bool (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_SCHEMA_JSON">API_FUNC_CONFIG_GET_SCHEMA_JSON: config_get_schema_json (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_GET_ALL_AS_JSON">API_FUNC_CONFIG_GET_ALL_AS_JSON: config_get_all_as_json (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_config_manager.html#API_FUNC_CONFIG_SET_ALL_FROM_JSON">API_FUNC_CONFIG_SET_ALL_FROM_JSON: config_set_all_from_json (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_netif_uart_tunnel.html#API_COMP_NETIF_TUNNEL">API_COMP_NETIF_TUNNEL: Network Tunnel (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_netif_uart_tunnel.html#API_STRUCT_NETIF_TUNNEL_CONFIG">API_STRUCT_NETIF_TUNNEL_CONFIG: netif_uart_tunnel_config_t (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_INIT">API_FUNC_NETIF_TUNNEL_INIT: netif_uart_tunnel_init (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_DEINIT">API_FUNC_NETIF_TUNNEL_DEINIT: netif_uart_tunnel_deinit (implemented)</a></div>
+<div class="line"><a class="reference external" href="../21_api/api_netif_uart_tunnel.html#API_FUNC_NETIF_TUNNEL_GET_HANDLE">API_FUNC_NETIF_TUNNEL_GET_HANDLE: netif_uart_tunnel_get_handle (implemented)</a></div>
 </div>
 </section>
 </section>
