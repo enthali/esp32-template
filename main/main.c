@@ -5,10 +5,15 @@
  * This template provides:
  * - WiFi connectivity (STA mode with AP fallback)
  * - Web-based configuration interface (captive portal)
- * - Configuration management (NVS storage)
+ * - JSON-based configuration management (NVS storage)
  * - QEMU network support (UART tunnel for emulation)
  * 
- * Customize the web interface and add your application logic.
+ * SYSTEM ARCHITECTURE:
+ * - Configuration Manager: JSON schema-based settings with NVS persistence
+ * - WiFi Manager: Network connectivity with automatic web server lifecycle
+ * - Web Server: Configuration interface with captive portal support
+ * 
+ * Customize the web interface and add your application components below.
  */
 
 #include <stdio.h>
@@ -17,83 +22,85 @@
 #include "esp_log.h"
 #include "esp_system.h"
 #include "esp_timer.h"
-#include "nvs_flash.h"
 
-// Template components
+// Template components - Configuration and Connectivity
 #include "config_manager.h"
-#include "web_server.h"
 #include "wifi_manager.h"
-
-#ifdef CONFIG_IDF_TARGET_ESP32
-    // QEMU network support (only for emulator)
-    // Note: wifi_manager_sim.c handles netif_uart_tunnel initialization
-#endif
 
 static const char *TAG = "main";
 
 /**
  * @brief Main application entry point
  * 
- * Initializes the ESP32 template with web-based configuration.
+ * Initializes the ESP32 template with web-based configuration interface.
+ * System initialization follows these steps:
+ * 1. Configuration manager (NVS + JSON schema)
+ * 2. WiFi manager and web server (automatic lifecycle management)
+ * 3. Your custom application components (add here)
+ * 
  * The device will:
- * 1. Try to connect to saved WiFi (STA mode)
- * 2. Fall back to AP mode with captive portal if connection fails
- * 3. Provide web interface for configuration and monitoring
+ * - Try to connect to saved WiFi (STA mode)
+ * - Fall back to AP mode with captive portal if connection fails
+ * - Provide web interface for configuration and monitoring
  */
 void app_main(void)
 {
-    ESP_LOGI(TAG, "ESP32 Template Starting...");
+    ESP_LOGI(TAG, "");
+    ESP_LOGI(TAG, "╔════════════════════════════════════════════════╗");
+    ESP_LOGI(TAG, "║      ESP32 Project Template - Starting...      ║");
+    ESP_LOGI(TAG, "║      WiFi + Web Config + JSON Settings         ║");
+    ESP_LOGI(TAG, "╚════════════════════════════════════════════════╝");
     ESP_LOGI(TAG, "ESP-IDF Version: %s", esp_get_idf_version());
     
-    // Initialize NVS (Non-Volatile Storage)
-    // Required for WiFi credentials and configuration storage
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_LOGW(TAG, "NVS partition was truncated and needs to be erased");
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ret = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK(ret);
-    ESP_LOGI(TAG, "NVS Flash initialized successfully");
-    
-    // Initialize configuration manager
+    // Step 1: Initialize configuration manager
+    // Internally initializes NVS and loads configuration from storage
+    // Uses JSON schema from config_schema.json for all parameters
     ESP_LOGI(TAG, "Initializing configuration manager...");
     ESP_ERROR_CHECK(config_init());
+    ESP_LOGI(TAG, "✓ Configuration manager initialized (NVS ready)");
     
-#ifdef CONFIG_IDF_TARGET_ESP32
-    // QEMU Build: Use simulator WiFi manager with UART tunnel
-    // The WiFi manager simulator will initialize the web server internally
-    ESP_LOGI(TAG, "Initializing WiFi manager (QEMU/simulator mode)...");
+    // Step 2: Initialize WiFi manager and web server
+    // Handles both STA mode (connect to WiFi) and AP mode (captive portal)
+    // WiFi manager automatically starts web server in both modes:
+    //   - AP mode: Web server on 192.168.4.1 (captive portal)
+    //   - STA mode: Web server on network IP (after connection)
+    ESP_LOGI(TAG, "Initializing WiFi manager...");
     ESP_ERROR_CHECK(wifi_manager_init());
     ESP_ERROR_CHECK(wifi_manager_start());
-#else
-    // Real Hardware: Initialize web server with WiFi manager
-    ESP_LOGI(TAG, "Initializing web server...");
-    web_server_config_t web_config = WEB_SERVER_DEFAULT_CONFIG();
-    ESP_ERROR_CHECK(web_server_init(&web_config));
-    ESP_ERROR_CHECK(web_server_start());
-#endif
+    ESP_LOGI(TAG, "✓ WiFi manager initialized (web server lifecycle managed automatically)");
     
-    ESP_LOGI(TAG, "Template initialized successfully");
+    // Step 3: Initialize your custom application components
+    // Add your hardware initialization, sensors, displays, etc. here
+    // Example:
+    //   ESP_LOGI(TAG, "Initializing custom hardware...");
+    //   ESP_ERROR_CHECK(my_sensor_init());
+    //   ESP_ERROR_CHECK(my_display_init());
+    //   ESP_LOGI(TAG, "✓ Custom components initialized");
+    
+    // System initialized successfully
     ESP_LOGI(TAG, "");
-    ESP_LOGI(TAG, "==============================================");
-    ESP_LOGI(TAG, "  ESP32 Project Template - Web Configured");
-    ESP_LOGI(TAG, "  ");
-    ESP_LOGI(TAG, "  Access web interface:");
-    ESP_LOGI(TAG, "  - STA mode: http://<device-ip>");
-    ESP_LOGI(TAG, "  - AP mode:  http://192.168.4.1");
-    ESP_LOGI(TAG, "  - QEMU:     http://localhost:8080");
-    ESP_LOGI(TAG, "==============================================");
+    ESP_LOGI(TAG, "╔════════════════════════════════════════════╗");
+    ESP_LOGI(TAG, "║          Template Ready!                   ║");
+    ESP_LOGI(TAG, "║  Web Interface: http://192.168.4.1         ║");
+    ESP_LOGI(TAG, "║  Captive Portal: Auto (AP mode)            ║");
+    ESP_LOGI(TAG, "║  QEMU: http://localhost:8080               ║");
+    ESP_LOGI(TAG, "╚════════════════════════════════════════════╝");
     ESP_LOGI(TAG, "");
     
-    // Main application loop
-    // Add your custom application logic here
+    // Main monitoring loop
+    // Lightweight periodic health checks and logging
     while (1) {
-        vTaskDelay(pdMS_TO_TICKS(10000));
+        vTaskDelay(pdMS_TO_TICKS(10000));  // 10 second interval
         
-        // Example: Monitor system health
-        ESP_LOGI(TAG, "System uptime: %lu seconds, Free heap: %lu bytes",
-                 (unsigned long)(esp_timer_get_time() / 1000000),
-                 (unsigned long)esp_get_free_heap_size());
+        // Monitor WiFi and system health
+        wifi_manager_monitor();  // Check WiFi connection status
+        
+        // Log system metrics
+        uint32_t heap_free = esp_get_free_heap_size();
+        uint32_t heap_min = esp_get_minimum_free_heap_size();
+        uint32_t uptime_s = (uint32_t)(esp_timer_get_time() / 1000000);
+        
+        ESP_LOGD(TAG, "Uptime: %lu s | Heap: %lu/%lu bytes",
+                 uptime_s, heap_free, heap_min);
     }
 }
